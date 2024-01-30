@@ -126,6 +126,7 @@ import { IndexBillingCycleComponent } from 'src/app/Components/BillingCycleMonth
 import { AddeditBillingComponent } from 'src/app/Components/BillingCycleMonthly/addedit-billing/addedit-billing.component';
 import { UpdateBillingComponent } from 'src/app/Components/BillingCycleMonthly/update-billing/update-billing.component';
 import { SSRSReportViewerComponent } from 'src/app/Components/AccountsController/Invoice/SSRS-REPORTVIEWER/ssrsreport-viewer/ssrsreport-viewer.component';
+import { ActionsCellRendererComponent } from 'src/app/Components/TopToolbarComponents/ClientCordination/ClientOrder/actions-cell-renderer/actions-cell-renderer.component';
 
 //Routing to another components 
 const routes: Routes = [
@@ -158,6 +159,7 @@ const routes: Routes = [
       { path: 'clientindex/clientorder', component: ClientordersComponent, canActivate: [authGuard] },
       { path: 'clientindex/clientordertable', component: ClientorderstableComponent, canActivate: [authGuard] },
       { path: 'clientindex/clientordertable', component: ClientorderstableComponent, canActivate: [authGuard] },
+      { path: 'clientindex/ActionsCellRenderer', component: ActionsCellRendererComponent, canActivate: [authGuard] },
       { path: 'clientindex/clientorder/clientorderview', component: ClientorderviewComponent, canActivate: [authGuard] },
       { path: 'clientindex/clientorder/clientdetailpopup', component: ClientdetailspopupComponent, canActivate: [authGuard] },
       { path: 'clientindex/clientorder/fileconvert', component: FileconvertComponent, canActivate: [authGuard] },

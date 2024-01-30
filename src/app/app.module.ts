@@ -45,9 +45,7 @@ import 'ag-grid-enterprise';
     FilterPipe,
     ItemFilterPipe,
     BirthdayComponent,
-    AnniversaryComponent,
-
-   
+    AnniversaryComponent
    ],
   imports: [
     BrowserModule,

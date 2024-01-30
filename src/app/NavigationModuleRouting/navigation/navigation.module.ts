@@ -148,6 +148,7 @@ import { SSRSReportViewerComponent } from 'src/app/Components/AccountsController
 import { ReportViewerModule } from 'ngx-ssrs-reportviewer-v2';
 import { AgGridModule } from 'ag-grid-angular';
 import 'ag-grid-enterprise';
+import { ActionsCellRendererComponent } from 'src/app/Components/TopToolbarComponents/ClientCordination/ClientOrder/actions-cell-renderer/actions-cell-renderer.component';
 
 @NgModule({
   declarations: [
@@ -175,7 +176,7 @@ import 'ag-grid-enterprise';
     ClientdetailspopupComponent,
     FileconvertComponent,
     JobDetailsClientIndexComponent,
-
+    ActionsCellRendererComponent,
     //JoborderComponent
     JoborderComponent,
     JoborderexcelComponent,

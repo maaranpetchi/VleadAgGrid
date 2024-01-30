@@ -26,6 +26,7 @@ import {
   GridOptions,
   HeaderCheckboxSelectionCallbackParams,
 } from 'ag-grid-community';
+import { ActionsCellRendererComponent } from '../actions-cell-renderer/actions-cell-renderer.component';
 @Component({
   selector: 'app-clientorderstable',
   templateUrl: './clientorderstable.component.html',
@@ -998,9 +999,9 @@ export class ClientorderstableComponent {
     { headerName: 'TransactionType ', field: 'transactionType' },
     {
       headerName: 'Actions',
-      field: 'id',
-      cellRenderer: this.actionsCellRenderer, // Custom renderer for action icons
-     autoHeight: true,
+      cellRenderer: ActionsCellRendererComponent, // JS comp by Direct Reference
+
+      autoHeight: true,
     }, { headerName: 'FileInawardMode', field: 'fileInwardMode' },
     {
       headerName: 'FileCount', field: 'filecount', editable: true,
@@ -1008,18 +1009,22 @@ export class ClientorderstableComponent {
     }
   ];
   actionsCellRenderer(params: any) {
-    const shareIcon = '<i class="fa fa-share-square" (click)="shareMethod($event, params.data)" style="cursor: pointer"></i>';
-    const viewIcon = '<i class="fa fa-eye" (click)="viewMethod($event, params.data)" style="cursor: pointer;color:green"></i>';
-    return `${viewIcon} ${shareIcon}`;
+    const shareIcon = '<i class="fa fa-share-square"></i>';
+    const viewIcon = '<i class="fa fa-eye"></i>';
+    return `
+    <span (click)="viewMethod(${params.data})" style="cursor: pointer;color:green">${viewIcon}</span>
+      <span (click)="shareMethod(${params.data})" style="cursor: pointer">${shareIcon}</span>
+    `;
   }
-  
-  shareMethod(event: Event, data: any) {
-    event.stopPropagation();
+
+
+  shareMethod(data: any) {
+    // Implement your share method logic here
     console.log('Share method triggered for row:', data);
   }
-  
-  viewMethod(event: Event, data: any) {
-    event.stopPropagation();
+
+  viewMethod(data: any) {
+    // Implement your view method logic here
     console.log('View method triggered for row:', data);
   }
 
