@@ -18,6 +18,8 @@ import Swal from 'sweetalert2/src/sweetalert2.js'
 import { catchError } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AgGridAngular } from 'ag-grid-angular';
+import {ICellRendererAngularComp} from 'ag-grid-angular';
+
 import {
   CheckboxSelectionCallbackParams,
   ColDef,
@@ -27,13 +29,21 @@ import {
   HeaderCheckboxSelectionCallbackParams,
 } from 'ag-grid-community';
 import { ActionsCellRendererComponent } from '../actions-cell-renderer/actions-cell-renderer.component';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 @Component({
   selector: 'app-clientorderstable',
   templateUrl: './clientorderstable.component.html',
   styleUrls: ['./clientorderstable.component.scss']
 })
-export class ClientorderstableComponent {
+export class ClientorderstableComponent  implements OnInit{
+context: any;
+  ngOnInit(): void {
+    // //DivisionApiDatadropdown
+    this.fetchdivision();
 
+    // this.bindingjobs();
+
+  }
 
   @ViewChild('popupComponent') popupComponent: ElementRef;
   @Output() showAlertEvent: EventEmitter<any> = new EventEmitter();
@@ -133,15 +143,12 @@ export class ClientorderstableComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private http: HttpClient, public dialog: MatDialog, private snackBar: MatSnackBar, private coreService: CoreService, private spinnerService: SpinnerService, private loginservice: LoginService) { }
+  constructor(private http: HttpClient, public dialog: MatDialog, private snackBar: MatSnackBar, private coreService: CoreService, private spinnerService: SpinnerService, private loginservice: LoginService,private sharedService: SharedService) { 
 
-  // ngOnInit(): void {
-  //   // //DivisionApiDatadropdown
-  //   this.fetchdivision();
 
-  //   this.bindingjobs();
+  }
 
-  // }
+
 
 
   // employeeFilter(event: Event): void {
@@ -1008,26 +1015,6 @@ export class ClientorderstableComponent {
       cellEditor: 'numericEditor'
     }
   ];
-  actionsCellRenderer(params: any) {
-    const shareIcon = '<i class="fa fa-share-square"></i>';
-    const viewIcon = '<i class="fa fa-eye"></i>';
-    return `
-    <span (click)="viewMethod(${params.data})" style="cursor: pointer;color:green">${viewIcon}</span>
-      <span (click)="shareMethod(${params.data})" style="cursor: pointer">${shareIcon}</span>
-    `;
-  }
-
-
-  shareMethod(data: any) {
-    // Implement your share method logic here
-    console.log('Share method triggered for row:', data);
-  }
-
-  viewMethod(data: any) {
-    // Implement your view method logic here
-    console.log('View method triggered for row:', data);
-  }
-
 
   public rowSelection: 'single' | 'multiple' = 'multiple';
   public rowData!: any[];
@@ -1057,14 +1044,19 @@ export class ClientorderstableComponent {
     console.log(newvalue, "HandlepressNewValue");
     console.log(parameterData, "ParameterValue");
 
-
   }
   multiGridConvert() {
     const selectedRows = this.gridApi.getSelectedRows();
-
     // Perform your bulk convert action with the selected rows
     console.log('Selected Rows:', selectedRows);
   }
+
+  onDivisionChange(){
+    console.log(this.selectdivision,"SelectDivi");
+    
+    this.sharedService.setData(this.selectdivision);
+  }
+  
 }
 
 function isFirstColumn(
