@@ -996,11 +996,34 @@ export class ClientorderstableComponent {
     { headerName: 'Instructions', field: 'instruction' },
     { headerName: 'Sales Person Name', field: 'salesPersonName' },
     { headerName: 'TransactionType ', field: 'transactionType' },
-    { headerName: 'Actions', field: 'actions' },
-    { headerName: 'FileInawardMode', field: 'fileInwardMode' },
-    { headerName: 'FileCount', field: 'filecount',      editable: true,
-    cellEditor: 'numericEditor' }
+    {
+      headerName: 'Actions',
+      field: 'id',
+      cellRenderer: this.actionsCellRenderer, // Custom renderer for action icons
+     autoHeight: true,
+    }, { headerName: 'FileInawardMode', field: 'fileInwardMode' },
+    {
+      headerName: 'FileCount', field: 'filecount', editable: true,
+      cellEditor: 'numericEditor'
+    }
   ];
+  actionsCellRenderer(params: any) {
+    const shareIcon = '<i class="fa fa-share-square" (click)="shareMethod($event, params.data)" style="cursor: pointer"></i>';
+    const viewIcon = '<i class="fa fa-eye" (click)="viewMethod($event, params.data)" style="cursor: pointer;color:green"></i>';
+    return `${viewIcon} ${shareIcon}`;
+  }
+  
+  shareMethod(event: Event, data: any) {
+    event.stopPropagation();
+    console.log('Share method triggered for row:', data);
+  }
+  
+  viewMethod(event: Event, data: any) {
+    event.stopPropagation();
+    console.log('View method triggered for row:', data);
+  }
+
+
   public rowSelection: 'single' | 'multiple' = 'multiple';
   public rowData!: any[];
   public themeClass: string =
@@ -1015,25 +1038,25 @@ export class ClientorderstableComponent {
       .subscribe((response) => (this.rowData = response.data));
   }
 
-  handleCellValueChanged(params: { colDef: ColDef, newValue: any ,data:any}) {
-console.log(params,"Parameter");
-console.log(params.data,"ParameterData");
+  handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {
+    console.log(params, "Parameter");
+    console.log(params.data, "ParameterData");
     let parameterData = params.data
     if (params.colDef.field === 'filecount') { // Check if the changed column is 'price'
-      this.openPopup(params.newValue,parameterData);
+      this.openPopup(params.newValue, parameterData);
     }
   }
 
-  
-  handlePress(newvalue,parameterData){
-console.log(newvalue,"HandlepressNewValue");
-console.log(parameterData,"ParameterValue");
+
+  handlePress(newvalue, parameterData) {
+    console.log(newvalue, "HandlepressNewValue");
+    console.log(parameterData, "ParameterValue");
 
 
   }
-  multiGridConvert(){
+  multiGridConvert() {
     const selectedRows = this.gridApi.getSelectedRows();
-    
+
     // Perform your bulk convert action with the selected rows
     console.log('Selected Rows:', selectedRows);
   }
