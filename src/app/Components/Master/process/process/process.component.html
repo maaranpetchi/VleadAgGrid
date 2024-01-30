@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body style="height:123vh">
+  <!DOCTYPE html>
+  <html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+
+  <body style="height: 123vh;">
+    <div class="container">
+      <div class="advance">
+        <div class="customerProfile">
+          <div class="backgroundcolor">
+            <div class="panel-heading">
+              <h2 class="panel-title" style="color:#fff;">
+                Process <mat-icon class="add-icon" matTooltip="Process!" (click)="addItem()">add_box</mat-icon>
+              </h2>
+            </div>
+
+            <div class="table-container">
+              <table id="custom-table" class="table table-sm table-responsive table table-bordered text-center"
+                mat-table [dataSource]="dataSource" >
+
+                <!-- DepartmentName Column -->
+                <ng-container matColumnDef="Name">
+                  <th mat-header-cell *matHeaderCellDef>
+                    <div class="header-wrapper">
+                      <div class="name text-start"> Name</div>
+                      <div class="filter-input">
+                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
+                      </div>
+                    </div>
+                  </th>
+                  <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+                </ng-container>
+
+                <!-- Description Column -->
+
+                <ng-container matColumnDef="ShortName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    <div class="header-wrapper">
+                      <div class="name text-start"> ShortName</div>
+                      <div class="filter-input">
+                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
+                      </div>
+                    </div>
+                  </th>
+                  <td mat-cell *matCellDef="let row"> {{row.shortName}}</td>
+                </ng-container>
+
+                <!-- Description Column -->
+                <ng-container matColumnDef="Description">
+                  <th mat-header-cell *matHeaderCellDef>
+                    <div class="header-wrapper">
+                      <div class="name text-start"> Description</div>
+                      <div class="filter-input">
+                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
+                      </div>
+                    </div>
+                  </th>
+                  <td mat-cell *matCellDef="let row"> {{row.description}}</td>
+                </ng-container>
+
+                <!-- Description Column -->
+                <ng-container matColumnDef="IsActive">
+                  <th mat-header-cell *matHeaderCellDef>
+                    <div class="header-wrapper">
+                      <div class="name text-start"> IsActive</div>
+                      <div class="filter-input">
+                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
+                      </div>
+                    </div>
+                  </th>
+                  <td mat-cell *matCellDef="let row"> {{row.isActive}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="Action">
+                  <th mat-header-cell *matHeaderCellDef> Action </th>
+                  <td mat-cell *matCellDef="let row">
+                    <button mat-icon-button color="primary" (click)="openViewForm(row)">
+                      <mat-icon>remove_red_eye</mat-icon>
+                    </button>
+
+                    <!-- <button mat-icon-button color="primary" routerLink="edit/{{row.id}}"> -->
+                    <button mat-icon-button color="primary" (click)="openEditForm(row.id)">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="deleteScopeUser(row.id)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                <!-- Row shown when there is no matching data. -->
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell" colspan="4">No data matching the filter "{{dataSource.filter}}"</td>
+                </tr>
+                <!-- Row shown when there is no matching data. -->
+                <ng-container *ngIf="dataSource?.data?.length === 0">
+                  <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="8">No data available</td>
+                  </tr>
+                </ng-container>
+
+              </table>
+
+            </div>
+            <mat-paginator [pageSizeOptions]="[25, 50]" showFirstLastButtons></mat-paginator>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </body>
+
+  </html>
+
+</body>
+
+</html>

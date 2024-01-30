@@ -1,0 +1,80 @@
+<!--Addeditcomponent-->
+<div class="container pa-5">
+	<div class="row  bg-primary mt-5">
+		<div class="col-md-12 text-center text-white"> User Info</div>
+	</div>
+</div>
+
+<div class="container">
+	<form [formGroup]="userRegistrationForm" (ngSubmit)="onFormSubmit(data)">
+		<div class="mb-3 mt-3 row">
+			<label for="sel1" class="col-sm-2 col-form-label">Access to <span class="text-danger">*</span></label>
+			<div class="col-sm-4 ">
+				<mat-form-field class="cursor">
+					<mat-label>{{employees.userType}}</mat-label>
+					<mat-select ngDefaultControl class="cursor" formControlName="userType"
+						[(value)]="selectedAccessNameOption">
+					</mat-select>
+				</mat-form-field>
+			</div>
+			<label for="sel1" class="col-sm-2 col-form-label">Employee <span class="text-danger">*</span></label>
+			<div class="col-sm-4 ">
+				<mat-form-field class="cursor">
+					<mat-label>{{employeeName}}</mat-label>
+					<mat-select ngDefaultControl class="cursor" formControlName="userTypeDesc"
+					[(value)]="selectedAccessNameOption">
+					</mat-select>
+				</mat-form-field>
+			</div>
+			<label for="sel1" class="col-sm-2 col-form-label">User Name<span class="text-danger">*</span></label>
+			<div class="col-sm-4 ">
+				<mat-form-field class="cursor">
+					<mat-label>{{employees.username}}</mat-label>
+					<mat-select ngDefaultControl class="cursor" formControlName="username"
+						[(value)]="selectedAccessNameOption">
+					</mat-select>
+				</mat-form-field>
+			</div>
+			<label for="staticEmail" class="col-sm-2 col-form-label">Password<span class="text-danger">*</span></label>
+			<div class="col-sm-4">
+				<mat-form-field>
+					<input matInput placeholder="Enter password" type="password"  formControlName="password" [value]="employees.password">
+				</mat-form-field>
+			</div>
+			<label for="sel1" class="col-sm-2 col-form-label">Role<span class="text-danger">*</span></label>
+			<div class="col-sm-4 py-0">
+				<mat-form-field >
+					<mat-label>Select Role</mat-label>
+					<mat-select formControlName="roles">
+						<mat-option (click)="showAdminData()" value="Admin">Admin</mat-option>
+						<mat-option (click)="showUserData()" value="User">User</mat-option>
+					</mat-select>
+				</mat-form-field>
+				<div *ngIf="isAdmin">
+				</div>
+
+				<div *ngIf="isEmployee" >
+					<div>
+						<div *ngFor="let menu of menus" [ngStyle]="getSubMenuPadding(menu.parentId, 0)">
+							<div *ngIf="menu.hasSubMenu">
+								<mat-label>{{menu.name}}</mat-label>
+							</div>
+							<div *ngIf="!menu.hasSubMenu">
+								<mat-checkbox [checked]="selectedMenu.indexOf(menu.id) > -1"
+									(change)="onMenuSelection($event, menu.id)">
+									{{menu.name}}
+								</mat-checkbox>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-12">
+			<button class="float-left" mat-raised-button color="primary" (click)="onCancel()"
+				routerLink="UserMasterComponent">Cancel</button>
+			<button type="submit" class="btn btn-success float-end">Success</button>
+		</div>
+	</form>
+	
+</div>

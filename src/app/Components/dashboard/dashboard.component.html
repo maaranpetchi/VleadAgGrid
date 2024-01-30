@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body style="height: 130vh;">
+  <div class="parentdashboard">
+    <div class="dashboard">
+      <mat-grid-list cols="3" rowHeight="100px" gutterSize="16px" >
+        <a routerLink="/topnavbar/clientindex" (click)="setClientProcessId(1)">
+          <mat-grid-tile class="ClientCoordination" *ngIf="IsMenuHaveAccess(1)" >
+            <!-- first card component goes here -->
+            ClientCoordination
+          </mat-grid-tile>
+        </a>
+        
+        <a routerLink="/topnavbar/production" (click)="setProductionAllocationProcessId(2)">
+          <mat-grid-tile class=" ProductionAllocation"  *ngIf="IsMenuHaveAccess(2)" >
+            <!-- second card component goes here -->
+            Production Allocation
+          </mat-grid-tile>
+        </a>
+  
+  
+        <a routerLink="/topnavbar/productionmain" (click)="setProcessId(3)">
+          <mat-grid-tile class=" Production" *ngIf="IsMenuHaveAccess(3)" >
+            <!-- third card component goes here -->
+            Production
+          </mat-grid-tile>
+        </a>
+      </mat-grid-list>
+  
+  
+      <br>
+  
+      <mat-grid-list cols="3" rowHeight="100px" gutterSize="16px">
+        <a routerLink="/topnavbar/qualityallocation"  (click)="setQualityAllocationProcessId(4)">
+          <mat-grid-tile class="QualityAllocation" *ngIf="IsMenuHaveAccess(4)" >
+            <!-- first card component goes here -->
+            Quality Allocation
+          </mat-grid-tile>
+        </a>
+  
+        <a routerLink="/topnavbar/quality" (click)="setQualityProcessId(5)">
+          <mat-grid-tile class="quality" *ngIf="IsMenuHaveAccess(5)" >
+            <!-- second card component goes here -->
+            Quality
+          </mat-grid-tile>
+        </a>
+  
+        <a routerLink="/topnavbar/proofreadingallocation" (click)="setProofReadingAllocationProcessId(6)">
+          <mat-grid-tile class=" ProofReadingAllocation" *ngIf="IsMenuHaveAccess(6)" >
+            <!-- third card component goes here -->
+            Proof Reading Allocation
+          </mat-grid-tile>
+        </a>
+      </mat-grid-list>
+      <br>
+      <mat-grid-list cols="3" rowHeight="100px" gutterSize="16px" (click)="setProofReadingProcessId(7)">
+        <a routerLink="/topnavbar/proofreading">
+          <mat-grid-tile class="ProofReading" *ngIf="IsMenuHaveAccess(7)" >
+            <!-- first card component goes here -->
+            Proof Reading
+          </mat-grid-tile>
+        </a>
+        <a routerLink="/topnavbar/buddyproof" (click)="setBuddyProofProcessId(9)">
+          <mat-grid-tile class="BuddyProof" *ngIf="IsMenuHaveAccess(9)" >
+            <!-- second card component goes here -->
+            Buddy Proof
+          </mat-grid-tile>
+        </a>
+  
+        <a routerLink="/topnavbar/sewout" (click)="setSewOutProcessId(11)">
+          <mat-grid-tile class="SewOut" *ngIf="IsMenuHaveAccess(11)" >
+            <!-- third card component goes here -->
+            Sew Out
+          </mat-grid-tile>
+        </a>
+      </mat-grid-list>
+      <br>
+  
+      <div class="row">
+        <div class="col-4">
+
+          <mat-grid-list cols="1" rowHeight="100px"  gutterSize="16px">
+            <a (click)="report(13)" >
+              <mat-grid-tile class="Reportstitle" *ngIf="IsMenuHaveAccess(1013)" >
+                <!-- first card component goes here -->
+                Reports
+              </mat-grid-tile>
+            </a>
+          </mat-grid-list>
+        </div>
+      </div>
+  
+    
+    </div>
+  </div>
+</body>
+</html>

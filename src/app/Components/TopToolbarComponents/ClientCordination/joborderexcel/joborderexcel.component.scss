@@ -1,0 +1,19 @@
+.mat-mdc-table {
+    table-layout: auto;
+    white-space: normal;
+    height: 312px;
+}
+    
+.mat-table {
+    overflow: auto;
+    max-height: 500px;
+  }
+  #table-container {
+    height: 50vh; /* Set a fixed height of 50% of the viewport height */
+    overflow-y: auto;  
+  }
+  #custom-table {
+    width: 75%; /* Set the table width to 75% of its container */
+    border-collapse: collapse; /* Optional: Collapse borders between table cells */
+  }
+  

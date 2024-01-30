@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body style="height: 123vh;">
+  <div class="container">
+    <div class="loginbox">
+      <img id="logopic" src="http://www.vleadservices.com/wp-content/uploads/2017/06/logo.png" [@slideInOut]>
+      <br>
+      <br>
+      <br>
+      <form (ngSubmit)="onSubmit()" (keydown.enter)="onSubmit()">
+        <div class="mb-3" [@slideInOut]>
+          <mat-form-field class="example-full-width">
+            <mat-label>Username</mat-label>
+            <input matInput type="text" class="form-control" name="username" placeholder="Username" [(ngModel)]="username">
+          </mat-form-field>
+        </div>
+        <div class="mb-3" [@slideInOut]>
+          <mat-form-field class="example-full-width">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" class="form-control" name="password" placeholder="Password" [(ngModel)]="password">
+          </mat-form-field>
+        </div>
+
+        <p>{{user}}</p>
+        <button id="loginButton" class="btn btn-primary" role="button" type="submit">Login</button>
+      </form>
+
+    </div>
+  </div>
+      
+</body>
+</html>

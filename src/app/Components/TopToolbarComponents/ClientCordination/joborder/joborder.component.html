@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <div class="main-body">
+        <div class="container">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <h3 class="text-white">
+                            <span class="scope-text text-end">Job Order</span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="bg-white">
+                    <form [formGroup]="joborder" (ngSubmit)="onFormSubmit()">
+                        <div class="joborder">
+                            <p style="color: rgb(255, 102, 102);font-family:'Times New Roman', Times, serif;">*Date
+                                Format in
+                                MM-dd-yyyy.</p>
+                            <!--jobno and jobdate-->
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>Job No</mat-label>
+                                        <input matInput placeholder="Enter Job No" name="jobNumber"
+                                            formControlName="jobno">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>Job Date</mat-label>
+                                        <input matInput placeholder="Date" value="{{getCurrentDate()}}"
+                                            formControlName="jobdate">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <!--jobDescription and Instruction-->
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>Job Description<span class="star"
+                                                style="color:red">*</span></mat-label>
+                                        <textarea matInput placeholder="Enter Job Description" name="jobDescription"
+                                            formControlName="jobdescription" [required]="false"></textarea>
+                                        <mat-error *ngIf="joborder.get('jobdescription')?.invalid">Job Description is
+                                            required</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>Instruction</mat-label>
+                                        <textarea matInput placeholder="Enter Instruction" name="Instruction"
+                                            formControlName="instruction"></textarea>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <!--JobStatus and Department-->
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>Job Status <span class="star" style="color:red">*</span></mat-label>
+                                        <mat-select [(ngModel)]="selectedJobStatus" name="jobStatus"
+                                            formControlName="jobstatus" [required]="false">
+                                            <mat-option *ngFor="let status of jobStatuses" [value]="status.id">
+                                                {{ status.jobStatusDescription }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="joborder.get('jobstatus')?.invalid">Job Status is
+                                            required</mat-error>
+
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>Department<span class="star" style="color:red">*</span></mat-label>
+                                        <mat-select [(ngModel)]="selectedDepartment" name="Department"
+                                            formControlName="department" [required]="false">
+                                            <mat-option *ngFor="let Department of Department" [value]="Department.id">
+                                                {{ Department.description }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="joborder.get('department')?.invalid">Department is
+                                            required</mat-error>
+
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <!--ClientName and CustomerContactName-->
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>ClientName<span class="star" style="color:red">*</span></mat-label>
+                                        <mat-select [(ngModel)]="selectedClientName" name="ClientName"
+                                            (selectionChange)="getcustomername()" formControlName="clientname"
+                                            [required]="false">
+                                            <mat-option *ngFor="let ClientName of ClientName;let i = index"
+                                                [value]="{id:ClientName.id,name:ClientName.shortName}">
+                                                {{ ClientName.shortName }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="joborder.get('clientname')?.invalid">Client Name is
+                                            required</mat-error>
+
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>CustomerContactName<span class="star"
+                                                style="color:red">*</span></mat-label>
+                                        <mat-select [(ngModel)]="selectedCustomerContactName"
+                                            (selectionChange)="onCustomerContactChange()" name="CustomerContactName"
+                                            formControlName="customercontactname">
+                                            <mat-option *ngFor="let customerContact of CustomerContactName"
+                                                [value]="customerContact.id">
+                                                {{ customerContact.contactName }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="joborder.get('customercontactname')?.invalid">Customer Contact
+                                            Name is required</mat-error>
+
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <!--clientJobId and ClientStatus-->
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>clientJobId</mat-label>
+                                        <input matInput placeholder="Enter clientJobId" name="clientJobId"
+                                            formControlName="clientjobid">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>ClientStatus<span class="star" style="color:red">*</span></mat-label>
+                                        <mat-select [(ngModel)]="selectedClientStatus" formControlName="clientstatus"
+                                            name="clientstatus" [required]="false">
+                                            <mat-option value="Live">Live</mat-option>
+                                            <mat-option value="Trail">Trail</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="joborder.get('clientstatus')?.invalid">Client Status is
+                                            required</mat-error>
+
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <!--FileName and FileRecdDate-->
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>FileName<span class="star" style="color:red">*</span></mat-label>
+                                        <input matInput placeholder="Enter FileName" name="FileName"
+                                            formControlName="filename" [required]="false">
+                                        <mat-error *ngIf="joborder.get('filename')?.invalid">File Name is
+                                            required</mat-error>
+
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk" class="example-full-width" appearance="fill">
+                                        <mat-label>FileRecdDate<span class="star" style="color:red">*</span></mat-label>
+                                        <input matInput [matDatepickerFilter]="myFilter" [matDatepicker]="picker"
+                                            formControlName="filerecddate" [required]="false">
+                                        <mat-hint>MM/DD/YYYY</mat-hint>
+                                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+                                        <mat-error *ngIf="joborder.get('filerecddate')?.invalid">File Recd Date is
+                                            required</mat-error>
+
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <!--ReferenceDate and ReferenceNo-->
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk" class="example-full-width" appearance="fill">
+                                        <mat-label>ReferenceDate</mat-label>
+                                        <input matInput [matDatepickerFilter]="myFilter" [matDatepicker]="ReferenceDate"
+                                            formControlName="referencedate">
+                                        <mat-hint>MM/DD/YYYY</mat-hint>
+                                        <mat-datepicker-toggle matIconSuffix
+                                            [for]="ReferenceDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #ReferenceDate></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>ReferenceNo</mat-label>
+                                        <input matInput placeholder="Enter ReferenceNo" name="ReferenceNo"
+                                            formControlName="referencenumber">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <!--FileInwardType and FileAttachment-->
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>FileInwardType<span class="star"
+                                                style="color:red">*</span></mat-label>
+                                        <mat-select [(ngModel)]="selectedfileinwardtype" name="fileinwardtype"
+                                            formControlName="fileinwardtype" [required]="false">
+                                            <mat-option *ngFor="let Fileinwardtype of fileinwardtype"
+                                                [value]="Fileinwardtype.id">
+                                                {{ Fileinwardtype.description}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="joborder.get('fileinwardtype')?.invalid">File Inward Type is
+                                            required</mat-error>
+
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <label>FileAttachment<span class="star" style="color:red">*</span></label>
+                                    <input #fileUpload type="file" (change)="onFileSelected($event)"
+                                        formControlName="fileattachment">
+
+                                    <div *ngIf="showUploadedFiles">
+                                        <label>Uploaded Files:</label>
+                                        <ul>
+                                            <li *ngFor="let fileInfo of fileInfos; let i = index">
+                                                {{ fileInfo.name }}
+
+                                                <button mat-button color="warn" (click)="removeFile(i)"><mat-icon
+                                                        style="color:red">delete</mat-icon> </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!--Employee and division-->
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>Employee<span class="star" style="color:red">*</span></mat-label>
+                                        <input matInput class="employee" placeholder=" Enter Employee" name="Employee"
+                                            formControlName="employee">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>Division<span class="star" style="color:red">*</span></mat-label>
+                                        <mat-select [(ngModel)]="selectedDivision" name="Division"
+                                            formControlName="division" [required]="false">
+                                            <mat-option *ngFor="let Division of Division" [value]="Division.id">
+                                                {{ Division.divisionName }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="joborder.get('division')?.invalid">Division is
+                                            required</mat-error>
+
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                          
+                            <!--JobReferenceId and Username-->
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>JobReferenceId</mat-label>
+                                        <input matInput placeholder=" Enter JobReferenceId" name="JobReferenceId"
+                                            formControlName="jobreferenceid">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>Username</mat-label>
+                                        <input matInput maxlength="25" placeholder="Enter username" name="Username"
+                                            formControlName="username">
+                                        <mat-hint id="UsercharCountHint"
+                                            style="color:rgb(254, 95, 95);font-family: 'Times New Roman', Times, serif;justify-content: end;"
+                                            text-align="end" aria-live="polite" aria-atomic="true">
+                                            limit upto 25 Char
+                                        </mat-hint>
+                                    </mat-form-field>
+                                    <br>
+
+                                </div>
+                            </div>
+                            <br>
+                            <!--Customer and SalesPerson-->
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>Customer</mat-label>
+                                        <input matInput placeholder=" Enter Customer" name="Customer"
+                                            formControlName="customer">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>SalesPerson</mat-label>
+                                        <input matInput maxlength="25" placeholder="Enter salesperson"
+                                            name="salesperson" formControlName="salesperson">
+                                        <mat-hint id="SalescharCountHint"
+                                            style="color:rgb(254, 95, 95);font-family: 'Times New Roman', Times, serif;justify-content: end;"
+                                            text-align="end" aria-live="polite" aria-atomic="true">
+                                            limit upto 25 Char
+                                        </mat-hint>
+                                    </mat-form-field>
+                                    <br>
+
+                                </div>
+                            </div>
+                            <br>
+                            <!--Style and Temp-->
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>Style</mat-label>
+                                        <input matInput placeholder=" Enter Style" name="Style" formControlName="style">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>Temp</mat-label>
+                                        <input matInput placeholder=" Enter Temp" name="Temp" formControlName="temp">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <!--TeamCode and ProjectCode-->
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>TeamCode</mat-label>
+                                        <input matInput placeholder=" Enter TeamCode" name="TeamCode"
+                                            formControlName="teamcode">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>ProjectCode</mat-label>
+                                        <input matInput placeholder=" Enter ProjectCode" name="ProjectCode"
+                                            formControlName="projectcode">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <!--schoolname-->
+                            <div class="row">
+                                <div class="col-6">
+
+                                </div>
+                                <div class="col-6">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>SchoolName</mat-label>
+                                        <input matInput placeholder=" Enter SchoolName" name="SchoolName"
+                                            formControlName="schoolname">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <!--LogoDimensions and Gender-->
+                            <div class="row">
+                                <p>Logo Dimensions</p>
+                                <div class="col-3">
+
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>Logo Width</mat-label>
+                                        <input matInput placeholder=" Width" name="LogoWidth"
+                                            formControlName="logowidth">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-3">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>Logo Length</mat-label>
+                                        <input matInput placeholder=" Length" name="LogoLength"
+                                            formControlName="logolength">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>Gender</mat-label>
+                                        <mat-select [(ngModel)]="selectedGender" name="gender" formControlName="gender">
+                                            <mat-option value="male">Male</mat-option>
+                                            <mat-option value="female">Female</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <!--ApparelLogoLocation and Garment Color-->
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk" class="apparellocation">
+                                        <mat-label>ApparelLogoLocation</mat-label>
+                                        <mat-select [(ngModel)]="selectedApparelLogoLocation" name="apparael"
+                                            formControlName="apparellogo">
+                                            <mat-option value="FullChest">Full Chest</mat-option>
+                                            <mat-option value="LeftChest">Left Chest</mat-option>
+                                            <mat-option value="RightChest">Right Chest</mat-option>
+                                            <mat-option value="FullBack">Full Back</mat-option>
+                                            <mat-option value="NapeofNeck">Nape of Neck</mat-option>
+                                            <mat-option value="LeftSleeve">Left Sleeve</mat-option>
+                                            <mat-option value="RightSleeve">Right Sleeve</mat-option>
+                                            <mat-option value="Others">Others</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>Garment Color</mat-label>
+                                        <input matInput placeholder="GarmentColor" name="GarmentColor"
+                                            formControlName="garmentcolor">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <!--Imprintcolors-1 and  virtualproof-->
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>Imprintcolors-1</mat-label>
+                                        <input matInput placeholder="Imprintcolors-1" name="Imprintcolors-1"
+                                            formControlName="imprintcolor1">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>VirtualProof</mat-label>
+                                        <mat-select [(ngModel)]="selectedVirtualProof" name="virtualproof"
+                                            formControlName="virtualproof">
+                                            <mat-option value="Yes">Yes</mat-option>
+                                            <mat-option value="No">No</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <!--Imprintcolors-3 and  Imprintcolors-2-->
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>Imprintcolors-3</mat-label>
+                                        <input matInput placeholder="Imprintcolors-3" name="Imprintcolors-3"
+                                            formControlName="imprintcolor3">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="no-asterisk">
+                                        <mat-label>Imprintcolors-2</mat-label>
+                                        <input matInput placeholder="Imprintcolors-2" name="Imprintcolors-2"
+                                            formControlName="imprintcolor2">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" style="float: right;" class="btn btn-success">Submit</button>
+                    </form>
+                </div>
+                <div class="col-12 mt-3">
+                    <button class="float-left" mat-raised-button color="primary" mat-raised-button color="primary"
+                        (click)="onCancel()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

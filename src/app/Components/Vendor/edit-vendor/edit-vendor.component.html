@@ -1,0 +1,71 @@
+<form>
+  <div class="container">
+    <div class="advance">
+      <div class="customerProfile">
+        <div class="backgroundcolor">
+          <div class="panel-heading">
+            <h2 class="panel-title"
+              style="color:#fff;display: flex;text-align: center;justify-content: center;font-family: 'Times New Roman', Times, serif;">
+              <!--Add Vendor-->
+              Add Vendor
+            </h2>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col">
+                <mat-form-field>
+                  <mat-label>Vendor Name</mat-label>
+                  <input matInput [(ngModel)]="vendorName" name="vendorName">
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field>
+                  <mat-label>Invoice Number<span style="color: red;">*</span></mat-label>
+                  <textarea matInput [(ngModel)]="invoiceNumber" name="invoiceNumber"></textarea>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col">
+                <mat-form-field>
+                  <mat-label>Invoice Date</mat-label>
+                  <input matInput [matDatepicker]="picker" [(ngModel)]="invoiceDate" name="invoiceDate">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field>
+                  <mat-label>Invoice Value<span style="color: red;">*</span></mat-label>
+                  <input matInput type="number" [(ngModel)]="invoiceValue" name="invoiceValue">
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col">
+                <mat-form-field>
+                  <mat-label>Pending Amount</mat-label>
+                  <input matInput type="number" id="pendingAmount" [(ngModel)]="pendingAmount" name="pendingAmount">
+                </mat-form-field>
+              </div>
+              <div class="col">
+                <mat-form-field>
+                  <mat-label>Amounts to be paid</mat-label>
+                  <input matInput type="number" [(ngModel)]="amtTobePaid" id="amountPaid"
+                    (input)="calculatePendingAmount()" name="amountPaid">
+                </mat-form-field>
+              </div>
+            </div>
+            <div mat-dialog-actions class="action">
+              <button mat-raised-button type="button" [mat-dialog-close]="false">Cancel</button>
+              <button mat-raised-button color="primary" type="submit" (click)="onFormSubmit()">{{data ? 'Update':
+                'Save'}}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

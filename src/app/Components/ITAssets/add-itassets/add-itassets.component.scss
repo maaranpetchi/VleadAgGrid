@@ -1,0 +1,33 @@
+.example-container {
+    display: flex;
+    flex-direction: column;
+    min-width: 400px;
+  }
+  
+  .mat-table {
+    overflow: auto;
+    max-height: 500px;
+  }
+
+  .red-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: red;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .red-btn:hover {
+    background-color: darkred;
+  }
+
+  .mat-mdc-table {
+    table-layout: auto;
+    white-space: normal;
+    height: 312px;
+}
+  

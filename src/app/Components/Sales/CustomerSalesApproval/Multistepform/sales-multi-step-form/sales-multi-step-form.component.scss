@@ -1,0 +1,51 @@
+.customerProfile{
+    border-style: solid; 
+    border-color: #428bca;
+}
+
+.panel-heading {
+    padding: 10px 15px;
+    border-bottom: 1px solid transparent;
+    border-top-right-radius: 1px;
+    border-top-left-radius: 1px;
+}
+.firstnext, .secondnext{
+    padding:20px;
+}
+
+.panel-title {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 15px;
+    color: inherit;
+}
+
+
+.pull-right {
+    float: right !important;
+}
+.backgroundcolor{
+    background-color: #428bca;
+}
+
+.container {
+    background-color: white;
+}
+
+#button-gap {
+    margin-right: 5px;
+  }
+  .table-container {
+    height: 50vh; /* Set a fixed height of 50% of the viewport height */
+    overflow-y: auto; /* Enable vertical scrolling if content overflows */
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
+    
+  }
+
+  /* Define the custom-table class for styling */
+  #custom-table {
+    width: 75%; /* Set the table width to 75% of its container */
+    border-collapse: collapse; /* Optional: Collapse borders between table cells */
+  }

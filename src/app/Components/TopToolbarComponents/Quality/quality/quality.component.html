@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="extensions/resizable/bootstrap-table-resizable.js"></script>
+</head>
+
+<body style="height:123vh">
+    <div class="main-body">
+        <div class="container">
+            <div class="productionmain">
+                <h3 style="font-family:'Times New Roman', Times, serif">Quality ({{ (freshJobsCount ? freshJobsCount:0)
+                    + (RevisionJobsCount ? RevisionJobsCount:0 ) + (ReworkJobsCount ? ReworkJobsCount:0) +
+                    (QuoteJobsCount ? QuoteJobsCount:0) +(BulkJobsCount ? BulkJobsCount:0) + (BulkUploadJobsCount ?
+                    BulkUploadJobsCount:0) }})</h3>
+                <mat-tab-group dynamicHeight (selectedTabChange)="onTabChange($event)">
+                    <mat-tab label="{{ 'Fresh Jobs (' + (freshJobsCount ? freshJobsCount:0) + ')' }}">
+                    </mat-tab>
+                    <mat-tab label="{{ 'Revision Jobs (' + (RevisionJobsCount ? RevisionJobsCount:0) + ')' }}">
+                    </mat-tab>
+                    <mat-tab label="{{ 'Rework Jobs (' + (ReworkJobsCount ? ReworkJobsCount:0) + ')' }}">
+                    </mat-tab>
+                    <mat-tab label="{{ 'Quote Jobs (' + (QuoteJobsCount ? QuoteJobsCount:0) + ')' }}">
+                    </mat-tab>
+                    <mat-tab label="{{ 'Bulk Jobs (' + (BulkJobsCount ? BulkJobsCount:0) + ')' }}">
+                    </mat-tab>
+                    <mat-tab label="{{ 'Bulk Upload Jobs (' + (BulkUploadJobsCount ? BulkUploadJobsCount:0) + ')' }}">
+                    </mat-tab>
+                </mat-tab-group>
+
+
+                <div>
+
+                    <app-qualitytable></app-qualitytable>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

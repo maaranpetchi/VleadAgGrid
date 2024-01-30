@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="extensions/resizable/bootstrap-table-resizable.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body style="height:auto;padding:5rem">
+    <div class="main-body">
+        <div class="container">
+            <div class="productionmain">
+                <h1
+                    style="font-family:'Times New Roman', Times, serif;display:flex;justify-content:center;color:#13cbe3">
+                    Client Order Details</h1>
+
+                <div class="row">
+                    <div class="col">
+                        <p>File Name</p>
+                    </div>
+                    <div class="col">
+                        <p>{{data.fileName}}</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <p>PO #</p>
+                    </div>
+                    <div class="col">
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <p>Sales Person Name</p>
+                    </div>
+                    <div class="col">
+                        <p>{{data.salesPersonName}}</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <p>Instruction</p>
+                    </div>
+                    <div class="col">
+                        <p>{{data.instruction}}</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <p>Department</p>
+                    </div>
+                    <div class="col">
+                        <p>{{data.departmentName}}</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <p>Job Status</p>
+                    </div>
+                    <div class="col">
+                        <p>{{data.transactionType}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p> Input File Folder</p>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-primary" (click)="downloadFiles(this.OrderDetails)"
+                            [disabled]="this.OrderDetails === null"><i class="fa fa-download"
+                                style="font-size:24px"></i>Download</button> &nbsp;<button class="btn btn-primary"
+                            (click)="zipcheck()"
+                            [disabled]="this.OrderDetails === null">
+                            <i class="fa fa-folder-open-o" style="font-size:24px"></i> Zip
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-warning" (click)="goBack()">Back</button>
+        </div>
+    </div>
+</body>
+
+</html>

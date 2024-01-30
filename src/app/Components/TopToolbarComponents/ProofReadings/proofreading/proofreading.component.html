@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="extensions/resizable/bootstrap-table-resizable.js"></script>
+</head>
+
+<body style="height: 100vh;">
+    <div class="main-body">
+        <div class="container">
+            <div class="productionmain">
+                <h1 style="font-family:'Times New Roman', Times, serif;color:#43958e">Proof Reading ({{(freshJobsCount ? freshJobsCount:0) + (revisionJobsCount ? revisionJobsCount:0) + (reworkJobsCount ? reworkJobsCount:0) +(quoteJobsCount ? quoteJobsCount:0) + (bulkJobsCount ? bulkJobsCount:0) + (bulkUploadJobsCount ? bulkUploadJobsCount:0)}})</h1>
+            <!--<button (click)="openproofdetailpop()"> ProofDetails</button>&nbsp;&nbsp;<button (click)="openproofworkflowpop()">ProofWorkflow</button>-->
+            
+                <mat-tab-group dynamicHeight (selectedTabChange)="onTabChange($event)">
+                    <mat-tab label="Fresh Jobs ({{freshJobsCount ? freshJobsCount:0}})">
+                    </mat-tab>
+                    <mat-tab label="Revision Jobs ({{revisionJobsCount ? revisionJobsCount:0}})">
+                    </mat-tab>
+                    <mat-tab label="Rework Jobs ({{reworkJobsCount ? reworkJobsCount:0}})">
+                    </mat-tab>
+                    <mat-tab label="Quote Jobs({{quoteJobsCount ? quoteJobsCount:0}})">
+                    </mat-tab>
+                    <mat-tab label="Bulk Jobs({{bulkJobsCount ? bulkJobsCount:0}})">
+                    </mat-tab>
+                    <mat-tab label="Bulk Upload Jobs({{bulkUploadJobsCount ? bulkUploadJobsCount:0}})">
+                    </mat-tab>
+                </mat-tab-group>
+
+
+                <div>
+                    <app-proof-reading-table></app-proof-reading-table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

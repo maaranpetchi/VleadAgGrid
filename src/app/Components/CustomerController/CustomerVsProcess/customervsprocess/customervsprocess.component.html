@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="advance">
+      <div class="customerProfile">
+        <div class="backgroundcolor">
+          <div class="panel-heading">
+            <h2 class="panel-title" style="color:#fff;display: flex;text-align: center;justify-content:center;">
+              CUSTOMER VS PROCESS </h2>
+          </div>
+
+          <div class="pricingcalculation">
+            <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+              <div class="row">
+                <div class="col-sm">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Department</mat-label>
+                    <mat-select ngDefaultControl [(value)]="selectedDepartmentOption"
+                      (selectionChange)="onOptionSelected($event,myForm)" formControlName="departmentList">
+                      <mat-option *ngFor="let department of data.departmentList" [value]="department.id">
+                        {{ department.description }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-sm">
+                  <mat-form-field>
+                    <mat-label>Customer</mat-label>
+                    <mat-select [(value)]="selectedCustomerOption" (selectionChange)="onOptionSelected($event,myForm)"
+                      formControlName="customer">
+                      <mat-option *ngFor="let customer of customers" [value]="customer.id"
+                        (click)="showDropdown = true">
+                        {{ customer.name+"-"+customer.shortName }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm">
+                  <mat-form-field *ngIf="showDropdown">
+                    <mat-label>CustomerScopeStatus</mat-label>
+                    <mat-select [(value)]="selectedCustomerScopeStatusOption"
+                      (selectionChange)="onOptionSelected($event,myForm)" formControlName="customerscopestatus">
+                      <mat-option *ngFor="let option of options" [value]="option.value">
+                        {{ option.viewValue }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm">
+                  <mat-form-field appearance="fill">
+                    <mat-label>jobStatus</mat-label>
+                    <mat-select ngDefaultControl [(value)]="selectedjobStatusOption"
+                      formControlName="jobStatusDescription" multiple>
+                      <mat-option *ngFor="let jobStatus of data.jobstatuslist" [value]="jobStatus.id">
+                        {{ jobStatus.jobStatusDescription }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm">
+                  <mat-form-field appearance="fill">
+                    <mat-label>scope</mat-label>
+                    <mat-select ngDefaultControl [(value)]="selectedscopeOption" formControlName="scopeName" multiple>
+                      <mat-option *ngFor="let Scope of scopeList" [value]="Scope?.id">
+                        {{ Scope?.scopeName }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="col-sm">
+                  <mat-form-field appearance="fill">
+                    <mat-label>currentProcess</mat-label>
+                    <mat-select ngDefaultControl [(value)]="selectedCurrentProcessOption"
+                      (selectionChange)="onOptionSelected($event,myForm)" formControlName="currentProcessList">
+                      <mat-option *ngFor="let currentProcessList of data.currentProcessList"
+                        [value]="currentProcessList.id">
+                        {{ currentProcessList.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                </div>
+
+                <div class="col-sm">
+                  <mat-form-field>
+                    <mat-label>Status</mat-label>
+                    <mat-select [(value)]="selectedStatusOption" (selectionChange)="onOptionSelected($event,myForm)"
+                      formControlName="status">
+                      <mat-option *ngFor="let Status of  data.statuslist" [value]="Status.id">
+                        {{ Status.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm">
+                  <mat-form-field>
+                    <mat-label>NextProcess</mat-label>
+                    <mat-select [(value)]="selectedNextProcessOption"
+                      (selectionChange)="onOptionSelected($event,myForm)" formControlName="NextProcess">
+                      <mat-option *ngFor="let nextprocess of data.currentProcessList" [value]="nextprocess.id">
+                        {{ nextprocess.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <button mat-raised-button color="primary">Submit</button>
+            </form>
+          </div>
+          <div class="table-container">
+
+            <table class="table table-sm table-responsive" id="custom-table" mat-table [dataSource]="dataSource">
+              <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef>
+                  <div class="header-wrapper">
+                    <div class="department-name text-start">Department </div>
+                    <div class="filter-input">
+                      <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                    </div>
+                  </div>
+                </th>
+                <td mat-cell *matCellDef="let row"> {{row.description}} </td>
+              </ng-container>
+
+              <!-- Progress Column -->
+              <ng-container matColumnDef="shortName">
+                <th mat-header-cell *matHeaderCellDef>
+                  <div class="header-wrapper">
+                    <div class="department-name text-start">Customer </div>
+                    <div class="filter-input">
+                      <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                    </div>
+                  </div>
+                </th>
+                <td mat-cell *matCellDef="let row"> {{row.shortName}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="currentProcess">
+                <th mat-header-cell *matHeaderCellDef>
+                  <div class="header-wrapper">
+                    <div class="department-name text-start">Current Process </div>
+                    <div class="filter-input">
+                      <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                    </div>
+                  </div>
+                </th>
+                <td mat-cell *matCellDef="let row"> {{row.currentProcess}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="statusDescription">
+                <th mat-header-cell *matHeaderCellDef>
+                  <div class="header-wrapper">
+                    <div class="department-name text-start">Status </div>
+                    <div class="filter-input">
+                      <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                    </div>
+                  </div>
+                </th>
+                <td mat-cell *matCellDef="let row"> {{row.statusDescription}}</td>
+              </ng-container>
+              <ng-container matColumnDef="nextProcess">
+                <th mat-header-cell *matHeaderCellDef>
+                  <div class="header-wrapper">
+                    <div class="department-name text-start">Next Process </div>
+                    <div class="filter-input">
+                      <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                    </div>
+                  </div>
+                </th>
+                <td mat-cell *matCellDef="let row"> {{row.nextProcess}}</td>
+              </ng-container>
+              <ng-container matColumnDef="jobStatusDescription">
+                <th mat-header-cell *matHeaderCellDef>
+                  <div class="header-wrapper">
+                    <div class="department-name text-start">Job Status </div>
+                    <div class="filter-input">
+                      <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                    </div>
+                  </div>
+                </th>
+                <td mat-cell *matCellDef="let row"> {{row.jobStatusDescription}}</td>
+              </ng-container>
+              <ng-container matColumnDef="scope">
+                <th mat-header-cell *matHeaderCellDef>
+                  <div class="header-wrapper">
+                    <div class="department-name text-start">Scope </div>
+                    <div class="filter-input">
+                      <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                    </div>
+                  </div>
+                </th>
+                <td mat-cell *matCellDef="let row"> {{row.scope}}</td>
+              </ng-container>
+              <ng-container matColumnDef="customJobType">
+                <th mat-header-cell *matHeaderCellDef>
+                  <div class="header-wrapper">
+                    <div class="department-name text-start">Customer Scope Status </div>
+                    <div class="filter-input">
+                      <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                    </div>
+                  </div>
+                </th>
+                <td mat-cell *matCellDef="let row"> {{row.customJobType}}</td>
+              </ng-container>
+
+
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> Action </th>
+                <td mat-cell *matCellDef="let row">
+
+                  <button mat-icon-button color="warn" (click)="deleteEmployee(row.id)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+              <!-- Row shown when there is no matching data. -->
+
+            </table>
+          </div>
+          <mat-paginator [pageSizeOptions]="[25, 50]" showFirstLastButtons></mat-paginator>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</body>
+
+</html>

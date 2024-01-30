@@ -1,0 +1,147 @@
+.container { 
+  // display: grid; 
+   grid-template-columns: 1fr; 
+   grid-template-rows: 1fr; 
+   gap: 0px 0px; 
+  grid-template-areas:
+    ". advance ."
+    ". . ."
+    ". . .";
+ }
+ 
+ .advance { grid-area: advance; }
+
+ .body{
+   min-height: 75vh ;
+   height: auto ;
+   margin: 0;
+   font-family: Roboto, "Helvetica Neue", sans-serif;
+   // overflow-y: auto;
+ }
+ .customerProfile{
+  border-style: solid; 
+  border-color: #428bca;
+ }
+ 
+ .panel-heading {
+  padding: 10px 15px;
+  border-bottom: 1px solid transparent;
+  border-top-right-radius: 1px;
+  border-top-left-radius: 1px;
+ }
+ 
+ 
+ .panel-title {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 15px;
+  color: inherit;
+ }
+ 
+ 
+ .pull-right {
+  float: right !important;
+ }
+ .backgroundcolor{
+  background-color: #428bca;
+ }
+ 
+ .container {
+  background-color: white;
+  height:50vh;
+  margin-top: 36px;
+
+ }
+ 
+ #button-gap {
+  margin-right: 5px;
+ }
+ 
+ 
+ .mat-elevation-z8{
+   overflow-x: scroll;
+ }
+ .clickable-link {
+   cursor: pointer;
+ }
+ 
+ .table-container {
+   height: 60vh; /* Set a fixed height of 50% of the viewport height */
+   overflow: auto; /* Enable vertical scrolling if content overflows */
+   overflow-x: auto; 
+   background:white;
+   
+ }
+ .checkbox{
+   background-color: #fff;
+ }
+ 
+ /* Define the custom-table class for styling */
+ #custom-table {
+   width: 75%; /* Set the table width to 75% of its container */
+   border-collapse: collapse; /* Optional: Collapse borders between table cells */
+ }
+ 
+
+ 
+.table-container {
+ height: 407px; /* Set the maximum height for the table container */
+ overflow-y: auto; /* Enable vertical scrolling */
+}
+
+table {
+ width: 100%;
+ border-collapse: collapse;
+}
+
+th, td {
+ padding: 8px;
+ border: 1px solid #ddd;
+ text-align: left;
+}
+
+th {
+ background-color: #f2f2f2;
+ position: sticky;
+ top: 0;
+}
+
+.table-header {
+ display: flex;
+ align-items: center;
+ justify-content: center;
+}
+
+
+//Table Color
+.text-color-green {
+  color: rgb(53, 157, 53)
+}
+
+.text-color-brown {
+  color: rgb(178, 50, 50)
+}
+
+.text-color-blue {
+  color: rgb(62, 62, 255)
+}
+
+.text-color-DeepSkyBlue {
+  color: deepskyblue
+}
+
+.text-color-yellow {
+  color: rgb(252, 252, 109);
+}
+
+.text-color-red {
+  color: rgb(253, 114, 114);
+}
+
+.SuperRush {
+  color: #ff00e1
+}
+
+.Rush {
+  color: #cc00cb
+}

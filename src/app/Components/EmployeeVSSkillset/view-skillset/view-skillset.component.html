@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="advance">
+            <div class="customerProfile">
+                <div class="backgroundcolor">
+                    <div class="panel-heading">
+                        <h2 class="panel-title" style="color:#fff;display: flex;text-align: center;justify-content: center;font-family: 'Times New Roman', Times, serif;">
+                            VIEW SKILLSET
+                        </h2>
+                    </div>
+                    <div class="container">
+
+                        <div class="row">
+                            <div class="col-8">
+                                <mat-form-field>
+                                    <mat-label>Employee Code</mat-label>
+                                    <input matInput placeholder="Employee Code" [(ngModel)]="employeeCode">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <mat-form-field>
+                                    <mat-label>Employee Name</mat-label>
+                                    <input matInput placeholder="Employee Name" [(ngModel)]="employeeName">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <mat-form-field>
+                                    <mat-label>Employee Division</mat-label>
+                                    <input matInput placeholder="Employee Division" [(ngModel)]="employeeDivision">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <mat-form-field>
+                                    <mat-label>Employee Working Status</mat-label>
+                                    <input matInput placeholder="Employee Working Status"
+                                        [(ngModel)]="employeeWorkingStatus">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <mat-form-field>
+                                    <mat-label>Employee Skill</mat-label>
+                                    <input matInput placeholder="Employee Skill" [(ngModel)]="employeeSkill">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <mat-form-field>
+                                    <mat-label>Proficiency Level</mat-label>
+                                    <input matInput placeholder="Proficiency Level" [(ngModel)]="proficiencyLevel">
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="row" id="button">
+                            <div class="col">
+                                <button type="button" class="btn btn-warning" style="float:left"
+                                    (click)="cancel()">Cancel</button>
+                                <button type="button" (click)="openEditForm()" class="btn btn-success"
+                                    style="float:right">Edit</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

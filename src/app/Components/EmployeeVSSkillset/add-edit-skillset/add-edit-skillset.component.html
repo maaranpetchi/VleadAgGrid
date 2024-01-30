@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body style="height: 123vh;">
+    <div class="container">
+        <div class="advance">
+            <div class="customerProfile">
+                <div class="backgroundcolor">
+                    <div class="panel-heading">
+                        <h2 class="panel-title" style="color:#fff;display: flex;text-align: center;justify-content: center;font-family: 'Times New Roman', Times, serif;">
+                             ADD SKILLSET
+                        </h2>
+                    </div>
+
+                    <div class="container">
+                       
+
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Employee Code<span style="color: red;">*</span></mat-label>
+                                    <mat-select [(ngModel)]="selectedEmployeeCode">
+                                        <mat-option *ngFor="let code of employeeCodes" [value]="code"
+                                            (onSelectionChange)="onSelectCode(code.employeeId)">
+                                            {{ code.employeeCode }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Employee Name<span style="color: red;">*</span></mat-label>
+                                    <input matInput [disabled]="EmployeeName" [value]="selectedEmployeeName ? selectedEmployeeName:''"
+                                        placeholder="Enter employee name">
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Division<span style="color: red;">*</span></mat-label>
+                                    <mat-select [(ngModel)]="selectedDivision">
+                                        <mat-option *ngFor="let division of divisions" [value]="division.id">
+                                            {{ division.divisionName }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Working Status<span style="color: red;">*</span></mat-label>
+                                    <mat-select [(value)]="selectedWorkingStatus">
+                                        <mat-option *ngFor="let option of WorkingStatus" [value]="option">{{ option
+                                            }}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <mat-form-field>
+                                    <mat-label>Scope<span style="color: red;">*</span></mat-label>
+                                    <mat-select [(ngModel)]="selectedScope">
+                                        <mat-option *ngFor="let scope of scopeOptions" [value]="scope.id">
+                                            {{ scope.description }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="!selectedScope">Scope is required.</mat-error>
+                                </mat-form-field>
+
+
+                            </div>
+                            <div class="col-4">
+                                <mat-form-field>
+                                    <mat-label>Proficiency Level<span style="color: red;">*</span></mat-label>
+                                    <mat-select [(ngModel)]="selectedProficiency">
+                                        <mat-option value="Skilled">Skilled</mat-option>
+                                        <mat-option value="Need Training">Need Training</mat-option>
+                                        <mat-option value="Basic">Basic</mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="!selectedProficiency">Proficiency Level is required.</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-2">
+                                <button type="button" class="btn btn-success" (click)="addItem()">Add</button>
+                            </div>
+                        </div>
+
+                        <div class="table" *ngIf="tableDisplay">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>SI.NO</th>
+                                        <th>Skill</th>
+                                        <th>Proficiency</th>
+                                        <th>Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of tableData; let i = index">
+                                        <td>{{ i + 1 }}</td>
+                                        <td>{{ item.skill }}</td>
+                                        <td>{{ item.ProficiencyLevel }}</td>
+                                        <td><button type="button" class="btn btn-danger"
+                                                (click)="removeItem(i)">Remove</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div class="buttons">
+                            <button type="button" id="panel-title" style="float:right" class="btn btn-success"
+                                (click)="onSubmit()">Submit</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

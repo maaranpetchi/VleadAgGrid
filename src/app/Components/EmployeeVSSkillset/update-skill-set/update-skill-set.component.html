@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body style="height:123vh">
+    <div class="container">
+        <div class="advance">
+            <div class="customerProfile">
+                <div class="backgroundcolor">
+                    <div class="panel-heading">
+                        <h2 class="panel-title"
+                            style="color:#fff;display: flex;text-align: center;justify-content: center;font-family: 'Times New Roman', Times, serif;">
+                            UPDATE SKILLSET
+                        </h2>
+                    </div>
+
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-6">
+                                <mat-form-field>
+                                    <mat-label>Employee Skill</mat-label>
+                                    <input matInput [(ngModel)]="employeeSkill" name="employeeSkill">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field>
+                                    <mat-label>Proficiency Level<span style="color: red;">*</span></mat-label>
+                                    <mat-select [(ngModel)]="selectedProficiency">
+                                        <mat-option value="Skilled">Skilled</mat-option>
+                                        <mat-option value="Need Training">Need Training</mat-option>
+                                        <mat-option value="Basic">Basic</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col">
+                                <button type="button" class="btn btn-warning" style="float:left"
+                                    (click)="CancelButton()">Cancel</button>
+                                <button type="button" (click)="updateForm()" class="btn btn-success"
+                                    style="float:right">Update</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

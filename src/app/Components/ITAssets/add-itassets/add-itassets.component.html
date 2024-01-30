@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <!-- stepper.component.html -->
+    <mat-horizontal-stepper linear>
+        <!-- Step 1: Hardware -->
+        <mat-step [stepControl]="hardwareStepFormGroup">
+            <ng-template matStepLabel>Hardware</ng-template>
+            <div>
+                <!-- Content for Hardware step goes here -->
+                <div class="panel panel-primary">
+                    <div class="panel-body form-horizontal">
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="required">Type<span style="color:red;">*</span> </label>
+                                <select class="form-control" [formControl]="type" [(ngModel)]="Type" name="type" (change)="onTypeChange()">
+                                    <option value="">-- Choose Type --</option>
+                                    <option value="1">BayNumber</option>
+                                    <option value="2">InStock</option>
+                                </select>
+
+                                <mat-error *ngIf="hardwareStepFormGroup.get('type')?.hasError('required') && hardwareStepFormGroup.get('type')?.touched">
+                                    Please select the type.
+                                  </mat-error>
+                            </div>
+                        </div>
+
+                        <br>
+                        <div class="row">
+                            <div class="col">
+                                <label class="required">Bay No<span style="color:red;">*</span></label>
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" [formControl]="bayno" [(ngModel)]="BayNo" [disabled]="baynodisable"
+                                    name="bayno" />
+
+                                    <mat-error *ngIf="hardwareStepFormGroup.get('bayno')?.hasError('required') && hardwareStepFormGroup.get('bayno')?.touched">
+                                        Please fill the baynumber.
+                                      </mat-error>
+                            </div>
+
+                            <div class="col">
+                                <label class="required">Location <span style="color:red;">*</span></label>
+                            </div>
+                            <div class="col">
+                                <textarea rows="3" type="text" class="form-control" [formControl]="location" [(ngModel)]="Location"
+                                    name="location"></textarea>
+                                    <mat-error *ngIf="hardwareStepFormGroup.get('location')?.hasError('required') && hardwareStepFormGroup.get('location')?.touched">
+                                        Please fill the location.
+                                      </mat-error>
+                            </div>
+                        </div>
+                        <br>
+
+                        <div class="row">
+                            <div class="col">PC Name</div>
+                            <div class="col">
+                                <textarea rows="3" type="text" class="form-control" [(ngModel)]="PcName"
+                                    name="pcname"></textarea>
+                            </div>
+
+                            <div class="col"><label class="required">PC Type<span style="color:red;">*</span></label>
+                            </div>
+                            <div class="col">
+                                <select class="form-control" [formControl]="pctype" [(ngModel)]="PcType" name="pctype">
+                                    <option value="">-- Choose PC Type --</option>
+                                    <option *ngFor="let item of HardwareData" [value]="item.id"
+                                        [selected]="item.description === PcTypeV">{{item.description}}</option>
+                                </select>
+                                <mat-error *ngIf="hardwareStepFormGroup.get('pctype')?.hasError('required') && hardwareStepFormGroup.get('pctype')?.touched">
+                                    Please fill the pc type.
+                                  </mat-error>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col">Monitor</div>
+                            <div class="col">
+                                <input type="text" class="form-control" [(ngModel)]="Monitor" name="monitor" />
+                            </div>
+
+                            <div class="col">Monitor Serial Number</div>
+                            <div class="col">
+                                <input type="text" class="form-control" [(ngModel)]="MonitorSno" name="monitorSno" />
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col">Keyboard</div>
+                            <div class="col">
+                                <input type="text" class="form-control" [(ngModel)]="keyboard" name="keyboard" />
+                            </div>
+
+                            <div class="col">Keyboard Serial Number</div>
+                            <div class="col">
+                                <input type="text" class="form-control" [(ngModel)]="keyboardSno" name="keyboardSNo" />
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col">Roll</div>
+                            <div class="col">
+                                <input type="text" class="form-control" [(ngModel)]="Roll" name="roll" />
+                            </div>
+
+                            <div class="col">Division</div>
+                            <div class="col">
+                                <input type="text" class="form-control" [(ngModel)]="Division" name="division" />
+                            </div>
+                        </div>
+
+                        <br>
+                        <div class="row">
+                            <div class="col">Brand</div>
+                            <div class="col">
+                                <input type="text" class="form-control" [(ngModel)]="Brand" name="brand" />
+                            </div>
+
+                            <div class="col">Model</div>
+                            <div class="col">
+                                <input type="text" class="form-control" [(ngModel)]="Model" name="model" />
+                            </div>
+                        </div>
+                        <br>
+
+                        <div class="row">
+                            <div class="col">Warranty Details</div>
+                            <div class="col">
+                                <input type="text" class="form-control" [(ngModel)]="WarrantyDetails"
+                                    name="warrantydetails" />
+                            </div>
+
+                            <div class="col">RAM</div>
+                            <div class="col">
+                                <input type="text" class="form-control" [(ngModel)]="RAM" name="ram" />
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col">Processor</div>
+                            <div class="col">
+                                <input type="text" class="form-control" [(ngModel)]="Processor" name="Processor" />
+                            </div>
+
+                            <div class="col">Graphics</div>
+                            <div class="col">
+                                <input type="text" class="form-control" [(ngModel)]="Graphics" name="graphics" />
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col">HDD</div>
+                            <div class="col">
+                                <input type="text" class="form-control" [(ngModel)]="HDD" name="hdd" />
+                            </div>
+
+                            <div class="col">TAG Number</div>
+                            <div class="col">
+                                <input type="text" class="form-control" [(ngModel)]="TAGNumber" name="TagNo" />
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col">MAC Address</div>
+                            <div class="col">
+                                <input type="text" class="form-control" [(ngModel)]="MacAddress" name="MacAddress" />
+                            </div>
+
+                            <div class="col">OS</div>
+                            <div class="col">
+                                <input type="text" class="form-control" [(ngModel)]="OS" name="os" />
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col">IP Address</div>
+                            <div class="col">
+                                <input type="text" class="form-control" [(ngModel)]="IPAddress" name="IPAddress" />
+                            </div>
+
+                            <div class="col"><label class="required">Server Type</label></div>
+                            <div class="col">
+                                <select class="form-control" [(ngModel)]="ServerType" name="servertype">
+                                    <option value="">-- Choose Server Type --</option>
+                                    <option *ngFor="let item of GetSTD " [value]="item.id"
+                                        [selected]="item.description === ServerTypeV">{{item.description}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col">Invoice Date</div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <input matInput [matDatepicker]="picker" [(ngModel)]="InvoiceDate"
+                                        name="InvoiceDate" />
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col">Invoice Number</div>
+                            <div class="col">
+                                <input type="text" class="form-control" [(ngModel)]="InvoiceNumber" name="Invoiceno" />
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col">Mouse</div>
+                            <div class="col">
+                                <input type="text" class="form-control" [(ngModel)]="Mouse" name="mouse" />
+                            </div>
+
+                            <div class="col">Mouse Serial Number</div>
+                            <div class="col">
+                                <input type="text" class="form-control" [(ngModel)]="MouseSNO" name="mouseSno" />
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-6"><label class="required">Working Status<span
+                                        style="color:red;">*</span></label>
+                                <select class="form-control" [formControl]="workingstatus" [(ngModel)]="WorkingStatus" name="workingstatus">
+                                    <option value="">-- Choose Working status --</option>
+                                    <option *ngFor="let item of GetWSD" [value]="item.id"
+                                        [selected]="item.description === WorkingStatusV">{{item.description}}</option>
+                                </select>
+
+                                <mat-error *ngIf="hardwareStepFormGroup.get('workingstatus')?.hasError('required') && hardwareStepFormGroup.get('workingstatus')?.touched">
+                                    Please fill the workingstatus.
+                                  </mat-error>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+            <div style="float:right">
+                <button class="btn btn-success" matStepperNext (click)="data ? secondadd() : firstAdd()">Next</button>
+            </div>
+        </mat-step>
+
+        <!-- Step 2: Software -->
+        <mat-step [stepControl]="softwareStepFormGroup">
+            <ng-template matStepLabel>Software</ng-template>
+            <div>
+                <!-- Content for Software step goes here -->
+                <div class="software">
+
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="required">Bay No</label>
+                            <input type="text" class="form-control" [value]="BayNo" [disabled]="true" name="bayno" />
+
+                        </div>
+                        <div class="col-6" *ngIf="SoftwareId && SoftwareId.length > 0">
+                            <label class="required">Software Status<span style="color:red;">*</span></label>
+                            <select class="form-control" [(ngModel)]="SoftwareStatus" name="softwarestatus">
+                                <option value="">-- Choose Software Status Type --</option>
+                                <option value="1">Compliance</option>
+                                <option value="2">Non-Compliance</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="required">Software</label>
+                            <select multiple class="form-control" style="height:150px" [(ngModel)]="SoftwareId"
+                                name="software">
+                                <option value="">-- Choose Software Type --</option>
+                                <option *ngFor="let item of SoftwareData" [value]="item.id">{{ item.description }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+
+                    <div mat-dialog-actions class="action"
+                        style="display:flex;align-items: center;justify-content: center;">
+                        <button mat-raised-button type="button" [mat-dialog-close]="false">Cancel</button>&nbsp;
+                        <!-- Update button will be displayed if data is available, otherwise Add button will be displayed -->
+                        <button mat-raised-button color="primary" type="button"
+                            (click)="data ? updateData() : softwareclick()">{{data ? 'Update' : 'Add'}}</button>
+                    </div>
+                    <br>
+                    <div class="table">
+                        <div class="example-container mat-elevation-z8">
+
+                            <mat-table class="table table-sm table-responsive" mat-table #table
+                                [dataSource]="dataSource" matSort>
+
+                                <ng-container matColumnDef="baynumber">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        <div class="header-wrapper">
+                                            <div class="department-name text-start"> Bay Number </div>
+                                            <div class="filter-input">
+                                                <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                    #input>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">{{element.bayNumber }}</td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="software">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        <div class="header-wrapper">
+                                            <div class="department-name text-start">Software</div>
+                                            <div class="filter-input">
+                                                <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                    #input>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">{{element.description}}</td>
+                                </ng-container>
+
+
+                                <ng-container matColumnDef="softwarestatus">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        <div class="header-wrapper">
+                                            <div class="department-name text-start">Software Status</div>
+                                            <div class="filter-input">
+                                                <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                    #input>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">{{element.softwareStatus}}</td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="Action">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
+                                    <td mat-cell *matCellDef="let element">
+
+                                        <a class="red-btn" matTooltip="delete" matTooltipPosition="below"
+                                            (click)="deleteEmployee(element.id)">
+                                            <mat-icon>delete</mat-icon>
+                                        </a>
+
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            </mat-table>
+                            <mat-paginator [pageSizeOptions]="[25, 50]" showFirstLastButtons></mat-paginator>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div>
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button matStepperNext (click)="softwareSubmitclick()" style="float:right">Submit</button>
+            </div>
+        </mat-step>
+    </mat-horizontal-stepper>
+
+
+
+
+
+
+
+</body>
+
+</html>

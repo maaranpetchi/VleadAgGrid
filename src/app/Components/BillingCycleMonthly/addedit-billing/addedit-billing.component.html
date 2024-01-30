@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body style="height:123vh">
+    <div class="container">
+        <div class="advance">
+            <div class="customerProfile">
+                <div class="backgroundcolor">
+                    <div class="panel-heading">
+                        <h2 class="panel-title"
+                            style="color:#fff;display: flex;text-align: center;justify-content: center;font-family: 'Times New Roman', Times, serif;">
+                            Add Billing Cycle
+                        </h2>
+                    </div>
+                    <form >
+
+                    <div class="container">
+                        
+                        <div class="row">
+                            <div class="col-6">
+                                <mat-form-field>
+                                    <mat-label>Customer</mat-label>
+                                    <mat-select [(ngModel)]="CustomerId" [ngModelOptions]="{standalone: true}">
+                                      <mat-option *ngFor="let customer of customers"  [value]="{ customerId: customer.id, Customername:customer.shortName }">
+                                        {{ customer.shortName }}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field>
+                                    <mat-label>Department</mat-label>
+                                    <mat-select [(ngModel)]="DepartmentId" [ngModelOptions]="{standalone: true}">
+                                      <mat-option [value]="{ departmentId: 1, Departmentname: 'Artwork'}">Artwork</mat-option>
+                                      <mat-option [value]="{ departmentId: 2, Departmentname: 'Digitizing'}">Digitizing</mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field>
+                                    <input matInput [matDatepicker]="picker" [(ngModel)]="billingDate" [ngModelOptions]="{standalone: true}" placeholder="Billing Date">
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                  </mat-form-field>
+                            </div>
+
+                        </div>
+
+                        <div class="row" style="float:right;">
+                            <div class="col-6">
+                                <button type="button" (click)="submit()" class="btn btn-success">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

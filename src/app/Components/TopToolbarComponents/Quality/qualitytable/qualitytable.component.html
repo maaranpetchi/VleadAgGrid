@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body style="height: 123vh;">
+    <div class="container">
+        <div class="advance">
+            <div class="customerProfile">
+                <div class="backgroundcolor">
+                    <div class="panel-heading">
+                        <h2 class="panel-title" style="color:#fff;">
+                            Quality
+                        </h2>
+                    </div>
+
+                    <div class="table-container">
+
+                        <table class="table table-sm table-responsive" mat-table #table [dataSource]="dataSource"
+                            id="custom-table">
+                            <!--Checkbox to select the values-->
+                            <ng-container matColumnDef="selected">
+                                <th mat-header-cell *matHeaderCellDef> Select </th>
+                                <td mat-cell *matCellDef="let element"> <mat-checkbox
+                                        (change)="setAll($event.checked,element)"></mat-checkbox>
+                                </td>
+
+                            </ng-container>
+                            <!-- Job ID Column -->
+                            <ng-container matColumnDef="jobId">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start"> Job Id </div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job"> <a class="workflow"
+                                        (click)="openJobDetailsDialog(job)"> {{ job.jobId }}
+                                    </a> </td>
+                            </ng-container>
+
+                            <!-- Job Name Column -->
+                            <ng-container matColumnDef="estjob">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start"> EST Job/Query Date </div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job"> {{ job.jobDateEst }} </td>
+                            </ng-container>
+                            <!-- Client Column -->
+                            <ng-container matColumnDef="action">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start"> Actions </div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job"> <a class="workflow" (click)="lnkviewedit(job)">
+                                        Workflow</a> </td>
+                            </ng-container>
+                            <ng-container matColumnDef="client">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start"> Client </div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job"> {{ job.shortName }} </td>
+                            </ng-container>
+                            <!-- Customer Satisfaction Column -->
+                            <ng-container matColumnDef="customerSatisfaction">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start"> Customer Classification </div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job"> {{ job.customerClassification }} </td>
+                            </ng-container>
+                            <!-- File Name Column -->
+                            <ng-container matColumnDef="fileName">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start"> File Name </div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job"> {{ job.fileName }} </td>
+                            </ng-container>
+                            <!-- File Inward Mode Column -->
+                            <ng-container matColumnDef="fileInwardMode">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start"> File Inward Mode </div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job"> {{ job.fileInwardType }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="scope">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start"> Scope </div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job"> {{ job.scopeDesc }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="jobstatus">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start"> Job Status </div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job"> {{ job.jobStatusDescription }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="projectcode">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start"> Project Code </div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job"> {{ job.projectCode }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="allocatedby">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start"> Allocated By </div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job"> {{ job.assignedFrom }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="processstatus">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start"> Process Status </div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job"> {{ job.workStatus }} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="esttime">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start"> Est Time </div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job"> {{ job.estimatedTime }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="jobcategeory">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start"> Job Category </div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job"> {{ job.jobCategoryDesc }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="deliverydate">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start"> Delivery Date </div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job"> {{ job.dateofDelivery }} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="start">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-center">Start </div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job"> <a
+                                        *ngIf="job.workStatus !== 'Working'"
+                                        style="cursor:pointer;color:rgb(0, 140, 255)"
+                                        (click)="changeWorkflow(job,'Start')">Start</a>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="workfiles">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-center">Workfiles </div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job"> <a
+                                        style="cursor:pointer;color:rgb(0, 140, 255)">Workfiles</a> </td>
+                            </ng-container>
+                            <ng-container matColumnDef="end">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-center">End </div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td [ngClass]="getCellClass(job)" mat-cell *matCellDef="let job"> <a
+                                        (click)="changeWorkflow(job,'End')"
+                                        style="cursor:pointer;color:rgb(0, 140, 255)">End</a> </td>
+                            </ng-container>
+                            <!-- Table Header -->
+                            <tr mat-header-row *matHeaderRowDef="visibility()"></tr>
+
+                            <!-- Table Rows -->
+                            <tr mat-row *matRowDef="let job; columns: visibility();"></tr>
+                        </table>
+                    </div>
+                    <mat-paginator [pageSizeOptions]="[25, 50]" showFirstLastButtons></mat-paginator>
+
+                </div>
+
+
+            </div>
+            <div class="scope" style="float: right;" *ngIf="scopeDisplay">
+                <mat-form-field>
+                    <mat-label>Scope</mat-label>
+                    <mat-select [(ngModel)]="scopeid" name="scopeid">
+                        <mat-option *ngFor="let item of ScopeApiData" [value]="item.id">
+                            {{ item.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

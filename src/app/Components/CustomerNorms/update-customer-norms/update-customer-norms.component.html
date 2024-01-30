@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body style="height: 123vh;">
+    <div class="customerProfile">
+        <div class="backgroundcolor">
+            <div class="panel-heading">
+                <h2 class="panel-title" style="color:#fff;display: flex;align-items: center;justify-content: center;">
+                    Customer Norms </h2>
+            </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label>Department</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input readonly [(ngModel)]="Departmentname">
+                    </div>
+                </div>
+<br>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label>Customer</label>
+                    </div>
+                    <div class="col-lg-8">
+
+                        <input readonly [(ngModel)]="CustomerShortName">
+                    </div>
+                </div>
+                <br>
+                
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label>Scope</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input readonly [(ngModel)]="ScopeName">
+                    </div>
+                </div>
+                <br>
+                
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label>Status</label>
+                    </div>
+                    <div class="col-lg-8">
+
+                        <input readonly [(ngModel)]="Jobstatus">
+                    </div>
+                </div>
+                <br>
+                
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label>Process</label>
+                    </div>
+                    <div class="col-lg-8">
+
+                        <input readonly [(ngModel)]="Processname">
+                    </div>
+                </div>
+                <br>
+                
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label>Division</label>
+                    </div>
+                    <div class="col-lg-8">
+
+                        <input readonly [(ngModel)]="DivisionName">
+                    </div>
+                </div>
+                <br>
+                
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label>Norms</label>
+                    </div>
+
+                    <div class="col-xs-4">
+                        <input type="number" class="form-control" tabindex="2" name="NormNo"
+                            [(ngModel)]="Norms" ng-required="true">
+        
+                    </div>
+                </div>
+                <br>
+                <br>
+
+                <div class="panel-heading">
+                    <button type="button" class="btn btn-primary" (click)="Cancel()">Cancel</button>
+                    <button type="button" id="panel-title" style="float:right" class="btn btn-success" (click)="update()">Update</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

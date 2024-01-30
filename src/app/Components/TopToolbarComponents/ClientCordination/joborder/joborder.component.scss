@@ -1,0 +1,54 @@
+.example-spacer {
+  flex: 1 1 auto;
+}
+.addemployee{
+  padding-left: 10px;
+}
+.main-body {
+  padding-top: 20px;
+  margin: 0 auto;
+  max-width: 1348px;
+  mat-form-field {
+    width: 60%;
+  }
+}
+
+.employee{
+  font-weight: bold;
+}
+.joborder {
+  padding: 20px;
+}
+.action {
+  display: flex;
+  gap: 5px;
+}
+
+.container {
+  // display: grid; 
+  grid-template-columns: 0.1fr 6.3fr 0.1fr; 
+  grid-template-rows: 0.1fr 1.8fr 1.3fr; 
+  gap: 0px 0px; 
+  grid-template-areas: 
+    ". . ."
+    ". formgroup ."
+    ". . ."; 
+}
+.no-asterisk .mat-form-field-required-marker {
+  display: none;
+}
+.card-body{
+  background-image: linear-gradient(to bottom,#5cadd6 0,#1e86ba 100%);
+}
+.small-input {
+  width: 100%;
+  max-width: 200px; /* Adjust the maximum width as per your requirement */
+}
+
+.small-mat-label {
+  font-size: 12px; /* Adjust the font size as per your preference */
+}
+mat-form-field{
+  width: 380px;
+  height: 70px;
+}

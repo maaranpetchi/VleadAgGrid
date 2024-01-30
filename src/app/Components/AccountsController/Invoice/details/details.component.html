@@ -1,0 +1,137 @@
+<form (ngSubmit)="submitForm()">
+    <h2
+        style="display: flex;align-items: center;justify-content: center;background-color: #0e73a9;color: white;font-family: 'Times New Roman', Times, serif;">
+        Discount</h2>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <label for="clientName">Client Name</label>
+            </div>
+            <div class="col">
+                <p>{{this.data1.shortName}}</p>
+            </div>
+        </div>
+
+
+
+
+        <div class="row">
+            <div class="col">
+                <label for="invoiceNumber">Invoice Number</label>
+            </div>
+            <div class="col">
+                <p>{{this.data1.invoiceNo}}</p>
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col">
+                <label for="invoiceDate">Invoice Date</label>
+            </div>
+            <div class="col">
+                <p>{{this.data1.invoiceDate}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                ____________________________________________________________________________
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <label for="Total Product Value">Total Product Value</label>
+            </div>
+            <div class="col">
+                <p>{{this.data1.productValue}}</p>
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col">
+                <label for="waiveramount">Waiver Amount</label>
+            </div>
+            <div class="col">
+                <p>{{this.data1.waiver}}</p>
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col">
+                <label for="waiveramount">Product Values After Waiver</label>
+            </div>
+            <div class="col">
+                <p>{{this.data1.receivableValue}}</p>
+            </div>
+        </div>
+
+
+
+
+        <div class="row">
+            <div class="col">
+                <label for="roundoff">Round Off</label>
+            </div>
+            <div class="col">
+                <p>{{this.data1.roundOff}}</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <label for="roundoff">Value</label>
+            </div>
+            <div class="col">
+                <p>{{this.data1.invoiceValue}}</p>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="radio-container">
+                    <mat-label>Discount Type</mat-label>
+                    <mat-radio-group [(ngModel)]="selectedOption"  name="selectedOption" [value]="selectedOption">
+                        <mat-radio-button value="0">Percentage</mat-radio-button>
+                        <mat-radio-button value="1">Normal</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col">
+                <label>Discount</label>
+                <span>
+                    <input id="discount" style="width:75px" min="0" [(ngModel)]="txtdiscount" name="txtdiscount" (input)="txtcountchange()" type="number" />
+                    <label>&nbsp; of &nbsp;</label>
+                    <label>${{ this.data1.invoiceValue }}</label>
+                </span>
+            </div>
+
+            <div class="col">
+                <label [(ngModel)]="lbldiscount" name="lbldiscount"> {{this.discountamount}}</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col"><label for="totalinvoicevalue">Total Invoice Value</label></div>
+            <div class="col"><label *ngIf="displayLastInvoice" [(ngModel)]="lblamount" name="lblamount"> {{this.amount}}</label>
+                <label *ngIf="displayFirstInvoice"> {{this.data1.totalInvoiceValue}}</label>
+            
+            </div>
+        </div>
+        <!-- Add more fields for Total Product Value, Waiver Amount, etc. -->
+
+        <button type="submit" class="btn btn-success">Submit</button>
+    </div>
+</form>

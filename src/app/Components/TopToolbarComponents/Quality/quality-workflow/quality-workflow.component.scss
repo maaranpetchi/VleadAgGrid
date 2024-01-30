@@ -1,0 +1,97 @@
+.Table {
+  display: table;
+  border: 7px solid #1E64A0;
+}
+
+#close{
+cursor:pointer;
+}
+
+
+body{
+  overflow-x: scroll;
+}
+.Row {
+  display: table-row;
+}
+
+.Cell {
+  display: table-cell;
+  border: 1px solid rgba(171, 173, 175, 0.72);
+  border-width: thin;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: inherit;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(1, #ffffff));
+  font-weight: bold;
+  border: #D4D4D4;
+  border-bottom: 1px solid #C2C4C5;
+}
+
+.Cell1 {
+  display: table-cell;
+  border: 1px solid rgba(171, 173, 175, 0.72);
+  border-width: thin;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: inherit;
+  border: #D4D4D4;
+  border-bottom: 1px solid #C2C4C5;
+  border-left: 1px solid #C2C4C5;
+}
+
+.test td.ng-binding {
+  text-align: -webkit-center;
+  width: 20%;
+}
+
+.test table {
+  border: 0px;
+}
+
+.modal-dialog {
+  width: 820px;
+}
+
+.mat-table {
+  width: 100%;
+}
+
+.hidden {
+  display: none;
+}
+
+.text-color-red {
+  color: red;
+}
+
+.container{
+  display: grid;
+  grid-template-columns: 0.6fr 95.4fr 3fr;
+  grid-template-rows: -0.8fr 1.9fr 0.9fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+      ". . ."
+      ". . ."
+      ". . .";
+}
+
+
+
+
+.status {
+  width: 17vw;
+}
+
+.form-control {
+  width: 74%;
+}
+
+select#ddlerrorCategory {
+  width: 53%;
+}
+
+select#ddlprocessstatus {
+    width: 53%;
+}

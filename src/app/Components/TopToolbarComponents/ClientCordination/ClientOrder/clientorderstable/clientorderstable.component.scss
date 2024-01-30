@@ -1,0 +1,87 @@
+.division{
+    display: flex;
+    justify-content: center;
+}
+
+.filecount{
+    width: 50%;
+}
+
+.actionicon:hover {
+cursor: pointer;
+}
+
+  .mat-mdc-paginator {
+    display: block;
+    // width: 85vw;
+}
+.mat-elevation-z8{
+overflow-x: auto;
+}
+
+#table-container {
+  height: 69vh; /* Set a fixed height of 50% of the viewport height */
+  overflow-y: auto;  
+}
+#custom-table {
+  width: 75%; /* Set the table width to 75% of its container */
+  border-collapse: collapse; /* Optional: Collapse borders between table cells */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+th {
+  background-color: #f2f2f2;
+  position: sticky;
+  top: 0;
+}
+
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+//Table Color
+.text-color-green {
+  color: rgb(53, 157, 53)
+}
+
+.text-color-brown {
+  color: rgb(178, 50, 50)
+}
+
+.text-color-blue {
+  color: rgb(62, 62, 255)
+}
+
+.text-color-DeepSkyBlue {
+  color: deepskyblue
+}
+
+.text-color-yellow {
+  color: rgb(252, 252, 109);
+}
+
+.text-color-red {
+  color: rgb(247, 87, 87);
+}
+
+.SuperRush {
+  color: #ff00e1
+}
+
+.Rush {
+  color: #cc00cb
+}

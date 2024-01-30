@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="extensions/resizable/bootstrap-table-resizable.js"></script>
+</head>
+
+<body>
+    <div class="main-body">
+        <div class="productionmain">
+            <h1 style="font-family:'Times New Roman', Times, serif;color:#137cdf">Total
+                Customers({{ApprovedCustomerCount +
+                UnApprovedCustomerCount}})</h1>
+            <mat-tab-group dynamicHeight (selectedTabChange)="onTabChange($event)">
+                <mat-tab
+                    label="{{ 'Un Approved Customers (' + (UnApprovedCustomerCount ? UnApprovedCustomerCount:0) + ')' }}">
+                </mat-tab>
+                <mat-tab
+                    label="{{ 'Approved  Customers (' +(ApprovedCustomerCount ? ApprovedCustomerCount:0)  + ')' }}">
+                </mat-tab>
+
+            </mat-tab-group>
+
+            <div>
+                <app-tabcustomertable></app-tabcustomertable>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

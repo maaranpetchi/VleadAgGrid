@@ -1,0 +1,83 @@
+<div class="container">
+  <!-- <div class=""> -->
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md">
+          <h3 class="text-white">
+            <span class="scope-text text-start">Edit Scope</span>
+          </h3>
+        </div>
+      </div>
+      <!-- <div class=" bg-white"> -->
+      <!-- <form [formGroup]="userRegistrationForm"> -->
+      <div class="bg-white">
+        <div class="row">
+          <div class="col-md-4 mt-2 mx-4">
+            <h3>File Name</h3>
+          </div>
+          <div class="col-md-4 mt-2  mx-4">
+            {{responseData.fileName}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 mt-2 mx-4">
+            <h3>PO#</h3>
+          </div>
+          <div class="col-md-4 mt-2  mx-4">
+            {{responseData.pono}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 mt-2 mx-4">
+            <h3>Sales Person Name</h3>
+          </div>
+          <div class="col-md-4 mt-2  mx-4">
+            {{responseData.salesPersonName}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 mt-2 mx-4">
+            <h3>Instruction</h3>
+          </div>
+          <div class="col-md-4 mt-2  mx-4">
+            {{responseData.instruction}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 mt-2 mx-4">
+            <h3> Department</h3>
+          </div>
+          <div class="col-md-4 mt-2 mx-4" *ngIf="responseData.workType==1">
+            Artwork
+          </div>
+          <div class="col-md-4 mt-2 mx-4" *ngIf="responseData.workType==2">
+            Digitizing
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mt-2 mx-4">
+            <h3>Job Status</h3>
+          </div>
+          <div class="col-md-6 mt-2  mx-4">
+            {{responseData.jobStatusDescription}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 mt-2 mx-4">
+            <h3>Input File Folder</h3>
+          </div>
+          <div class="col-md-4 mt-2  mx-4">
+            <button (click)="workFiles(responseData.fileUploadPath)">WorkFiles</button><button>Zip</button>
+          </div>
+        </div>
+      </div>
+      <!-- </div> -->
+      <div class="col-12 mt-5">
+        <button class="float-left" mat-raised-button color="primary" (click)="onCancel()">Back</button>
+      </div>
+      <!-- </form> -->
+    </div>
+  </div>
+  <!-- </div> -->
+</div>

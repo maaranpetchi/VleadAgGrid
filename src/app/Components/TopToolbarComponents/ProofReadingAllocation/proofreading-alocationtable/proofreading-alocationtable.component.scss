@@ -1,0 +1,84 @@
+.example-spacer {
+    flex: 1 1 auto;
+  }
+  .addemployee{
+    padding-left: 10px;
+  }
+  .main-body {
+    padding-top: 20px;
+    margin: 0 auto;
+    max-width: 1348px;
+    mat-form-field {
+      width: 40%;
+    }
+  }
+  
+  .action {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .container {
+    // display: grid; 
+    grid-template-columns: 0.1fr 6.3fr 0.1fr; 
+    grid-template-rows: 0.1fr 1.8fr 1.3fr; 
+    gap: 0px 0px; 
+    grid-template-areas: 
+      ". . ."
+      ". formgroup ."
+      ". . ."; 
+  }
+  .formgroup { grid-area: formgroup; }
+
+  .exchangeheader{
+    width: 20px;;
+  }
+
+  .mat-elevation-z8{
+    overflow-x: scroll;
+  }
+  .clickable-link {
+    cursor: pointer;
+  }
+  .table-container {
+    height: 50vh; /* Set a fixed height of 50% of the viewport height */
+    overflow-y: auto;    
+  }
+  #custom-table {
+    width: 75%; /* Set the table width to 75% of its container */
+    border-collapse: collapse; /* Optional: Collapse borders between table cells */
+  }
+
+
+  //Table Color
+.text-color-green {
+  color: rgb(53, 157, 53)
+}
+
+.text-color-brown {
+  color: rgb(178, 50, 50)
+}
+
+.text-color-blue {
+  color: rgb(62, 62, 255)
+}
+
+.text-color-DeepSkyBlue {
+  color: deepskyblue
+}
+
+.text-color-yellow {
+  color: rgb(252, 252, 109);
+}
+
+.text-color-red {
+  color: rgb(253, 114, 114);
+}
+
+.SuperRush {
+  color: #ff00e1
+}
+
+.Rush {
+  color: #cc00cb
+}

@@ -1,0 +1,14 @@
+.container { 
+    
+    grid-template-columns: 0.6fr 0.9fr 1.5fr;
+    grid-template-rows: 0.9fr 1.1fr 1fr;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    grid-template-areas:
+      ". sewout ."
+      ". . ."
+      ". . .";
+  }
+  
+  .sewout { grid-area: sewout; }
+  

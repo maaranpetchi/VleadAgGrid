@@ -1,0 +1,257 @@
+<div class="container">
+    <div class="workflow">
+
+        <form action="">
+            <h1 style="font-family: 'Times New Roman', Times, serif;color:#396bb5">Work Flow</h1>
+            <div class="jobhistory">
+                <div class="row">
+                    <div class="col">
+                        <p class="control-label font-bold">Job Id: &nbsp;{{data.jobId}}</p>
+                    </div>
+                    <div class="col">
+                        <p>Job Date: &nbsp;{{data.jobDate}}</p>
+                    </div>
+                    <div class="col">
+                        <p>Sales Person:&nbsp; {{data.salesPersonName}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Department:&nbsp;{{data.department}}</p>
+                    </div>
+                    <div class="col">
+                        <p>Estimated Time:&nbsp;{{data.estimatedTime?data.estimatedTime:0 + "Minutes"}}</p>
+                    </div>
+                    <div class="col">
+                        <p>PO#:&nbsp;{{data.poNo}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Client:&nbsp;&nbsp;{{data.shortName}}</p>
+                    </div>
+                    <div class="col">
+                        <p>Assigned Date & Time :&nbsp;{{data.jobDateEst}}</p>
+                    </div>
+                    <div class="col">
+                        <p>Job Status:&nbsp;{{data.jobStatusDescription}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Job Desc:&nbsp;{{data.jobDescription}}</p>
+                    </div>
+                    <div class="col">
+                        <p>File Name:&nbsp;{{data.fileName}}</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <p>Instructions:&nbsp;{{data.instruction}}</p>
+                    </div>
+                    <div class="col-6">
+                        <p>Garment Color: &nbsp;{{data.color}}</p>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <a routerLink="/topnavbar/sewout" style="color:#3988b5; float:left">Back</a>
+                            <p style="color:#3988b5;float: right;" (click)="viewDetails(data)">View Details</p>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <div class="col" style="display: flex; gap: 5px; justify-content: center;">
+                            <div class="col-sm-offset-4">
+                                <button class="btn btn-success" (click)="changeWorkType('Start')">Start</button>
+
+                                <button class="btn btn-warning" (click)="changeWorkType('Break')"
+                                    [disabled]="disableWorkType">Break</button>
+                                <span style="margin-right: 5px;"></span>
+                                <button class="btn btn-primary" (click)="changeWorkType('Training / Meeting')"
+                                    [disabled]="disableWorkType">Training / Meeting</button>
+                                <span style="margin-right: 5px;"></span>
+                                <button class="btn btn-warning" (click)="changeWorkType('Hold')"
+                                    [disabled]="disableWorkType">Hold</button>
+                                <span style="margin-right: 5px;"></span>
+                                <button class="btn btn-info" (click)="changeWorkType('Others')"
+                                    [disabled]="disableWorkType">Others</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="downloadbuttons">
+                <div class="row">
+                    <div class="col">
+                        <p>Work File Folder:
+                            <button type="button" class="btn btn-primary">WorkFiles</button>&nbsp; <button type="button"
+                                class="btn btn-primary">Zip</button>
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Input File Folder:&nbsp;&nbsp;
+                            <button type="button" class="btn btn-primary">WorkFiles</button>&nbsp; <button type="button"
+                                class="btn btn-primary">Zip</button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="jobtable">
+                <div class="row">
+                    <div class="col-6">
+                        <mat-table [dataSource]="jobWorkDetails" matSort>
+                          
+                            <ng-container matColumnDef="StartDate">
+                              <mat-header-cell *matHeaderCellDef>Start Date & Time</mat-header-cell>
+                              <mat-cell *matCellDef="let element">{{ element.startDate | date: 'MM-dd-yyyy hh:mm:ss' }}</mat-cell>
+                            </ng-container>
+                          
+                            <ng-container matColumnDef="EndDate">
+                              <mat-header-cell *matHeaderCellDef>End Date & Time</mat-header-cell>
+                              <mat-cell *matCellDef="let element" [ngClass]="{'text-color-red': element.endDate === null}">
+                                {{ element.endDate === null ? dates[0].date1 : element.endDate | date: 'MM-dd-yyyy HH:mm:ss' }}
+                              </mat-cell>
+                            </ng-container>
+                          
+                            <ng-container matColumnDef="TotalTimeTaken">
+                              <mat-header-cell *matHeaderCellDef>Time Taken in Mins</mat-header-cell>
+                              <mat-cell *matCellDef="let element">{{ element.totalTimeTaken }}</mat-cell>
+                            </ng-container>
+                          
+                            <ng-container matColumnDef="Status">
+                              <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+                              <mat-cell *matCellDef="let element">{{ element.status }}</mat-cell>
+                            </ng-container>
+                          
+                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                          </mat-table>
+                          
+                    </div>
+                    <div class="col-4">
+
+                        <div class="Table">
+                            <div class="Row">
+                                <div class="Cell">
+                                    <p>Total Time Worked</p>
+                                </div>
+                                <div class="Cell1">
+                                    <p>{{ TotalTimeWorked }} Minutes</p>
+                                </div>
+                            </div>
+                            <div class="Row">
+                                <div class="Cell">
+                                    <p>Break</p>
+                                </div>
+                                <div class="Cell1">
+                                    <p>{{Break}} Minutes</p>
+                                </div>
+                            </div>
+                            <div class="Row">
+                                <div class="Cell">
+                                    <p>Training/Meeting</p>
+                                </div>
+                                <div class="Cell1">
+                                    <p>{{ Training }} Minutes</p>
+                                </div>
+                            </div>
+                            <div class="Row">
+                                <div class="Cell">
+                                    <p>Hold</p>
+                                </div>
+                                <div class="Cell1">
+                                    <p>{{ Hold }} Minutes</p>
+                                </div>
+                            </div>
+                            <div class="Row">
+                                <div class="Cell">
+                                    <p>Others</p>
+                                </div>
+                                <div class="Cell1">
+                                    <p>{{ Others }} Minutes</p>
+                                </div>
+                            </div>
+                            <div class="Row">
+                                <div class="Cell">
+                                    <p>Total Time Taken</p>
+                                </div>
+                                <div class="Cell1">
+                                    <p>{{ TotalTimeTaken }} Minutes</p>
+                                </div>
+                            </div>
+                            <div class="Row" *ngIf="data.processName === 'Production'">
+                                <div class="Cell">
+                                    <p>Estimated time</p>
+                                </div>
+                                <div class="Cell1">
+                                    <p>{{ Estimatedtime }} Minutes</p>
+                                </div>
+                            </div>
+                            <div class="Row" *ngIf="data.processName === 'Production'">
+                                <div class="Cell">
+                                    <p>Deviation (+), (-)</p>
+                                </div>
+                                <div class="Cell1">
+                                    <p>{{ Deviation }} Minutes</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <br>
+            <div class="dropdowns">
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Process Status</mat-label>
+                            <mat-select [(ngModel)]="selectedStatus" name="status" (selectionChange)="onScopeChange()">
+                                <mat-option *ngFor="let status of processStatuses" [value]="status">{{ status
+                                    }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col" *ngIf="showCopyFilesCheckbox">
+                        <mat-label>Copy Files</mat-label>
+                        <mat-checkbox [(ngModel)]="copyFiles" name="checked" [disabled]="disableCopyFiles"><span>Copy Previous
+                                Tray Files</span></mat-checkbox>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field>
+                            <textarea matInput placeholder="Remarks" [(ngModel)]="remarks" name="remarks"></textarea>
+                        </mat-form-field>
+
+                    </div>
+                    <div class="col">
+                        <input type="file" (change)="onFileSelected($event)">
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field>
+                            <mat-label>Scope</mat-label>
+                            <mat-select [(value)]="selectedScopeValue">
+                                <mat-option *ngFor="let value of scopeApiValues"
+                                    [value]="value.id">{{value.name}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-danger">End</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

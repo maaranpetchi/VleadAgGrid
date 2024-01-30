@@ -1,0 +1,307 @@
+<mat-toolbar color="primary" class="topToolbar">
+<div class="logoImage">
+   <a routerLink="dashboard" style="cursor: pointer;"><img src="http://www.vleadservices.com/wp-content/uploads/2017/06/logo.png" alt=""
+      style="max-width: 60%;"></a>
+</div>
+
+<div class="textCenter">
+   <span style="color:red">V</span>is <span style="color:red">I</span>nformation <span style="color:red">S</span>ystem
+    <p class="version" style="font-family: 'Open Sans';font-size: 17px;">Ver[3.0.0]</p>
+</div>
+
+<div class="lastcontent">
+<a class="last" (click)="birthday()"><img src="../../../../../assets/Images/BirthdayImage_003.png" alt="birthday" id="birthday"></a>
+
+<a class="last" (click)="anniversary()"><img src="../../../../../assets/Images/Anniversary_New.png" alt="anniversary" id="anniversary"></a>
+
+<label class="userloginname">Welcome {{ getloginusername() }}</label>
+ <mat-button mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon class="last">settings</mat-icon>
+  </mat-button>
+
+  <mat-menu #menu="matMenu">
+    <button (click)="openchangepassword()" mat-menu-item>
+      <mat-icon>account_circle</mat-icon>ChangePassword
+    </button>
+    <button (click)="logout()" mat-menu-item>
+      <mat-icon>lock_open</mat-icon> Logout
+    </button>
+  </mat-menu>
+</div>
+</mat-toolbar>
+
+<div class="toptoolbar">
+  <mat-toolbar style="justify-content: center;">
+    <span style="display: flex;">
+      <div class="toptoolbar" *ngFor="let process of Processes">
+        <img [ngClass]="{
+            'clientcoordination': process.id == 1,
+            'ProductionAllocation': process.id == 2,
+            'Production': process.id == 3,
+            'QualityAllocation': process.id == 4,
+            'Quality': process.id == 5,
+            'ProofReadingAllocation': process.id == 6,
+            'ProofReading': process.id == 7,
+            'BuddyProof': process.id == 9,
+            'SewOut': process.id == 11,
+            'Reports': process.id == 13
+          }" style="padding: 30px;background-repeat: no-repeat;cursor: pointer;" src="" alt="" srcset=""
+          [matTooltip]="process.name" (click)="routeNav(process)">
+      </div>
+    </span>
+  </mat-toolbar>
+</div>
+
+
+
+
+<mat-sidenav-container class="app-container">
+  
+  <mat-sidenav #sidenav mode="side" [opened]="isSidenavOpen" [class.mat-elevation-z4]="true" [@sidenavAnimation]>
+    <mat-nav-list style="width:281px">
+      <mat-list-item routerLink="dashboard"  *ngIf="this.checkIsTrue([1],isAdmin)">
+        <span class="spanClass">
+          <mat-icon class="cached">cached</mat-icon><span >MY PROCESS</span>
+        </span>
+      </mat-list-item>
+      <mat-list-item routerLink="jobHistory" *ngIf="this.checkIsTrue([66],isAdmin)">
+        <span class="spanClass">
+        <mat-icon class="push_pin">push_pin</mat-icon> <span >JOB HISTORY</span>
+        </span>
+      </mat-list-item>
+      <mat-list-item routerLink="jobTransfer" *ngIf="this.checkIsTrue([36],isAdmin)">
+        <span class="spanClass">
+        <mat-icon class="swap_horiz">swap_horiz</mat-icon> <span >JOB TRANSFER</span>
+        </span>
+      </mat-list-item>
+
+
+
+
+      <mat-expansion-panel [class.mat-elevation-z0]="true">
+        <mat-expansion-panel-header  *ngIf="this.checkIsTrue([2,95],isAdmin)">
+          <span class="spanClass">
+          <mat-icon class="account_circle">account_circle</mat-icon> <span >EMPLOYEE</span>
+          </span>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item routerLink="Emp-Empcontroller"  *ngIf="this.checkIsTrue([2],isAdmin)">
+            <p class="sidelabel">EMPLOYEE</p>
+          </a>
+          <a mat-list-item routerLink="Emp-empvsdiv"  *ngIf="this.checkIsTrue([95],isAdmin)">
+            <p class="sidelabel">EMPLOYEE VS DIVISION</p>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [class.mat-elevation-z0]="true"
+        *ngIf="this.checkIsTrue([10,11,1074,12,13,14 ], isAdmin )">
+        <mat-expansion-panel-header>
+          <span class="spanClass">
+          <mat-icon class="account_circle">account_circle</mat-icon> <span  >CUSTOMER</span>
+          </span>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a *ngIf="this.checkIsTrue([13],isAdmin)" mat-list-item routerLink="cus-cusvsemp">
+            <p class="sidelabel">CUSTOMER VS EMPLOYEE</p>
+          </a>
+          <a *ngIf="this.checkIsTrue([14], isAdmin)" mat-list-item routerLink="cus-cusvsprocess">
+            <p class="sidelabel"> CUSTOMER VS PROCESS</p>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [class.mat-elevation-z0]="true">
+        <mat-expansion-panel-header  *ngIf="this.checkIsTrue([67,69,16,17,35,62,61,83,63,90,97], isAdmin)">
+          <span class="spanClass">
+          <mat-icon class="account_circle">account_circle</mat-icon> <span  >ACCOUNTS</span>
+          </span>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item  *ngIf="this.checkIsTrue([69], isAdmin)" routerLink="acc-pricing">
+            <p class="sidelabel">PRICING CALCULATION</p>
+          </a>
+          <a mat-list-item  *ngIf="this.checkIsTrue([16], isAdmin)" routerLink="acc-customer">
+            <p class="sidelabel">CUSTOMER RECEIPTS</p>
+          </a>
+          <a mat-list-item  *ngIf="this.checkIsTrue([17], isAdmin)" routerLink="acc-advance">
+            <p class="sidelabel">ADVANCE ADJUSTMENT</p>
+          </a>
+          <a mat-list-item  *ngIf="this.checkIsTrue([35], isAdmin)" routerLink="acc-invoice">
+            <p class="sidelabel">INVOICE</p>
+          </a>
+          <a mat-list-item  *ngIf="this.checkIsTrue([62], isAdmin)" routerLink="acc-invcan">
+            <p class="sidelabel">INVOICE CANCELLATION</p>
+          </a>
+          <a mat-list-item  *ngIf="this.checkIsTrue([61], isAdmin)" routerLink="acc-wavier">
+            <p class="sidelabel">WAVIER</p>
+          </a>
+          <a mat-list-item  *ngIf="this.checkIsTrue([83], isAdmin)" routerLink="acc-tally">
+            <p class="sidelabel">TALLY</p>
+          </a>
+          <a mat-list-item  *ngIf="this.checkIsTrue([63], isAdmin)" routerLink="acc-creditnote">
+            <p class="sidelabel">CREDIT NOTE</p>
+          </a>
+          <a mat-list-item  *ngIf="this.checkIsTrue([90], isAdmin)" routerLink="acc-scopechange">
+            <p class="sidelabel">SCOPE CHANGE</p>
+          </a>
+          <a mat-list-item  *ngIf="this.checkIsTrue([97], isAdmin)" routerLink="acc-nonbill">
+            <p class="sidelabel">NON BILLED JOBS</p>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+
+      <mat-expansion-panel [class.mat-elevation-z0]="true">
+        <mat-expansion-panel-header  *ngIf="this.checkIsTrue([68,25,59,60,58,99,100,101], isAdmin)">
+          <span class="spanClass">
+          <mat-icon class="account_circle">account_circle</mat-icon> <span >SALES</span>
+          </span>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item routerLink="pricing"  *ngIf="this.checkIsTrue([25], isAdmin)">
+            <p class="sidelabel">PRICING</p>
+          </a>
+          <a mat-list-item routerLink="customerSalesApproval"  *ngIf="this.checkIsTrue([59], isAdmin)">
+            <p class="sidelabel">CUSTOMER SALES APPROVAL</p>
+          </a>
+          <a mat-list-item routerLink="unapprovalJobs"  *ngIf="this.checkIsTrue([60], isAdmin)">
+            <p class="sidelabel">CUSTOMER UNAPPROVAL JOBS</p>
+          </a>
+          <a mat-list-item routerLink="customer-salesmapping"  *ngIf="this.checkIsTrue([58], isAdmin)">
+            <p class="sidelabel">CUSTOMER SALES MAPPING</p>
+          </a>
+          <a mat-list-item routerLink="sales-cusvsdiv"  *ngIf="this.checkIsTrue([99], isAdmin)">
+            <p class="sidelabel">CUSTOMER VS DIVISION</p>
+          </a>
+          <a mat-list-item routerLink="pricing-Approval"   *ngIf="this.checkIsTrue([100], isAdmin)">
+            <p class="sidelabel">PRICING APPROVAL PROCESS</p>
+          </a>
+          <a mat-list-item routerLink="creditSales"   *ngIf="this.checkIsTrue([101], isAdmin)">
+            <p class="sidelabel">CREDIT DAYS APPROVAL</p>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+
+      <mat-expansion-panel [class.mat-elevation-z0]="true">
+        <mat-expansion-panel-header *ngIf="this.checkIsTrue([8,9,20,21,28,22,72], isAdmin)">
+          <span class="spanClass">
+            <mat-icon class="account_circle">account_circle</mat-icon> <span >MASTER</span>
+            </span>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item routerLink="master-user" *ngIf="this.checkIsTrue([9], isAdmin)">
+            <p class="sidelabel">USER</p>
+          </a>
+          <a mat-list-item routerLink="master-scope" *ngIf="this.checkIsTrue([20], isAdmin)">
+            <p class="sidelabel">SCOPE </p>
+          </a>
+          <a mat-list-item routerLink="errorCategory" *ngIf="this.checkIsTrue([21], isAdmin)">
+            <p class="sidelabel">ERROR CATEGORY</p>
+          </a>
+          <a mat-list-item routerLink="processMaster" *ngIf="this.checkIsTrue([28], isAdmin)">
+            <p class="sidelabel">PROCESS</p>
+          </a>
+          <a mat-list-item routerLink="oneTimeMaster" *ngIf="this.checkIsTrue([22], isAdmin)">
+            <p class="sidelabel">ONE TIME MASTER</p>
+          </a>
+          <a mat-list-item routerLink="benchStatus" *ngIf="this.checkIsTrue([72], isAdmin)">
+            <p class="sidelabel">BENCH STATUS</p>
+          </a>
+
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+
+
+      <mat-expansion-panel [class.mat-elevation-z0]="true">
+        <mat-expansion-panel-header  *ngIf="this.checkIsTrue([73,74], isAdmin)">
+          <span class="spanClass">
+          <mat-icon class="account_circle">account_circle</mat-icon> <span >BENCH</span>
+          </span>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item routerLink="benchOptions" *ngIf="this.checkIsTrue([74], isAdmin)">
+            <p class="sidelabel">BENCH OPTION</p>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+
+      <!-- <mat-list-item routerLink="indexBiling">
+        <span class="spanClass">
+        <mat-icon class="push_pin">push_pin</mat-icon> <span >BILLING CYCLE MONTHLY</span>
+        </span>
+      </mat-list-item> -->
+      
+
+      <mat-list-item routerLink="JobFilesLocationMaster" *ngIf="this.checkIsTrue([92], isAdmin)">
+        <span class="spanClass">
+        <mat-icon class="push_pin">push_pin</mat-icon> <span >JOB FILES LOCATION MASTER</span>
+        </span>
+      </mat-list-item>
+      
+      <mat-list-item routerLink="clientindex/completedjobs"  *ngIf="this.checkIsTrue([82], isAdmin)">
+        <span class="spanClass">
+        <mat-icon class="push_pin">push_pin</mat-icon> <span >TRANSITION FILES</span>
+        </span>
+      </mat-list-item>
+
+      <mat-list-item routerLink="ITAsset" *ngIf="this.checkIsTrue([107], isAdmin)">
+        <span class="spanClass">
+        <mat-icon class="push_pin">push_pin</mat-icon> <span  >IT ASSET</span>
+        </span>
+      </mat-list-item>
+
+      <mat-list-item routerLink="customerNorms" >
+        <span class="spanClass">
+        <mat-icon class="push_pin">push_pin</mat-icon> <span >CUSTOMER NORMS</span>
+        </span>
+      </mat-list-item>
+      <mat-list-item routerLink="attendance">
+        <span class="spanClass">
+        <mat-icon class="push_pin">push_pin</mat-icon> <span >ATTENDANCE</span>
+        </span>
+      </mat-list-item>
+
+      <mat-list-item routerLink="vendor" *ngIf="this.checkIsTrue([108], isAdmin)">
+        <span class="spanClass">
+        <mat-icon class="push_pin">push_pin</mat-icon> <span >VENDOR</span>
+        </span>
+      </mat-list-item>
+
+      <mat-list-item routerLink="bank" *ngIf="this.checkIsTrue([109], isAdmin)" >
+        <span class="spanClass">
+        <mat-icon class="push_pin">push_pin</mat-icon> <span >BANK</span>
+        </span>
+      </mat-list-item>
+      <mat-list-item routerLink="CustomerVsChecklist" *ngIf="this.checkIsTrue([113], isAdmin)">
+        <span class="spanClass">
+        <mat-icon class="push_pin">push_pin</mat-icon> <span >CUSTOMER VS CHECKLIST</span>
+        </span>
+      </mat-list-item>
+
+
+      <mat-list-item routerLink="indexskillset" >
+        <span class="spanClass">
+        <mat-icon class="push_pin">push_pin</mat-icon><span >EMPLOYEE VS SKILLSET</span>
+        </span>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
+
+
+
+
+  <mat-sidenav-content>
+    <button mat-icon-button (click)="toggleSidenav()" style="float:left">
+      <mat-icon>{{ isSidenavOpen ? 'keyboard_arrow_left' : 'menu' }}</mat-icon>
+    </button>
+    <p >
+      <router-outlet>
+        
+      </router-outlet>
+    </p>
+  </mat-sidenav-content>
+</mat-sidenav-container>

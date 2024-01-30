@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="advance">
+            <div class="customerProfile">
+                <div class="backgroundcolor">
+                    <div class="panel-heading">
+                        <h2 class="panel-title"
+                            style="color:#fff;display: flex;text-align: center;justify-content: center;font-family: 'Times New Roman', Times, serif;">
+                            CUSTOMER RECEIPTS
+                        </h2>
+                    </div>
+                    <div class="container">
+                        <!--1st row-->
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Voucher Number</mat-label>
+                                    <input matInput [disabled]="true" value="0" />
+                                </mat-form-field>
+
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Voucher Date</mat-label>
+                                    <input matInput [matDatepicker]="voucherDatePicker" placeholder="mm/dd/yyyy"
+                                        [(ngModel)]="voucherdate">
+                                    <mat-datepicker-toggle matSuffix [for]="voucherDatePicker"></mat-datepicker-toggle>
+                                    <mat-datepicker #voucherDatePicker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <!--2nd  row-->
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Reference Number</mat-label>
+                                    <input matInput [(ngModel)]="referenceNumber" maxlength="34">
+                                </mat-form-field>
+
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Reference Date</mat-label>
+                                    <input matInput [matDatepicker]="referenceDatePicker" placeholder="mm/dd/yyyy"
+                                        [(ngModel)]="referencedate">
+                                    <mat-datepicker-toggle matSuffix
+                                        [for]="referenceDatePicker"></mat-datepicker-toggle>
+                                    <mat-datepicker #referenceDatePicker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <!--3rd row-->
+
+                        <div class="row">
+                            <div class="col-6">
+                                <mat-form-field>
+                                    <mat-label>CustomerName</mat-label>
+                                    <mat-select ngDefaultControl [(ngModel)]="CustomerId"
+                                        [(value)]="selectedCustomerNameOption.id"
+                                        (selectionChange)="CustomerInvoice(CustomerId)">
+                                        <mat-option
+                                            *ngFor="let customernamedropdownvalues of CustomerNamedropdownvalues"
+                                            [value]="customernamedropdownvalues.id">
+                                            {{ customernamedropdownvalues.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Description</mat-label>
+                                    <input matInput [(ngModel)]="description" name="description">
+                                </mat-form-field>
+
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Destination Bank</mat-label>
+                                    <input matInput [(ngModel)]="destinationBank" name="destinationbank">
+                                </mat-form-field>
+
+                            </div>
+                        </div>
+                        <!--4th row-->
+
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Exchange Rate</mat-label>
+                                    <input matInput type="number" [(ngModel)]="exchangerate" name="exchangerate">
+                                </mat-form-field>
+
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label> Total Receipt Amount*</mat-label>
+                                    <input matInput type="number" [(ngModel)]="totalreceiptamount"
+                                        name="totalreceiptamount">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="invoicedetails" *ngIf="InvoiceDetailsPanel">
+                    <h1
+                        style="display:flex;align-items: center;justify-content: center;font-family: 'Times New Roman', Times, serif;">
+                        Invoice Details</h1>
+                    <div class="row">
+                        <div class="col">
+                            <mat-form-field>
+                                <mat-label>Invoice Type</mat-label>
+                                <mat-select [(ngModel)]="selectedInvoiceType">
+                                    <mat-option value="adjustment">Adjustment</mat-option>
+                                    <mat-option value="advance">Advance</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                        </div>
+                        <div class="col" *ngIf="selectedInvoiceType === 'adjustment'">
+                            <mat-form-field>
+                                <mat-label>Select Invoice Number</mat-label>
+                                <mat-select [(ngModel)]="invoiceNumber" name="invoicenumber"
+                                    (selectionChange)="InvoiceDetailsChanges()">
+                                    <mat-option *ngFor="let invoice of invoicenumberdropdownvalue"
+                                        [value]="invoice.invoiceNo">
+                                        {{ invoice.invoiceNo }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="selectedInvoiceType === 'adjustment'">
+                        <div class="col">
+                            <mat-form-field>
+                                <mat-label> Invoice Date</mat-label>
+
+                                <input matInput [matDatepicker]="invoiceDatePicker" placeholder="Invoice Date"
+                                    [disabled]="isInputDisabled" [(ngModel)]="invoiceDate" name="invoiceDate">
+                                <mat-datepicker-toggle matSuffix [for]="invoiceDatePicker"></mat-datepicker-toggle>
+                                <mat-datepicker #invoiceDatePicker></mat-datepicker>
+                            </mat-form-field>
+
+                        </div>
+                        <div class="col">
+                            <mat-form-field>
+                                <mat-label> Invoice Value</mat-label>
+
+                                <input matInput placeholder="Invoice Value" [(ngModel)]="invoiceValue"
+                                    name="invoiceValue" [disabled]="isInputDisabled" type="number">
+                            </mat-form-field>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <mat-form-field>
+                                <mat-label> Amount to be Adjusted*</mat-label>
+                                <input matInput placeholder="Amount adjusted" [(ngModel)]="amounttobeadjusted"
+                                    name="amounttobeadjusted" type="number">
+                            </mat-form-field>
+                        </div>
+                        <div class="col" *ngIf="selectedInvoiceType === 'adjustment'">
+                            <mat-form-field>
+                                <mat-label>Adjusted Amount</mat-label>
+                                <input matInput placeholder="Adjusted Amount" [(ngModel)]="adjustedamount"
+                                    name="adjustedamount" [disabled]="isInputDisabled" type="number">
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row" *ngIf="selectedInvoiceType === 'adjustment'">
+                        <div class="col">
+                            <mat-form-field>
+                                <mat-label>Balance to be Adjusted </mat-label>
+                                <input matInput placeholder="balance"
+                                    [(ngModel)]="this.invoiceValue - this.amounttobeadjusted"
+                                    [disabled]="isInputDisabled" name="balanceadjusted" type="number">
+                            </mat-form-field>
+
+                        </div>
+                    </div>
+
+                    <div class="row" style="float:right">
+                        <div class="col">
+                            <button type="button" class="btn btn-success" (click)="addInvoice()">Add</button>
+                        </div>
+                    </div>
+
+                    <div class="InvoiceAdjustmentDetails">
+                        <div class="col-md-12">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <!-- <th width="10%" class="text-center">Remove</th> -->
+                                        <th width="10%" class="text-center">Action</th>
+                                        <th width="1%" class="text-center">S.No</th>
+                                        <th width="5%" class="text-center">Invoice Type</th>
+                                        <th width="5%" class="text-center">Invoice Number</th>
+                                        <th width="5%" class="text-center">Invoice Date</th>
+                                        <th width="7%" class="text-center">Invoice Value</th>
+                                        <th width="7%" class="text-center">Adjusted Amount</th>
+                                        <th width="7%" class="text-center">Amount To Be Adjusted</th>
+                                        <!-- <th width="1%" class="text-center">Remove</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of AddedInvoice; let i = index">
+                                        <!-- <td><a href="" class="btn btn-danger actionbtn" tooltip-html-unsafe="Remove" tooltip-placement="bottom" (click)="RemoveInvoice(i)"><i class="glyphicon glyphicon-trash"></i></a></td> -->
+                                        <td> <mat-icon (click)="RemoveInvoice(i)">delete</mat-icon>
+                                        </td>
+                                        <td class="text-center">{{ i + 1 }}</td>
+                                        <td class="text-center">{{ item.IsInvoiceAdjustment }}</td>
+                                        <td class="text-center">{{ item.InvoiceNo }}</td>
+                                        <td class="text-center">{{ item.InvoiceDate | date:"MM/dd/yyyy" }}</td>
+                                        <td class="text-center">{{ item.InvoiceValue }}</td>
+                                        <td class="text-center">{{ item.AdjustmentAmount }}</td>
+                                        <td class="text-center">{{ item.CurrentAdjustedAmount }}</td>
+                                    </tr>
+                                    <tr style="background:#F1F1F3;">
+                                        <td width="10%" class="text-right">Invoice Adjusted Amount</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right">{{ TotalAdjustedAmount }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td width="10%" class="text-right">Receipt Balance Amount</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right">{{ CollectionBalanceAmount }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="receiptdetails">
+                    <div class="container">
+                        <h1
+                            style="display:flex;align-items: center;justify-content: center;font-family: 'Times New Roman', Times, serif;">
+                            Receipt Details</h1>
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Receipt Mode</mat-label>
+                                    <mat-select [(ngModel)]="receiptMode">
+                                        <mat-option value="charges">Charges</mat-option>
+                                        <mat-option value="paypal">Paypal</mat-option>
+                                        <mat-option value="wire">Wire</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Bank Name</mat-label>
+                                    <input matInput [(ngModel)]="bankName" name="bankName"
+                                        placeholder="Enter Bank Name">
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Transaction No</mat-label>
+                                    <input matInput [(ngModel)]="transactionNo" name="transactionNo">
+                                </mat-form-field>
+
+
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Transaction Date</mat-label>
+                                    <input matInput [matDatepicker]="transactionDatePicker"
+                                        [(ngModel)]="transactionDate">
+                                    <mat-datepicker-toggle matSuffix
+                                        [for]="transactionDatePicker"></mat-datepicker-toggle>
+                                    <mat-datepicker #transactionDatePicker></mat-datepicker>
+                                </mat-form-field>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <mat-form-field>
+                                    <input matInput placeholder="Amount" [(ngModel)]="totalreceiptamount" name="amount"
+                                        [disabled]="isInputDisabled">
+                                </mat-form-field>
+
+                            </div>
+                            <br>
+                            <div class="row" style="float:right">
+                                <div class="col">
+                                    <button type="button" class="btn btn-success" (click)="addPayment()">Add</button>
+                                </div>
+                            </div>
+
+                            <div class="receipTable">
+                                <div class="col-md-12">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th width="1%" class="text-center">S.No</th>
+                                                <th width="10%" class="text-center">Receipt Mode</th>
+                                                <th width="10%" class="text-center">Transaction No</th>
+                                                <th width="20%" class="text-center">Transaction Date</th>
+                                                <th width="10%" class="text-center">Bank Name</th>
+                                                <th width="10%" class="text-center">Amount</th>
+                                                <th width="10%" class="text-center">Remove</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of AddedPayment; let i = index">
+                                                <td class="text-center">{{ i + 1 }}</td>
+                                                <td class="text-center">{{ item.ReceiptMode }}</td>
+                                                <td class="text-center">{{ item.TransactionNumber}}</td>
+                                                <td class="text-center">{{ item.TransactionDate | date: 'MM/dd/yyyy' }}
+                                                </td>
+                                                <td class="text-center">{{ item.BankName }}</td>
+                                                <td class="text-center">{{ item.Amount }}</td>
+                                                <td>
+                                                    <mat-icon (click)="RemovePayment(i)">delete</mat-icon>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <div class="buttons">
+                        <button type="button" class="btn btn-primary" (click)="BackButton()">Back</button>
+                        <button type="button" class="btn btn-success" style="float:right"
+                            (click)="AddReceivable()">Submit</button>
+                    </div>
+                </div>
+            </div>
+            <br>
+
+            
+        </div>
+    </div>
+</body>
+
+</html>

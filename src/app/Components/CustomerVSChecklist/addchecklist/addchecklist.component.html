@@ -1,0 +1,62 @@
+<form (ngSubmit)="onFormSubmit()">
+    <div class="container">
+        <div class="advance">
+            <div class="customerProfile">
+                <div class="backgroundcolor">
+                    <div class="panel-heading">
+                        <h2 class="panel-title" style="color:#fff;display: flex;text-align: center;justify-content: center;font-family: 'Times New Roman', Times, serif;">
+                            Checklist
+                        </h2>
+                    </div>
+                    <div class="container">
+                        <div class="content">
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field>
+                                        <mat-label>Department<span style="color: red;">*</span></mat-label>
+                                        <mat-select [(ngModel)]="selectedDepartment" name="department">
+                                            <mat-option *ngFor="let department of dept" [value]="department.id">{{
+                                                department.name }}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field style="width: 40%;">
+                                        <mat-label>Customer Short Name<span style="color: red;">*</span></mat-label>
+                                        <mat-select [(ngModel)]="selectedCustomer" name="shortname">
+                                            <mat-option *ngFor="let customer of customers" [value]="customer.id">{{
+                                                customer.shortName
+                                                }}</mat-option>
+                                        </mat-select>
+
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field>
+                                        <mat-label>Checklist Description</mat-label>
+                                        <textarea matInput [(ngModel)]="checklistDescription"
+                                            name="description"></textarea>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div mat-dialog-actions class="action">
+                            <button mat-raised-button type="button" [mat-dialog-close]="false">Cancel</button>
+                            <button mat-raised-button color="primary" type="submit" style="float: right;">{{data ?
+                                'Update':
+                                'Save'}}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

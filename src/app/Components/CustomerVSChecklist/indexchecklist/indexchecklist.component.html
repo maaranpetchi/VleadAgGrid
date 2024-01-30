@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body style="height:123vh">
+    <div class="container">
+        <div class="advance">
+            <div class="customerProfile">
+                <div class="backgroundcolor">
+                    <div class="panel-heading">
+                        <h2 class="panel-title" style="color:#fff;font-family: 'Times New Roman', Times, serif;">
+                            Add Checklist <mat-icon class="add-icon" matTooltip="Add Checklist!"
+                                (click)="openvendor()">add_box</mat-icon>
+                        </h2>
+                    </div>
+
+                    
+                            <div class="table-container">
+                            <table class="table table-sm table-responsive" mat-table [dataSource]="dataSource" id="custom-table" >
+
+                                <ng-container matColumnDef="shortname">
+                                    <th mat-header-cell *matHeaderCellDef >
+                                        <div class="header-wrapper">
+                                            <div class="department-name text-start"> Short Name </div>
+                                            <div class="filter-input">
+                                                <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                    #input>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">{{element.shortName }}</td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="description">
+                                    <th mat-header-cell *matHeaderCellDef >
+                                        <div class="header-wrapper">
+                                            <div class="department-name text-start">Description</div>
+                                            <div class="filter-input">
+                                                <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                    #input>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">{{element.description}}</td>
+                                </ng-container>
+
+
+                                <ng-container matColumnDef="department">
+                                    <th mat-header-cell *matHeaderCellDef >
+                                        <div class="header-wrapper">
+                                            <div class="department-name text-start">Department</div>
+                                            <div class="filter-input">
+                                                <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                    #input>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">{{element.department}}</td>
+                                </ng-container>
+
+
+                                <ng-container matColumnDef="Action">
+                                    <th mat-header-cell *matHeaderCellDef >Action</th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <a class="btn btn-success actionbtn" matTooltip="view"
+                                            matTooltipPosition="below" (click)="openViewForm(element)">
+                                            <mat-icon>visibility</mat-icon>
+                                        </a>
+                                        <a class="btn btn-success actionbtn" matTooltip="Edit"
+                                            matTooltipPosition="below" (click)="openEditForm(element)">
+                                            <mat-icon>edit</mat-icon>
+                                        </a>
+                                        <a class="btn btn-success actionbtn" matTooltip="delete"
+                                            matTooltipPosition="below" (click)="deleteEmployee(element.id)">
+                                            <mat-icon>delete</mat-icon>
+                                        </a>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            </table>
+                        </div>
+                        </div>
+                        <mat-paginator [pageSizeOptions]="[25, 50]" showFirstLastButtons></mat-paginator>
+
+                    </div>
+
+                </div>
+            </div>
+
+</body>
+
+</html>

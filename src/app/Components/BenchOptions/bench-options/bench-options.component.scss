@@ -1,0 +1,30 @@
+
+.grid-container {
+    display: grid;
+    gap: 10px;
+    background-color: #2196F3;
+    padding: 10px;
+  }
+  
+  .grid-container > div {
+    background-color:white;
+    border: 1px solid white;
+    text-align: center;
+    // font-size: 30px;
+  }
+
+  .mat-drawer-content {
+    position: relative;
+    z-index: 1;
+    display: block;
+    /* height: 100%; */
+    overflow: auto;
+}
+
+.col-sm-offset-5 {
+    padding-top: 20px;
+}
+
+.form-control {
+    width: 117%;
+}

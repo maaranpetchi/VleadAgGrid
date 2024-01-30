@@ -1,0 +1,14 @@
+.table-container {
+  height: 50vh; /* Set a fixed height of 50% of the viewport height */
+  overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  
+}
+
+/* Define the custom-table class for styling */
+#custom-table {
+  width: 75%; /* Set the table width to 75% of its container */
+  border-collapse: collapse; /* Optional: Collapse borders between table cells */
+}

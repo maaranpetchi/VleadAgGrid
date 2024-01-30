@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="advance">
+            <div class="customerProfile">
+                <div class="backgroundcolor">
+                    <div class="panel-heading">
+                        
+                        <div class="row">
+                            <div class="col">
+                                <h2 class="panel-title" style="color:#fff;">
+                                    Customer Job Files Path Details
+                                </h2>
+                            </div>
+                            <div class="col">
+                                <h2 class="panel-title" style="color:#fff;">
+                                    <button class="panel-title" class="btn btn-success" style="float:right">
+                                        Home
+                                    </button>
+                                </h2>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="cards">
+                        <mat-card class="example-card">
+                            <mat-card-content>
+                                <form [formGroup]="jobFilesLocationForm" >
+                             <div class="row">
+                                <div class="col">
+                                    <mat-form-field>
+                                        <mat-label>Customer</mat-label>
+                                        <mat-select [formControl]="customer"  [(ngModel)]="selectedClientId" name="customerId">
+                                          <mat-option *ngFor="let customer of customers" [value]="customer.id">
+                                            {{ customer.shortName }}
+                                          </mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                      <mat-error *ngIf="jobFilesLocationForm.get('customer')?.hasError('required') && jobFilesLocationForm.get('customer')?.touched">
+                                        * Please select the customer.
+                                      </mat-error>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field>
+                                        <mat-label>Department</mat-label>
+                                        <mat-select [formControl]="department"  [(ngModel)]="selectedDepartmentId" name="DepartmentId">
+                                          <mat-option *ngFor="let Department of Departments" [value]="Department.id">
+                                            {{ Department.description }}
+                                          </mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                      <mat-error *ngIf="jobFilesLocationForm.get('department')?.hasError('required') && jobFilesLocationForm.get('department')?.touched">
+                                        * Please select the department.
+                                      </mat-error>
+                                </div>
+                             </div>
+
+                             <div class="row">
+                                <div class="col">
+                                    <mat-form-field>
+                                        <mat-label>Shared Path</mat-label>
+                                        <input matInput [formControl]="ftpfilepath"  [(ngModel)]="FTPFilePath" name="FTPFilePath" placeholder="Enter FTP Path">
+                                      </mat-form-field>
+                                      <mat-error *ngIf="jobFilesLocationForm.get('ftpfilepath')?.hasError('required') && jobFilesLocationForm.get('ftpfilepath')?.touched">
+                                        * Please fill the filepath.
+                                      </mat-error>
+                                      
+                                </div>
+                                <div class="col">
+                                    <mat-form-field appearance="fill" style="width: 200px;">
+                                        <mat-label>Process</mat-label>
+                                        <mat-select [formControl]="selectedprocessname" [(ngModel)]="SelectedProcessName" required>
+                                          <mat-option value="">All</mat-option>
+                                          <mat-option value="Production">Production</mat-option>
+                                          <mat-option value="Quality">Quality</mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                      <mat-error *ngIf="jobFilesLocationForm.get('ftpfilepath')?.hasError('required') && jobFilesLocationForm.get('ftpfilepath')?.touched">
+                                        * Please fill the filepath.
+                                      </mat-error>
+                                </div>
+                             </div>
+                             <div class="button-container" style="display: flex; align-items: center; justify-content: center; gap: 20px; padding-right: 286px;">
+                                <button class="btn btn-success" *ngIf="AddVisible" (click)="CreateCustomerContact()">Add</button>
+                                <button class="btn btn-success" *ngIf="UpdateVisible" (click)="UpdateCustomerContact()">Update</button>
+                                <button class="btn btn-primary" (click)="reset()" >Cancel</button>
+                              </div>
+                            </form>
+                            </mat-card-content>
+                            
+
+                        </mat-card>
+                    </div>
+                 
+                    <table mat-table [dataSource]="dataSource">
+
+                        <!-- EmployeeCode Column -->
+                        <ng-container matColumnDef="Department">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <div class="header-wrapper">
+                                    <div class="department-name text-start"> Department </div>
+                                    <div class="filter-input">
+                                        <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                                    </div>
+                                </div>
+                            </th>
+                            <td mat-cell *matCellDef="let element"> {{ element.department.description }} </td>
+                        </ng-container>
+
+                        <!-- EmployeeName Column -->
+                        <ng-container matColumnDef="Customer">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <div class="header-wrapper">
+                                    <div class="department-name text-start"> Customer </div>
+                                    <div class="filter-input">
+                                        <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                                    </div>
+                                </div>
+                            </th>
+                            <td mat-cell *matCellDef="let element"> {{ element.customer.name }} </td>
+                        </ng-container>
+
+                        <!-- Skill Column -->
+                        <ng-container matColumnDef="SharedFilePath">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <div class="header-wrapper">
+                                    <div class="department-name text-start"> Shared File Path </div>
+                                    <div class="filter-input">
+                                        <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                                    </div>
+                                </div>
+                            </th>
+                            <td mat-cell *matCellDef="let element"> {{ element.ftpfilePath }} </td>
+                        </ng-container>
+
+                        <!-- ProficiencyLevel Column -->
+                        <ng-container matColumnDef="ProcessName">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <div class="header-wrapper">
+                                    <div class="department-name text-start"> Process Name </div>
+                                    <div class="filter-input">
+                                        <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                                    </div>
+                                </div>
+                            </th>
+                            <td mat-cell *matCellDef="let element"> {{ element.processName }} </td>
+                        </ng-container>
+
+                        <!-- Action Column -->
+                        <ng-container matColumnDef="Action">
+                            <th mat-header-cell *matHeaderCellDef>Action</th>
+                            <td mat-cell *matCellDef="let element">
+                                <a matTooltip="Edit" matTooltipPosition="below" (click)="openEditForm(element.id)">
+                                    <mat-icon>edit</mat-icon>
+                                </a>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

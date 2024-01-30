@@ -1,0 +1,65 @@
+
+  <div class="container">
+    <div class="advance">
+      <div class="customerProfile">
+        <div class="backgroundcolor">
+          <div class="panel-heading">
+            <h2 class="panel-title"
+              style="color:#fff;display: flex;text-align: center;justify-content: center;font-family: 'Times New Roman', Times, serif;">
+              CUSTOMER VS EMPLOYEE
+            </h2>
+          </div>
+          <div class="container">
+            <div class="formcontainer" style="text-align: center;">
+              <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+                <mat-form-field appearance="fill" hidden>
+                  <mat-label>Hidden Field</mat-label>
+                  <input matInput placeholder="Hidden Field" formControlName="id" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                  <mat-label>customerClassification</mat-label>
+                  <mat-select ngDefaultControl formControlName="classificationList" [(ngModel)]="selectedCustomer" (selectionChange)="customerChange()">
+                    <mat-option *ngFor="let customerClassification of data.classificationList"
+                      [value]="customerClassification.id">
+                      {{customerClassification.description}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                  <mat-label>Employee</mat-label>
+                  <mat-select ngDefaultControl formControlName="employeeName">
+                    <mat-option *ngFor="let option of data.employeeList"
+                      [value]="option.employeeId">{{option.employeeName +'-'+option.employeeCode}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <br>
+                <!-- <mat-form-field>
+                  <mat-label>Customer</mat-label>
+                  <mat-select ngDefaultControl multiple formControlName="customer" [(ngModel)]="selectedCustomerId" (selectionChange)="customerChange()">
+                    <mat-option *ngFor="let employeehierarchyoption of data.customerList" [value]="employeehierarchyoption.id">
+                      {{ employeehierarchyoption.shortName + '-' + employeehierarchyoption.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <br> -->
+                <mat-form-field>
+                  <mat-label>Customer</mat-label>
+                  <!-- <mat-select ngDefaultControl formControlName="customer" [formControl]="selectControl" multiple> -->
+                  <mat-select ngDefaultControl multiple formControlName="customer" [(ngModel)]="selectedCustomerId" (selectionChange)="customerChange()"><mat-label> Search for customer</mat-label>
+                    <input matInput (keyup)="applyFilters($event)" placeholder="Filter" #input>
+                    <mat-option *ngFor="let employeehierarchyoption of data.customerList"
+                      [value]="employeehierarchyoption.id	">
+                      {{ employeehierarchyoption.shortName+'-'+employeehierarchyoption.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div class="button"> <button mat-raised-button color="primary">Submit</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

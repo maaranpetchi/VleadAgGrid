@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClientOrderTable</title>
+</head>
+<div class="main-body">
+    <div class="container" id="table-container">
+
+        <ag-grid-angular
+        style="width: 100%; height: 100%;"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [suppressRowClickSelection]="true"
+        [rowSelection]="rowSelection"
+        [rowData]="rowData"
+        [class]="themeClass"
+        (gridReady)="onGridReady($event)"
+        (cellValueChanged)="handleCellValueChanged($event)"
+
+      ></ag-grid-angular>
+
+    </div>
+</div>
+
+</html>
+<button class="btn btn-success" (click)="multiGridConvert()">Bulk Convert</button>
+<div class="row">
+    <div class="division mt-3">
+        <mat-form-field>
+            <mat-label>Divisions</mat-label>
+            <mat-select [(value)]="selectdivision">
+                <mat-option *ngFor="let Divisions of DivisionApiData" [value]="Divisions.id">
+                    {{ Divisions.divisionName }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</div>

@@ -1,0 +1,87 @@
+<form [formGroup]="empForm" (ngSubmit)="onSubmitDetails()">
+    <div class="container">
+        <div class="advance">
+            <div class="customerProfile">
+                <div class="backgroundcolor">
+                    <div class="panel-heading">
+                        <h2 class="panel-title"
+                            style="color:#fff;display: flex;text-align: center;justify-content: center;font-family: 'Times New Roman', Times, serif;">
+                            Update Vendor
+                        </h2>
+                    </div>
+
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Vendor Name</mat-label>
+                                    <input matInput formControlName="vendorName">
+                                </mat-form-field>
+
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Invoice Number<span style="color: red;">*</span></mat-label>
+                                    <textarea matInput formControlName="invoiceNumber"></textarea>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Invoice Date</mat-label>
+                                    <input matInput [matDatepicker]="picker" formControlName="invoiceDate">
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Invoice Value<span style="color: red;">*</span></mat-label>
+                                    <input matInput type="number" formControlName="invoiceValue"
+                                        (ngModelChange)="InvValueChng()">
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Pending Amount</mat-label>
+                                    <input matInput type="number" id="pendingAmount" formControlName="pendingAmount"
+                                        [disabled]="true">
+                                </mat-form-field>
+
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Amounts to be paid</mat-label>
+                                    <input matInput type="number" formControlName="amountsToBePaid" name="amounttopaid"
+                                        [(ngModel)]="Amounttobepaid" (ngModelChange)="AmtbePaidChng()">
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <div>
+                                    <div class="col-xs-2">Amount paid</div>
+                                    <div class="col-xs-4">
+                                        <input type="number" class="form-control" id="amtPaid"
+                                            formControlName="amtPaid"  [(ngModel)]="amtPaid"/>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div mat-dialog-actions class="action">
+                        <button mat-raised-button type="button" [mat-dialog-close]="false">Cancel</button>
+                        <button mat-raised-button color="primary" type="submit">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

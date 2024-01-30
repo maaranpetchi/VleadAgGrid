@@ -1,0 +1,61 @@
+<h1 mat-dialog-title>File Convert</h1>
+<div mat-dialog-content>
+
+<!-- rest-api-table.component.html -->
+<div class="mat-elevation-z8">
+    <mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="fileName">
+            <mat-header-cell *matHeaderCellDef>FileName</mat-header-cell>
+            <mat-cell *matCellDef="let element;let i = index">
+              <input type="text" name="" id="" [value]="element.FileName"  (change)="updatefilename($event,i,element)" style="width:100%">
+            </mat-cell>
+          </ng-container>
+          
+      <ng-container matColumnDef="poNo">
+        <mat-header-cell *matHeaderCellDef>P.O.No</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{ element.PoNo }}</mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="poDate">
+        <mat-header-cell *matHeaderCellDef>P.O.Date</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{ element.PODate }}</mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="instruction">
+        <mat-header-cell *matHeaderCellDef>Instruction</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{ element.Remarks }}</mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="salesPersonName">
+        <mat-header-cell *matHeaderCellDef>Sales Person Name</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{ element.SalesPersonName }}</mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="transactionType">
+        <mat-header-cell *matHeaderCellDef>Transaction Type</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{ element.TransactionId }}</mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="division">
+        <mat-header-cell *matHeaderCellDef>Division</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{ element.DivisionId }}</mat-cell>
+      </ng-container>
+  
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+  
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+  
+</div>
+<div mat-dialog-actions class="text-center">
+  <button class="yesbutton" mat-button class="btn btn-success" (click)="multiorderconvert()">Yes</button>
+  <button class="nobutton" mat-button class="btn btn-danger" (click)="close()">No</button>
+</div>
+
+
+
+
+
+

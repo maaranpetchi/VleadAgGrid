@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body style="height: 123vh;">
+
+
+
+    <div class="grid-container">
+        <h2
+            style="display:flex;text-align: center;justify-content: center;color: white;font-family: 'Times New Roman', Times, serif;">
+            Idle Bench Option</h2>
+        <div>
+            <form>
+                <div class="col-md-12 text-center">
+                    <div class="col-sm-offset-5">
+                        <button class="btn btn-success" (click)="changeBench('Start')" id="start"
+                            [disabled]="disableWorkType">Start</button> &nbsp;
+                        <button class="btn btn-warning" (click)="changeBench('Break')" id="Break"
+                            [disabled]="!disableWorkType">Break</button>
+                    </div>
+                    <div class="clearfix padding-bottom-10"></div>
+                    <br>
+                    <div *ngIf="disableWorkType" style="display:grid;align-items: center;justify-content: center;">
+
+                        <div class="row">
+                            <div class="col">
+                                <label for="Status" class="col-sm-4 control-label">Status<span
+                                        style="color: red;">*</span></label>
+                            </div>
+                            <div class="col">
+                                <select class="form-control" id="Status" [(ngModel)]="Statusid" name="statusid"
+                                    required>
+                                    <option value="">--Select--</option>
+                                    <option *ngFor="let item of GetStatuslist" [value]="item.id">{{ item.description }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+
+                        <div class="row">
+                            <div class="col">
+                                <label for="remarks" class="col-sm-4 control-label">Remarks<span
+                                        style="color: red;">*</span></label>
+                            </div>
+                            <div class="col">
+                                <textarea id="remarks" class="form-control" [(ngModel)]="Remarks" name="remarks"
+                                    required></textarea>
+
+                            </div>
+                        </div>
+                        <br>
+                        <div class="clearfix padding-bottom-10"></div>
+                        <div class="col-sm-offset-5">
+                            <button class="btn btn-info" type="submit" id="End"
+                                (click)="changeBench('End')">End</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,256 @@
+<div class="container">
+    <div class="workflow">
+
+        <form action="">
+            <h1 style="font-family: 'Times New Roman', Times, serif;color:#396bb5">Work Flow</h1>
+            <div class="jobhistory">
+                <div class="row">
+                    <div class="col">
+                        <p class="control-label font-bold">Job Id:</p>
+                    </div>
+                    <div class="col">
+                        <p>Job Date:</p>
+                    </div>
+                    <div class="col">
+                        <p>Sales Person:</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Department:</p>
+                    </div>
+                    <div class="col">
+                        <p>Estimated Time:</p>
+                    </div>
+                    <div class="col">
+                        <p>PO#:</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Client:&nbsp;&nbsp;</p>
+                    </div>
+                    <div class="col">
+                        <p>Stitich Count:&nbsp;&nbsp;</p>
+                    </div>
+                    <div class="col">
+                        <p>Assigned Date & Time :</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Job Status:&nbsp;</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <p>Job Desc:</p>
+                    </div>
+                    <div class="col-6">
+                        <p>File Name:</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <p>Instructions:</p>
+                    </div>
+                    <div class="col-6">
+                        <p>Garment Color:</p>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <a routerLink="/topnavbar/sewout" style="color:#3988b5; float:left">Back</a>
+                            <p style="color:#3988b5;float: right;">View Details</p>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <div class="col" style="display: flex;gap:5px;justify-content: center;">
+                            <button class="btn btn-success btn-block">Start</button>
+                            <button class="btn btn-warning btn-block">Break</button>
+                            <button class="btn btn-primary btn-block">Training/Meeting</button>
+                            <button class="btn btn-warning btn-block">Hold</button>
+                            <button class="btn btn-danger btn-block" id="others">Others</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="downloadbuttons">
+                <div class="row">
+                    <div class="col">
+                        <p>Work File Folder:
+                            <button type="button" class="btn btn-primary">WorkFiles</button>
+                            <button type="button" class="btn btn-primary">Zip</button>
+                            <button class="btn btn-primary">CopyPath</button>
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Input File Folder:&nbsp;&nbsp;
+                            <button class="btn btn-primary">WorkFiles</button>
+                            <button class="btn btn-primary">Zip</button>
+                            <button class="btn btn-primary">CopyPath</button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="jobtable">
+                <div class="row">
+                    <div class="col-6">
+                        <mat-table [dataSource]="dataSource" matSort>
+                            <ng-container matColumnDef="startDate">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Start Date & Time</mat-header-cell>
+                                <mat-cell *matCellDef="let job">{{ job.startDate }}</mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="endDate">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>End Date & Time</mat-header-cell>
+                                <mat-cell *matCellDef="let job">{{ job.endDate }}</mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="timeTaken">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> Time Taken in
+                                    Minutes</mat-header-cell>
+                                <mat-cell *matCellDef="let job">{{ job.timeTaken }}</mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="status">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+                                <mat-cell *matCellDef="let job">{{ job.status }}</mat-cell>
+                            </ng-container>
+
+                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                        </mat-table>
+
+                        <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+
+                    </div>
+                    <div class="col-4">
+
+                        <table>
+                            <tr>
+                                <th>Total Time Worked</th>
+                                <td>{{ totalWorked }}</td>
+                            </tr>
+                            <tr>
+                                <th>Break</th>
+                                <td>{{ breakTime }}</td>
+                            </tr>
+                            <tr>
+                                <th>Training/Meeting</th>
+                                <td>{{ trainingMeeting }}</td>
+                            </tr>
+                            <tr>
+                                <th>Hold</th>
+                                <td>
+                                <td>{{ holdTime }}</td>
+                            </tr>
+                            <tr>
+                                <th>Others</th>
+                                <td>
+                                <td>{{ othersTime }}</td>
+                            </tr>
+                            <tr>
+                                <th>Total Time Taken</th>
+                                <td>
+                                <td>{{ totalTime }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <br>
+            <div class="dropdowns">
+                <!--!st row in dropdown-->
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field>
+                            <mat-label>Process Status</mat-label>
+                            <mat-select>
+                                <mat-option value="selected">Selected</mat-option>
+                                <mat-option value="completed">Completed</mat-option>
+                                <mat-option value="query">Query</mat-option>
+                                <mat-option value="query-special-pricing">Query for Special Pricing</mat-option>
+                                <mat-option value="work-incomplete">Work Incomplete</mat-option>
+                                <mat-option value="error">Error</mat-option>
+                                <mat-option value="completed-error">Completed with Error</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <div class="checkbox">
+                            <mat-label>Copy Files</mat-label>
+                            <mat-checkbox [(ngModel)]="copyPreviousTrayFiles" name="copyPreviousTrayFiles">
+                                copy Previous Tray Files
+                            </mat-checkbox>
+                        </div>
+                    </div>
+                </div>
+                <!--2ND ROW-->
+                <div class="row">
+                    <div class="col">
+                        <div class="completedtextarea">
+                            <mat-form-field class="example-full-width">
+                                <textarea matInput placeholder="Remarks"></textarea>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="completeduploadfile">
+                            <input type="file" (change)="onFileSelected($event)" />
+                        </div>
+                    </div>
+                </div>
+                <!--3rd row-->
+                <div class="row">
+                    <div class="col">
+                        <div class="comremark">
+                          
+                            <mat-form-field class="example-full-width">
+                                <textarea matInput placeholder="Leave a remark"></textarea>
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                    <div class="col">
+                        <div class="combtn">
+                            <mat-label>Previous Tray Files</mat-label>
+                            <button class="btn btn-primary">Files</button>
+                        </div>
+                    </div>
+                </div>
+                <!--4th row-->
+                <div class="row">
+                    <div class="col">
+                        <div class="comstitch">
+                            <mat-form-field>
+                                <mat-label>Stitch Count</mat-label>
+                                <input matInput type="number" [(ngModel)]="stitchCount" name="stitchCount" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="combtn">
+                            <button class="btn btn-danger">End</button>
+                        </div>
+                    </div>
+                </div>
+                <!--5th row-->
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field>
+                            <mat-label>Scope</mat-label>
+                            <mat-select [(value)]="selectedScopeValue">
+                                <mat-option *ngFor="let value of scopeApiValues" [value]="value.id">{{ value.name }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

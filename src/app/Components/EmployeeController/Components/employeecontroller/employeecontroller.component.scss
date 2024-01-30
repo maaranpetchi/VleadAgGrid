@@ -1,0 +1,103 @@
+.container { 
+ // display: grid; 
+  grid-template-columns: 1fr; 
+  grid-template-rows: 1fr; 
+  gap: 0px 0px; 
+ grid-template-areas:
+   ". advance ."
+   ". . ."
+   ". . .";
+}
+
+.advance { grid-area: advance; }
+
+.body{
+  min-height: 75vh ;
+  height: auto ;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  // overflow-y: auto;
+}
+.customerProfile{
+ border-style: solid; 
+ border-color: #428bca;
+}
+
+.panel-heading {
+ padding: 10px 15px;
+ border-bottom: 1px solid transparent;
+ border-top-right-radius: 1px;
+ border-top-left-radius: 1px;
+}
+
+
+.panel-title {
+ margin-top: 0;
+ margin-bottom: 0;
+ font-size: 15px;
+ color: inherit;
+}
+
+
+.pull-right {
+ float: right !important;
+}
+.backgroundcolor{
+ background-color: #428bca;
+}
+
+.container {
+ background-color: white;
+ height:50vh
+}
+
+#button-gap {
+ margin-right: 5px;
+}
+
+
+.mat-elevation-z8{
+  overflow-x: scroll;
+}
+.clickable-link {
+  cursor: pointer;
+}
+
+
+.table-container {
+  height: 94vh;
+  overflow-y: auto; /* Enable vertical scrolling */
+  background-color: white;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+  position: sticky;
+  top: 0;
+}
+
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.checkbox{
+  background-color: #fff;
+}
+
+/* Define the custom-table class for styling */
+#custom-table {
+  width: 75%; /* Set the table width to 75% of its container */
+  border-collapse: collapse; /* Optional: Collapse borders between table cells */
+}

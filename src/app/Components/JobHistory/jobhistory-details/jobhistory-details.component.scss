@@ -1,0 +1,10 @@
+.download-link {
+    text-decoration: none;
+    color: #007bff; /* Blue color, you can change this */
+    cursor: pointer;
+}
+
+/* Style for the hover effect (finger cursor) */
+.download-link:hover {
+    text-decoration: underline;
+}

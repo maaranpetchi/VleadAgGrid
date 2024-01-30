@@ -1,0 +1,232 @@
+<div class="container">
+    <div class="workflow">
+
+        <form action="">
+            <h1 style="font-family: 'Times New Roman', Times, serif;color:#396bb5">Work Flow</h1>
+            <div class="jobhistory">
+                <div class="row">
+                    <div class="col">
+                        <p class="control-label font-bold">Job Id: &nbsp;{{data.jobId}}</p>
+                    </div>
+                    <div class="col">
+                        <p>Job Date: &nbsp;{{data.jobDate}}</p>
+                    </div>
+                    <div class="col">
+                        <p>Sales Person:&nbsp; {{data.salesPersonName}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Department:&nbsp;{{data.department}}</p>
+                    </div>
+                    <div class="col">
+                        <p>Estimated Time:&nbsp;{{data.estimatedTime?data.estimatedTime:0 + "Minutes"}}</p>
+                    </div>
+                    <div class="col">
+                        <p>PO#:&nbsp;{{data.poNo}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Client:&nbsp;&nbsp;{{data.shortName}}</p>
+                    </div>
+                    <div class="col">
+                        <p>Assigned Date & Time :&nbsp;{{data.jobDateEst}}</p>
+                    </div>
+                    <div class="col">
+                        <p>Job Status:&nbsp;{{data.jobStatusDescription}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Job Desc:&nbsp;{{data.jobDescription}}</p>
+                    </div>
+                    <div class="col">
+                        <p>File Name:&nbsp;{{data.fileName}}</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <p>Instructions:&nbsp;{{data.instruction}}</p>
+                    </div>
+                    <div class="col-6">
+                        <p>Garment Color: &nbsp;{{data.color}}</p>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <a routerLink="/topnavbar/sewout" style="color:#3988b5; float:left">Back</a>
+                            <p style="color:#3988b5;float: right;" (click)="viewDetails(data)">View Details</p>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <div class="col" style="display: flex; gap: 5px; justify-content: center;">
+                            <div class="col-sm-offset-4">
+                              <button class="btn btn-success" (click)="changeWorkType('Start')" [disabled]="!disableWorkType && !isHold && !SameEmp">Start</button>
+                              <span style="margin-right: 5px;"></span>
+                              <button class="btn btn-warning" (click)="changeWorkType('Break')" [disabled]="disableWorkType">Break</button>
+                              <span style="margin-right: 5px;"></span>
+                              <button class="btn btn-primary" (click)="changeWorkType('Training / Meeting')" [disabled]="disableWorkType">Training / Meeting</button>
+                              <span style="margin-right: 5px;"></span>
+                              <button class="btn btn-warning" (click)="changeWorkType('Hold')" [disabled]="disableWorkType">Hold</button>
+                              <span style="margin-right: 5px;"></span>
+                              <button class="btn btn-info" (click)="changeWorkType('Others')" [disabled]="disableWorkType">Others</button>
+                            </div>
+                          </div>                          
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="downloadbuttons">
+                <div class="row">
+                    <div class="col">
+                      <p>Input File Folder : &nbsp;&nbsp;&nbsp;
+                        <button (click)="workFiles(data.id)" class="btn btn-primary">WorkFiles</button>
+                        <button (click)="zipFiles()" class="btn btn-primary">Zip</button>
+                      </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                      <p>Input File Folder : &nbsp;&nbsp;&nbsp;
+                        <button (click)="workFiles(data.id)" class="btn btn-primary">WorkFiles</button>
+                        <button (click)="zipFiles()" class="btn btn-primary">Zip</button>
+                      </p>
+                    </div>
+                </div>
+            </div>
+            <div class="jobtable">
+                <div class="row">
+                    <div class="col-6">
+                        <mat-table [dataSource]="jobWorkDetails.dataSource" matSort>
+                            <ng-container *ngFor="let column of jobWorkDetails.columnDefs" [matColumnDef]="column.matColumnDef">
+                              <mat-header-cell *matHeaderCellDef>{{ column.matHeaderCellDef }}</mat-header-cell>
+                              <mat-cell *matCellDef="let row">{{ row[column.matCellDef] }}</mat-cell>
+                            </ng-container>
+                          
+                            <mat-header-row *matHeaderRowDef="jobWorkDetails.displayedColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: jobWorkDetails.displayedColumns"></mat-row>
+                          </mat-table>
+                        <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator> 
+                      </div>
+                    <div class="col-4">
+
+                        <div class="Table">
+                            <div class="Row">
+                              <div class="Cell">
+                                <p>Total Time Worked</p>
+                              </div>
+                              <div class="Cell1">
+                                <p>{{ TotalTimeWorked }} Minutes</p>
+                              </div>
+                            </div>
+                            <div class="Row">
+                              <div class="Cell">
+                                <p>Break</p>
+                              </div>
+                              <div class="Cell1">
+                                <p>{{ Break}} Minutes</p>
+                              </div>
+                            </div>
+                            <div class="Row">
+                              <div class="Cell">
+                                <p>Training/Meeting</p>
+                              </div>
+                              <div class="Cell1">
+                                <p>{{ Training }} Minutes</p>
+                              </div>
+                            </div>
+                            <div class="Row">
+                              <div class="Cell">
+                                <p>Hold</p>
+                              </div>
+                              <div class="Cell1">
+                                <p>{{ Hold }} Minutes</p>
+                              </div>
+                            </div>
+                            <div class="Row">
+                              <div class="Cell">
+                                <p>Others</p>
+                              </div>
+                              <div class="Cell1">
+                                <p>{{ Others }} Minutes</p>
+                              </div>
+                            </div>
+                            <div class="Row">
+                              <div class="Cell">
+                                <p>Total Time Taken</p>
+                              </div>
+                              <div class="Cell1">
+                                <p>{{ TotalTimeTaken }} Minutes</p>
+                              </div>
+                            </div>
+                            <div class="Row" *ngIf="data.processName === 'Production'">
+                              <div class="Cell">
+                                <p>Estimated time</p>
+                              </div>
+                              <div class="Cell1">
+                                <p>{{ Estimatedtime }} Minutes</p>
+                              </div>
+                            </div>
+                            <div class="Row" *ngIf="data.processName === 'Production'">
+                              <div class="Cell">
+                                <p>Deviation (+), (-)</p>
+                              </div>
+                              <div class="Cell1">
+                                <p>{{ Deviation }} Minutes</p>
+                              </div>
+                            </div>
+                          </div>
+                          
+                    </div>
+                </div>
+
+            </div>
+            <br>
+            <div class="dropdowns">
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Process Status</mat-label>
+                            <mat-select [(ngModel)]="selectedStatus" name="status" (selectionChange)="onScopeChange()">
+                                <mat-option *ngFor="let status of processStatuses" [value]="status">{{ status }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col" *ngIf="showCopyFilesCheckbox">
+                        <mat-label>Copy Files</mat-label>
+                        <mat-checkbox [(ngModel)]="copyFiles" [disabled]="disableCopyFiles" checked><span>Copy Previous Tray Files</span></mat-checkbox>                        
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field>
+                            <textarea matInput placeholder="Remarks" [(ngModel)]="remarks" name="remarks"></textarea>
+                        </mat-form-field>
+
+                    </div>
+                    <div class="col">
+                        <input type="file" (change)="onFileSelected($event)" >
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field>
+                            <mat-label>Scope</mat-label>
+                            <mat-select [(value)]="selectedScopeValue">
+                                <mat-option *ngFor="let value of scopeApiValues" [value]="value.id">{{value.name}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-danger">End</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+  

@@ -1,0 +1,269 @@
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.center-text-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex-direction: column;
+}
+
+.center-text {
+  font-size: 20px;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.arrowbtn {
+  height: 19px;
+}
+.sidelabel{
+  font-size: 13px;
+}
+.sidelabel:hover {
+  background: #526fad;
+  color: white;
+}
+
+.mat-sidenav a:hover {
+  background: #526fad;
+}
+
+.mat-toolbar.mat-primary {
+  background: #15508d;
+  color: #fff;
+}
+
+.spanClass {
+  display: flex;
+  gap: 1rem;
+  font-size: 13px;
+}
+
+
+.topToolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logoImage {
+  height: 89px;
+}
+
+
+p.version {
+  position: absolute;
+  left: 60px;
+}
+
+.lastcontent > a {
+  padding: 11px;
+}
+.textCenter {
+  height: 60px;
+  position: relative;
+}
+
+
+
+.last{
+  cursor:pointer;
+}
+
+
+
+
+
+//
+.clientcoordination {
+  background-image: url('../../../../../assets/Images/clientcordination.png');
+}
+
+.clientcoordination:hover {
+  background-image: url('../../../../../assets/Images/1_active.png');
+}
+
+
+//
+.ProductionAllocation {
+  background-image: url('../../../../../assets/Images/2.png');
+}
+
+.ProductionAllocation:hover {
+  background-image: url('../../../../../assets/Images/2_active.png');
+}
+
+//
+
+
+.Production {
+  background-image: url('../../../../../assets/Images/3.png');
+}
+
+.Production:hover {
+  /* Set the hover image as the background image */
+  background-image: url('../../../../../assets/Images/3_active.png');
+}
+
+
+
+.QualityAllocation {
+  background-image: url('../../../../../assets/Images/4.png');
+}
+
+.QualityAllocation:hover {
+
+  background-image: url('../../../../../assets/Images/4_active.png');
+}
+
+.Quality {
+  background-image: url('../../../../../assets/Images/5.png');
+}
+
+.Quality:hover {
+
+  background-image: url('../../../../../assets/Images/5_active.png');
+}
+
+.ProofReadingAllocation {
+  background-image: url('../../../../../assets/Images/6.png');
+}
+
+.ProofReadingAllocation:hover {
+
+  background-image: url('../../../../../assets/Images/6_active.png');
+}
+
+.ProofReading {
+  background-image: url('../../../../../assets/Images/7.png');
+}
+
+.ProofReading:hover {
+
+  background-image: url('../../../../../assets/Images/7_active.png');
+}
+
+.BuddyProof {
+  background-image: url('../../../../../assets/Images/9.png');
+}
+
+.BuddyProof:hover {
+
+  background-image: url('../../../../../assets/Images/9_active.png');
+}
+
+.SewOut {
+  background-image: url('../../../../../assets/Images/11.png');
+}
+
+.SewOut:hover {
+
+  background-image: url('../../../../../assets/Images/11_active.png');
+}
+
+.Reports {
+  background-image: url('../../../../../assets/Images/1014.png');
+}
+
+.Reports:hover {
+
+  background-image: url('../../../../../assets/Images/1014_active.png');
+}
+
+.toptoolbar {
+  justify-content: center;
+}
+
+
+.labelname {
+  font-size: small;
+  // text-transform: uppercase;
+
+}
+
+.menu-with-scrollbar {
+  max-height: 800px;
+  overflow-y: hidden;
+}
+
+
+// span{
+//   text-transform: uppercase; 
+// }
+
+
+//ToggleAnimation
+@keyframes slideIn {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.mat-sidenav {
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+}
+
+.sidenavAnimation {
+  animation-timing-function: ease-in;
+}
+
+.sidenavAnimation.slidingIn {
+  animation-name: slideIn;
+}
+
+.sidenavAnimation.slidingOut {
+  animation-name: slideOut;
+}
+
+.panel-header-text::after {
+  display: none;
+}
+
+//////////////////////////////////////SIde nav changes///////////////////
+.app-container {
+  height: 90%;
+  margin: 0;
+}
+
+.app-sidenav {
+  width: 230px;
+}
+
+.app-sidenav-content {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.push_pin {
+  display: inline-block;
+  transform: rotate(45deg);
+  color: red;
+}
+
+.cached,
+.swap_horiz,
+.account_circle,
+.add_box {
+  display: inline-block;
+  color: rgb(54, 139, 192);
+}

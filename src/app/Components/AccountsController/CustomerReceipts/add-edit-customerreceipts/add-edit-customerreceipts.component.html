@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="customerReceiptDetails">
+    <div class="backgroundcolor">
+      <div class="panel-heading" style="display: flex;align-items: center;justify-content: center;">
+        <h2 class="panel-title" style="color:#ebebeb">
+          Customer Receipt Details
+        </h2>
+      </div>
+
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <label> Voucher Number:</label>&nbsp;&nbsp;{{voucherNumber}}
+          </div>
+          <div class="col">
+            <label> Voucher Date:</label>&nbsp;&nbsp;{{voucherDate | date:'MM-dd-yyyy'}}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label> Reference Number:</label>&nbsp;&nbsp;{{referenceNumber}}
+
+          </div>
+          <div class="col">
+            <label> Reference Date:</label>&nbsp;&nbsp;{{referenceDate | date:'MM-dd-yyyy'}}
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label>Customer Name:</label>&nbsp; &nbsp;{{customerName}}
+          </div>
+          <div class="col">
+            <label>Receipt Amount:</label>&nbsp; &nbsp;{{receiptAmount}}
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-4">
+
+            <label>Description:</label>&nbsp; &nbsp;{{description}}
+          </div>
+        </div>
+
+      <br>
+      <br>
+      <br>
+      <br>
+
+      <div class="invoicetable">
+
+        <mat-table class="table table-sm table-responsive" mat-table #table [dataSource]="dataSource" matSort>
+
+          <ng-container matColumnDef="invoicetype">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <div class="header-wrapper">
+                <div class="department-name text-start"> Invoice Type </div>
+             
+              </div>
+            </th>
+            <td mat-cell *matCellDef="let element"> Adjustment</td>
+          </ng-container>
+
+          <ng-container matColumnDef="invoicenumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <div class="header-wrapper">
+                <div class="department-name text-start">Invoice Number</div>
+                <div class="filter-input">
+                  <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                </div>
+              </div>
+            </th>
+            <td mat-cell *matCellDef="let element">{{element.invoiceNo}}</td>
+          </ng-container>
+
+
+          <ng-container matColumnDef="adjustedamount">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <div class="header-wrapper">
+                <div class="department-name text-start">Adjusted Amount</div>
+                <div class="filter-input">
+                  <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                </div>
+              </div>
+            </th>
+            <td mat-cell *matCellDef="let element">{{element.adjustmentAmount}}</td>
+          </ng-container>
+
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </mat-table>
+        <mat-paginator #paginatorOne [pageSizeOptions]="[25, 50]" showFirstLastButtons></mat-paginator>
+
+      </div>
+      <br>
+      <br>
+      <br>
+      <br>
+
+      <div class="Receipttable">
+
+        <mat-table class="table table-sm table-responsive" mat-table #table [dataSource]="dataSourceReceipt" matSort>
+
+
+          <ng-container matColumnDef="bankname">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <div class="header-wrapper">
+                <div class="department-name text-start">Bank Name</div>
+                <div class="filter-input">
+                  <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                </div>
+              </div>
+            </th>
+            <td mat-cell *matCellDef="let element">{{element.bankName}}</td>
+          </ng-container>
+
+
+          <ng-container matColumnDef="transactiondate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <div class="header-wrapper">
+                <div class="department-name text-start">Transaction Date</div>
+                <div class="filter-input">
+                  <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                </div>
+              </div>
+            </th>
+            <td mat-cell *matCellDef="let element">{{element.bankName}}</td>
+          </ng-container>
+          <ng-container matColumnDef="receiptmode">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <div class="header-wrapper">
+                <div class="department-name text-start">Receipt Mode</div>
+                <div class="filter-input">
+                  <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                </div>
+              </div>
+            </th>
+            <td mat-cell *matCellDef="let element">{{element.receiptMode}}</td>
+          </ng-container>
+          <ng-container matColumnDef="transactionnumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <div class="header-wrapper">
+                <div class="department-name text-start">Transaction Number</div>
+                <div class="filter-input">
+                  <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                </div>
+              </div>
+            </th>
+            <td mat-cell *matCellDef="let element">{{element.transactionNo}}</td>
+          </ng-container>
+          <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <div class="header-wrapper">
+                <div class="department-name text-start">Amount</div>
+                <div class="filter-input">
+                  <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
+                </div>
+              </div>
+            </th>
+            <td mat-cell *matCellDef="let element">{{element.amount}}</td>
+          </ng-container>
+
+
+          <tr mat-header-row *matHeaderRowDef="displayedReceiptColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedReceiptColumns;"></tr>
+        </mat-table>
+        <mat-paginator #paginatorTwo [pageSizeOptions]="[25, 50]" showFirstLastButtons></mat-paginator>
+
+      </div>
+      
+<button mat-button (click)="goBack()">Back</button>
+
+      
+      </div>
+
+    </div>
+  </div>
+</body>
+
+</html>

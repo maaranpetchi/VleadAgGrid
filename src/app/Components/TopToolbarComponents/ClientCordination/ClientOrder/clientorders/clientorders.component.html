@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="extensions/resizable/bootstrap-table-resizable.js"></script>
+</head>
+<body >
+    <div class="main-body">
+        <div class="container">
+            <div class="productionmain">
+                <h1 style="font-family:'Times New Roman', Times, serif;color:#137cdf">Client Orders({{(NewJobTabCount ? NewJobTabCount:0) +  (QuotationTabCount ? QuotationTabCount:0) }})</h1>
+                <mat-tab-group  dynamicHeight 
+                 (selectedTabChange)="onTabChange($event)"> 
+                    <mat-tab label="{{ 'New Jobs (' + (NewJobTabCount ? NewJobTabCount:0) + ')' }}">
+                    </mat-tab>
+                    <mat-tab label="{{ 'Quotation Jobs (' + (QuotationTabCount ? QuotationTabCount:0) + ')' }}">
+                    </mat-tab>
+                    <mat-tab label="{{ 'Converted Jobs (' + (ConvertedJobTabCount ? ConvertedJobTabCount:0) + ')' }}">
+                    </mat-tab>
+                    <mat-tab label="{{ 'Deleted Jobs (' + (DeletedJobTabCount ? DeletedJobTabCount:0) + ')' }}">
+                    </mat-tab>
+                    <mat-tab label="{{ 'Quote Not Approval Jobs (' + (QuoteNotApprovalJobTabCount ? QuoteNotApprovalJobTabCount:0) + ')' }}">
+                    </mat-tab>
+                    <mat-tab label="{{ 'Query For SP Not Approval Jobs ('+(QueryforjobJobTabCount ? QueryforjobJobTabCount:0)+')'}}">
+                    </mat-tab>
+                </mat-tab-group>
+
+                <div>
+                    <app-clientorderstable></app-clientorderstable>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<div class="container">
+  <div class="jobdetails">
+    <h1 mat-dialog-title>Job Details</h1>
+    <div mat-dialog-content>
+      <div class="jobdetails">
+        <div class="row">
+          <div class="col">
+            <p> Job Id: &nbsp;&nbsp;{{data.jobId}}</p>
+          </div>
+          <div class="col">
+            <p>Client Name:&nbsp;&nbsp;{{data.shortName}}</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <p>File Received Date:&nbsp;&nbsp;{{data.estfileReceivedDate}}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <p>File Name :&nbsp;&nbsp;{{data.fileName}}</p>
+          </div>
+        </div> 
+        <div class="row">
+          <div class="col">
+            <p>Job Description :&nbsp;&nbsp; {{data.jobStatusDescription}}</p>
+          </div>
+          <div class="col">
+            <p>File Inward Mode :&nbsp;&nbsp; {{data.fileInwardType}}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <p>Query For SP Scope :&nbsp;&nbsp; {{data.description}}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <p>Work File Folder : &nbsp;&nbsp;&nbsp;
+              <button (click)="workFiles(data.id)">WorkFiles</button>
+              <button (click)="zipFiles()">Zip</button>
+            </p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <p>Input File Folder : &nbsp;&nbsp;&nbsp;
+              <button (click)="workFiles(data.id)">WorkFiles</button>
+              <button (click)="zipFiles()">Zip</button>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="jobHistory">
+    <h1 mat-dialog-title>Job History</h1>
+    <div mat-dialog-content>
+      <div class="jobhistory">
+        <table mat-table [dataSource]="dataJobSource" class="mat-elevation-z8 table-bordered">
+          <ng-container matColumnDef="movedFrom">
+            <th mat-header-cell *matHeaderCellDef>Moved From</th>
+            <td mat-cell *matCellDef="let element">{{ element.processName }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="movedTo">
+            <th mat-header-cell *matHeaderCellDef>Moved To</th>
+            <td mat-cell *matCellDef="let element">{{ element.previousProcessName}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="movedDate">
+            <th mat-header-cell *matHeaderCellDef>Moved Date [mm-dd-yyyy]</th>
+            <td mat-cell *matCellDef="let element">{{ element.createdUTC }}</td>
+          </ng-container>
+          <ng-container matColumnDef="movedBy">
+            <th mat-header-cell *matHeaderCellDef>Moved By</th>
+            <td mat-cell *matCellDef="let element">{{ element.employeeName?element.employeeName:"Client" }}</td>
+          </ng-container>
+          <ng-container matColumnDef="MovedTo">
+            <th mat-header-cell *matHeaderCellDef>Moved To</th>
+            <td mat-cell *matCellDef="let element">{{ element.workingName?element.workingName:"-" }}</td>
+          </ng-container>
+          <ng-container matColumnDef="remarks">
+            <th mat-header-cell *matHeaderCellDef>Remarks</th>
+            <td mat-cell *matCellDef="let element">{{ element.remarks }}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedJobColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedJobColumns;"></tr>
+        </table>
+      </div>
+    </div>
+    <div class="stitchcount" *ngIf="stitchCountdisplay">
+      <mat-form-field>
+        <mat-label>Stitch Count</mat-label>
+        <input matInput [(ngModel)]="stitchCount" name="stitchCount" placeholder="Enter Stitch Count">
+      </mat-form-field>
+    </div>
+
+  </div>
+
+  <div class="query">
+    <h1 mat-dialog-title>Query</h1>
+    <div mat-dialog-content>
+      <div class="query">
+        <table mat-table [dataSource]="dataQuerySource" class="mat-elevation-z8">
+          <ng-container matColumnDef="movedFrom">
+            <th mat-header-cell *matHeaderCellDef>Moved From</th>
+            <td mat-cell *matCellDef="let element">{{ element.previousProcessName }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="movedTo">
+            <th mat-header-cell *matHeaderCellDef>Moved To</th>
+            <td mat-cell *matCellDef="let element">{{ element.processName }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="movedDate">
+            <th mat-header-cell *matHeaderCellDef>Moved Date [mm-dd-yyyy]</th>
+            <td mat-cell *matCellDef="let element">{{ element.createdUTC }}</td>
+          </ng-container>
+          <ng-container matColumnDef="jobStatus">
+            <th mat-header-cell *matHeaderCellDef>JOb Status</th>
+            <td mat-cell *matCellDef="let element">{{ element.jobStatus }}</td>
+          </ng-container>
+          <ng-container matColumnDef="movedBy">
+            <th mat-header-cell *matHeaderCellDef>Moved By</th>
+            <td mat-cell *matCellDef="let element">{{ element.employeeName }}</td>
+          </ng-container>
+          <ng-container matColumnDef="MovedTo">
+            <th mat-header-cell *matHeaderCellDef>Moved To</th>
+            <td mat-cell *matCellDef="let element">{{ element.workingName }}</td>
+          </ng-container>
+          <ng-container matColumnDef="remarks">
+            <th mat-header-cell *matHeaderCellDef>Remarks</th>
+            <td mat-cell *matCellDef="let element">{{ element.comments }}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedQueryColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedQueryColumns;"></tr>
+        </table>
+      </div>
+    </div>
+
+
+  </div>
+  <div>
+    <span class="text-danger"> * All Date Formats in : [MM/dd/yyyy]</span>
+  </div>
+  <div class="row">
+    <div class="col-md-4">Process Status <span class="text-danger">*</span></div>
+    <div class="col-md-4">
+      <div class="querydropdown">
+        <mat-form-field>
+          <mat-label>---Select status---</mat-label>
+          <mat-select [(value)]="selectedQureryStatus" (selectionChange)="onFilterChange()">
+            <!-- <mat-option value="Select status"></mat-option> -->
+            <mat-option value="6">Query</mat-option>
+            <mat-option value="8">Query sent for special pricing</mat-option>
+            <mat-option value="100">Modified Esitmated Time</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="remarksdata">
+    <div class="col-md-4">remarks <span class="text-danger">*</span></div>
+    <div class="col-md-4">
+      <div class="querydropdown">
+        <mat-form-field>
+          <textarea matInput placeholder="Remarks" [(ngModel)]="remarks"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="EmployeData">
+    <div class="col-md-4">Employees</div>
+    <div class="col-md-4">
+      <mat-form-field>
+        <mat-label>Select a Employees</mat-label>
+        <mat-select [(ngModel)]="selectedEmployees">
+          <mat-option *ngFor="let employe of Employees" [value]="employe.id">{{ employe.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+
+  <div class="row" *ngIf="EstimatedTime">
+    <div class="col-md-4">Estimated Time</div>
+    <div class="col-md-4">
+      <mat-form-field>
+        <textarea matInput [(ngModel)]="estimatedTime"></textarea>
+      </mat-form-field>
+    </div>
+    <!-- <div class="col-md-2"> Estimated Time (estimatedTime)</div> -->
+  </div>
+  <div class="row" *ngIf="EmployeDatascope">
+    <div class="col-md-4">Scope</div>
+    <div class="col-md-4 fw-bold fs-1">
+      {{data.description}}
+    </div>
+  </div>
+  <div class="mb-5 text-center">
+    <button type="button" class="btn btn-danger" (click)="close()">Close</button> &nbsp;<button type="button"
+      class="btn btn-success" (click)="onSubmit()">Submit</button>
+
+  </div>
+
+  <!-- class="btn btn-success" (click)="postQueryData()">Submit</button> -->
+
+</div>

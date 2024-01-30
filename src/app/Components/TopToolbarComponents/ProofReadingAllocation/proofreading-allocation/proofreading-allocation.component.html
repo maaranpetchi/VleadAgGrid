@@ -1,0 +1,43 @@
+<div class="main-body">
+	<div class="container">
+		<div class="productionallocation">
+			<div class="header">
+				<div class="row">
+					<div class="col">
+						<h3 style="font-family:'Times New Roman', Times, serif">ProofReading Allocation
+							({{(pendingJobsCount? pendingJobsCount:0)+(freshJobsCount?freshJobsCount:0) +
+							(revisionJobsCount?revisionJobsCount:0)+(reworkJobsCount?reworkJobsCount:0)+(allocatedJobCount?allocatedJobCount:0)+(queriesJobsCount?queriesJobsCount:0)+(queryResponseJobsCount?queryResponseJobsCount:0)+(errorJobsCount?errorJobsCount:0)+(quotationJobCount?quotationJobCount:0)}})
+						</h3>
+					</div>
+					<div class="col" id="titles">
+						<p><span class="box"></span> Assigned to Single Employee</p>
+						<p><span class="box1"></span> Assigned to Multiple Employee</p>
+						<p><span class="box2"></span> Work-Incomplete</p>
+					</div>
+				</div>
+			</div>
+
+			<mat-tab-group dynamicHeight (selectedTabChange)="onTabChange($event)">
+				<mat-tab label="Fresh Jobs ({{freshJobsCount?freshJobsCount:0}})">
+				</mat-tab>
+				<mat-tab label="Revision Jobs ({{revisionJobsCount?revisionJobsCount:0}})">
+				</mat-tab>
+				<mat-tab label="Rework Jobs ({{reworkJobsCount?reworkJobsCount:0}})">
+				</mat-tab>
+				<mat-tab label="Allocated Jobs ({{allocatedJobCount?allocatedJobCount:0}})">
+				</mat-tab>
+				<mat-tab label="Queries  ({{queriesJobsCount?queriesJobsCount:0}})">
+				</mat-tab>
+				<mat-tab label="Query Response  ({{queryResponseJobsCount?queryResponseJobsCount:0}})">
+				</mat-tab>
+				<mat-tab label="Error Jobs ({{errorJobsCount?errorJobsCount:0}})">
+				</mat-tab>
+				<mat-tab label="Quotation Jobs ({{quotationJobCount?quotationJobCount:0}})">
+				</mat-tab>
+			</mat-tab-group>
+			<div class="example-large-box mat-elevation-z4">
+				<app-proofreading-alocationtable></app-proofreading-alocationtable>
+			</div>
+		</div>
+	</div>
+</div>

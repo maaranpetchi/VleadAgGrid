@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="extensions/resizable/bootstrap-table-resizable.js"></script>
+</head>
+<body >
+    <div class="container">
+        <div class="sewout">
+            <h1 style="font-family:'Times New Roman', Times, serif;color: #3388cd;">Sew Out ({{(freshJobsCount ? freshJobsCount:0)+ (RevisionJobsCount ? RevisionJobsCount:0)+(ReworkJobsCount ? ReworkJobsCount:0)+(QuoteJobsCount ? QuoteJobsCount:0)+(SewOutCount ? SewOutCount:0)}})</h1>
+            <mat-tab-group  dynamicHeight (selectedTabChange)="onTabChange($event)">
+                <mat-tab label="{{ 'Fresh Jobs (' + (freshJobsCount ? freshJobsCount:0) + ')' }}">
+                </mat-tab>
+                <mat-tab label="{{ 'Revision Jobs (' + (RevisionJobsCount ? RevisionJobsCount:0) + ')' }}">
+                </mat-tab>
+                <mat-tab label="{{ 'Rework Jobs (' + (ReworkJobsCount ? ReworkJobsCount:0) + ')' }}">
+                </mat-tab>
+                <mat-tab label="{{ 'Quote Jobs (' + (QuoteJobsCount ? QuoteJobsCount:0) + ')' }}">
+                </mat-tab>
+                <mat-tab label="{{ 'Sew Out (' + (SewOutCount ? SewOutCount:0) + ')' }}">
+                </mat-tab>
+                <mat-tab label="{{'Bulk Jobs('+ (BulkJobsCount ? BulkJobsCount:0)+')' }}">
+                </mat-tab>
+                <mat-tab label="{{'Bulk Upload Jobs('+ (BulkUploadJobsCount ? BulkUploadJobsCount:0)+')' }}">
+                </mat-tab>
+            </mat-tab-group>
+          <div class="sewtable">
+            <app-sew-out-table></app-sew-out-table>
+         <br>
+          
+        </div>
+        </div>
+      </div>
+
+</body>
+</html>

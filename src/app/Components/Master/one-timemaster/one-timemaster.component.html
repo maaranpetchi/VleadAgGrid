@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body style="height: 100vh;">
+  <div class="container">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="text-white text-center">
+          <span class="scope-text">One Time Master</span>
+        </h3>
+        <div class="bg-white" style="height: 70vh;">
+          <form [formGroup]="userRegistrationForm">
+            <div class="container pt-1 pb-3">
+              <div class=" tab-container">
+                <div class="tab-buttons tabbuttonclr">
+                  <button mat-button (click)="showTabContent('Add')">Add</button>
+                  <button mat-button (click)="showTabContent('Update')">Edit</button>
+                  <button mat-button (click)="showTabContent('Remove')">Delete</button>
+                </div>
+                <div class="tab-content  background">
+
+                  <div *ngIf="currentTab === 'Add'">
+                    <!-- New Tab Content -->
+                    <h4 class="text-start"> Add</h4>
+                    <div class="container">
+                      <mat-form-field appearance="fill" class="dropdown-field">
+                        <mat-label>Select Option</mat-label>
+                        <mat-select [(ngModel)]="selectedOption" class="dropdown" formControlName="chooseRole">
+                          <mat-option *ngFor="let option of options" [value]="option">
+                            {{ option }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <div class="input-field">
+                        <input type="text" [(ngModel)]="valueInput" class="input" [style.height.px]="37"
+                          placeholder="Enter value" formControlName="valueInput">
+                      </div>
+                    </div>
+                    <div class="button-group mt-4">
+                      <button mat-raised-button color="warn" class="button" (click)="clearSelection()">Clear</button>
+
+                      <button mat-raised-button color="primary" class="button float-end" type="submit"
+                        (click)="addSelection()">Add</button>
+                    </div>
+
+                  </div>
+
+                  <div *ngIf="currentTab === 'Update'">
+                    <h3>Edit</h3>
+                    <div class="container">
+                      <mat-form-field appearance="fill" class="dropdown-field">
+                        <mat-label>Select Option</mat-label>
+                        <mat-select [(ngModel)]="selectedOption" class="dropdown" (selectionChange)="getcustomername()"
+                          formControlName="clientname">
+                          <mat-option *ngFor="let option of options" [value]="option">
+                            {{ option }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <div class="col">
+                        <mat-form-field>
+                          <mat-label>CustomerContactName</mat-label>
+                          <mat-select [(ngModel)]="selectedCustomerContactName" name="CustomerContactName"
+                            formControlName="customercontactname"  (selectionChange)="getTimematerId(selectedCustomerContactName)">
+                            <mat-option *ngFor="let CustomerContactName of CustomerContactName"
+                              [value]="CustomerContactName.id">
+                              {{ CustomerContactName .description}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="input-field">
+                        <input type="text" [(ngModel)]="editvalueInput" class="input" [style.height.px]="37"
+                          placeholder="Enter value" formControlName="editvalueInput">   
+                      </div>
+                    </div>
+                    <div class="button-group mt-4">
+                      <button mat-raised-button color="warn" class="button" (click)="clearSelection()">Clear</button>
+
+                      <button mat-raised-button color="primary" class="button float-end" type="submit"
+                        (click)="updateSelection()">Update</button>
+                    </div>
+                  </div>
+
+                  <div *ngIf="currentTab === 'Remove'">
+                    <!-- Delete Tab Content -->
+                    <h3>Delete</h3>
+                    <div class="container">
+                      <div class="col">
+                        <mat-form-field appearance="fill" class="dropdown-field">
+                          <mat-label>Select Option</mat-label>
+                          <mat-select [(ngModel)]="selectedOption" class="dropdown" (selectionChange)="getcustomername()"
+                            formControlName="deleteMastertname">
+                            <mat-option *ngFor="let option of options" [value]="option">
+                              {{ option }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="col">
+                        <mat-form-field>
+                          <mat-label>CustomerContactName</mat-label>
+                          <mat-select [(ngModel)]="selectedCustomerContactName" name="CustomerContactName"
+                            formControlName="deleteMastercontactname"  (selectionChange)="getTimematerId(selectedCustomerContactName)">
+                            <mat-option *ngFor="let CustomerContactName of CustomerContactName"
+                              [value]="CustomerContactName.id">
+                              {{ CustomerContactName .description}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <!-- <div class="input-field">
+                        <input type="text" [(ngModel)]="editvalueInput" class="input" [style.height.px]="37"
+                          placeholder="Enter value" formControlName="editvalueInput">   
+                      </div> -->
+                    </div>
+                    <div class="button-group mt-4">
+                      <button mat-raised-button color="warn" class="button" (click)="clearSelection()">Clear</button>
+
+                      <button mat-raised-button color="primary" class="button float-end" type="submit"
+                        (click)="deleteSelection()">Delete</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

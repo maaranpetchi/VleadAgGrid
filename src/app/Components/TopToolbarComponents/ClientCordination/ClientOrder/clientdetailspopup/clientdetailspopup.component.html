@@ -1,0 +1,38 @@
+<h1 mat-dialog-title>Details</h1>
+<div mat-dialog-content>
+    <table mat-table [dataSource]="dataSource" matSort id="custom-table"
+    class="table table-sm table-responsive table table-bordered text-center">
+
+        <ng-container matColumnDef="amount">
+          <th mat-header-cell *matHeaderCellDef>Amount</th>
+          <td mat-cell *matCellDef="let element">{{ element.specialPrice }}</td>
+        </ng-container>
+      
+        <ng-container matColumnDef="instruction">
+          <th mat-header-cell *matHeaderCellDef>Instruction</th>
+          <td mat-cell *matCellDef="let element">{{ element.instruction }}</td>
+        </ng-container>
+      
+        <ng-container matColumnDef="suggestion">
+          <th mat-header-cell *matHeaderCellDef>Suggestion</th>
+          <td mat-cell *matCellDef="let element">{{ element.suggestion }}</td>
+        </ng-container>
+      
+        <ng-container matColumnDef="vleadComments">
+          <th mat-header-cell *matHeaderCellDef>Vlead Comments</th>
+          <td mat-cell *matCellDef="let element">{{ element.comments }}</td>
+        </ng-container>
+      
+        <ng-container matColumnDef="department">
+          <th mat-header-cell *matHeaderCellDef>Department</th>
+          <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+        </ng-container>
+      
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      
+      </table>      
+</div>
+<div mat-dialog-actions style="display: flex;align-items: center;justify-content: center;">
+  <button mat-button class="btn btn-warning" (click)="closeDialog()">Close</button>
+</div>

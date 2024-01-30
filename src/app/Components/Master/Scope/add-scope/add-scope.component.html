@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <h3 class="text-white">
+              <span class="scope-text">Scope</span>
+            </h3>
+          </div>
+        </div>
+        <form [formGroup]="userRegistrationForm" (ngSubmit)="onFormSubmit()">
+          <div class="row bg-white">
+            <div class="col-md-6"> <!-- First Column -->
+              <div class="row">
+                <div class="col-md-12"> <!-- Department Row -->
+                  <div class="row mt-3">
+                    <div class="col-md-4 small-mat-label">Department <span class="text-danger">*</span></div>
+                    <div class="col-md-8">
+                      <mat-form-field class="mat-form-field-sm small-input small-mat-label">
+                        <mat-label>-- Select Department --</mat-label>
+                        <mat-select formControlName="departmentName">
+                          <mat-option>-- Select Department --</mat-option>
+                          <mat-option value=1>Artwork</mat-option>
+                          <mat-option value=2>Digitizing</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12"> <!-- Description Row -->
+                  <div class="row">
+                    <div class="col-md-4 ">Description</div>
+                    <div class="col-md-8 small-mat-label  mb-3">
+                      <input type="text" formControlName="description" class="form-control form-control-sm small-input">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 mt-3">
+            <button class="float-left" mat-raised-button color="primary" (click)="onCancel()"
+              routerLink="UserMasterComponent">Cancel</button>
+            <button type="submit" class="btn btn-success float-end">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

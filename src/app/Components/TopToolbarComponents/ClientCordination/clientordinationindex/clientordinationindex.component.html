@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body style="height:123vh">
+
+  <div class="main-body">
+    <div class="container">
+      <div class="roworderlink" style="display: flex; flex-direction: column;">
+        <a routerLink="joborder">Create Job Order</a>
+        <a routerLink="Jobexcel" style="margin-top: 10px;">Job Order For Excel</a>
+        <a routerLink="completedjobs" style="margin-top: 10px;">Completed Jobs ({{ CompletedJobsCount ? CompletedJobsCount:0}}) </a>
+        <a routerLink="clientorder" style="margin-top: 10px;">Client Orders ({{this.clientOrderCount ? this.clientOrderCount:0 }})</a>
+      </div>
+      <h3 style="font-family:'Times New Roman', Times, serif">Client Coordination ({{ (QueryJobCount ? QueryJobCount:0) + (querycount  ? querycount:0) + (cancelledcount ? cancelledcount : 0) + (quotationcount ? quotationcount:0)}})</h3>
+      <!-- <div style="display: flex; flex-direction: row;">
+                <a routerLink="/queries" style="margin-right: 10px;">Queries To Client (0)</a>
+                <a routerLink="/query-response" style="margin-right: 10px;">Query Response (0)</a>
+                <a routerLink="/cancelled-jobs" style="margin-right: 10px;">Cancelled Jobs (0)</a>
+                <a routerLink="/quotation-jobs">Quotation Jobs (0)</a>
+              </div> -->
+
+      <mat-tab-group dynamicHeight (selectedTabChange)="onTabChange($event)">
+        <mat-tab label="{{ 'Queries To Client (' + (QueryJobCount ? QueryJobCount:0) + ')' }}">
+        </mat-tab>
+
+        <mat-tab label="{{'Query Response ('+(querycount  ? querycount:0)+')'}}">
+        </mat-tab>
+        <mat-tab label="{{ 'Cancelled Jobs (' + (cancelledcount ? cancelledcount : 0) + ')' }}">
+      </mat-tab>
+        <mat-tab label="{{'Quotation Jobs ('+ (quotationcount ? quotationcount:0 )+')'}}">
+        </mat-tab>
+      </mat-tab-group>
+
+      <div>
+        <app-query-to-client></app-query-to-client>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

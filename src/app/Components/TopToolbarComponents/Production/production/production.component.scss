@@ -1,0 +1,33 @@
+.example-spacer {
+    flex: 1 1 auto;
+  }
+  .addemployee{
+    padding-left: 10px;
+  }
+  .main-body {
+    padding-top: 20px;
+    margin: 0 auto;
+    max-width: 1348px;
+    mat-form-field {
+      width: 100%;
+    }
+  }
+  
+  .action {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .container {
+    // display: grid; 
+    grid-template-columns: 0.1fr 6.3fr 0.1fr; 
+    grid-template-rows: 0.1fr 1.8fr 1.3fr; 
+    gap: 0px 0px; 
+    grid-template-areas: 
+      ". . ."
+      ". formgroup ."
+      ". . ."; 
+  }
+  .formgroup { grid-area: formgroup; }
+
+  

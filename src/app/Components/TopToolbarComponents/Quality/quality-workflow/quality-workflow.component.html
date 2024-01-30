@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="workflow">
+
+      <form action="">
+        <h1 style="font-family: 'Times New Roman', Times, serif;color:#396bb5"> Work Flow</h1>
+        <div class="jobhistory">
+          <div class="row">
+            <div class="col">
+              <p class="control-label font-bold">Job Id: &nbsp;{{data.jobId ? data.jobId :
+                this.ProcessTransaction.jobId}}</p>
+            </div>
+            <div class="col">
+              <p>Job Date: &nbsp;{{data.jobDate ? data.jobDate : this.ProcessTransaction.jobDate}}</p>
+            </div>
+            <div class="col">
+              <p>Sales Person:&nbsp; {{data.salesPersonName ? data.salesPersonName :
+                this.ProcessTransaction.salesPersonName}}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <p>Department:&nbsp;{{data.department ? data.department : this.ProcessTransaction.department}}</p>
+            </div>
+            <div class="col">
+              <p>Estimated Time:&nbsp;{{data.estimatedTime?data.estimatedTime:this.ProcessTransaction.estimatedTime
+                }}&nbsp;Minutes</p>
+            </div>
+            <div class="col">
+              <p>PO#:&nbsp;{{data.poNo ? data.poNo : this.ProcessTransaction.poNo}}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <p>Client:&nbsp;&nbsp;{{data.shortName ? data.shortName : this.ProcessTransaction.shortName }}</p>
+            </div>
+            <div class="col">
+              <p>Assigned Date & Time :&nbsp;{{data.jobDateEst ? data.jobDateEst : this.ProcessTransaction.jobDateEst}}
+              </p>
+            </div>
+            <div class="col">
+              <p>Job Status:&nbsp;{{data.jobStatusDescription? data.jobStatusDescription :
+                this.ProcessTransaction.jobStatusDescription }}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <p>Job Desc:&nbsp;{{data.jobDescription ? data.jobDescription : this.ProcessTransaction.jobDescription}}
+              </p>
+            </div>
+            <div class="col">
+              <p>File Name:&nbsp;{{data.fileName ? data.fileName : this.ProcessTransaction.fileName}}</p>
+            </div>
+            <div class="col"
+              *ngIf="(data.department == 'Digitizing') && (data.processName =='Proof Reading' || data.processName=='Sew Out' || data.processName=='Buddy Proof')">
+              <p>StichCount:&nbsp;{{data.stitchCount ? data.stitchCount : this.ProcessTransaction.stitchCount}}</p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <p>Instructions:&nbsp;{{data.instruction ? data.instruction: this.ProcessTransaction.instruction}}</p>
+            </div>
+            <div class="col-6">
+              <p>Garment Color: &nbsp;{{data.color ? data.color : this.ProcessTransaction.color}}</p>
+            </div>
+            <div class="row">
+              <div class="col">
+                <a style="color:#3988b5; float:left" (click)="Back()">Back</a>
+                <p style="color:#3988b5;float: right;" (click)="viewDetails(data)">View Details</p>
+              </div>
+            </div>
+            <br>
+            <div class="buttons">
+              <div class="col" style="display: flex; justify-content: center;">
+                <div class="col-sm-offset-4" style="display: flex; gap: 5px;">
+                  <button class="btn btn-success" (click)="changeWorkType('Start')" [disabled]="!disableWorkType"
+                    *ngIf="!isHold && !SameEmp">Start</button>
+                  <button class="btn btn-warning" (click)="changeWorkType('Break')"
+                    [disabled]="disableWorkType">Break</button>
+                  <button class="btn btn-primary" (click)="changeWorkType('Training/Meeting')"
+                    [disabled]="disableWorkType">Training / Meeting</button>
+                  <button class="btn btn-warning" (click)="changeWorkType('Hold')"
+                    [disabled]="disableWorkType">Hold</button>
+                  <button class="btn btn-info" (click)="changeWorkType('Others')"
+                    [disabled]="disableWorkType">Others</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <br>
+        <div class="form-group" ng-show="showFiles">
+          <div class="row">
+            <div class="col">
+              <p>Work File Folder: &nbsp;&nbsp;&nbsp;
+                <button (click)="workFiles(data.id)" class="btn btn-primary">WorkFiles</button>
+                <button (click)="zipFiles()" class="btn btn-primary">Zip</button>
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <p>Input File Folder : &nbsp;&nbsp;&nbsp;
+                <button (click)="workFiles(data.id)" class="btn btn-primary">WorkFiles</button>
+                <button (click)="zipFiles()" class="btn btn-primary">Zip</button>
+              </p>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="col-6">
+
+            <mat-table [dataSource]="dataSource" matSort>
+              <!-- Replace columnDefs with matColumnDef -->
+              <!-- <ng-container matColumnDef="id">
+              <mat-header-cell *matHeaderCellDef>Id</mat-header-cell>
+              <mat-cell *matCellDef="let row">{{ row.Id }}</mat-cell>
+            </ng-container> -->
+
+              <ng-container matColumnDef="startDate">
+                <mat-header-cell *matHeaderCellDef>Start Date &amp; Time</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.startDate | date:'MM-dd-yyyy HH:mm:ss' }}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="endDate">
+                <mat-header-cell *matHeaderCellDef>End Date &amp; Time</mat-header-cell>
+                <mat-cell *matCellDef="let row" [ngClass]="{ 'text-color-red': row.endDate === null }">
+                  {{ row.endDate ? (row.endDate | date:'MM-dd-yyyy HH:mm:ss') : startTimer(row.startDate) }}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="totalTimeTaken">
+                <mat-header-cell *matHeaderCellDef>Time Taken in Mins</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.totalTimeTaken }}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="status">
+                <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.status }}</mat-cell>
+              </ng-container>
+
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+            </mat-table>
+
+            <!-- Add the Angular Material paginator -->
+            <mat-paginator [pageSizeOptions]="[25, 50,75,100]" showFirstLastButtons></mat-paginator>
+
+          </div>
+          <div class="col-3">
+            <div class="Table">
+              <div class="Row">
+                <div class="Cell">
+                  <p>Total Time Worked</p>
+                </div>
+                <div class="Cell1">
+                  <p>{{ TotalTimeWorked }} Minutes</p>
+                </div>
+              </div>
+              <div class="Row">
+                <div class="Cell">
+                  <p>Break</p>
+                </div>
+                <div class="Cell1">
+                  <p>{{Break}} Minutes</p>
+                </div>
+              </div>
+              <div class="Row">
+                <div class="Cell">
+                  <p>Training/Meeting</p>
+                </div>
+                <div class="Cell1">
+                  <p>{{ Training }} Minutes</p>
+                </div>
+              </div>
+              <div class="Row">
+                <div class="Cell">
+                  <p>Hold</p>
+                </div>
+                <div class="Cell1">
+                  <p>{{ Hold }} Minutes</p>
+                </div>
+              </div>
+              <div class="Row">
+                <div class="Cell">
+                  <p>Others</p>
+                </div>
+                <div class="Cell1">
+                  <p>{{ Others }} Minutes</p>
+                </div>
+              </div>
+              <div class="Row">
+                <div class="Cell">
+                  <p>Total Time Taken</p>
+                </div>
+                <div class="Cell1">
+                  <p>{{ TotalTimeTaken }} Minutes</p>
+                </div>
+              </div>
+              <div class="Row" *ngIf="data.processName === 'Production'">
+                <div class="Cell">
+                  <p>Estimated time</p>
+                </div>
+                <div class="Cell1">
+                  <p>{{ Estimatedtime !== undefined && Estimatedtime !== null ? Estimatedtime + ' Minutes' : '0 Minutes'
+                    }}</p>
+                </div>
+              </div>
+              <div class="Row" *ngIf="data.processName === 'Production'">
+                <div class="Cell">
+                  <p>Deviation (+), (-)</p>
+                </div>
+                <div class="Cell1">
+                  <p>{{ Deviation }} Minutes</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <br>
+        <br>
+
+        <!--Fotter dropdown-->
+        <div *ngIf="!disableWorkType">
+
+          <div class="row">
+            <div class="col">
+                <label>ProcessStatus</label>
+                <select id="ddlprocessstatus" class="form-control" name="selectedStatus" [(ngModel)]="Status"
+                  (ngModelChange)="selectIsError()">
+                  <option value="">-- Select Status --</option>
+                  <option value="Buddy Proof"
+                    *ngIf="data.processName=='Production' && IsSelfQC==true && data.jobStatusDescription!='Quotation' || this.ProcessTransaction.processName=='Production' && IsSelfQC==true && this.ProcessTransaction.jobStatusDescription!='Quotation'">
+                    Buddy
+                    Proof</option>
+                  <option value="Sew Out"
+                    *ngIf="data.processName=='Production' && IsSelfQC==true && data.jobStatusDescription!='Quotation' && data.department=='Digitizing' || this.ProcessTransaction.processName=='Production' && IsSelfQC==true && this.ProcessTransaction.jobStatusDescription!='Quotation' && this.ProcessTransaction.department=='Digitizing'">
+                    Sew Out</option>
+                  <option value="Sew Out"
+                    *ngIf="data.processName=='Quality' && data.jobStatusDescription!='Quotation' && data.department=='Digitizing' || this.ProcessTransaction.processName=='Quality' && this.ProcessTransaction.jobStatusDescription!='Quotation' && this.ProcessTransaction.department=='Digitizing'">
+                    Sew Out</option>
+                  <option value="SelfQC"
+                    *ngIf="data.processName=='Production' && IsSelfQC==true && data.jobStatusDescription!='Quotation' || this.ProcessTransaction.processName=='Production' && IsSelfQC==true && this.ProcessTransaction.jobStatusDescription!='Quotation'">
+                    Self QC
+                  </option>
+                  <option value="Completed">Completed</option>
+                  <option value="Query"
+                    *ngIf="data.processName!='Proof Reading' || this.ProcessTransaction.processName!='Proof Reading'">
+                    Query</option>
+                  <option value="Query for Special Pricing"
+                    *ngIf="data.processName!='Proof Reading' || this.ProcessTransaction.processName!='Proof Reading' ">
+                    Query for Special
+                    Pricing</option>
+                  <option value="Work Incomplete">Work Incomplete</option>
+                  <option value="Error"
+                    *ngIf="data.processName!='Production' || this.ProcessTransaction.processName!='Production'">Error
+                  </option>
+                  <option value="Completed With Error"
+                    *ngIf="data.processName!='Production' && data.processName!='Proof Reading' || this.ProcessTransaction.processName!='Production' && this.ProcessTransaction.processName!='Proof Reading'">
+                    Completed With Error
+                  </option>
+                  <option value="No Need Revise"
+                    *ngIf="data.processName=='Quality' || this.ProcessTransaction.processName=='Quality'">No Need
+                    Revise</option>
+                </select>
+            </div>
+            <div class="col">
+              <div class="checkbox">
+                <div class="clearfix"
+                  *ngIf="data.processName == 'Quality' || data.processName == 'Proof Reading' || Status == 'Query' || Status == 'Query for Special Pricing' || data.processName == 'Buddy Proof' || data.processName == 'Sew Out' || this.ProcessTransaction.processName == 'Quality' || this.ProcessTransaction.processName == 'Proof Reading' || Status == 'Query' || Status == 'Query for Special Pricing' || this.ProcessTransaction.processName == 'Buddy Proof' || this.ProcessTransaction.processName == 'Sew Out' ">
+                  <div class="col-sm-9">
+                    <label class="col-sm-3 control-label">Copy Files</label>
+                    <input type="checkbox" [checked]="checked" [disabled]="disable" name="CopyPreviousFiles"
+                      [(ngModel)]="CopyPreviousFiles"> Copy
+                    Previous Tray Files
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+<br>
+          <div class="row">
+            <div class="col-6" *ngIf="Status === 'Error' || Status ==='Completed With Error'">
+                <label for="ddlerrorCategory" class="col-sm-3 control-label">Error Category</label>
+                <select id="ddlerrorCategory" class="form-control" name="errorCategory" [(ngModel)]="errorId"
+                  [ngModelOptions]="{ standalone: true }" [required]="RbnError=='Error'">
+                  <option value="">-- Select Error Category --</option>
+                  <option [value]="error.id" *ngFor="let error of errorCategory">{{ error.description }}</option>
+                </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="comment">
+                <div class="form-group clearfix" *ngIf="Status && (
+    (data.processName=='Production' && IsSelfQC==true && (Status=='SelfQC' || Status=='Sew Out' || Status=='Buddy Proof')) ||
+    (data.processName=='Quality' && (Status=='Completed' || Status=='No Need Revise' || Status=='Sew Out')) ||
+    (data.processName == 'Sew Out' && Status=='Completed') ||
+    (data.processName == 'Buddy Proof' && Status=='Completed')
+  )">
+                  <label for="txtcommentsToClient" class="col-sm-3 control-label">Comments To Client</label>
+                  <div class="col-sm-9">
+                    <textarea id="txtcommentsToClient" class="form-control" name="commentsToClient"
+                      [(ngModel)]="commentsToClient"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="uploadfile">
+                <div class="clearfix"
+                  *ngIf="data.processName == 'Production' || data.processName == 'Quality' || data.processName == 'Sew Out' || data.processName == 'Buddy Proof' || this.ProcessTransaction.processName">
+                  <label class="col-sm-3 control-label">Upload Files<span style="color:red;">*</span></label>
+                  <div class="col-sm-9">
+                    <div class="padding-top-5">
+                      <input id="fileUpload" type="file" multiple class="form-control"
+                        (change)="onFileSelected($event)">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+          <div class="row">
+            <div class="col">
+              <div class="remark">
+                <div class="form-group clearfix" *ngIf="Status">
+                  <label for="txtremarks" class="col-sm-3 control-label">Remarks<span
+                      style="color:red;">*</span></label>
+                  <div class="col-sm-9">
+                    <textarea id="txtremarks" class="form-control" name="remarks" [(ngModel)]="Remarks"
+                      required></textarea>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="col">
+
+              <div class="end">
+                <button class="btn btn-danger" [disabled]="disableWorkType" (click)="changeWorkType('End')">End</button>
+              </div>
+            </div>
+          </div>
+
+
+
+          <div class="row">
+            <div class="col-6">
+              <div class="scope">
+                <div class="form-group clearfix" *ngIf="Status">
+                  <label class="col-sm-3 control-label">Scope<span style="color:red;">*</span></label>
+                  <div class="col-sm-9">
+                    <div class="dropdown">
+                      <select id="ddlScope" class="form-control" name="ddlScope" [(ngModel)]="data.scopeId" required
+                        [disabled]="hiddenscope">
+                        <option value="">--Select--</option>
+                        <option [value]="scope.id" *ngFor="let scope of Scope">{{ scope.name }}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col-6">
+              <div class="stitchCount">
+                <div class="stitchcounttodeeleople">
+                  <div class="form-group clearfix" *ngIf="((data.department=='Digitizing') && (data.processName=='Quality')) 
+                   || (data.department=='Digitizing' && data.processName=='Production'
+                    && (Status=='SelfQC' || Status=='Query for Special Pricing' || Status=='Buddy Proof' 
+                    || Status=='Sew Out'))">
+                    <label for="txtbpsoStitchCount" class="col-sm-3 control-label">Stitch Count</label>
+                    <div class="col-sm-9">
+                      <input type="number" id="txtbpsoStitchCount" name="txtbpsoStitchCount" class="form-control"
+                        [(ngModel)]="txtbpsoStitchCount" required min="0">
+                    </div>
+                  </div>
+
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>

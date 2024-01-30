@@ -1,0 +1,52 @@
+p{
+    text-transform: capitalize;
+}
+
+body{
+    height:100vh;
+}
+
+#others:hover {
+    color: #fff;
+    background-color: #00d5ff;
+    border-color: #00d5ff;
+}
+
+#others {
+    color: #fff;
+    background-color: #0dcaf0;
+    border-color: #0dcaf0;
+}
+
+.downloadbuttons button {
+    margin-right: 5px;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+  th{
+    background-color: #d4d4d4
+  }
+
+ 
+/* Add this code in your component's CSS file */
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid black;
+    padding: 20px;
+    height: 200px;
+    width:300px;
+    z-index: 9999;
+  }
+  .mat-elevation-z8 {
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  

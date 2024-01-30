@@ -1,0 +1,69 @@
+.invoicedetails{
+
+    height: auto;
+    width: 70vw;
+    border:1px solid rgb(207, 207, 207)
+  }
+
+  
+
+.customerProfile{
+  border-style: solid; 
+  border-color: #428bca;
+}
+
+.panel-heading {
+  padding: 10px 15px;
+  border-bottom: 1px solid transparent;
+  border-top-right-radius: 1px;
+  border-top-left-radius: 1px;
+}
+#panel-heading {
+  padding: 10px 15px;
+  border-bottom: 1px solid transparent;
+  border-top-right-radius: 1px;
+  border-top-left-radius: 1px;
+}
+
+
+.panel-title {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 15px;
+  color: inherit;
+}
+
+
+.pull-right {
+  float: right !important;
+}
+.backgroundcolor{
+  background-color: #428bca;
+}
+
+.container {
+  background-color: white;
+  padding: 20px;
+
+}
+
+
+
+
+.mat-mdc-form-field {
+  width: 40%;
+  --mat-mdc-form-field-floating-label-scale: 0.75;
+  display: inline-flex;
+  flex-direction: column;
+  min-width: 0;
+  text-align: left;
+}
+
+#button {
+ padding: 15PX;
+}
+
+.buttons {
+  background: WHITE;
+  padding: 4PX;
+}

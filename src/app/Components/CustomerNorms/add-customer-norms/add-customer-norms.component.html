@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body style="height: 123vh;">
+    <div class="customerProfile">
+        <div class="backgroundcolor">
+            <div class="panel-heading">
+                <h2 class="panel-title" style="color:#fff;display: flex;align-items: center;justify-content: center;">
+                    Customer Norms </h2>
+            </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field>
+                            <mat-label>Department</mat-label>
+                            <mat-select [(ngModel)]="selectedDepartment">
+                              <mat-option *ngFor="let department of departments" [value]="department.id">
+                                {{ department.description }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field>
+                            <mat-label>Customer</mat-label>
+                            <mat-select [(ngModel)]="selectedCustomer">
+                              <mat-option *ngFor="let customer of customers"  (onSelectionChange)="onSelectCode(customer.id)" [value]="customer.id">
+                                {{ customer.shortName }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field>
+                            <mat-label>Scope</mat-label>
+                            <mat-select [(ngModel)]="selectedScope">
+                              <mat-option *ngFor="let scope of scopes"   [value]="scope.id">
+                                {{ scope.description }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field>
+                            <mat-label>Job Status</mat-label>
+                            <mat-select [(ngModel)]="selectedJobStatus">
+                              <mat-option *ngFor="let JobStatus of jobstatus" [value]="JobStatus.id">
+                                {{ JobStatus.jobStatusDescription }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field>
+                            <mat-label>Process</mat-label>
+                            <mat-select [(ngModel)]="selectedProcess">
+                              <mat-option *ngFor="let Process of process" [value]="Process.id">
+                                {{ Process.name }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+
+                    </div>
+                    <div class="col">
+                        <mat-form-field>
+                            <mat-label>CustomerDivision</mat-label>
+                            <mat-select [(ngModel)]="selectedDivision">
+                              <mat-option *ngFor="let CustomerDivision of CustomerDivisions" [value]="CustomerDivision.id">
+                                {{ CustomerDivision.divisionName }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <mat-form-field>
+                            <mat-label>Norms</mat-label>
+                            <input matInput [(ngModel)]="norms" name="norms">
+                          </mat-form-field>
+                          
+                          
+                    </div>
+                </div>
+
+   
+
+               
+                <div class="panel-heading">
+                        <button type="button" id="panel-title"  style="float:right" class="btn btn-success" (click)="onSubmit()">Submit</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

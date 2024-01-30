@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="advance">
+            <div class="customerProfile">
+                <div class="backgroundcolor">
+                    <div class="panel-heading">
+                        <h2 class="panel-title" style="color:#fff;">
+                            Invoice Calculation
+                        </h2>
+                    </div>
+
+                    <div class="pricingcalculation">
+                        <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+                            <div class="container1">
+                                <div class="row">
+                                    <div class="col">
+                                        <mat-form-field>
+                                            <mat-label>Start Date</mat-label>
+                                            <input matInput [matDatepicker]="startDatePicker"
+                                                placeholder="Choose a date" formControlName="fromDate">
+                                            <mat-datepicker-toggle matSuffix
+                                                [for]="startDatePicker"></mat-datepicker-toggle>
+                                            <mat-datepicker #startDatePicker></mat-datepicker>
+                                        </mat-form-field>
+                                        <mat-error *ngIf="myForm.get('fromDate')?.hasError('required') && myForm.get('fromDate')?.touched">
+                                            *Please choose start date.
+                                          </mat-error>
+                                    </div>
+                                    <div class="col">
+                                        <mat-form-field>
+                                            <mat-label>End Date</mat-label>
+                                            <input matInput [matDatepicker]="endDatePicker" placeholder="Choose a date"
+                                                formControlName="toDate">
+                                            <mat-datepicker-toggle matSuffix
+                                                [for]="endDatePicker"></mat-datepicker-toggle>
+                                            <mat-datepicker #endDatePicker></mat-datepicker>
+                                        </mat-form-field>
+                                        <mat-error *ngIf="myForm.get('toDate')?.hasError('required') && myForm.get('toDate')?.touched">
+                                            *Please choose end date.
+                                          </mat-error>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <mat-form-field appearance="fill">
+                                                <mat-label>Client</mat-label>
+                                                <mat-select ngDefaultControl formControlName="ClientId">
+                                                    <mat-option *ngFor="let Client of data.clientList"
+                                                        [value]="Client.id">
+                                                        {{Client.shortName}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                            <mat-error *ngIf="myForm.get('ClientId')?.hasError('required') && myForm.get('ClientId')?.touched">
+                                                *Please select the client.
+                                              </mat-error>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="button">
+                                                <button class="btn" mat-raised-button color="primary">Search</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                    <div class="table-container">
+
+                        <table class="table table-sm table-responsive" id="custom-table" mat-table
+                            [dataSource]="dataSource" matSort>
+
+                            <!-- Add checkbox column to your table -->
+                            <ng-container matColumnDef="selected">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                                        [checked]="selection.hasValue() && isAllSelected()"
+                                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+                                    </mat-checkbox>
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <mat-checkbox (click)="$event.stopPropagation()"
+                                        (change)="$event ? selection.toggle(row) : null"
+                                        [checked]="selection.isSelected(row)">
+                                    </mat-checkbox>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="ClientName">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start">Client Name</div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td mat-cell *matCellDef="let element">{{element.shortName}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="Jobid">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start">Job Id</div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td mat-cell *matCellDef="let element">{{element.jobId}}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="FileName">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start">File Name</div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td mat-cell *matCellDef="let element">{{element.fileName}}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="Department">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start">Department</div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td mat-cell *matCellDef="let element">{{element.department}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="ProjectCode">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start">Project Code</div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td mat-cell *matCellDef="let element">{{element.projectCode}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="SpecialPrice">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start">Special Price</div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td mat-cell *matCellDef="let element">{{element.specialPrice}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="scope">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start">Scope</div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td mat-cell *matCellDef="let element">{{element.description}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="JobStatus">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start">Job Status</div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td mat-cell *matCellDef="let element">{{element.jobStatusDescription}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="StitchCount">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start">Stitch Count</div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td mat-cell *matCellDef="let element">{{element.stitchCount}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="ESTFileReceivedDate">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start">ESTFileReceivedDate</div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td mat-cell *matCellDef="let element">{{element.estFileReceivedDate}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="ESTDateofUpload">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <div class="header-wrapper">
+                                        <div class="department-name text-start">ESTDateofUpload</div>
+                                        <div class="filter-input">
+                                            <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
+                                                #input>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td mat-cell *matCellDef="let element">{{element.estDateofUpload}}</td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                    </div>
+                    <mat-paginator [pageSizeOptions]="[25, 50]" showFirstLastButtons></mat-paginator>
+                </div>
+
+                <div class="matbuttonaign">
+                    <button mat-raised-button style="color:#088607" (click)="openDialog()"> InvoiceCalculation</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="height: 100vh;">
+  <div class="container">
+    <div class="card">
+      <div class="card-body">
+        <!-- <div class="row">
+          <div class="col-md-12 text-start">
+            <h3 class="text-white">
+              <span class="scope-text">Error Category</span>
+            </h3>
+          </div>
+        </div> -->
+        <h3 class="text-white text-start">{{ mode === 'add' ? 'Add' : 'Edit' }} Process</h3>
+        <form [formGroup]="userRegistrationForm" (ngSubmit)="submitForm()">
+          <div class="bg-white">
+            <div class="row mt-2" >
+              <div class="col-md-2 mt-4 mx-4">
+                <h3>Name</h3>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field appearance="fill">
+                  <input type="" matInput ngDefaultControl formControlName="name">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2 mt-4 mx-4">
+                <h3>Short Name</h3>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field appearance="fill">
+                  <input type="" matInput ngDefaultControl formControlName="shortName">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2 mt-4 mx-4">
+                <h3>Description</h3>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field appearance="fill">
+                  <input type="" matInput ngDefaultControl formControlName="description">
+                  
+                </mat-form-field>
+              </div>
+            </div>
+            <div *ngIf="mode === 'edit'" class="col-md-2 mt-4 mx-4">
+              <label>
+                IsActive:
+                <input type="checkbox" formControlName="isActive" />
+              </label>
+            </div>
+          </div>
+          
+          <div class="col-12 mt-3">
+            <button class="float-left" mat-raised-button color="primary" (click)="onCancel()"
+              routerLink="UserMasterComponent">Cancel</button>
+              <button type="submit" class="btn btn-success float-end">{{ mode === 'add' ? 'Add' : 'Save' }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+<!-- 
+  <h2>{{ mode === 'add' ? 'Add' : 'Edit' }} Details</h2>
+  <form [formGroup]="myForm" (ngSubmit)="submitForm()">
+    <label>
+      Name:
+      <input type="text" formControlName="name" />
+    </label>
+    <label>
+      Short Name:
+      <input type="text" formControlName="shortName" />
+    </label>
+    <label>
+      Description:
+      <textarea formControlName="description"></textarea>
+    </label>
+
+    <div *ngIf="mode === 'edit'">
+      <label>
+        IsActive:
+        <input type="checkbox" formControlName="isActive" />
+      </label>
+    </div>
+
+    <button type="submit">{{ mode === 'add' ? 'Add' : 'Save' }}</button>
+  </form> -->
+
+</body>
+
+</html>

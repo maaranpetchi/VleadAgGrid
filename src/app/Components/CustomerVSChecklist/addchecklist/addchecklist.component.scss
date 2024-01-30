@@ -1,0 +1,101 @@
+.checklist{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+  
+}
+
+h1 {
+   font-family: 'Times New Roman', Times, serif;
+   font-size: large;
+}
+
+.view {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+
+// body {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     height: 60vh;
+//     margin: 0;
+// }
+
+
+// .container {
+//     width: 46vw;
+// }
+
+.container { 
+   // display: grid;
+   grid-template-columns: 0.6fr 1.8fr 0.6fr;
+   grid-template-rows: -0.5fr 0.5fr 1fr;
+   gap: 0px 0px;
+   grid-auto-flow: row;
+   grid-template-areas:
+     ". advance ."
+     ". . ."
+     ". . .";
+ }
+ 
+ .advance { grid-area: advance; }
+ 
+
+ .customerProfile{
+   border-style: solid; 
+   border-color: #428bca;
+}
+
+.panel-heading {
+   padding: 10px 15px;
+   border-bottom: 1px solid transparent;
+   border-top-right-radius: 1px;
+   border-top-left-radius: 1px;
+}
+
+
+.panel-title {
+   margin-top: 0;
+   margin-bottom: 0;
+   font-size: 15px;
+   color: inherit;
+}
+
+
+.pull-right {
+   float: right !important;
+}
+.backgroundcolor{
+   background-color: #428bca;
+}
+
+.container {
+   background-color: white;
+   padding-top: 12px;
+
+}
+
+#button-gap {
+   margin-right: 5px;
+ }
+.content{
+   text-align: center;
+}
+
+ .table-container {
+    height: 60vh; /* Set a fixed height of 50% of the viewport height */
+    overflow: auto; /* Enable vertical scrolling if content overflows */
+    overflow-x: hidden; 
+    
+  }
+
+  
+  /* Define the custom-table class for styling */
+  #custom-table {
+    width: 75%; /* Set the table width to 75% of its container */
+    border-collapse: collapse; /* Optional: Collapse borders between table cells */
+  }

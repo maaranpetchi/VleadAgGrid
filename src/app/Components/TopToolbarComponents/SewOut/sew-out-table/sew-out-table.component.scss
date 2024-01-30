@@ -1,0 +1,76 @@
+.mat-elevation-z8{
+    overflow: auto;
+}
+
+.no-data-cell {
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    color: gray;
+  }
+
+  .table-container {
+    height:50vh; /* Set the maximum height for the table container */
+    overflow-y: auto; /* Enable vertical scrolling */
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+    position: sticky;
+    top: 0;
+  }
+  
+  .table-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Define the custom-table class for styling */
+  #custom-table {
+    width: 75%; /* Set the table width to 75% of its container */
+    border-collapse: collapse; /* Optional: Collapse borders between table cells */
+  }
+//Table Color
+.text-color-green {
+  color: rgb(53, 157, 53)
+}
+
+.text-color-brown {
+  color: rgb(178, 50, 50)
+}
+
+.text-color-blue {
+  color: rgb(62, 62, 255)
+}
+
+.text-color-DeepSkyBlue {
+  color: deepskyblue
+}
+
+.text-color-yellow {
+  color: rgb(252, 252, 109);
+}
+
+.text-color-red {
+  color: rgb(253, 114, 114);
+}
+
+.SuperRush {
+  color: #ff00e1
+}
+
+.Rush {
+  color: #cc00cb
+}

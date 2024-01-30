@@ -1,0 +1,89 @@
+<div class="container">
+    <div class="jobdetails">
+      <h1 mat-dialog-title>Job Details</h1>
+    
+        <div class="jobdetails">
+          <div class="row">
+            <div class="col">
+              <p> Job Id: &nbsp;&nbsp;{{data.jobId}}</p>
+            </div>
+            <div class="col">
+              <p>Client Name:&nbsp;&nbsp;{{data.shortName}}</p>
+            </div>
+          </div>
+  
+          <div class="row">
+            <div class="col">
+              <p>File Received Date:&nbsp;&nbsp;{{data.estfileReceivedDate}}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <p>File Name :&nbsp;&nbsp;{{data.fileName}}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <p>Job Description :&nbsp;&nbsp; {{data.jobStatusDescription}}</p>
+            </div>
+            <div class="col">
+              <p>File Inward Mode :&nbsp;&nbsp; {{data.fileInwardType}}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+<p>Instructions : &nbsp;&nbsp;{{data.instructions}} </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <p>Garment Color : &nbsp;&nbsp;{{data.garmentColor}} </p>
+            </div>
+          </div>    
+    </div>
+  
+    <div class="jobHistory">
+      <h1 mat-dialog-title>Job History</h1>
+      <div mat-dialog-content>
+        <div class="jobhistory">
+          <table mat-table [dataSource]="dataJobSource" class="mat-elevation-z8">
+            <ng-container matColumnDef="movedFrom">
+              <th mat-header-cell *matHeaderCellDef>Moved From</th>
+              <td mat-cell *matCellDef="let element">{{ element.previousProcessName ? element.previousProcessName:"Client"
+                }}</td>
+            </ng-container>
+  
+            <ng-container matColumnDef="movedTo">
+              <th mat-header-cell *matHeaderCellDef>Moved To</th>
+              <td mat-cell *matCellDef="let element">{{ element.processName?element.processName:"client" }}</td>
+            </ng-container>
+  
+            <ng-container matColumnDef="movedDate">
+              <th mat-header-cell *matHeaderCellDef>Moved Date [mm-dd-yyyy]</th>
+              <td mat-cell *matCellDef="let element">{{ element.createdUTC }}</td>
+            </ng-container>
+            <ng-container matColumnDef="movedBy">
+              <th mat-header-cell *matHeaderCellDef>Moved By</th>
+              <td mat-cell *matCellDef="let element">{{ element.employeeName?element.employeeName:"Client" }}</td>
+            </ng-container>
+            <ng-container matColumnDef="MovedTo">
+              <th mat-header-cell *matHeaderCellDef>Moved To</th>
+              <td mat-cell *matCellDef="let element">{{ element.workingName?element.workingName:"-" }}</td>
+            </ng-container>
+            <ng-container matColumnDef="remarks">
+              <th mat-header-cell *matHeaderCellDef>Remarks</th>
+              <td mat-cell *matCellDef="let element">{{ element.remarks }}</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedJobColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedJobColumns;"></tr>
+          </table>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col" style="display:flex;justify-content: center;">
+            <button type="button" class="btn btn-danger" (click)="closeDialog()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

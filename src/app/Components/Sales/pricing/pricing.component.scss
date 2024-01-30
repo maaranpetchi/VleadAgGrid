@@ -1,0 +1,59 @@
+.form-container {
+  display: flex; /* Use flexbox layout to align elements */
+  align-items: center; /* Center elements vertically */
+}
+
+.vertical-line {
+  width: 1px; /* Set the width of the line */
+  height: 50px; /* Set the height of the line (adjust as needed) */
+  background-color: #000; /* Set the color of the line */
+  margin-bottom: 20px;
+}
+.scope-text {
+  margin-right: 10px;
+}
+
+.square-button {
+  width: 48px;
+  height: 48px;
+  border-radius: 0;
+  vertical-align: middle;
+}
+.add-icon-bg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: green;
+}
+
+
+.add-icon {
+  color: rgb(252, 255, 252);
+  margin-top: 8px;
+  text-align:  center;
+  width: 100%;
+  height: 100%;
+  font-size: 18px; /* Adjust the value as needed */
+}
+.small-input .mat-input-element {
+  height: 50px;
+  padding: 10px;
+  font-size: 14px;
+  line-height: 1;
+}
+.table-container {
+  height: 50vh; /* Set a fixed height of 50% of the viewport height */
+  overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  
+}
+
+/* Define the custom-table class for styling */
+#custom-table {
+  width: 75%; /* Set the table width to 75% of its container */
+  border-collapse: collapse; /* Optional: Collapse borders between table cells */
+}

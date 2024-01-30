@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <h3 class="text-white">
+              <span class="scope-text">Error Category</span>
+            </h3>
+          </div>
+        </div>
+        <form [formGroup]="userRegistrationForm" (ngSubmit)="onFormSubmit()">
+          <div class="bg-white">
+            <div class="row">
+              <div class="col-md-2 mt-4 mx-4">
+                <h3>Department Name</h3>
+              </div>
+              <div class="col-md-6 mt-3">
+                <mat-form-field>
+                  <mat-label>Department</mat-label>
+                  <mat-select formControlName="department" [(value)]="scopeID">
+                    <mat-option *ngFor="let error of errorCategory" [value]="error.id" >
+                      {{ error.description }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2 mt-4 mx-4">
+                <h3>Scope Description</h3>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field appearance="fill">
+                  <input type="" matInput ngDefaultControl  formControlName="description">
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 mt-3">
+            <button class="float-left" mat-raised-button color="primary" (click)="onCancel()"
+              routerLink="UserMasterComponent">Cancel</button>
+            <button type="submit" class="btn btn-success float-end">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

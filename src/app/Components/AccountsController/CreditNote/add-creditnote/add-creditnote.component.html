@@ -1,0 +1,174 @@
+<div class="container">
+    <div class="advance">
+        <div class="customerProfile">
+            <div class="backgroundcolor">
+                <div class="panel-heading">
+                    <h2 class="panel-title"
+                        style="color:#fff;display: flex;text-align: center;justify-content: center;font-family: 'Times New Roman', Times, serif;">
+                        CREDIT NOTE
+                    </h2>
+                </div>
+
+                <form [formGroup]="Empregister" (ngSubmit)="onFormSubmit()">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Voucher Number</mat-label>
+                                    <input matInput placeholder="Invoice Type" formcontrolname="vouchernumber" value="0"
+                                        style="font-weight: bold" disabled>
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Voucher Date</mat-label>
+                                    <input ngDefaultControl formControlName="voucherdate" matInput
+                                        [matDatepicker]="voucherdate">
+                                    <mat-hint>MM/DD/YYYY</mat-hint>
+                                    <mat-datepicker-toggle matIconSuffix [for]="voucherdate"></mat-datepicker-toggle>
+                                    <mat-datepicker #voucherdate></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Reference Number</mat-label>
+                                    <input type="number" ngDefaultControl name="ReferenceNumber" matInput
+                                        placeholder="ReferenceNumber" [ngModelOptions]="{standalone: true}"
+                                        [(ngModel)]="referencenumber">
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Reference Date</mat-label>
+                                    <input ngDefaultControl formControlName="referencedate" matInput
+                                        [matDatepicker]="referencedate">
+                                    <mat-hint>MM/DD/YYYY</mat-hint>
+                                    <mat-datepicker-toggle matIconSuffix [for]="referencedate"></mat-datepicker-toggle>
+                                    <mat-datepicker #referencedate></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Customer Name</mat-label>
+                                    <mat-select ngDefaultControl formControlName="customer"
+                                        (selectionChange)="onchangesubmit()" [(value)]="selectedCustomerOption">
+                                        <mat-option *ngFor="let customerdropdownvalues of Customerdropdownvalues"
+                                            [value]="customerdropdownvalues.id">
+                                            {{ customerdropdownvalues.name+" - "+customerdropdownvalues.shortName }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Credit Note Amount</mat-label>
+                                    <input ngDefaultControl matInput placeholder="Invoice Type"
+                                        [ngModelOptions]="{standalone: true}" [(ngModel)]="creditnoteamount"
+                                        name="creditnoteamount">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Description</mat-label>
+                                    <input ngDefaultControl matInput placeholder="Invoice Type"
+                                        [ngModelOptions]="{standalone: true}" [(ngModel)]="description"
+                                        name="description">
+                                </mat-form-field>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Exchange Rate</mat-label>
+                                    <input ngDefaultControl type="number" matInput placeholder="exchangeRate"
+                                        [ngModelOptions]="{standalone: true}" [(ngModel)]="exchangerate"
+                                        name="exchangerate">
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="invoicedetails">
+                            <h1 style="text-align: center;color:#939597;font-family: 'Times New Roman', Times, serif;">
+                                Invoice
+                                Details
+                            </h1>
+                            <div class="wrapper" *ngIf="invoicedropdownvalues.length == 0 ? false : true">
+                                <div class="row">
+                                    <div class="col">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Invoice Date</mat-label>
+                                            <input type="text" matInput placeholder="" formcontrolname=""
+                                                [value]="invoiceDate">
+                                            <mat-hint>(MM/DD/YYYY)</mat-hint>
+                                        </mat-form-field>
+
+                                    </div>
+                                    <div class="col">
+                                        <mat-form-field>
+                                            <mat-label>Invoice Number</mat-label>
+                                            <mat-select ngDefaultControl formControlName="invoicenumber"
+                                                (selectionChange)="invoicenumberdetails()"
+                                                [(value)]="selectedinvoiceoption">
+
+                                                <mat-option *ngFor="let InvoiceDropdownvalues of invoicedropdownvalues"
+                                                    [value]="InvoiceDropdownvalues.invoiceNo">
+                                                    {{ InvoiceDropdownvalues.invoiceNo}}
+
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Invoice Value</mat-label>
+                                            <input type="number" matInput [value]="invoiceValue" placeholder=""
+                                                formcontrolname="">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Adjusted Amount</mat-label>
+                                            <input type="number" matInput placeholder="" [value]="adjustedAmount"
+                                                formcontrolname="">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Balance To Be Adjusted</mat-label>
+                                            <input type="number" matInput [value]="amountToBeAdjusted" placeholder=""
+                                                formcontrolname="">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </form>
+
+
+
+                <div class="buttons">
+                    <button class="btn btn-warning" (click)="cancel()" style="float:left;">Cancel</button>
+                    <button class="btn btn-success" (click)="onFormSubmit()" style="float:right;">Submit</button>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

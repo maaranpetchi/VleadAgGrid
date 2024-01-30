@@ -1,0 +1,273 @@
+
+.invoiceroute{
+  color: #1994c5;
+  cursor: pointer;
+  text-decoration: none;
+}
+.viewcancelledinvoice{
+  text-decoration: none;
+  float: right;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: medium;
+}
+
+
+.showingcontent{
+  height:300px;
+  width:400px;
+}
+
+.demo{
+  display:flex;
+  flex-direction: row;
+}
+
+
+.mat-mdc-tab-body.mat-mdc-tab-body-active {
+  position: relative;
+  overflow-x: auto;
+  /* overflow-y: auto; */
+  z-index: 1;
+  flex-grow: 1;
+}
+
+
+
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#invoice-button {
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+.button-gap {
+  width: 2px;
+}
+
+
+.disabled {
+  pointer-events: none; /* Disable click events */
+  opacity: 0.6; /* Dim the appearance of disabled cells */
+}
+
+
+.container {
+  // display: grid; 
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    ". advance ."
+    ". . ."
+    ". . .";
+}
+
+.advance {
+  grid-area: advance;
+}
+
+.body {
+  min-height: 75vh;
+  height: auto;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  // overflow-y: auto;
+}
+
+.customerProfile {
+  border-style: solid;
+  border-color: #428bca;
+}
+
+.panel-heading {
+  padding: 10px 15px;
+  border-bottom: 1px solid transparent;
+  border-top-right-radius: 1px;
+  border-top-left-radius: 1px;
+}
+
+
+.panel-title {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 15px;
+  color: inherit;
+}
+
+
+.pull-right {
+  float: right !important;
+}
+
+.backgroundcolor {
+  background-color: #428bca;
+}
+
+.container {
+  background-color: white;
+  height: 140vh;
+  margin-top: 36px;
+
+}
+
+#button-gap {
+  margin-right: 5px;
+}
+
+
+.mat-elevation-z8 {
+  overflow-x: scroll;
+}
+
+.clickable-link {
+  cursor: pointer;
+}
+
+.table-container {
+  height: 75vh;
+  overflow-y: auto; /* Enable vertical scrolling */
+  background-color: white;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+  position: sticky;
+  top: 0;
+}
+
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkbox {
+  background-color: #fff;
+}
+
+/* Define the custom-table class for styling */
+#custom-table {
+  width: 75%;
+  /* Set the table width to 75% of its container */
+  border-collapse: collapse;
+  /* Optional: Collapse borders between table cells */
+}
+
+.container {
+  // display: grid; 
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    ". advance ."
+    ". . ."
+    ". . .";
+    height:100vh;
+}
+
+.advance {
+  grid-area: advance;
+}
+
+.body {
+  min-height: 75vh;
+  height: auto;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  // overflow-y: auto;
+}
+
+.customerProfile {
+  border-style: solid;
+  border-color: #428bca;
+}
+
+.panel-heading {
+  padding: 10px 15px;
+  border-bottom: 1px solid transparent;
+  border-top-right-radius: 1px;
+  border-top-left-radius: 1px;
+}
+
+
+.panel-title {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 15px;
+  color: inherit;
+}
+
+
+.pull-right {
+  float: right !important;
+}
+
+.backgroundcolor {
+  background-color: #428bca;
+}
+
+.container {
+  background-color: white;
+  height:140vh;
+  margin-top: 36px;
+
+}
+
+#button-gap {
+  margin-right: 5px;
+}
+.pricingcalculation{
+  background: white;
+  padding: 20px;
+}
+.matbuttonaign {
+  display: flex;
+  padding:3px;
+  align-items: center;
+  justify-content: center;
+}
+.mat-elevation-z8 {
+  overflow-x: scroll;
+}
+
+.clickable-link {
+  cursor: pointer;
+}
+
+.table-container {
+  background: white;
+  height: 75vh;
+  /* Set a fixed height of 50% of the viewport height */
+  overflow: auto;
+  /* Enable vertical scrolling if content overflows */
+  overflow-x: auto;
+
+}
+
+.checkbox {
+  background-color: #fff;
+}
+
+/* Define the custom-table class for styling */
+#custom-table {
+  width: 75%;
+  /* Set the table width to 75% of its container */
+  border-collapse: collapse;
+  /* Optional: Collapse borders between table cells */
+}

@@ -1,0 +1,127 @@
+<div class="maindiv">
+<div class="customerProfile">
+    <div class="backgroundcolor">
+        <div class="panel-heading">
+            <h2 class="panel-title" style="color:#fff;display: flex;align-items: center;justify-content: center;">
+                Adjusting Invoice </h2>
+        </div>
+
+        <div class="container">
+            <form #itemForm="ngForm" [formGroup]="invoiceForm">
+
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Invoice Type</mat-label>
+                            <input matInput placeholder="Invoice Type" value="Adjustment" style="font-weight: bold"
+                                disabled>
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field>
+                            <mat-label>Choose Invoice Number</mat-label>
+                            <mat-select ngDefaultControl [(ngModel)]="selectedValue"
+                                formControlName="selectedinvoicenumber" name="selectedinvoicenumber"
+                                (selectionChange)="onchangevalues()" [(value)]="selectedInvoiceOption">
+                                <mat-option *ngFor="let invoicedropdownvalues of Invoicedropdownvalues"
+                                    [value]="invoicedropdownvalues.invoiceNo">
+                                    {{ invoicedropdownvalues.invoiceNo }}
+                                </mat-option>
+                            </mat-select>
+                            <input matInput placeholder="Invoice Type" [value]="InvoiceId" style="font-weight: bold"
+                                hidden>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Invoice Value</mat-label>
+                            <input matInput name="invoicevalue" [(ngModel)]="invoiceValue"
+                                formControlName="invoicevalue" placeholder="Invoice Value">
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Already Adjusted Amount</mat-label>
+                            <input matInput name="alreadyadjustedamount" [(ngModel)]="adjustmentAmount"
+                                formControlName="alreadyadjustedamount" placeholder="Already Adjusted Amount">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Balance Amount</mat-label>
+                            <input matInput name="balanceamount" formControlName="balanceamount" [(ngModel)]="input3"
+                                [value]="invoiceValue - adjustmentAmount">
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Invoice Date</mat-label>
+                            <input matInput [(ngModel)]="input4" name="InvoiceDate" formControlName="InvoiceDate"
+                                placeholder="InvoiceDate">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Advance Amount</mat-label>
+                            <input matInput [(ngModel)]="InvoiceAmount" formControlName="AdvanceAmount"
+                                [value]="InvoiceAmount" name="InvoiceAmount" placeholder="Advance Amount">
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Enter amount to be Adjusted</mat-label>
+                            <input matInput [(ngModel)]="input6" (ngModelChange)="amountvalidation()" name="enteramount"
+                                formControlName="enteramount" [min]="0" [max]="InvoiceAmount">
+
+                        </mat-form-field>
+                        <p style="color:red" *ngIf="amountvalidationerror">Enter amount is greater than balance amount
+                        </p>
+                    </div>
+                    <div class="addbutton">
+                        <button class="btn btn-primary" (click)="addItem(itemForm)">Add</button>
+                    </div>
+                </div>
+
+                <!--table to add the advance details-->
+                <table class="table">
+                    <thead>
+                        <tr>
+
+                            <th scope="col">Invoice Number</th>
+                            <th scope="col">Invoice Date</th>
+                            <th scope="col">Invoice Value</th>
+                            <th scope="col">Already Adjusted Inv Amount</th>
+                            <th scope="col">Invoce O/S Amount</th>
+                            <th scope="col">Advanve Amount Adjusted</th>
+                            <th scope="col">Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of items; let i = index">
+                            <td>{{ item.selectedValue }}</td>
+                            <td>{{ item.input4}}</td>
+                            <td>{{ item.invoiceValue}}</td>
+                            <td>{{ item.adjustmentAmount}}</td>
+                            <td>{{ item.InvoiceAmount}}</td>
+                            <td>{{ item.input6}}</td>
+                            <td>
+                                <button class="btn btn-danger" (click)="deleteItem(i)">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div class="button">
+        <button class="btn btn-primary" (click)="onCloseClick()">Cancel</button>
+        <button  class="btn btn-success" (click)="onFormSubmit()" style="float:right">Submit</button>
+    </div>
+</div>
+</div>

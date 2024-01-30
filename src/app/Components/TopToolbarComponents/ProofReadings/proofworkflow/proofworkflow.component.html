@@ -1,0 +1,122 @@
+<div class="container">
+    <div class="fullform">
+        <div class="qualityworkflow">
+            <h1 style="font-family: 'Times New Roman', Times, serif;color:#000000">Proof Reading Workflow</h1>
+
+            <div class="header">
+                <div class="row">
+                    <div class="col-4">
+                        <p>Job Id</p>
+                        <p>Department</p>
+                        <p>Client</p>
+                        <p>JobDesc</p>
+                        <p>Instruction</p>
+                    </div>
+                    <div class="col-4">
+                        <p>Job Date</p>
+                        <p>EstimatedTime</p>
+                        <p>AssignedDate&Time</p>
+                        <p>File Name</p>
+                        <p>Garment Color</p>
+                    </div>
+                    <div class="col-4">
+                        <p>Salesperson</p>
+                        <p>PO#</p>
+                        <p>JobStatus</p>
+                        <p>ArtistComments</p>
+                    </div>
+                </div>
+                <div class="nav" style="display: flex;">
+                    <div class="back" style="margin-right: auto;">
+                      <a class="backandviewdetailsanchor">
+                        Back
+                      </a>
+                    </div>
+                    <div class="viewdetails" style="margin-left: auto;">
+                      <a class="backandviewdetailsanchor" (click)="openJobHistory()">
+                        View Details
+                      </a>
+                    </div>
+                  </div>
+                  
+                  <div class="buttons" style="display:flex;justify-content: center;">
+                          <button class="btn btn-success">Start</button>&nbsp;
+                          <button class="btn btn-primary">Break</button>&nbsp;
+                          <button class="btn btn-warning">Training/Meeting</button>&nbsp; 
+                          <button class="btn btn-primary">Hold</button>&nbsp;
+                          <button class="btn btn-secondary">Others</button>&nbsp;
+                      </div>
+
+                      <div class="formtable">
+                        <div class="table">
+                          <div class="formtab">
+                            <table mat-table [dataSource]="dataSource" matSort>
+                                <!-- StartDate & Time Column -->
+                                <ng-container matColumnDef="startDate">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Start Date & Time </th>
+                                  <td mat-cell *matCellDef="let element"> {{element.startDate}} </td>
+                                </ng-container>
+                              
+                                <!-- EndDate & Time Column -->
+                                <ng-container matColumnDef="endDate">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header> End Date & Time </th>
+                                  <td mat-cell *matCellDef="let element"> {{element.endDate}} </td>
+                                </ng-container>
+                              
+                                <!-- TimeTakenInMins Column -->
+                                <ng-container matColumnDef="timeTaken">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Time Taken (mins) </th>
+                                  <td mat-cell *matCellDef="let element"> {{element.timeTaken}} </td>
+                                </ng-container>
+                              
+                                <!-- Status Column -->
+                                <ng-container matColumnDef="status">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                                  <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+                                </ng-container>
+                              
+                                <!-- Define the table rows -->
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                              </table>
+ 
+                              <!-- Add pagination control -->
+                              <mat-paginator [pageSizeOptions]="[25, 50,75,100]" showFirstLastButtons></mat-paginator>
+                          </div>
+                        </div>
+                        <div class="minutestable">
+                          <div class="tablemin">
+                            <table *ngIf="timeData">
+                                <tr>
+                                  <th>Total Time Worked</th>
+                                  <td>{{ timeData.totalTimeWorked }}</td>
+                                </tr>
+                                <br>
+                                <tr>
+                                  <th>Break</th>
+                                  <td>{{ timeData.break }}</td>
+                                </tr>
+                                <br>
+                                <tr>
+                                  <th>Training/Meeting</th>
+                                  <td>{{ timeData.trainingMeeting }}</td>
+                                </tr>
+                                <br>
+                                <tr>
+                                  <th>Hold</th>
+                                  <td>{{ timeData.hold }}</td>
+                                </tr>
+                                <br>
+                                <tr>
+                                  <th>Others</th>
+                                  <td>{{ timeData.others }}</td>
+                                </tr>
+                              </table>
+                          </div>
+                        </div>
+                      </div>
+    
+                  </div>
+            </div>
+        </div>
+    </div>
