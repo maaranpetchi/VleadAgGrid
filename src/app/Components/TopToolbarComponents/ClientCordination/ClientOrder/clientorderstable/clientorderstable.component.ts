@@ -332,7 +332,6 @@ export class ClientorderstableComponent implements OnInit {
   }
   queryforsp() {
     this.spinnerService.requestStarted();
-    this.spinnerService.requestStarted();
     this.gridApi.setColumnVisible('filecount', false);
     this.gridApi.setColumnVisible('action', false);
     this.gridApi.setColumnVisible('fileInwardMode', true);
@@ -348,8 +347,9 @@ export class ClientorderstableComponent implements OnInit {
       })
 
     ).subscribe(queryforsp => {
-      this.rowData = queryforsp.queryJobs;
       this.spinnerService.requestEnded();
+
+      this.rowData = queryforsp.queryJobs;
     },
       error => {
         this.spinnerService.resetSpinner();
@@ -968,16 +968,16 @@ export class ClientorderstableComponent implements OnInit {
   };
 
   columnDefs: ColDef[] = [
-    { headerName: 'JobId', field: 'jobId' },
-    { headerName: 'ClientName', field: 'clientName' },
-    { headerName: 'CustomerClassification', field: 'customerClassification' },
-    { headerName: 'FileName', field: 'fileName' },
-    { headerName: 'File Received EST Date', field: 'estFileReceivedDate' },
-    { headerName: 'Department', field: 'departmentName' },
-    { headerName: 'Quote Parent Id', field: 'parentJobId' },
-    { headerName: 'Instructions', field: 'instruction' },
-    { headerName: 'Sales Person Name', field: 'salesPersonName' },
-    { headerName: 'TransactionType ', field: 'transactionType' },
+    { headerName: 'JobId', field: 'jobId', filter: true, },
+    { headerName: 'ClientName', field: 'clientName', filter: true, },
+    { headerName: 'CustomerClassification', field: 'customerClassification', filter: true, },
+    { headerName: 'FileName', field: 'fileName', filter: true, },
+    { headerName: 'File Received EST Date', field: 'estFileReceivedDate', filter: true, },
+    { headerName: 'Department', field: 'departmentName', filter: true, },
+    { headerName: 'Quote Parent Id', field: 'parentJobId', filter: true, },
+    { headerName: 'Instructions', field: 'instruction', filter: true, },
+    { headerName: 'Sales Person Name', field: 'salesPersonName', filter: true, },
+    { headerName: 'TransactionType ', field: 'transactionType', filter: true, },
     {
       headerName: 'Actions',
       field: 'action',

@@ -71,7 +71,6 @@ export class FileconvertComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
   a: any[] = [];
-
   gettingdata(data: any) {
     let GetAllvalues = data.row;
     let count = data.fileCount;
