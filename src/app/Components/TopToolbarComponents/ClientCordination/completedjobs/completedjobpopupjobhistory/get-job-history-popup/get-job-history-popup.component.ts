@@ -116,16 +116,28 @@ export class GetJobHistoryPopupComponent implements OnInit {
 
 
   jobMovement(processMovement) {
+    this.spinnerservice.requestStarted();
     this.http.post<any>(environment.apiURL + `Allocation/processMovement`, processMovement).subscribe(result => {
-     
+      this.spinnerservice.requestEnded();
+
+      if(result.success == false){
+    
+      Swal.fire(
+        ' inf0!',
+        result.message,
+        'info'
+      )
+     }
+     else{
+      Swal.fire('info', 'Converted Successfully','info').then((res)=>{
+        if(res.isConfirmed){
+          this.fileUpload(result)
+          this.CompletedjobsComponent.getCompletedJobData();
+        }
+      })
+     }
        
-        this.fileUpload(result)
-        this.CompletedjobsComponent.getCompletedJobData();
-        Swal.fire(
-          ' Done!',
-          result.message,
-          'success'
-        )
+    
     });
   }
 

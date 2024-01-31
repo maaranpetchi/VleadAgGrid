@@ -12,6 +12,9 @@ import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { error } from 'jquery';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { SelectionModel } from '@angular/cdk/collections';
+import { GridApi, ColDef, GridReadyEvent, CellClickedEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams, ColumnApi } from 'ag-grid-community';
+import { ClientordinationindexComponent } from '../clientordinationindex/clientordinationindex.component';
+import { JobDetailsClientIndexComponent } from '../query-to-client/job-details-client-index/job-details-client-index.component';
 @Component({
   selector: 'app-completedjobs',
   templateUrl: './completedjobs.component.html',
@@ -41,56 +44,27 @@ export class CompletedjobsComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  columnApi: ColumnApi;
 
   constructor(private http: HttpClient, private loginservice: LoginService, private dialog: MatDialog, private spinnerService: SpinnerService) { }
 
   ngOnInit(): void {
     this.getCompletedJobData();
-    this.getcompleteordercount();
   }
   //getting count
   CompletedJobsCount: number;
-  getcompleteordercount() {
-    this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `Allocation/getCompletedJobs?EmpId=${this.loginservice.getUsername()}`).subscribe(response => {
-      this.spinnerService.requestEnded();
-      this.CompletedJobsCount = response.clientDetails.resultForCompletedList;
-    }, error => {
-      this.spinnerService.resetSpinner();
-    });
-  }
+
   getCompletedJobData(): void {
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Allocation/getCompletedJobs?EmpId=${this.loginservice.getUsername()}`).subscribe(data => {
       this.spinnerService.requestEnded();
-      this.dataSource = new MatTableDataSource(data.clientDetails.resultCompletedJobsList);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    }, error => {
-      this.spinnerService.resetSpinner();
+      this.rowData= data.clientDetails.resultCompletedJobsList;
+      this.CompletedJobsCount = data.clientDetails.resultForCompletedList;
+
     });
   }
 
-
   remarkValue: string = '';
-  //to save the checkbox value
-
-  // setAll(completed: boolean, item: any) {
-
-  //   if (completed == true) {
-  //     this.selectedQuery.push({ ...item, Comments: '', CategoryDesc: '', SelectedRows: [], CommentsToClient: '', SelectedEmployees: [] })
-  //   }
-  //   else {
-
-  //     if (this.selectedQuery.find(x => x.id == item.id)) {
-  //       this.selectedQuery = this.selectedQuery.filter(x => {
-  //         if (x.id != item.id) {
-  //           return item
-  //         }
-  //       })
-  //     }
-  //   }
-  // }
   postdatabulk: any[] = [];
 
   selectedJobs: any[] = [];
@@ -98,7 +72,7 @@ export class CompletedjobsComponent implements OnInit {
 
   bulkUpload() {
     this.spinnerService.requestStarted();
-    this.selection.selected.forEach(x => this.setAll(x));
+    this.gridApi.getSelectedRows().forEach(x => this.setAll(x));
     if (this.selectedQuery.length > 0) {
       this.selectedJobs = this.selectedQuery;
     }
@@ -159,7 +133,7 @@ export class CompletedjobsComponent implements OnInit {
           'success'
         ).then((result) => {
           if (result.isConfirmed) {
-window.location.reload();
+            this.getCompletedJobData();
           }
         })
       }
@@ -173,14 +147,6 @@ window.location.reload();
     });
   }
 
-
-  getRemarkValue(event: Event) {
-    this.remarkValue = (event.target as HTMLInputElement).value;
-  }
-  onChange(tab) {
-    tab = this.getCompletedJobData();
-
-  }
 
   getjobhistory(data) {
     const dialogRef = this.dialog.open(GetJobHistoryPopupComponent, {
@@ -246,5 +212,71 @@ window.location.reload();
       'Rush': data.jobStatusId === 2 || data.jobStatusId === 4 || data.jobStatusId === 8
     };
   }
+/////////////////////////Ag-grid module///////////////////////////////
+context: any;
 
+@ViewChild('agGrid') agGrid: any;
+
+private gridApi!: GridApi<any>;
+
+
+public defaultColDef: ColDef = {
+  flex: 1,
+  minWidth: 100,
+  headerCheckboxSelection: isFirstColumn,
+  checkboxSelection: isFirstColumn,
+};
+
+columnDefs: ColDef[] = [
+
+
+
+  { headerName: 'JobNumber', field: 'jobId', filter: true,cellStyle: {color: 'skyblue', 'cursor':'pointer'}  },
+
+  { headerName: 'EST Job /Query Date', field: 'jobDateEst', filter: true, },
+  { headerName: 'Department', field: 'description', filter: true, },
+  { headerName: 'Client', field: 'shortName', filter: true, },
+  { headerName: 'CustomerClassification', field: 'customerClassification', filter: true, },
+  { headerName: 'ClientStatus', field: 'customerType', filter: true, },
+  { headerName: 'JobStatus', field: 'jobStatusDescription', filter: true, },
+  { headerName: 'ParentJobId', field: 'parentjobid', filter: true, },
+  { headerName: 'FileName', field: 'fileName', filter: true, },
+  { headerName: 'File Inward Mode', field: 'fileInwardMode', filter: true, },
+  { headerName: 'File Received EST Date', field: 'estfileReceivedDate', filter: true, },
+  { headerName: 'JobClosedDate', field: 'jobClosedUtc', filter: true, },
+  { headerName: 'CommentsToClient', field: 'commentsToClient', filter: true, },
+];
+
+
+
+public rowSelection: 'single' | 'multiple' = 'multiple';
+public rowData!: any[];
+public themeClass: string =
+  "ag-theme-quartz";
+  @ViewChild(ClientordinationindexComponent) ClientordinationindexComponent: ClientordinationindexComponent;
+
+onGridReady(params: GridReadyEvent<any>) {
+ this.gridApi = params.api;
+ this.columnApi = params.columnApi;
+ this.http.get<any>(environment.apiURL + `Allocation/getCompletedJobs?EmpId=${this.loginservice.getUsername()}`).subscribe((response) => (this.rowData = response.clientDetails.resultCompletedJobsList)); 
+
+ }
+ onCellClicked(event: CellClickedEvent) {
+  const { colDef, data } = event;
+  if (colDef.field === 'jobId') {
+    console.log(data,"PopupData");
+    this.getjobhistory(data)
+  }
+}
+}
+
+
+function isFirstColumn(
+params:
+  | CheckboxSelectionCallbackParams
+  | HeaderCheckboxSelectionCallbackParams
+) {
+var displayedColumns = params.api.getAllDisplayedColumns();
+var thisIsFirstColumn = displayedColumns[0] === params.column;
+return thisIsFirstColumn;
 }
