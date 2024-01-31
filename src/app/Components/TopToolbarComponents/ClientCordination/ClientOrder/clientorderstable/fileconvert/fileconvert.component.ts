@@ -120,9 +120,7 @@ export class FileconvertComponent implements OnInit {
         imprintColors2: '',
         imprintColors3: '',
         virtualProof: '',
-
         customerJobType: '',
-
         viewDatas: [],
       };
       this.a.push(GetAddList);
