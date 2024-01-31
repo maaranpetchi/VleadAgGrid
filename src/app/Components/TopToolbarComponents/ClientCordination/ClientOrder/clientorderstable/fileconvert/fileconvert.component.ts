@@ -20,6 +20,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from 'src/Environments/environment';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
+import Swal from 'sweetalert2';
 
 interface TableData {
   fileName: string;
@@ -211,11 +212,17 @@ export class FileconvertComponent implements OnInit {
       dateofDelivery: '2023-05-12T07:08:03.495Z',
       getAllValues: this.dataSource.data,
     };
+    this.spinnerService.requestStarted();
     this.http
       .post<any>(environment.apiURL + 'JobOrder/DirectOrder', senddata)
       .subscribe((multiorderdataconvert) => {
-        // this.showSnackBar('Converted successfully');
-        this.dialogRef.close();
+        this.spinnerService.requestEnded();
+
+        Swal.fire('Done', 'Converted Successfully', 'success').then((res) => {
+          if (res.isConfirmed) {
+            this.dialogRef.close();
+          }
+        });
       });
   }
 
@@ -237,7 +244,7 @@ export class FileconvertComponent implements OnInit {
   // }
 
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 }

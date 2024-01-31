@@ -18,7 +18,7 @@ import Swal from 'sweetalert2/src/sweetalert2.js'
 import { catchError } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AgGridAngular } from 'ag-grid-angular';
-import {ICellRendererAngularComp} from 'ag-grid-angular';
+import { ICellRendererAngularComp } from 'ag-grid-angular';
 
 import {
   CheckboxSelectionCallbackParams,
@@ -35,8 +35,8 @@ import { SharedService } from 'src/app/Services/SharedService/shared.service';
   templateUrl: './clientorderstable.component.html',
   styleUrls: ['./clientorderstable.component.scss']
 })
-export class ClientorderstableComponent  implements OnInit{
-context: any;
+export class ClientorderstableComponent implements OnInit {
+  context: any;
   ngOnInit(): void {
     // //DivisionApiDatadropdown
     this.fetchdivision();
@@ -143,7 +143,7 @@ context: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private http: HttpClient, public dialog: MatDialog, private snackBar: MatSnackBar, private coreService: CoreService, private spinnerService: SpinnerService, private loginservice: LoginService,private sharedService: SharedService) { 
+  constructor(private http: HttpClient, public dialog: MatDialog, private snackBar: MatSnackBar, private coreService: CoreService, private spinnerService: SpinnerService, private loginservice: LoginService, private sharedService: SharedService) {
 
 
   }
@@ -212,7 +212,13 @@ context: any;
     // })
   }
   quotationjobs() {
-    this.spinnerService.requestStarted();
+    this.gridApi.setColumnVisible('filecount', false);
+    this.gridApi.setColumnVisible('action', true);
+    this.gridApi.setColumnVisible('fileInwardMode', false);
+    this.gridApi.setColumnVisible('transactionType', true);
+    this.gridApi.setColumnVisible('quoteparentid', true);
+    this.gridApi.setColumnVisible('transactionType', true);
+    this.gridApi.setColumnVisible('jobId', false);
     this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/2').pipe(
 
       catchError((error) => {
@@ -238,6 +244,13 @@ context: any;
   }
   convertedjobs() {
     this.spinnerService.requestStarted();
+    this.gridApi.setColumnVisible('filecount', false);
+    this.gridApi.setColumnVisible('action', true);
+    this.gridApi.setColumnVisible('fileInwardMode', false);
+    this.gridApi.setColumnVisible('transactionType', true);
+    this.gridApi.setColumnVisible('quoteparentid', true);
+    this.gridApi.setColumnVisible('transactionType', true);
+    this.gridApi.setColumnVisible('jobId', false);
     this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/3').pipe(
 
       catchError((error) => {
@@ -263,6 +276,13 @@ context: any;
   }
   deletedjobs() {
     this.spinnerService.requestStarted();
+    this.gridApi.setColumnVisible('filecount', false);
+    this.gridApi.setColumnVisible('action', true);
+    this.gridApi.setColumnVisible('fileInwardMode', false);
+    this.gridApi.setColumnVisible('transactionType', true);
+    this.gridApi.setColumnVisible('quoteparentid', true);
+    this.gridApi.setColumnVisible('transactionType', true);
+    this.gridApi.setColumnVisible('jobId', false);
     this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/4').pipe(
 
       catchError((error) => {
@@ -289,26 +309,22 @@ context: any;
   }
   quotenotapprovaljobs() {
     this.spinnerService.requestStarted();
-
+    this.gridApi.setColumnVisible('filecount', false);
+    this.gridApi.setColumnVisible('action', true);
+    this.gridApi.setColumnVisible('fileInwardMode', false);
+    this.gridApi.setColumnVisible('transactionType', true);
+    this.gridApi.setColumnVisible('quoteparentid', true);
+    this.gridApi.setColumnVisible('transactionType', true);
+    this.gridApi.setColumnVisible('jobId', false);
     this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/5').pipe(
-
       catchError((error) => {
-
         this.spinnerService.requestEnded();
-
         console.error('API Error:', error);
-
-
-
         return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-
       })
-
     ).subscribe(quotenotapproval => {
       this.rowData = quotenotapproval.data;
       this.spinnerService.requestEnded();
-
-
     },
       error => {
         this.spinnerService.resetSpinner();
@@ -316,21 +332,23 @@ context: any;
   }
   queryforsp() {
     this.spinnerService.requestStarted();
+    this.spinnerService.requestStarted();
+    this.gridApi.setColumnVisible('filecount', false);
+    this.gridApi.setColumnVisible('action', false);
+    this.gridApi.setColumnVisible('fileInwardMode', true);
+    this.gridApi.setColumnVisible('transactionType', false);
+    this.gridApi.setColumnVisible('quoteparentid', false);
+    this.gridApi.setColumnVisible('transactionType', true);
+    this.gridApi.setColumnVisible('jobId', true);
     this.http.get<any>(environment.apiURL + 'CustomerQuery/GetNotApprovedQueryForSPJobsToCC').pipe(
-
       catchError((error) => {
-
         this.spinnerService.requestEnded();
-
         console.error('API Error:', error);
-
-
-
         return Swal.fire('Alert', 'Error occured', 'error');
       })
 
     ).subscribe(queryforsp => {
-      this.rowData = queryforsp.data;
+      this.rowData = queryforsp.queryJobs;
       this.spinnerService.requestEnded();
     },
       error => {
@@ -594,9 +612,9 @@ context: any;
   selectedQuery: any[] = [];
 
   multiconvert() {
-    let selectedRow= this.gridApi.getSelectedRows();
-    console.log(selectedRow,"SelectedRowws");
-    
+    let selectedRow = this.gridApi.getSelectedRows();
+    console.log(selectedRow, "SelectedRowws");
+
     this.gridApi.getSelectedRows().forEach(x => this.setAll(x));
     if (this.selectedQuery.length > 0) {
       this.selectedJobs = this.selectedQuery;
@@ -962,6 +980,7 @@ context: any;
     { headerName: 'TransactionType ', field: 'transactionType' },
     {
       headerName: 'Actions',
+      field: 'action',
       cellRenderer: ActionsCellRendererComponent, // JS comp by Direct Reference
       autoHeight: true,
     }, { headerName: 'FileInawardMode', field: 'fileInwardMode' },
@@ -978,6 +997,16 @@ context: any;
 
   onGridReady(params: GridReadyEvent<any>) {
     this.gridApi = params.api;
+
+    this.gridApi.setColumnVisible('filecount', true);
+    this.gridApi.setColumnVisible('action', true);
+    this.gridApi.setColumnVisible('fileInwardMode', false);
+    this.gridApi.setColumnVisible('transactionType', true);
+    this.gridApi.setColumnVisible('quoteparentid', true);
+    this.gridApi.setColumnVisible('transactionType', true);
+    this.gridApi.setColumnVisible('jobId', false);
+
+
     this.http
       .get<any>(
         environment.apiURL + 'ClientOrderService/ClientOrdersExts/1'
@@ -1000,18 +1029,14 @@ context: any;
     console.log(parameterData, "ParameterValue");
 
   }
-  multiGridConvert() {
-    const selectedRows = this.gridApi.getSelectedRows();
-    // Perform your bulk convert action with the selected rows
-    console.log('Selected Rows:', selectedRows);
-  }
 
-  onDivisionChange(){
-    console.log(this.selectdivision,"SelectDivi");
-    
+
+  onDivisionChange() {
+    console.log(this.selectdivision, "SelectDivi");
+
     this.sharedService.setData(this.selectdivision);
   }
-  
+
 }
 
 function isFirstColumn(
