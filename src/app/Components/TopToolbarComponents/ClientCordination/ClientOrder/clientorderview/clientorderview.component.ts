@@ -27,7 +27,10 @@ export class ClientorderviewComponent {
 
 
   getOrderList(){
-    this.http.get<any>(environment.apiURL+`ClientOrderService/GetClientByOrderId/1?orderId=${this.data.orderId}`).subscribe({
+    console.log(this.data,"firstDtaa");
+    console.log(this.data.data,"secdlata");
+    
+    this.http.get<any>(environment.apiURL+`ClientOrderService/GetClientByOrderId/1?orderId=${this.data.data.orderId}`).subscribe({
       next:(results)=>{
         this.OrderDetails = results.fileUploadPath;
       }

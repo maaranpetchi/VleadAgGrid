@@ -228,19 +228,9 @@ context: any;
       })
 
     ).subscribe(quotation => {
-      this.dataSource = new MatTableDataSource(quotation.data),
-        this.dataSource.paginator = this.paginator;
+      this.rowData = quotation.data;
       this.spinnerService.requestEnded();
-      this.displayedColumnsvisibility.jobid = false;
-      this.displayedColumnsvisibility.transactionType = true;
-      this.displayedColumnsvisibility.filecount = false;
 
-      this.displayedColumnsvisibility.quoteparentid = true;
-      this.displayedColumnsvisibility.action = true;
-      this.displayedColumnsvisibility.actionicon = true;
-      this.displayedColumnsvisibility.transactiontype = true;
-      this.displayedColumnsvisibility.fileInwardMode = false;
-      this.dataSource.sort = this.sort;
     },
       error => {
         this.spinnerService.resetSpinner();
@@ -263,19 +253,9 @@ context: any;
       })
 
     ).subscribe(converted => {
-      this.dataSource = new MatTableDataSource(converted.data);
-      this.spinnerService.requestEnded();
+      this.rowData = converted.data;
 
-      this.displayedColumnsvisibility.actionicon = false;
-      this.displayedColumnsvisibility.transactionType = true;
-      this.displayedColumnsvisibility.jobid = false;
-      this.displayedColumnsvisibility.quoteparentid = true;
-      this.displayedColumnsvisibility.action = true;
-      this.displayedColumnsvisibility.transactiontype = true;
-      this.displayedColumnsvisibility.fileInwardMode = false;
-      this.displayedColumnsvisibility.filecount = false;
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      this.spinnerService.requestEnded();
     },
       error => {
         this.spinnerService.resetSpinner();
@@ -298,18 +278,10 @@ context: any;
       })
 
     ).subscribe(deleted => {
-      this.dataSource = new MatTableDataSource(deleted.data);
+      this.rowData = deleted.data;
+
       this.spinnerService.requestEnded();
-      this.displayedColumnsvisibility.filecount = false;
-      this.displayedColumnsvisibility.transactionType = true;
-      this.displayedColumnsvisibility.jobid = false;
-      this.displayedColumnsvisibility.quoteparentid = true;
-      this.displayedColumnsvisibility.action = true;
-      this.displayedColumnsvisibility.actionicon = false;
-      this.displayedColumnsvisibility.transactiontype = true;
-      this.displayedColumnsvisibility.fileInwardMode = false;
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+
     },
       error => {
         this.spinnerService.resetSpinner();
@@ -333,17 +305,9 @@ context: any;
       })
 
     ).subscribe(quotenotapproval => {
-      this.dataSource = new MatTableDataSource(quotenotapproval.data)
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      this.rowData = quotenotapproval.data;
       this.spinnerService.requestEnded();
 
-      this.displayedColumnsvisibility.filecount = false;
-      this.displayedColumnsvisibility.transactionType = true;
-      this.displayedColumnsvisibility.jobid = false;
-      this.displayedColumnsvisibility.fileInwardMode = false;
-      this.displayedColumnsvisibility.action = true;
-      this.displayedColumnsvisibility.actionicon = false;
 
     },
       error => {
@@ -366,19 +330,8 @@ context: any;
       })
 
     ).subscribe(queryforsp => {
-      this.dataSource = new MatTableDataSource(queryforsp.data)
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      this.rowData = queryforsp.data;
       this.spinnerService.requestEnded();
-
-      this.displayedColumnsvisibility.filecount = false;
-      this.displayedColumnsvisibility.jobid = true;
-      this.displayedColumnsvisibility.quoteparentid = false;
-      this.displayedColumnsvisibility.transactiontype = false;
-      this.displayedColumnsvisibility.action = false;
-      this.displayedColumnsvisibility.transactionType = false;
-      this.displayedColumnsvisibility.fileInwardMode = true;
-
     },
       error => {
         this.spinnerService.resetSpinner();
@@ -641,7 +594,10 @@ context: any;
   selectedQuery: any[] = [];
 
   multiconvert() {
-    this.selection.selected.forEach(x => this.setAll(x));
+    let selectedRow= this.gridApi.getSelectedRows();
+    console.log(selectedRow,"SelectedRowws");
+    
+    this.gridApi.getSelectedRows().forEach(x => this.setAll(x));
     if (this.selectedQuery.length > 0) {
       this.selectedJobs = this.selectedQuery;
     }
@@ -1007,7 +963,6 @@ context: any;
     {
       headerName: 'Actions',
       cellRenderer: ActionsCellRendererComponent, // JS comp by Direct Reference
-
       autoHeight: true,
     }, { headerName: 'FileInawardMode', field: 'fileInwardMode' },
     {
