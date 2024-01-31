@@ -5,6 +5,7 @@ import { LoginService } from 'src/app/Services/Login/login.service';
 import { environment } from 'src/Environments/environment';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { ClientcordinationService } from 'src/app/Services/CoreStructure/ClientCordination/clientcordination.service';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 
 @Component({
   selector: 'app-clientordinationindex',
@@ -15,7 +16,15 @@ export class ClientordinationindexComponent implements OnInit {
   @ViewChild(QueryToClientComponent) QueryToClientComponent: QueryToClientComponent;
   SetIndex: any;
   clientOrderCount: any;
-  constructor(private http: HttpClient, private loginservice: LoginService, private spinnerService: SpinnerService, private _empService: ClientcordinationService) { }
+  constructor(private http: HttpClient, private loginservice: LoginService, private spinnerService: SpinnerService, private _empService: ClientcordinationService,private sharedDataService: SharedService) {
+    this.sharedDataService.refreshData$.subscribe(() => {
+      // Update your data or call the necessary methods to refresh the data
+      this.getclientordercount();
+      this.getcompleteordercount();
+      this.getquerytoclientcount();
+      // ... other refresh logic
+    });
+   }
 
   ngOnInit(): void {
     this.onTabChange(event);
@@ -25,9 +34,6 @@ export class ClientordinationindexComponent implements OnInit {
     this.getcompleteordercount();
     this.getquerytoclientcount();
   }
-
-
-
   onTabChange(event: any) {
     // Update the REST API based on the selected tab
     
@@ -60,10 +66,6 @@ export class ClientordinationindexComponent implements OnInit {
     }
   }
 
-  setndexData() {
-
-
-  }
 
   queriesToClient() {
     if (this.QueryToClientComponent) {

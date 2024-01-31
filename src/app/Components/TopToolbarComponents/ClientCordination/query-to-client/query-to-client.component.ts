@@ -9,7 +9,8 @@ import { JobDetailsClientIndexComponent } from './job-details-client-index/job-d
 import { environment } from 'src/Environments/environment';
 import * as e from 'cors';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
-import { CheckboxSelectionCallbackParams, ColDef, GridApi, GridReadyEvent, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { CellClickedEvent, CheckboxSelectionCallbackParams, ColDef, ColumnApi, GridApi, GridReadyEvent, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { ClientordinationindexComponent } from '../clientordinationindex/clientordinationindex.component';
 
 
 @Component({
@@ -40,6 +41,8 @@ export class QueryToClientComponent implements OnInit {
     customerSatisfaction: true,
     status: true,
   };
+  columnApi: ColumnApi;
+  clientOrderCount: number;
   visibility() {
     let result: string[] = [];
     if (this.displayedColumnsVisibility.selected) {
@@ -89,6 +92,7 @@ export class QueryToClientComponent implements OnInit {
   ngOnInit(): void {
     //to get the data and show it in table
   this.queriesToClient();
+
   }
 
   applyFilter(event: Event): void {
@@ -119,16 +123,7 @@ export class QueryToClientComponent implements OnInit {
 
   convertedDate:string;
 
-  
-getJobDetails(data){
-  const dialogRef =  this.dialog.open(JobDetailsClientIndexComponent,{
-  width:'80vw',
-  data
-})
-dialogRef.afterClosed().subscribe(result => {
-this.ngOnInit();
-});
-}
+
 
 
  //textcolor
@@ -150,6 +145,8 @@ this.ngOnInit();
  @ViewChild('agGrid') agGrid: any;
 
  private gridApi!: GridApi<any>;
+
+ 
  public defaultColDef: ColDef = {
    flex: 1,
    minWidth: 100,
@@ -158,14 +155,12 @@ this.ngOnInit();
  };
 
  columnDefs: ColDef[] = [
-  {
-    headerName: 'JobId',
-    field: 'jobId',
-    filter: true,
-    cellRenderer: 'jobIdCellRenderer' // Custom cell renderer
-  },   { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
+   { headerName: 'JobId', field: 'jobId', filter: true,cellStyle: {color: 'skyblue', 'cursor':'pointer'}  },
+
+   { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
    { headerName: 'File Name', field: 'fileName', filter: true, },
-   { headerName: 'File Received EST Date', field: 'fileReceivedDate ', filter: true, },
+   { headerName: 'File Received EST Date', field: 'fileReceivedDate', filter: true, },
+
    { headerName: 'File Inward Mode', field: 'fileInwardType', filter: true, },
    { headerName: 'Client', field: 'shortName', filter: true, },
    { headerName: 'Customer Classification', field: 'customerClassification', filter: true, },
@@ -176,17 +171,22 @@ this.ngOnInit();
  public rowData!: any[];
  public themeClass: string =
    "ag-theme-quartz";
+   @ViewChild(ClientordinationindexComponent) ClientordinationindexComponent: ClientordinationindexComponent;
 
  onGridReady(params: GridReadyEvent<any>) {
-   this.gridApi = params.api;
-   this.http.get<any>( environment.apiURL+ `Allocation/getQueryPendingJobs/${this.loginservice.getUsername()}/1/0`).subscribe((response) => (this.rowData = response.data));
- }
+  this.gridApi = params.api;
+  this.columnApi = params.columnApi;
+   this.http.get<any>( environment.apiURL+ `Allocation/getQueryPendingJobs/${this.loginservice.getUsername()}/1/0`).subscribe((response) => (this.rowData = response.queryPendingJobs)); 
+
+  }
 
  queriesToClient(){
-  this.spinnerService.requestStarted();
+  
+  this.gridApi.setColumnVisible('name', true);
+
   this.http.get<any>( environment.apiURL+ `Allocation/getQueryPendingJobs/${this.loginservice.getUsername()}/1/0`).subscribe(data => {
+    
     this.rowData = data.queryPendingJobs;
-    this.spinnerService.requestEnded();
   },
   error => {
     this.spinnerService.resetSpinner(); // Reset the spinner if the request times out
@@ -194,19 +194,21 @@ this.ngOnInit();
 }
 //query
 queryResponse(){
-  this.spinnerService.requestStarted();
+  
+  this.gridApi.setColumnVisible('name', true);
   this.http.get<any>(environment.apiURL+`Allocation/getQueryResponseJobs/${this.loginservice.getUsername()}/1`).subscribe(data => {
-    this.spinnerService.requestEnded();
-    this.rowData = data.queryResponseJobs;
+    
+    this.rowData = data.queryResonponseJobs;
   },
   error => {
     this.spinnerService.resetSpinner(); // Reset the spinner if the request times out
   });  
 }
 cancelledJobs(){
-  this.spinnerService.requestStarted();
+  
+  this.gridApi.setColumnVisible('name', true);
   this.http.get<any>(environment.apiURL+`Allocation/getPendingJobs/${this.loginservice.getUsername()}/1`).subscribe(data => {
-    this.spinnerService.requestEnded();
+    
     this.rowData = data.cancelledJobs;
   },
   error => {
@@ -214,9 +216,10 @@ cancelledJobs(){
   });  
 }
 quotationJobs(){
-  this.spinnerService.requestStarted();
+  
+  this.gridApi.setColumnVisible('name', false);
   this.http.get<any>(environment.apiURL+`Allocation/getPendingJobs/${this.loginservice.getUsername()}/1`).subscribe(data => {
-    this.spinnerService.requestEnded();
+    
     this.rowData = data.quotationJobs;
   },
   error => {
@@ -236,21 +239,26 @@ quotationJobs(){
       this.quotationJobs();
     }
   }
-  frameworkComponents = {
-    jobIdCellRenderer: (params: any) => {
-      const jobId = params.value;
-      const link = document.createElement('a');
-      link.href = '#'; // Add a dummy link
-      link.innerText = jobId;
 
-      link.addEventListener('click', (event) => {
-        event.preventDefault();
-        this.getJobDetails(params.data);
-      });
-
-      return link;
+  onCellClicked(event: CellClickedEvent) {
+    const { colDef, data } = event;
+    if (colDef.field === 'jobId') {
+      console.log(data,"PopupData");
+      
+      this.getJobDetails(data);
     }
-  };
+  }
+  
+  getJobDetails(data){
+    const dialogRef =  this.dialog.open(JobDetailsClientIndexComponent,{
+    width:'80vw',
+    data
+  })
+  dialogRef.afterClosed().subscribe(result => {
+  this.ngOnInit();
+  });
+  }
+
 
 }
 

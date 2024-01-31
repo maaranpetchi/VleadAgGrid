@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import saveAs from 'file-saver';
@@ -9,6 +9,8 @@ import { ClientcordinationService } from 'src/app/Services/CoreStructure/ClientC
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
+import { ClientordinationindexComponent } from '../../clientordinationindex/clientordinationindex.component';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 
 @Component({
   selector: 'app-job-details-client-index',
@@ -16,6 +18,8 @@ import Swal from 'sweetalert2/src/sweetalert2.js'
   styleUrls: ['./job-details-client-index.component.scss']
 })
 export class JobDetailsClientIndexComponent implements OnInit {
+  @ViewChild(ClientordinationindexComponent) ClientordinationindexComponent: ClientordinationindexComponent;
+
   QuotationDetailsList: any;
   QueryEstimatedTime: any;
   QueryEstimatedScope: any;
@@ -25,7 +29,7 @@ export class JobDetailsClientIndexComponent implements OnInit {
   JobCommonDetails: any;
   JobCommonDetailsJob: any;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private http: HttpClient, private spinnerService: SpinnerService, private loginservice: LoginService, private _coreService: CoreService, public dialogRef: MatDialogRef<JobDetailsClientIndexComponent>, private _empService: ClientcordinationService) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private http: HttpClient, private spinnerService: SpinnerService, private loginservice: LoginService, private _coreService: CoreService, public dialogRef: MatDialogRef<JobDetailsClientIndexComponent>, private _empService: ClientcordinationService,private sharedDataService: SharedService) {
     this.JobCommonDetailsJob = this.data.jobStatusDescription;
 
     this.gettingindex = this._empService.getData() ?? 0;
@@ -114,7 +118,12 @@ export class JobDetailsClientIndexComponent implements OnInit {
           'Done!',
           result.message,
           'success'
-        );
+        ).then((res)=>{
+          if(res.isConfirmed){
+            this.sharedDataService.triggerRefresh();
+
+          }
+        });
       }
 
 
