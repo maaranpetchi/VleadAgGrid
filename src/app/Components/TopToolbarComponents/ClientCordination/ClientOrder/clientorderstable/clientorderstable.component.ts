@@ -205,11 +205,13 @@ export class ClientorderstableComponent implements OnInit {
 
   errorShowingClientName: string = '';
   bindingjobs() {
-    // this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/1').subscribe((response)=>{
-    //   this.rowData = response.data;
-    //   console.log(this.rowData,"RowData");
+    this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/1').subscribe((response)=>{
+      this.spinnerService.requestEnded();
+      this.rowData = response.data;
+      console.log(this.rowData,"RowData");
 
-    // })
+    })
   }
   quotationjobs() {
     this.gridApi.setColumnVisible('filecount', false);
@@ -355,7 +357,6 @@ export class ClientorderstableComponent implements OnInit {
         this.spinnerService.resetSpinner();
       });
   }
-
 
   tab(action) {
     if (action == '1') {

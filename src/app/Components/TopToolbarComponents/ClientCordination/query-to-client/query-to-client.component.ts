@@ -9,6 +9,7 @@ import { JobDetailsClientIndexComponent } from './job-details-client-index/job-d
 import { environment } from 'src/Environments/environment';
 import * as e from 'cors';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
+import { CheckboxSelectionCallbackParams, ColDef, GridApi, GridReadyEvent, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
 
 
 @Component({
@@ -117,74 +118,8 @@ export class QueryToClientComponent implements OnInit {
   }
 
   convertedDate:string;
-queriesToClient(){
-  this.spinnerService.requestStarted();
-  this.http.get<any>( environment.apiURL+ `Allocation/getQueryPendingJobs/${this.loginservice.getUsername()}/1/0`).subscribe(data => {
-   this.spinnerService.requestEnded();
-    this.dataSource = data.queryPendingJobs;
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.displayedColumnsVisibility.status = true;
-    const apiDate = data.date; // Assuming the API response has a 'date' property
-  },
-  error => {
-    this.spinnerService.resetSpinner(); // Reset the spinner if the request times out
-  });  
-}
-//query
-queryResponse(){
-  this.spinnerService.requestStarted();
-  this.http.get<any>(environment.apiURL+`Allocation/getQueryResponseJobs/${this.loginservice.getUsername()}/1`).subscribe(data => {
-    this.spinnerService.requestEnded();
-    this.dataSource = data.queryResponseJobs;
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.displayedColumnsVisibility.status = true;
-  },
-  error => {
-    this.spinnerService.resetSpinner(); // Reset the spinner if the request times out
-  });  
-}
-cancelledJobs(){
-  this.spinnerService.requestStarted();
-  this.http.get<any>(environment.apiURL+`Allocation/getPendingJobs/${this.loginservice.getUsername()}/1`).subscribe(data => {
-    this.spinnerService.requestEnded();
-    this.dataSource = data.cancelledJobs;
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.displayedColumnsVisibility.status = true;
-  },
-  error => {
-    this.spinnerService.resetSpinner(); // Reset the spinner if the request times out
-  });  
-}
-quotationJobs(){
-  this.spinnerService.requestStarted();
-  this.http.get<any>(environment.apiURL+`Allocation/getPendingJobs/${this.loginservice.getUsername()}/1`).subscribe(data => {
-    this.spinnerService.requestEnded();
-    this.dataSource = data.quotationJobs;
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.displayedColumnsVisibility.status = false;
-  },
-  error => {
-    this.spinnerService.resetSpinner(); // Reset the spinner if the request times out
-  });  
-}
 
-
-  tab(action) {
-    if (action == '1') {
-      this.queriesToClient();
-    } else if (action == '2') {
-      this.queryResponse();
-    } else if (action == '3') {
-      this.cancelledJobs();
-    } else if (action == '4') {
-      this.quotationJobs();
-    }
-  }
-
+  
 getJobDetails(data){
   const dialogRef =  this.dialog.open(JobDetailsClientIndexComponent,{
   width:'80vw',
@@ -209,4 +144,122 @@ this.ngOnInit();
     'Rush': data.jobStatusId === 2 || data.jobStatusId === 4 || data.jobStatusId === 8
   };
 }
+ /////////////////////////Ag-grid module///////////////////////////////
+ context: any;
+
+ @ViewChild('agGrid') agGrid: any;
+
+ private gridApi!: GridApi<any>;
+ public defaultColDef: ColDef = {
+   flex: 1,
+   minWidth: 100,
+   headerCheckboxSelection: isFirstColumn,
+   checkboxSelection: isFirstColumn,
+ };
+
+ columnDefs: ColDef[] = [
+  {
+    headerName: 'JobId',
+    field: 'jobId',
+    filter: true,
+    cellRenderer: 'jobIdCellRenderer' // Custom cell renderer
+  },   { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
+   { headerName: 'File Name', field: 'fileName', filter: true, },
+   { headerName: 'File Received EST Date', field: 'fileReceivedDate ', filter: true, },
+   { headerName: 'File Inward Mode', field: 'fileInwardType', filter: true, },
+   { headerName: 'Client', field: 'shortName', filter: true, },
+   { headerName: 'Customer Classification', field: 'customerClassification', filter: true, },
+   { headerName: 'Status', field: 'name', filter: true, },
+ ];
+
+ public rowSelection: 'single' | 'multiple' = 'multiple';
+ public rowData!: any[];
+ public themeClass: string =
+   "ag-theme-quartz";
+
+ onGridReady(params: GridReadyEvent<any>) {
+   this.gridApi = params.api;
+   this.http.get<any>( environment.apiURL+ `Allocation/getQueryPendingJobs/${this.loginservice.getUsername()}/1/0`).subscribe((response) => (this.rowData = response.data));
+ }
+
+ queriesToClient(){
+  this.spinnerService.requestStarted();
+  this.http.get<any>( environment.apiURL+ `Allocation/getQueryPendingJobs/${this.loginservice.getUsername()}/1/0`).subscribe(data => {
+    this.rowData = data.queryPendingJobs;
+    this.spinnerService.requestEnded();
+  },
+  error => {
+    this.spinnerService.resetSpinner(); // Reset the spinner if the request times out
+  });  
+}
+//query
+queryResponse(){
+  this.spinnerService.requestStarted();
+  this.http.get<any>(environment.apiURL+`Allocation/getQueryResponseJobs/${this.loginservice.getUsername()}/1`).subscribe(data => {
+    this.spinnerService.requestEnded();
+    this.rowData = data.queryResponseJobs;
+  },
+  error => {
+    this.spinnerService.resetSpinner(); // Reset the spinner if the request times out
+  });  
+}
+cancelledJobs(){
+  this.spinnerService.requestStarted();
+  this.http.get<any>(environment.apiURL+`Allocation/getPendingJobs/${this.loginservice.getUsername()}/1`).subscribe(data => {
+    this.spinnerService.requestEnded();
+    this.rowData = data.cancelledJobs;
+  },
+  error => {
+    this.spinnerService.resetSpinner(); // Reset the spinner if the request times out
+  });  
+}
+quotationJobs(){
+  this.spinnerService.requestStarted();
+  this.http.get<any>(environment.apiURL+`Allocation/getPendingJobs/${this.loginservice.getUsername()}/1`).subscribe(data => {
+    this.spinnerService.requestEnded();
+    this.rowData = data.quotationJobs;
+  },
+  error => {
+    this.spinnerService.resetSpinner(); // Reset the spinner if the request times out
+  });  
+}
+
+
+  tab(action) {
+    if (action == '1') {
+      this.queriesToClient();
+    } else if (action == '2') {
+      this.queryResponse();
+    } else if (action == '3') {
+      this.cancelledJobs();
+    } else if (action == '4') {
+      this.quotationJobs();
+    }
+  }
+  frameworkComponents = {
+    jobIdCellRenderer: (params: any) => {
+      const jobId = params.value;
+      const link = document.createElement('a');
+      link.href = '#'; // Add a dummy link
+      link.innerText = jobId;
+
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        this.getJobDetails(params.data);
+      });
+
+      return link;
+    }
+  };
+
+}
+
+function isFirstColumn(
+ params:
+   | CheckboxSelectionCallbackParams
+   | HeaderCheckboxSelectionCallbackParams
+) {
+ var displayedColumns = params.api.getAllDisplayedColumns();
+ var thisIsFirstColumn = displayedColumns[0] === params.column;
+ return thisIsFirstColumn;
 }
