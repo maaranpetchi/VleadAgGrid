@@ -70,7 +70,6 @@ export class FileconvertComponent implements OnInit {
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
   }
-
   a: any[] = [];
 
   gettingdata(data: any) {
