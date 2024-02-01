@@ -173,19 +173,15 @@ export class QueryToClientComponent implements OnInit {
    "ag-theme-quartz";
    @ViewChild(ClientordinationindexComponent) ClientordinationindexComponent: ClientordinationindexComponent;
 
- onGridReady(params: GridReadyEvent<any>) {
-  this.gridApi = params.api;
-  this.columnApi = params.columnApi;
-   this.http.get<any>( environment.apiURL+ `Allocation/getQueryPendingJobs/${this.loginservice.getUsername()}/1/0`).subscribe((response) => (this.rowData = response.queryPendingJobs)); 
 
-  }
 
  queriesToClient(){
   
   this.gridApi.setColumnVisible('name', true);
-
+this.spinnerService.requestStarted();
   this.http.get<any>( environment.apiURL+ `Allocation/getQueryPendingJobs/${this.loginservice.getUsername()}/1/0`).subscribe(data => {
-    
+    this.spinnerService.requestEnded();
+
     this.rowData = data.queryPendingJobs;
   },
   error => {
@@ -196,9 +192,12 @@ export class QueryToClientComponent implements OnInit {
 queryResponse(){
   
   this.gridApi.setColumnVisible('name', true);
+  this.spinnerService.requestStarted();
+
   this.http.get<any>(environment.apiURL+`Allocation/getQueryResponseJobs/${this.loginservice.getUsername()}/1`).subscribe(data => {
-    
-    this.rowData = data.queryResonponseJobs;
+    this.spinnerService.requestEnded();
+
+    this.rowData = data.queryResponseJobs;
   },
   error => {
     this.spinnerService.resetSpinner(); // Reset the spinner if the request times out
@@ -207,8 +206,10 @@ queryResponse(){
 cancelledJobs(){
   
   this.gridApi.setColumnVisible('name', true);
+  this.spinnerService.requestStarted();
   this.http.get<any>(environment.apiURL+`Allocation/getPendingJobs/${this.loginservice.getUsername()}/1`).subscribe(data => {
-    
+    this.spinnerService.requestEnded();
+
     this.rowData = data.cancelledJobs;
   },
   error => {
@@ -218,8 +219,11 @@ cancelledJobs(){
 quotationJobs(){
   
   this.gridApi.setColumnVisible('name', false);
+  this.spinnerService.requestStarted();
+
   this.http.get<any>(environment.apiURL+`Allocation/getPendingJobs/${this.loginservice.getUsername()}/1`).subscribe(data => {
-    
+    this.spinnerService.requestEnded();
+
     this.rowData = data.quotationJobs;
   },
   error => {
@@ -259,7 +263,12 @@ quotationJobs(){
   });
   }
 
-
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+    this.columnApi = params.columnApi;
+     this.http.get<any>( environment.apiURL+ `Allocation/getQueryPendingJobs/${this.loginservice.getUsername()}/1/0`).subscribe((response) => (this.rowData = response.queryPendingJobs)); 
+  
+    }
 }
 
 function isFirstColumn(
