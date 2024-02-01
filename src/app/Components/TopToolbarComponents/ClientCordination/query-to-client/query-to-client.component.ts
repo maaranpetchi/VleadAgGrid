@@ -153,7 +153,6 @@ export class QueryToClientComponent implements OnInit {
    headerCheckboxSelection: isFirstColumn,
    checkboxSelection: isFirstColumn,
  };
-
  columnDefs: ColDef[] = [
    { headerName: 'JobId', field: 'jobId', filter: true,cellStyle: {color: 'skyblue', 'cursor':'pointer'}  },
 
