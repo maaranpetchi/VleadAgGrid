@@ -18,6 +18,14 @@ import { WorkflowService } from 'src/app/Services/CoreStructure/WorkFlow/workflo
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs';
 import Swal from 'sweetalert2';
+import { GridApi, ColDef, CellClickedEvent, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { ClientordinationindexComponent } from '../../ClientCordination/clientordinationindex/clientordinationindex.component';
+import { actionrendering } from '../../Production/actionrendering.component';
+import { bulkuploadrendering } from '../../Production/bulkuploadrendering.component';
+import { EndRenderingComponent } from '../../Production/endrendering.component';
+import { StartRenderingComponent } from '../../Production/startrendering.component';
+import { workflowrendering } from '../../Production/workflowrendering.component';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 @Component({
   selector: 'app-qualitytable',
   templateUrl: './qualitytable.component.html',
@@ -25,6 +33,7 @@ import Swal from 'sweetalert2';
 })
 export class QualitytableComponent {
   @Output() showAlertEvent: EventEmitter<any> = new EventEmitter();
+  columnApi: any;
 
   employeeFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -83,7 +92,7 @@ export class QualitytableComponent {
     if (this.displayedColumns.scope) {
       result.push('scope');
     }
- 
+
     if (this.displayedColumns.jobstatus) {
       result.push('jobstatus');
     }
@@ -96,7 +105,7 @@ export class QualitytableComponent {
     if (this.displayedColumns.processstatus) {
       result.push('processstatus');
     }
-  
+
     if (this.displayedColumns.esttime) {
       result.push('esttime');
     }
@@ -121,7 +130,11 @@ export class QualitytableComponent {
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private router: Router, private workflowservice: WorkflowService, private _coreService: CoreService, private sewOutService: SewOutService, private http: HttpClient, private loginservice: LoginService, private dialog: MatDialog, private spinnerService: SpinnerService, private qualitycomponent: QualityComponent, private workflowService: WorkflowService) { }
+  constructor(private router: Router, private workflowservice: WorkflowService, private _coreService: CoreService, private sewOutService: SewOutService, private http: HttpClient, private loginservice: LoginService, private dialog: MatDialog, private spinnerService: SpinnerService, private qualitycomponent: QualityComponent, private workflowService: WorkflowService,private sharedDataService:SharedService) {    
+     this.sharedDataService.refreshData$.subscribe(() => {
+      this.bulkJobs();
+    })
+  }
 
   ngOnInit(): void {
     // //ScopeDropdown
@@ -165,15 +178,23 @@ export class QualitytableComponent {
   tab(action) {
     if (action == '1') {
       this.freshJobs();
+      this.scopeDisplay = false;
+
     }
     else if (action == '2') {
       this.revisionJobs();
+      this.scopeDisplay = false;
+
     }
     else if (action == '3') {
       this.reworkJobs();
+      this.scopeDisplay = false;
+
     }
     else if (action == '4') {
       this.quoteJobs();
+      this.scopeDisplay = false;
+
     }
     else if (action == '5') {
       this.bulkJobs();
@@ -182,11 +203,16 @@ export class QualitytableComponent {
     }
     else if (action == '6') {
       this.bulkUploadJobs();
+      this.scopeDisplay = false;
+
     }
 
   }
 
   freshJobs() {
+    this.gridApi.setColumnVisible('start',false);
+    this.gridApi.setColumnVisible('workfiles',false);
+    this.gridApi.setColumnVisible('end',false);
     try {
       this.spinnerService.requestStarted();
       this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`).pipe(
@@ -200,11 +226,7 @@ export class QualitytableComponent {
 
       ).subscribe(freshdata => {
         this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(freshdata.getWorkflowDetails);
-        this.dataSource.paginator = this.paginator;
-        this.displayedColumns.start = false;
-        this.displayedColumns.workfiles = false;
-        this.displayedColumns.end = false;
+        this.rowData =freshdata.getWorkflowDetails;
       });
     } catch (error) {
       console.error('Synchronous error:', error);
@@ -212,6 +234,9 @@ export class QualitytableComponent {
     }
   }
   revisionJobs() {
+    this.gridApi.setColumnVisible('start',false);
+    this.gridApi.setColumnVisible('workfiles',false);
+    this.gridApi.setColumnVisible('end',false);
     try {
       this.spinnerService.requestStarted();
       this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/2/0`).pipe(
@@ -230,17 +255,18 @@ export class QualitytableComponent {
 
       ).subscribe(freshdata => {
         this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(freshdata.getWorkflowDetails);
-        this.dataSource.paginator = this.paginator;
-        this.displayedColumns.start = false;
-        this.displayedColumns.workfiles = false;
-        this.displayedColumns.end = false;      });
+        this.rowData =  freshdata.getWorkflowDetails;
+   
+      });
     } catch (error) {
       console.error('Synchronous error:', error);
       this.spinnerService.resetSpinner();
     }
   }
   reworkJobs() {
+    this.gridApi.setColumnVisible('start',false);
+    this.gridApi.setColumnVisible('workfiles',false);
+    this.gridApi.setColumnVisible('end',false);
     try {
       this.spinnerService.requestStarted();
 
@@ -260,11 +286,9 @@ export class QualitytableComponent {
 
       ).subscribe(freshdata => {
         this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(freshdata.getWorkflowDetails);
-        this.dataSource.paginator = this.paginator;
-        this.displayedColumns.start = false;
-        this.displayedColumns.workfiles = false;
-        this.displayedColumns.end = false;      });
+        this.rowData =freshdata.getWorkflowDetails;
+      
+      });
     } catch (error) {
       console.error('Synchronous error:', error);
       this.spinnerService.resetSpinner();
@@ -289,8 +313,7 @@ export class QualitytableComponent {
 
       ).subscribe(freshdata => {
         this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(freshdata.getWorkflowDetails);
-        this.dataSource.paginator = this.paginator;
+        this.rowData =freshdata.getWorkflowDetails;
         // this.dataSource.sort = this.sort;
       });
     } catch (error) {
@@ -300,6 +323,12 @@ export class QualitytableComponent {
   }
   scopeDisplay: boolean = false; // display a scope dropdown div
   bulkJobs() {
+    this.gridApi.setColumnVisible('start',true);
+    this.gridApi.setColumnVisible('workfiles',true);
+    this.gridApi.setColumnVisible('end',true);
+    this.gridApi.setColumnVisible('bulkupload',true);
+    this.scopeDisplay = true;
+
     try {
       this.spinnerService.requestStarted();
       this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/6/0`).pipe(
@@ -307,22 +336,14 @@ export class QualitytableComponent {
         catchError((error) => {
           this.spinnerService.requestEnded();
           console.error('API Error:', error);
-          // return Swal.fire({
-          //   icon: 'error', // Use 'error' icon
-          //   title: 'Alert!',
-          //   text: 'An error occurred while processing your request',
-          // });
+
           return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
 
         })
 
       ).subscribe(freshdata => {
         this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(freshdata.getWorkflowDetails);
-        this.dataSource.paginator = this.paginator;
-        this.displayedColumns.start = true;
-        this.displayedColumns.workfiles = true;
-        this.displayedColumns.end = true; this.scopeDisplay = true;
+        this.rowData = freshdata.getWorkflowDetails;
       });
     } catch (error) {
       console.error('Synchronous error:', error);
@@ -330,6 +351,9 @@ export class QualitytableComponent {
     }
   }
   bulkUploadJobs() {
+    this.gridApi.setColumnVisible('start',false);
+    this.gridApi.setColumnVisible('workfiles',false);
+    this.gridApi.setColumnVisible('end',false);
     try {
       this.spinnerService.requestStarted();
       this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/7/0`).pipe(
@@ -348,11 +372,9 @@ export class QualitytableComponent {
 
       ).subscribe(freshdata => {
         this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(freshdata.getWorkflowDetails);
-        this.dataSource.paginator = this.paginator;
-        this.displayedColumns.start = false;
-        this.displayedColumns.workfiles = false;
-        this.displayedColumns.end = false;      })
+        this.rowData = freshdata.getWorkflowDetails;
+      
+      })
     } catch (error) {
       console.error('Synchronous error:', error);
       this.spinnerService.resetSpinner();
@@ -455,20 +477,20 @@ export class QualitytableComponent {
           this.router.navigate(['/topnavbar/qualityworkflow']);
         }
         else {
-          if(result.success == true){
-            Swal.fire('Done',result.message,'success').then((res)=>{
-              if(res.isConfirmed){
+          if (result.success == true) {
+            Swal.fire('Done', result.message, 'success').then((res) => {
+              if (res.isConfirmed) {
                 this.BindPendingJobs();
               }
             });
           }
-        else{
-          Swal.fire('info',result.message,'info').then((res)=>{
-            if(res.isConfirmed){
-              this.BindPendingJobs();
-            }
-          });
-        }
+          else {
+            Swal.fire('info', result.message, 'info').then((res) => {
+              if (res.isConfirmed) {
+                this.BindPendingJobs();
+              }
+            });
+          }
         }
       });
     }
@@ -520,8 +542,6 @@ export class QualitytableComponent {
   }
 
 
-
-  /////////////////Start end workflow bulkupload/////////////////////
   changeWorkflow(data, worktype) {
     if (worktype === 'Start') {
       const processMovement =
@@ -652,7 +672,89 @@ export class QualitytableComponent {
       }
     }
   }
+  /////////////////Start end workflow bulkupload/////////////////////
 
 
 
+  context: any;
+
+  @ViewChild('agGrid') agGrid: any;
+
+  private gridApi!: GridApi<any>;
+
+
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+  columnDefs: ColDef[] = [
+    { headerName: 'Job Id', field: 'jobId', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
+
+    { headerName: 'EST Job/Query Date', field: 'jobDateEst', filter: true, },
+    { headerName: 'Actions', cellRenderer: actionrendering, field: 'actions', filter: true, },// Use cellRenderer for customization},
+    { headerName: 'Client', field: 'shortName', filter: true, },
+    { headerName: 'Customer Classification', field: 'customerClassification', filter: true, },
+    { headerName: 'File Name', field: 'fileName', filter: true, },
+    { headerName: 'File Inward Mode', field: 'fileInwardType', filter: true, },
+    { headerName: 'Scope', field: 'scopeDesc', filter: true, },
+    { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
+    { headerName: 'Project Code', field: 'projectCode', filter: true, },
+    { headerName: 'Allocated By', field: 'assignedFrom', filter: true, },
+    { headerName: 'Process Status', field: 'workStatus', filter: true, },
+    { headerName: 'Est Time', field: 'estimatedTime', filter: true, },
+    { headerName: 'Job Category', field: 'jobCategoryDesc', filter: true, },
+    { headerName: 'DeliveryDate', field: 'jobCategoryDesc', filter: true, },
+    { headerName: 'start', cellRenderer: StartRenderingComponent, field: 'start', filter: true, },
+    { headerName: 'Workfiles', cellRenderer: workflowrendering, field: 'workfiles', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
+    { headerName: 'End', cellRenderer: EndRenderingComponent, field: 'end', filter: true, },
+    { headerName: 'Bulk Upload', cellRenderer: bulkuploadrendering, field: 'bulkupload', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
+
+  ];
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData!: any[];
+  public themeClass: string =
+    "ag-theme-quartz";
+  @ViewChild(ClientordinationindexComponent) ClientordinationindexComponent: ClientordinationindexComponent;
+
+
+  onDivisionChange() {
+    console.log(this.scopeid, "SelectDivi");
+
+    this.sharedDataService.setData(this.scopeid);
+  }
+
+
+
+
+  onCellClicked(event: CellClickedEvent) {
+    const { colDef, data } = event;
+    if (colDef.field === 'jobId') {
+      console.log(data, "PopupData");
+
+      this.openJobDetailsDialog(data);
+    }
+
+  }
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+    this.columnApi = params.columnApi;
+   
+    this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`).subscribe((response) => (this.rowData = response.getWorkflowDetails));
+    this.freshJobs();
+
+  }
+}
+
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
 }

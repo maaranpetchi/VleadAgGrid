@@ -297,6 +297,10 @@ settingStitchcount: number=0;
 
         if (val.success === true) {
           Swal.fire('Done!', val.message, 'success').then((val) => {
+            if(val.isConfirmed){
+              this.dialogRef.close();
+              window.location.reload();
+            }
           });
         }
       },

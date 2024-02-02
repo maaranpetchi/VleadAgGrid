@@ -6,6 +6,7 @@ import { QualitytableComponent } from '../qualitytable/qualitytable.component';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { catchError, throwError } from 'rxjs';
 import Swal from 'sweetalert2/src/sweetalert2.js'
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 @Component({
   selector: 'app-quality',
   templateUrl: './quality.component.html',
@@ -14,7 +15,12 @@ import Swal from 'sweetalert2/src/sweetalert2.js'
 export class QualityComponent implements OnInit {
   @ViewChild(QualitytableComponent) QualitytableComponent: QualitytableComponent;
   ScopeApiData: any[];
-  constructor(private http: HttpClient, private loginservice: LoginService, private spinnerService: SpinnerService) { }
+  constructor(private http: HttpClient, private loginservice: LoginService, private spinnerService: SpinnerService,private sharedDataService:SharedService) {   this.sharedDataService.refreshData$.subscribe(() => {
+    // Update your data or call the necessary methods to refresh the data
+    this.getCount();
+
+    // ... other refresh logic
+  });}
   ngOnInit(): void {
     this.getCount();
     this.freshJobs();
