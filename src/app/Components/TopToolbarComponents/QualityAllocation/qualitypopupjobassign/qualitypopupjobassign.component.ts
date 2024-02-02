@@ -99,7 +99,6 @@ settingStitchcount: number=0;
     this.fetchScopes();
   }
 
-
   onFilterChange() {
     if (this.selectedQureryStatus == 6) {
       this.remarksdata = true;
