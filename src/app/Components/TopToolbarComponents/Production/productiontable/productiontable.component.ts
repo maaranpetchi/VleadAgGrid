@@ -18,6 +18,12 @@ import Swal from 'sweetalert2';
 import { GridApi, ColDef, CellClickedEvent, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
 import { ClientordinationindexComponent } from '../../ClientCordination/clientordinationindex/clientordinationindex.component';
 import { JobDetailsClientIndexComponent } from '../../ClientCordination/query-to-client/job-details-client-index/job-details-client-index.component';
+import { actionrendering } from '../actionrendering.component';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
+import { StartRenderingComponent } from '../startrendering.component';
+import { EndRenderingComponent } from '../endrendering.component';
+import { workflowrendering } from '../workflowrendering.component';
+import { bulkuploadrendering } from '../bulkuploadrendering.component';
 
 @Component({
   selector: 'app-productiontable',
@@ -126,7 +132,11 @@ export class ProductiontableComponent {
   @ViewChild(MatSort) sort: MatSort;
   storedProcessId: string | null;
 
-  constructor(private http: HttpClient, private loginservice: LoginService, private dialog: MatDialog, private spinnerService: SpinnerService, private workflowservice: WorkflowService, private router: Router) { }
+  constructor(private http: HttpClient, private loginservice: LoginService, private dialog: MatDialog, private spinnerService: SpinnerService, private workflowservice: WorkflowService, private router: Router,private sharedDataService:SharedService) {
+    // this.sharedDataService.refreshData$.subscribe(() => {
+    //   this.bulkJobs();
+    // })
+  }
 
   ngOnInit(): void {
     // //ScopeDropdown
@@ -360,7 +370,7 @@ export class ProductiontableComponent {
     { headerName: 'JobId', field: 'jobId', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
 
     { headerName: 'EST Job/Query Date', field: 'jobDateEst', filter: true, },
-    { headerName: 'Actions', field:'workflow' ? "Workflow":"Workflow", filter: true,  } ,// Use cellRenderer for customization},
+    { headerName: 'Actions', cellRenderer: actionrendering, field:'actions', filter: true, },// Use cellRenderer for customization},
     { headerName: 'Client', field: 'shortName', filter: true, },
     { headerName: 'Customer Classification', field: 'customerClassification', filter: true, },
     { headerName: 'File Name', field: 'fileName', filter: true, },
@@ -369,13 +379,14 @@ export class ProductiontableComponent {
     { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
     { headerName: 'Project Code', field: 'projectCode', filter: true, },
     { headerName: 'Allocated By', field: 'assignedFrom', filter: true, },
+    { headerName: 'Process Status', field: 'workStatus', filter: true, },
     { headerName: 'Est Time', field: 'estimatedTime', filter: true, },
     { headerName: 'Job Category', field: 'jobCategoryDesc', filter: true, },
     { headerName: 'DeliveryDate', field: 'jobCategoryDesc', filter: true, },
-    { headerName: 'start', field: 'start', filter: true, },
-    { headerName: 'Workfiles', field: 'Workfiles', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
-    { headerName: 'End', field: 'End', filter: true, },
-    { headerName: 'Bulk Upload', field: 'Workflow', filter: true,cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
+    { headerName: 'start', cellRenderer:StartRenderingComponent, field:'start' ,filter: true, },
+    { headerName: 'Workfiles', cellRenderer:workflowrendering,field:'workfiles', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
+    { headerName: 'End',  cellRenderer:EndRenderingComponent,field:'end', filter: true, },
+    { headerName: 'Bulk Upload',cellRenderer:bulkuploadrendering, field:'bulkupload', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
 
   ];
 
@@ -410,16 +421,21 @@ export class ProductiontableComponent {
 
   }
 
+  onDivisionChange() {
+    console.log(this.scopeid, "SelectDivi");
+
+    this.sharedDataService.setData(this.scopeid);
+  }
 
   freshJobs() {
+    this.gridApi.setColumnVisible('start',false);
+    this.gridApi.setColumnVisible('workfiles',false);
+    this.gridApi.setColumnVisible('end',false);
+    this.gridApi.setColumnVisible('bulkupload',false);
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.storedProcessId ? this.loginservice.getProcessId() : 3}/1/0`).subscribe(freshdata => {
       this.rowData = freshdata.getWorkflowDetails;
       this.spinnerService.requestEnded();
-      this.displayedColumns.start = false;
-      this.displayedColumns.workfiles = false;
-      this.displayedColumns.end = false;
-      this.displayedColumns.bulkupload = false;
     }, (error) => {
       this.spinnerService.resetSpinner();
 
@@ -429,6 +445,10 @@ export class ProductiontableComponent {
     });
   }
   revisionJobs() {
+    this.gridApi.setColumnVisible('start',false);
+    this.gridApi.setColumnVisible('workfiles',false);
+    this.gridApi.setColumnVisible('end',false);
+    this.gridApi.setColumnVisible('bulkupload',false);
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/2/0`).pipe(
       catchError((error) => {
@@ -439,11 +459,7 @@ export class ProductiontableComponent {
     ).subscribe(freshdata => {
       this.spinnerService.requestEnded();
       this.rowData = freshdata.getWorkflowDetails;
-      this.dataSource.paginator = this.paginator;
-      this.displayedColumns.start = false;
-      this.displayedColumns.workfiles = false;
-      this.displayedColumns.end = false;
-      this.displayedColumns.bulkupload = false;
+
     }, (error) => {
       this.spinnerService.resetSpinner();
 
@@ -453,6 +469,10 @@ export class ProductiontableComponent {
     });
   }
   reworkJobs() {
+    this.gridApi.setColumnVisible('start',false);
+    this.gridApi.setColumnVisible('workfiles',false);
+    this.gridApi.setColumnVisible('end',false);
+    this.gridApi.setColumnVisible('bulkupload',false);
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.storedProcessId ? this.loginservice.getProcessId() : 3}/3/0`).pipe(
       catchError((error) => {
@@ -463,11 +483,7 @@ export class ProductiontableComponent {
     ).subscribe(freshdata => {
       this.spinnerService.requestEnded();
       this.rowData = freshdata.getWorkflowDetails;
-      this.dataSource.paginator = this.paginator;
-      this.displayedColumns.start = false;
-      this.displayedColumns.workfiles = false;
-      this.displayedColumns.end = false;
-      this.displayedColumns.bulkupload = false;
+
     }, (error) => {
       this.spinnerService.resetSpinner();
 
@@ -477,6 +493,11 @@ export class ProductiontableComponent {
     });
   }
   quoteJobs() {
+    this.gridApi.setColumnVisible('start',false);
+    this.gridApi.setColumnVisible('workfiles',false);
+    this.gridApi.setColumnVisible('end',false);
+    this.gridApi.setColumnVisible('bulkupload',false);
+
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.storedProcessId ? this.loginservice.getProcessId() : 3}/4/0`).pipe(
       catchError((error) => {
@@ -487,11 +508,6 @@ export class ProductiontableComponent {
     ).subscribe(freshdata => {
       this.spinnerService.requestEnded();
       this.rowData = freshdata.getWorkflowDetails;
-      this.dataSource.paginator = this.paginator;
-      this.displayedColumns.start = false;
-      this.displayedColumns.workfiles = false;
-      this.displayedColumns.end = false;
-      this.displayedColumns.bulkupload = false;
     }, (error) => {
       this.spinnerService.resetSpinner();
 
@@ -502,6 +518,10 @@ export class ProductiontableComponent {
   }
   scopeDisplay: boolean = false; // display a scope dropdown div
   bulkJobs() {
+    this.gridApi.setColumnVisible('start',true);
+    this.gridApi.setColumnVisible('workfiles',true);
+    this.gridApi.setColumnVisible('end',true);
+    this.gridApi.setColumnVisible('bulkupload',true);
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.storedProcessId ? this.loginservice.getProcessId() : 3}/6/0`).pipe(
       catchError((error) => {
@@ -515,11 +535,9 @@ export class ProductiontableComponent {
 
       this.workingstatus = freshdata.getWorkflowDetails[0].workStatus;
 
-      this.dataSource.paginator = this.paginator;
-      this.displayedColumns.start = true;
-      this.displayedColumns.workfiles = true;
-      this.displayedColumns.end = true;
-      this.displayedColumns.bulkupload = true; this.scopeDisplay = true;
+   
+
+      this.scopeDisplay = true;
     }, (error) => {
       this.spinnerService.resetSpinner();
 
@@ -529,6 +547,10 @@ export class ProductiontableComponent {
     });
   }
   bulkUploadJobs() {
+    this.gridApi.setColumnVisible('start',false);
+    this.gridApi.setColumnVisible('workfiles',false);
+    this.gridApi.setColumnVisible('end',false);
+    this.gridApi.setColumnVisible('bulkupload',false);
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.storedProcessId ? this.loginservice.getProcessId() : 3}/7/0`).pipe(
       catchError((error) => {
@@ -539,11 +561,6 @@ export class ProductiontableComponent {
     ).subscribe(freshdata => {
       this.spinnerService.requestEnded();
       this.rowData = freshdata.getWorkflowDetails;
-      this.dataSource.paginator = this.paginator;
-      this.displayedColumns.start = false;
-      this.displayedColumns.workfiles = false;
-      this.displayedColumns.end = false;
-      this.displayedColumns.bulkupload = false;
     }, (error) => {
       this.spinnerService.resetSpinner();
 
@@ -561,21 +578,7 @@ export class ProductiontableComponent {
 
       this.openJobDetailsDialog(data);
     }
-    if (colDef.field === 'workflow') {
-      console.log(data, "PopupData");
 
-      this.lnkviewedit(data);
-    }
-    if (colDef.field === 'start') {
-      console.log(data, "PopupData");
-
-      this.changeWorkflow(data, 'Start')
-    }
-    if (colDef.field === 'End') {
-      console.log(data, "PopupData");
-
-      this.changeWorkflow(data, 'End')
-    }
   }
 
   openJobDetailsDialog(data) {
@@ -677,7 +680,12 @@ export class ProductiontableComponent {
   onGridReady(params: GridReadyEvent<any>) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
+    this.gridApi.setColumnVisible('start',false);
+    this.gridApi.setColumnVisible('workfiles',false);
+    this.gridApi.setColumnVisible('end',false);
+    this.gridApi.setColumnVisible('bulkupload',false);
     this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.storedProcessId ? this.loginservice.getProcessId() : 3}/1/0`).subscribe((response) => (this.rowData = response.queryPendingJobs));
+    this.freshJobs();
 
   }
 }

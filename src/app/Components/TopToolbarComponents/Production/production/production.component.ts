@@ -5,6 +5,7 @@ import { environment } from 'src/Environments/environment';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { catchError, throwError } from 'rxjs';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 
 @Component({
   selector: 'app-production',
@@ -14,8 +15,13 @@ import { catchError, throwError } from 'rxjs';
 export class ProductionComponent implements OnInit{
   @ViewChild(ProductiontableComponent) ProductiontableComponent: ProductiontableComponent;
 
- constructor(private http:HttpClient,private loginservice:LoginService, private spinnerService:SpinnerService){
-  
+ constructor(private http:HttpClient,private loginservice:LoginService, private spinnerService:SpinnerService,private sharedDataService:SharedService){
+  this.sharedDataService.refreshData$.subscribe(() => {
+    // Update your data or call the necessary methods to refresh the data
+    this.getCount();
+
+    // ... other refresh logic
+  });
  }
   ngOnInit(): void {
   this.getCount();

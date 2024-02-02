@@ -55,6 +55,9 @@ export class QualitypopupjobassignComponent implements OnInit {
   selectedJobs: { DepartmentId: any; TranMasterId: any; JId: any; CustomerId: any; JobId: any; Comments: any; TimeStamp: any; CategoryDesc: any; SelectedRows: any; FileInwardType: any; CommentsToClient: any; SelectedEmployees: any }[];
   ChangeEstTimeData: any;
   getJobHistoryData: any;
+  gettingscopeid: any;
+  gettingStitchCount: any;
+settingStitchcount: number=0;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -107,7 +110,18 @@ export class QualitypopupjobassignComponent implements OnInit {
       this.EstimatedTime = true;
       this.remarksdata = true;
       this.EmployeData = false;
-      this.EmployeDatascope = true;
+      this.http.get<any>(environment.apiURL + `Allocation/GetQuerySPDetailsForQA/${this.data.jId ? this.data.jId : this.data.jid}`).subscribe(result => {
+        this.EmployeDatascope = true;
+        this.QueryDetailsList = result;
+        this.gettingScope = result.scope;
+        this.gettingscopeid = result.scopeId;
+        this.gettingStitchCount = result.stitchCount;
+        console.log(this.gettingStitchCount,"Gettingstitchcount");
+        this.settingStitchcount =this.gettingStitchCount; 
+        console.log(this.settingStitchcount,"settingStitchcount");
+
+      })
+      
     } else if (this.selectedQureryStatus == 100) {
       this.EstimatedTime = false;
       this.EmployeData = true;
@@ -126,14 +140,14 @@ export class QualitypopupjobassignComponent implements OnInit {
   }
   fetchData() {
     const apiUrl = environment.apiURL + 'JobOrder/getJobHistory';
-console.log(this.data,"DataJID");
+    console.log(this.data, "DataJID");
 
-    this.http.post<any>(apiUrl, this.data.jId ? this.data.jId : 0).subscribe(
+    this.http.post<any>(apiUrl, this.data.jId ? this.data.jId : this.data.jid).subscribe(
       (response: any) => {
         this.getJobHistoryData = response;
         this.jobCommonDetails = response.jobCommonDetails.description;
         this.dataJobSource = new MatTableDataSource(response.jobHistory);
-        this.dataQuerySource =new MatTableDataSource(response.jobQueryHistory);
+        this.dataQuerySource = new MatTableDataSource(response.jobQueryHistory);
       },
       (error: any) => {
         console.log('Error fetching data from REST API:', error);
@@ -144,7 +158,7 @@ console.log(this.data,"DataJID");
   getAssignedEmployeesToChangeEstTime() {
     const apiUrl =
       environment.apiURL +
-      `Allocation/getAssignedEmployeesToChangeEstTime/${this.data.jId ? this.data.jId:0}`;
+      `Allocation/getAssignedEmployeesToChangeEstTime/${this.data.jId ? this.data.jId : 0}`;
 
     this.http.get(apiUrl).subscribe(
       (response: any) => {
@@ -154,6 +168,16 @@ console.log(this.data,"DataJID");
         console.log('Error fetching data from REST API:', error);
       }
     );
+  }
+  isScopeMapped() {
+    this.http
+      .get<any>(
+        environment.apiURL +
+        `Allocation/getScopeValues/${this.loginservice.getUsername()}`
+      )
+      .subscribe((scopedata) => {
+        this.Scopes = scopedata.scopeDetails; // Sort the scopes based on the 'name' property
+      });
   }
   gettingScope: any;
   QueryDetailspost() {
@@ -167,9 +191,9 @@ console.log(this.data,"DataJID");
     this.http.post(apiUrl, datas).subscribe(
       (response: any) => {
         // this.restApiData = response;
-       
-        console.log(this.gettingScope,"gettingsope");
-         // Assuming the REST API response is an array of objects
+
+        console.log(this.gettingScope, "gettingsope");
+        // Assuming the REST API response is an array of objects
       },
       (error: any) => {
         console.log('Error fetching data from REST API:', error);
@@ -204,7 +228,7 @@ console.log(this.data,"DataJID");
       id: 0,
       processId: this.loginservice.getProcessId(),
       statusId: this.selectedQureryStatus,
-      selectedScopeId: this.selectedScope,
+      selectedScopeId: this.gettingscopeid,
       autoUploadJobs: true,
       employeeId: this.loginservice.getUsername(),
       remarks: this.remarks,
@@ -212,7 +236,7 @@ console.log(this.data,"DataJID");
       jobId: this.data.jobId,
       value: 0,
       amount: 0,
-      stitchCount: 0,
+      stitchCount: this.settingStitchcount,
       estimationTime: this.estimatedTime !== 0 ? this.estimatedTime : 0,
       dateofDelivery: '2023-07-01T10:02:55.095Z',
       comments: 'string',
@@ -227,7 +251,7 @@ console.log(this.data,"DataJID");
           customerId: this.data.customerId,
           departmentId: this.data.departmentId,
           estimatedTime: this.estimatedTime,
-          jId: this.data.jid,
+          jId: this.data.jId,
           tranMasterId: this.data.tranMasterId,
           Comments: '',
           TimeStamp: '',
@@ -437,9 +461,12 @@ console.log(this.data,"DataJID");
   //////////////Popupsubmit////
 
   getQueryDetailList() {
-
+    this.spinnerservice.requestStarted();
     this.http.get<any>(environment.apiURL + `Allocation/GetQuerySPDetailsForQA/${this.jobCommonDetails.jobCommonDetails.jid}`).subscribe(result => {
       this.QueryDetailsList = result;
+      this.gettingScope = result.scope;
+      this.gettingscopeid = result.scopeId;
+      this.spinnerservice.requestEnded();
     })
   }
   stitchCountdisplay: boolean = false;

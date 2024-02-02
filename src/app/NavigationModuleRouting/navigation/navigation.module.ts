@@ -149,6 +149,7 @@ import { ReportViewerModule } from 'ngx-ssrs-reportviewer-v2';
 import { AgGridModule } from 'ag-grid-angular';
 import 'ag-grid-enterprise';
 import { ActionsCellRendererComponent } from 'src/app/Components/TopToolbarComponents/ClientCordination/ClientOrder/actions-cell-renderer/actions-cell-renderer.component';
+import { StartRenderingComponent } from 'src/app/Components/TopToolbarComponents/Production/startrendering.component';
 
 @NgModule({
   declarations: [
@@ -188,6 +189,7 @@ import { ActionsCellRendererComponent } from 'src/app/Components/TopToolbarCompo
     ProductiontableComponent,
     ProdjobpopupComponent,
     ProductionworkflowComponent,
+    StartRenderingComponent,
     //QualityAllocation
     QualityallocationComponent,
     QualityallocationtableComponent,

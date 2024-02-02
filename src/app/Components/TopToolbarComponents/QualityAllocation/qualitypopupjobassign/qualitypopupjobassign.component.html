@@ -195,12 +195,30 @@
     </div>
     <!-- <div class="col-md-2"> Estimated Time (estimatedTime)</div> -->
   </div>
-  <div class="row" *ngIf="EmployeDatascope">
+  <!-- <div class="row" *ngIf="EmployeDatascope">
     <div class="col-md-4">Scope</div>
+    <mat-select [(ngModel)]="selectedEmployees">
+      <mat-option *ngFor="let scope of Scopes" [value]="scope.id">{{ scope.name }}</mat-option>
+    </mat-select>
     <div class="col-md-4 fw-bold fs-1">
       {{data.description}}
     </div>
+  </div> -->
+  <div class="row" *ngIf="EmployeDatascope">
+    <div class="col-md-4">Scope:</div>
+    <div class="col-md-4">
+    <b>{{this.gettingScope}}</b> 
+    </div>
   </div>
+  <div class="row" *ngIf="EmployeDatascope && data.departmentId==2">
+    <div class="col-md-4">Stitch Count: <span style="color: red;">*</span></div>
+    <div class="col-md-4">
+<input class="form-control"  type="text" name="stitchcount" [(ngModel)]="this.settingStitchcount" id="stitchcount">    </div>
+  </div>
+
+
+<br>
+<br>
   <div class="mb-5 text-center">
     <button type="button" class="btn btn-danger" (click)="close()">Close</button> &nbsp;<button type="button"
       class="btn btn-success" (click)="onSubmit()">Submit</button>

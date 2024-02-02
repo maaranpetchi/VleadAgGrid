@@ -41,7 +41,7 @@
             <div class="scope" style="float: right;" *ngIf="scopeDisplay">
                 <mat-form-field>
                     <mat-label>Scope</mat-label>
-                    <mat-select [(ngModel)]="scopeid" name="scopeid">
+                    <mat-select [(ngModel)]="scopeid" name="scopeid" (selectionChange)="onDivisionChange()">
                       <mat-option *ngFor="let item of ScopeApiData" [value]="item.id">
                         {{ item.name }}
                       </mat-option>

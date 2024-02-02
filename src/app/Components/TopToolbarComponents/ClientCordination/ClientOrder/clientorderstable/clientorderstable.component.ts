@@ -978,7 +978,7 @@ export class ClientorderstableComponent implements OnInit {
     { headerName: 'Quote Parent Id', field: 'parentJobId', filter: true, },
     { headerName: 'Instructions', field: 'instruction', filter: true, },
     { headerName: 'Sales Person Name', field: 'salesPersonName', filter: true, },
-    { headerName: 'TransactionType ', field: 'transactionType', filter: true, },
+    { headerName: 'TransactionType', field: 'transactionType', filter: true, },
     {
       headerName: 'Actions',
       field: 'action',
