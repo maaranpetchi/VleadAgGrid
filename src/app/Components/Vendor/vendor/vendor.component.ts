@@ -54,8 +54,6 @@ context: any="vendor";
     });
   }
 
-
-
   openvendor() {
     const dialogRef = this._dialog.open(EditVendorComponent);
     dialogRef.afterClosed().subscribe({
