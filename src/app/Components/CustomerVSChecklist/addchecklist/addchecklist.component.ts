@@ -8,6 +8,7 @@ import { SpinnerService } from '../../Spinner/spinner.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2/src/sweetalert2.js';
 import { IndexchecklistComponent } from '../indexchecklist/indexchecklist.component';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 
 @Component({
   selector: 'app-addchecklist',
@@ -16,8 +17,8 @@ import { IndexchecklistComponent } from '../indexchecklist/indexchecklist.compon
 })
 export class AddchecklistComponent implements OnInit {
 
-  constructor(private http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, private _coreService: CoreService, private loginservice: LoginService, private spinnerService: SpinnerService, private router: Router, public dialogRef: MatDialogRef<AddchecklistComponent>) {
-    
+  constructor(private http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, private _coreService: CoreService, private loginservice: LoginService, private spinnerService: SpinnerService, private router: Router, private sharedDataService: SharedService, public dialogRef: MatDialogRef<AddchecklistComponent>) {
+
     if (this.data && this.data.type === "edit") {
       this.fetchDataAndOpenForm();
     }
@@ -32,8 +33,8 @@ export class AddchecklistComponent implements OnInit {
     { id: 2, name: 'Digitizing' }
   ];
 
-  selectedDepartment: number=0;
-  selectedCustomer: number=0;
+  selectedDepartment: number = 0;
+  selectedCustomer: number = 0;
   checklistDescription: string;
 
   customers: any[] = [];
@@ -41,12 +42,12 @@ export class AddchecklistComponent implements OnInit {
   fetchDataAndOpenForm() {
     this.spinnerService.requestStarted();
     this.http.get(environment.apiURL + `CustomerVsChecklist/GetChecklistDetails?id=${this.data.data.id}`).subscribe({
-      next:(data: any) => {
-      this.spinnerService.requestEnded();
+      next: (data: any) => {
+        this.spinnerService.requestEnded();
 
-      this.selectedDepartment = data.dept.id;
-      this.selectedCustomer = data.customer.id;
-      this.checklistDescription = data.description;
+        this.selectedDepartment = data.dept.id;
+        this.selectedCustomer = data.customer.id;
+        this.checklistDescription = data.description;
       },
       error: (err) => {
         this.spinnerService.resetSpinner(); // Reset spinner on error
@@ -56,13 +57,13 @@ export class AddchecklistComponent implements OnInit {
           'error'
         );
       }
-  
+
     });
   }
 
   fetchCustomers() {
     this.http.get<any>(environment.apiURL + `CustomerVsChecklist/GetDropDownList`).subscribe({
-      next:(data) => {
+      next: (data) => {
         this.customers = data.customerList;
       },
       error: (err) => {
@@ -73,19 +74,19 @@ export class AddchecklistComponent implements OnInit {
           'error'
         );
       }
-  
-      });
+
+    });
   }
 
   onFormSubmit() {
     const requiredFields: string[] = [];
     if (!this.selectedCustomer) {
-        requiredFields.push('Customer');
+      requiredFields.push('Customer');
     }
     if (!this.selectedDepartment) {
-        requiredFields.push('Department');
+      requiredFields.push('Department');
     }
-  
+
 
     if (requiredFields.length === 0) {
       if (this.data) {
@@ -104,12 +105,11 @@ export class AddchecklistComponent implements OnInit {
             'Done!',
             results.cvCList,
             'success'
-          ).then((result) => {
-            if (result.isConfirmed) {
-              this.router.navigate(['/topnavbar/CustomerVsChecklist']);
-          }
-  
-          this.dialogRef.close();
+          ).then((response) => {
+            if (response.isConfirmed) {
+
+              this.dialogRef.close(true);
+            }
           })
         }, (error) => {
           Swal.fire(
@@ -120,15 +120,15 @@ export class AddchecklistComponent implements OnInit {
           this.spinnerService.resetSpinner();
         });
       }
-    
+
     } else {
-        // Show validation error message with missing field names
-        const missingFields = requiredFields.join(', ');
-        Swal.fire('Required Fields', `Please fill in the following required fields: ${missingFields}.`, 'error');
+      // Show validation error message with missing field names
+      const missingFields = requiredFields.join(', ');
+      Swal.fire('Required Fields', `Please fill in the following required fields: ${missingFields}.`, 'error');
     }
 
 
- 
+
   }
 
 
@@ -270,17 +270,18 @@ export class AddchecklistComponent implements OnInit {
       this.http.post<any>(environment.apiURL + `CustomerVsChecklist/UpdateChecklist`, UploadPayload).subscribe({
         next: (val: any) => {
           this.spinnerService.requestEnded();
-          if(val.message == true){ Swal.fire(
-            'Done!',
-            'Employee detail updated!',
-            'success'
-          ).then((result) => {
-            if (result.isConfirmed) {
-              this.router.navigate(['/topnavbar/CustomerVsChecklist']);
+          if (val.message == true) {
+            Swal.fire(
+              'Done!',
+              'Employee detail updated!',
+              'success'
+            ).then((result) => {
+              if (result.isConfirmed) {
+                this.dialogRef.close(true);
+              }
+            })
           }
-          })
-          this.dialogRef.close();}
-          else{
+          else {
             Swal.fire(
               'info!',
               'No Changes Occured!',
@@ -288,11 +289,11 @@ export class AddchecklistComponent implements OnInit {
             ).then((result) => {
               if (result.isConfirmed) {
                 this.router.navigate(['/topnavbar/CustomerVsChecklist']);
-            }
+              }
             })
-            this.dialogRef.close();
+
           }
-         
+
 
 
         },

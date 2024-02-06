@@ -148,7 +148,6 @@ export class InvoiceComponent implements OnInit {
         "isWaiver": true,
         "jobStatusId": 0
       }
-console.log( "clientId", this.myForm.value?.ClientId);
 
 
       this.http.post<any>(environment.apiURL + 'Invoice/GenerateInvoice', result).pipe(catchError((error) => {
@@ -164,9 +163,7 @@ console.log( "clientId", this.myForm.value?.ClientId);
           'info'
         ).then((response) => {
           if (response.isConfirmed) {
-            this.onSubmit();
-            console.log( "clientId", this.myForm.value?.ClientId);
-
+            this.ngOnInit()
           }
         })
       }
@@ -186,8 +183,6 @@ console.log( "clientId", this.myForm.value?.ClientId);
     this.http.get<any>(environment.apiURL + 'Invoice/GetClient').subscribe(data => {
       this.spinnerService.requestEnded();
       this.data = data;
-      this.ClientGeneratedId = this.Clientid;
-
       this.ClientGeneratedata = data;
     }, error => {
       this.spinnerService.resetSpinner();
@@ -562,18 +557,12 @@ console.log( "clientId", this.myForm.value?.ClientId);
 
   ///3rd 
 
-  setConfirmAll(item: any): void {
-    this.selectedConfirmInvoice = item;
-    this.selection3.clear();
-    this.selection3.select(item);
+  isConfirmSelected() {
+    const numSelected = this.selection3.selected.length;
+    const numRows = this.ConfirmInvoicedataSource.data.length;
+    return numSelected === numRows;
   }
-  
-  // ...
-  
-  // Update the isConfirmSelected method
-  isConfirmSelected(): boolean {
-    return this.selectedConfirmInvoice !== null;
-  }
+
   confcMasterToggle() {
     if (this.isConfirmSelected()) {
       this.selection3.clear();
@@ -597,7 +586,14 @@ console.log( "clientId", this.myForm.value?.ClientId);
     }
   }
   selectedConfirmInvoice: any[] = [];
+  setConfirmAll(item: any) {
+    console.log(item, "selectedConfirmInvoice");
 
+    this.selectedConfirmInvoice.push({
+      ...item,
+
+    });
+  }
 
 
   openArtInvoice() {
@@ -630,6 +626,8 @@ console.log( "clientId", this.myForm.value?.ClientId);
         );
         const redirectURL = document.location.origin + '/#' + url;
         window.open(redirectURL, '_blank');
+
+      
 
       }
     }

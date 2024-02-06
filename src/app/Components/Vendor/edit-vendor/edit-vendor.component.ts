@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { catchError } from 'rxjs';
 import { VendorComponent } from '../vendor/vendor.component';
 import { VendorService } from 'src/app/Services/Vendor/vendor.service';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 
 @Component({
   selector: 'app-edit-vendor',
@@ -31,6 +32,7 @@ export class EditVendorComponent implements OnInit {
     private router: Router,
     private spinnerService: SpinnerService,
     private http: HttpClient,
+    private sharedDataService:SharedService,
     private _dialogRef: MatDialogRef<EditVendorComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _coreService: CoreService,
@@ -48,65 +50,64 @@ export class EditVendorComponent implements OnInit {
   onFormSubmit(): void {
     const requiredFields: string[] = [];
     if (!this.invoiceNumber) {
-        requiredFields.push('Invoice Number');
+      requiredFields.push('Invoice Number');
     }
     if (!this.invoiceValue) {
-        requiredFields.push('Invoice Value');
+      requiredFields.push('Invoice Value');
     }
-    
-    
+
+
     if (requiredFields.length === 0) {
-        const payload = {
-            id: 0,
-            vendorName: this.vendorName ? this.vendorName:'',
-            invoiceNumber: this.invoiceNumber ? this.invoiceNumber:"",
-            invoiceDate: this.invoiceDate !== null ? this.invoiceDate : '',
-            invoiceValue: this.invoiceValue ? this.invoiceValue:0,
-            pendingAmount: this.pendingAmount ?this.pendingAmount:0,
-            amountbePaid: this.amtTobePaid ? this.amtTobePaid:0,
-            amountPaid: 0,
-            employeeId: this.loginservice.getUsername(),
-          };
-      
-          this.spinnerService.requestStarted();
-          this.http.post<any>(environment.apiURL + `ITAsset/nSetVendorDetails`, payload).pipe(catchError((error) => {
-            this.spinnerService.requestEnded();
-            return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-          })).subscribe({
-            next: (val: any) => {
-              this.spinnerService.requestEnded();
-              Swal.fire(
-                'Done!',
-                val.setVDetailList,
-                'success'
-              ).then((response) => {
-                if (response.isConfirmed) {
-                  this._dialogRef.close();
-      
-                  window.location.reload();
-                }
-              })
-            },
-            error: (err: any) => {
-              this.spinnerService.resetSpinner();
-              Swal.fire(
-                'info!!',
-                'No Changes Occured',
-                'info'
-              ).then((response) => {
-                if (response.isConfirmed) {
-                  this._dialogRef.close();
-      
-                  window.location.reload();          }
-              })
+      const payload = {
+        id: 0,
+        vendorName: this.vendorName ? this.vendorName : '',
+        invoiceNumber: this.invoiceNumber ? this.invoiceNumber : "",
+        invoiceDate: this.invoiceDate !== null ? this.invoiceDate : '',
+        invoiceValue: this.invoiceValue ? this.invoiceValue : 0,
+        pendingAmount: this.pendingAmount ? this.pendingAmount : 0,
+        amountbePaid: this.amtTobePaid ? this.amtTobePaid : 0,
+        amountPaid: 0,
+        employeeId: this.loginservice.getUsername(),
+      };
+
+      this.spinnerService.requestStarted();
+      this.http.post<any>(environment.apiURL + `ITAsset/nSetVendorDetails`, payload).pipe(catchError((error) => {
+        this.spinnerService.requestEnded();
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+      })).subscribe({
+        next: (val: any) => {
+          this.spinnerService.requestEnded();
+          Swal.fire(
+            'Done!',
+            val.setVDetailList,
+            'success'
+          ).then((response) => {
+            if (response.isConfirmed) {
+              this.sharedDataService.triggerRefresh();
+              this._dialogRef.close();
             }
-          });
-    
+          })
+        },
+        error: (err: any) => {
+          this.spinnerService.resetSpinner();
+          Swal.fire(
+            'info!!',
+            'No Changes Occured',
+            'info'
+          ).then((response) => {
+            if (response.isConfirmed) {
+              this.sharedDataService.triggerRefresh();
+              this._dialogRef.close();
+            }
+          })
+        }
+      });
+
     } else {
-        // Show validation error message with missing field names
-        const missingFields = requiredFields.join(', ');
-        Swal.fire('Required Fields', `Please fill in the following required fields: ${missingFields}.`, 'error');
+      // Show validation error message with missing field names
+      const missingFields = requiredFields.join(', ');
+      Swal.fire('Required Fields', `Please fill in the following required fields: ${missingFields}.`, 'error');
     }
-    
+
   }
 }

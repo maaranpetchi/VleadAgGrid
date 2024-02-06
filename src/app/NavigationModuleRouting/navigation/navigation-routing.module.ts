@@ -127,6 +127,7 @@ import { AddeditBillingComponent } from 'src/app/Components/BillingCycleMonthly/
 import { UpdateBillingComponent } from 'src/app/Components/BillingCycleMonthly/update-billing/update-billing.component';
 import { SSRSReportViewerComponent } from 'src/app/Components/AccountsController/Invoice/SSRS-REPORTVIEWER/ssrsreport-viewer/ssrsreport-viewer.component';
 import { ActionsCellRendererComponent } from 'src/app/Components/TopToolbarComponents/ClientCordination/ClientOrder/actions-cell-renderer/actions-cell-renderer.component';
+import { EmpskillactionrenderingComponent } from 'src/app/Components/EmployeeVSSkillset/empskillactionrendering/empskillactionrendering.component';
 
 //Routing to another components 
 const routes: Routes = [
@@ -353,6 +354,7 @@ const routes: Routes = [
       { path: 'addeditskillset', component: AddEditSkillsetComponent, canActivate: [authGuard] },
       { path: 'viewskillset', component: ViewSkillsetComponent, canActivate: [authGuard] },
       { path: 'updateskillset', component: UpdateSkillSetComponent, canActivate: [authGuard] },
+      { path: 'empskillaction', component: EmpskillactionrenderingComponent, canActivate: [authGuard] },
 
 
       //JOBFILESLOCATIONMASTER

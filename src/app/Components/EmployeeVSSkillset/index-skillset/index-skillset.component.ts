@@ -9,6 +9,9 @@ import { SpinnerService } from '../../Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { EmployeevsskillsetService } from 'src/app/Services/EmployeeVsSkillset/employeevsskillset.service';
 import { catchError } from 'rxjs';
+import { GridApi, ColDef, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { EmpskillactionrenderingComponent } from '../empskillactionrendering/empskillactionrendering.component';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 @Component({
   selector: 'app-index-skillset',
   templateUrl: './index-skillset.component.html',
@@ -20,8 +23,14 @@ export class IndexSkillsetComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  context: any = "EmployeeVSSkillset";
 
-  constructor(private http: HttpClient, private router: Router, private spinnerService: SpinnerService, private _empService: EmployeevsskillsetService) { }
+  constructor(private http: HttpClient, private router: Router, private spinnerService: SpinnerService, private _empService: EmployeevsskillsetService, private sharedDataService: SharedService) {
+    this.sharedDataService.refreshData$.subscribe(() => {
+      // Update your data or call the necessary methods to refresh the data
+      this.getFetchTables();
+    });
+  }
 
   ngOnInit(): void {
     this.getFetchTables();
@@ -31,9 +40,8 @@ export class IndexSkillsetComponent implements OnInit {
     this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/ShowEmployeeVsSkillset`).subscribe({
       next: (employees) => {
         this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(employees.gEvSlist);
-        this.dataSource.paginator = this.paginator;
-        // this.dataSource.sort = this.sort;
+        this.rowData = employees.gEvSlist;
+
       },
       error: (err) => {
         this.spinnerService.resetSpinner(); // Reset spinner on error
@@ -56,86 +64,76 @@ export class IndexSkillsetComponent implements OnInit {
   }
 
   //aCTIONS
-  openEditForm(id: number) {
-    this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/GetEmployeeVsSkillsetbyId?id=${id}`).pipe(catchError((error) => {
-      this.spinnerService.requestEnded();
-      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-    })).subscribe({
-      next: (results) => {
-        this.spinnerService.requestEnded();
-        this._empService.setData({ type: 'EDIT', data: results });
-        this._empService.shouldFetchData = true;
-        this.router.navigate(['/topnavbar/updateskillset']);
-      },
-      error: (err) => {
-        this.spinnerService.resetSpinner(); // Reset spinner on error
-        console.error(err);
-        Swal.fire(
-          'Error!',
-          'An error occurred !.',
-          'error'
-        );
-      }
-    });
 
-  }
   viewEmployee(id: number) {
-    this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/GetEmployeeVsSkillsetbyId?id=${id}`).pipe(catchError((error) => {
-      this.spinnerService.requestEnded();
-      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-    })).subscribe({
-      next: (results) => {
-        this.spinnerService.requestEnded();
 
-        this._empService.setData({ type: 'EDIT', data: results });
-        this._empService.shouldFetchData = true;
-        this.router.navigate(['/topnavbar/viewskillset']);
-      },
-      error: (err) => {
-        this.spinnerService.resetSpinner(); // Reset spinner on error
-        console.error(err);
-        Swal.fire(
-          'Error!',
-          'An error occurred !.',
-          'error'
-        );
-      }
-    });
   }
   deleteEmployee(id: number) {
-    this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/Delete-Skill?id=${id}`).pipe(catchError((error) => {
-      this.spinnerService.requestEnded();
-      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-    })).subscribe({
-      next: (res) => {
-        this.spinnerService.requestEnded();
 
-        Swal.fire(
-          'Deleted!',
-          'Data deleted successfully!',
-          'success'
-        ).then((response) => {
-          if (response.isConfirmed) {
-            this.getFetchTables();
-          }
-        })
-      },
-      error: (err) => {
-        this.spinnerService.resetSpinner(); // Reset spinner on error
-        console.error(err);
-        Swal.fire(
-          'Error!',
-          'An error occurred !.',
-          'error'
-        );
-      }
-    });
   }
 
   OpenNewForm() {
     this.router.navigate(['/topnavbar/addeditskillset']);
   }
+  /////////////////////////Ag-grid module///////////////////////////////
+  @ViewChild('agGrid') agGrid: any;
+
+  private gridApi!: GridApi<any>;
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+
+  columnDefs: ColDef[] = [
+    { headerName: 'EmployeeCode ', field: 'employeeCode', filter: true, },
+    { headerName: 'EmployeeName ', field: 'employeeName', filter: true, },
+    { headerName: 'Skill', field: 'skill', filter: true, },
+    { headerName: 'ProficiencyLevel', field: 'proficiencyLevel', filter: true, },
+    {
+      headerName: 'Actions',
+      field: 'action',
+      cellRenderer: EmpskillactionrenderingComponent, // JS comp by Direct Reference
+      autoHeight: true,
+    }
+  ];
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData!: any[];
+  public themeClass: string =
+    "ag-theme-quartz";
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+    this.http.get<any>(environment.apiURL + `EmployeeVsSkillset/ShowEmployeeVsSkillset`).subscribe((response) => (this.rowData = response.gEvSlist));
+  }
+
+  handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {
+    console.log(params, "Parameter");
+    console.log(params.data, "ParameterData");
+    let parameterData = params.data
+    if (params.colDef.field === 'filecount') { // Check if the changed column is 'price'
+
+    }
+  }
+
+
+  handlePress(newvalue, parameterData) {
+    console.log(newvalue, "HandlepressNewValue");
+    console.log(parameterData, "ParameterValue");
+
+  }
+
+
+}
+
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
 }
