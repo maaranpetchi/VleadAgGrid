@@ -223,7 +223,6 @@ export class JobHistoryComponent implements OnInit {
   @ViewChild(ClientordinationindexComponent) ClientordinationindexComponent: ClientordinationindexComponent;
 
 
-
   onCellClicked(event: CellClickedEvent) {
     const { colDef, data } = event;
     if (colDef.field === 'jobId') {
