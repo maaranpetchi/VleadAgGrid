@@ -42,7 +42,6 @@ export class customernormsrenderingcomponent implements ICellRendererAngularComp
 
     constructor(private sharedService: SharedService, private injector: Injector, private spinnerService: SpinnerService, private http: HttpClient, private loginservice: LoginService, private sharedDataService: SharedService,private _empService:CustomerNormsService,private router:Router) { }
     iconClicked: boolean = false;
-
     // gets called once before the renderer is used
     agInit(params: ICellRendererParams): void {
         this.gettingData = params.data;
