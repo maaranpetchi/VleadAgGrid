@@ -128,6 +128,7 @@ import { UpdateBillingComponent } from 'src/app/Components/BillingCycleMonthly/u
 import { SSRSReportViewerComponent } from 'src/app/Components/AccountsController/Invoice/SSRS-REPORTVIEWER/ssrsreport-viewer/ssrsreport-viewer.component';
 import { ActionsCellRendererComponent } from 'src/app/Components/TopToolbarComponents/ClientCordination/ClientOrder/actions-cell-renderer/actions-cell-renderer.component';
 import { EmpskillactionrenderingComponent } from 'src/app/Components/EmployeeVSSkillset/empskillactionrendering/empskillactionrendering.component';
+import { customernormsrenderingcomponent } from 'src/app/Components/CustomerNorms/customernormsindex/customerNormsRendering.component';
 
 //Routing to another components 
 const routes: Routes = [
@@ -364,6 +365,7 @@ const routes: Routes = [
       { path: 'customerNorms', component: CustomernormsindexComponent, canActivate: [authGuard] },
       { path: 'addcustomerNorms', component: AddCustomerNormsComponent, canActivate: [authGuard] },
       { path: 'updatecustomerNorms', component: UpdateCustomerNormsComponent, canActivate: [authGuard] },
+      { path: 'customerNormsrendering', component: customernormsrenderingcomponent, canActivate: [authGuard] },
 
 
       //Attendance

@@ -18,6 +18,8 @@ export class UpdateCustomerNormsComponent implements OnInit {
     let data: any[] = [];
     if (this._empservice.shouldFetchData) {
       const data = this._empservice.getViewData();
+      console.log(data,"APIResponse");
+      
       this.apiResponseData = data.data;
       this.fetchUpdateData();
       this._empservice.shouldFetchData = false;

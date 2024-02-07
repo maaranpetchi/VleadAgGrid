@@ -65,7 +65,7 @@ export class EmpskillactionrenderingComponent implements ICellRendererAngularCom
     if (this.Context == 'CustomerVSChecklist') {
       this.CustomerVSChecklistview()
     }
-
+ 
 
   }
 
@@ -84,6 +84,7 @@ export class EmpskillactionrenderingComponent implements ICellRendererAngularCom
     if (this.Context == 'CustomerVSChecklist') {
       this.CustomerVSChecklistedit()
     }
+
 
 
   }
@@ -105,6 +106,7 @@ export class EmpskillactionrenderingComponent implements ICellRendererAngularCom
     if (this.Context == 'CustomerVSChecklist') {
       this.CustomerVSChecklistDelete()
     }
+
 
 
   }

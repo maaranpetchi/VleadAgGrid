@@ -152,6 +152,7 @@ import { ActionsCellRendererComponent } from 'src/app/Components/TopToolbarCompo
 import { StartRenderingComponent } from 'src/app/Components/TopToolbarComponents/Production/startrendering.component';
 import { EmpskillactionrenderingComponent } from 'src/app/Components/EmployeeVSSkillset/empskillactionrendering/empskillactionrendering.component';
 import { VendoractionrenderingComponent } from 'src/app/Components/Vendor/vendor/Vendoractionrendering.component';
+import { customernormsrenderingcomponent } from 'src/app/Components/CustomerNorms/customernormsindex/customerNormsRendering.component';
 
 @NgModule({
   declarations: [
@@ -366,7 +367,7 @@ import { VendoractionrenderingComponent } from 'src/app/Components/Vendor/vendor
     CustomernormsindexComponent,
     AddCustomerNormsComponent,
     UpdateCustomerNormsComponent,
-
+    customernormsrenderingcomponent,
 
     //Attendance
     AttendanceIndexComponent,

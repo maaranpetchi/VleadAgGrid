@@ -33,42 +33,14 @@
     <div class="table">
         <div class="example-container mat-elevation-z8">
 
-            <mat-table mat-table #table [dataSource]="dataSource" matSort>
-
-                <!-- Department Column -->
-                <ng-container matColumnDef="EmpCode">
-                    <th mat-sort-header mat-header-cell *matHeaderCellDef> EmpCode</th>
-                    <td mat-cell *matCellDef="let job"> {{ job.empCode }} </td>
-                </ng-container>
-                <!-- clientname Column -->
-                <ng-container matColumnDef="Name">
-                    <th mat-sort-header mat-header-cell *matHeaderCellDef>Name</th>
-                    <td mat-cell *matCellDef="let job"> {{ job.name }} </td>
-                </ng-container>
-                <!-- File Name Column -->
-                <ng-container matColumnDef="Devision">
-                    <th mat-sort-header mat-header-cell *matHeaderCellDef> Devision</th>
-                    <td mat-cell *matCellDef="let job"> {{ job.devision }} </td>
-                </ng-container>
-                <ng-container matColumnDef="shift">
-                    <th mat-sort-header mat-header-cell *matHeaderCellDef> Shift</th>
-                    <td mat-cell *matCellDef="let job"> {{ job.shift }} </td>
-                </ng-container>
-                <ng-container matColumnDef="AttendanceStatus">
-                    <th mat-sort-header mat-header-cell *matHeaderCellDef> AttendanceStatus</th>
-                    <td mat-cell *matCellDef="let job"> {{ job.attendanceStatus }} </td>
-                </ng-container>
-
-                <!-- Table Header -->
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-
-                <!-- Table Rows -->
-                <tr mat-row *matRowDef="let job; columns: displayedColumns;"></tr>
-                <!-- <tr class="mat-row" *matNoDataRow>
-                    <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
-                </tr> -->
-            </mat-table>
-            <mat-paginator [pageSizeOptions]="[25, 50,75,100]" aria-label="Select page of users"></mat-paginator>
+     
+            <ag-grid-angular
+  style="width: 100%; height: 550px;"
+  [class]="themeClass"
+    [rowData]="rowData"
+  [columnDefs]="columnDefs"
+>
+</ag-grid-angular>
         </div>
     </div>
     <div class="button" style="display:flex;justify-content: center;align-items: center;gap:20px">
