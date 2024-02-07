@@ -29,109 +29,21 @@
     
               <div class="table-container">
               
-                <table class="table table-sm table-responsive" id="custom-table" mat-table [dataSource]="dataSource">
-
-                    <ng-container matColumnDef="baynumber">
-                        <th mat-header-cell *matHeaderCellDef>
-                            <div class="header-wrapper">
-                                <div class="department-name text-start"> Bay Number </div>
-                                <div class="filter-input">
-                                    <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
-                                        #input>
-                                </div>
-                            </div>
-                        </th>
-                        <td mat-cell *matCellDef="let element">{{element.bayNumber }}</td>
-                    </ng-container>
-                
-                    <ng-container matColumnDef="location">
-                        <th mat-header-cell *matHeaderCellDef>
-                            <div class="header-wrapper">
-                                <div class="department-name text-start">Location</div>
-                                <div class="filter-input">
-                                    <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
-                                        #input>
-                                </div>
-                            </div>
-                        </th>
-                        <td mat-cell *matCellDef="let element">{{element.location}}</td>
-                    </ng-container>
-                
-                
-                    <ng-container matColumnDef="pcname">
-                        <th mat-header-cell *matHeaderCellDef>
-                            <div class="header-wrapper">
-                                <div class="department-name text-start">PC Name</div>
-                                <div class="filter-input">
-                                    <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
-                                        #input>
-                                </div>
-                            </div>
-                        </th>
-                        <td mat-cell *matCellDef="let element">{{element.pcName}}</td>
-                    </ng-container>
-                
-                
-                    <ng-container matColumnDef="pctype">
-                        <th mat-header-cell *matHeaderCellDef>
-                            <div class="header-wrapper">
-                                <div class="department-name text-start">PC Type</div>
-                                <div class="filter-input">
-                                    <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
-                                        #input>
-                                </div>
-                            </div>
-                        </th>
-                        <td mat-cell *matCellDef="let element">{{element.description}}</td>
-                    </ng-container>
-                
-                
-                    <ng-container matColumnDef="roll">
-                        <th mat-header-cell *matHeaderCellDef>
-                            <div class="header-wrapper">
-                                <div class="department-name text-start">Roll</div>
-                                <div class="filter-input">
-                                    <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
-                                        #input>
-                                </div>
-                            </div>
-                        </th>
-                        <td mat-cell *matCellDef="let element">{{element.roll}}</td>
-                    </ng-container>
-                
-                    <ng-container matColumnDef="workingstatus">
-                        <th mat-header-cell *matHeaderCellDef>
-                            <div class="header-wrapper">
-                                <div class="department-name text-start">Working Status</div>
-                                <div class="filter-input">
-                                    <input matInput (keyup)="employeeFilter($event)" placeholder="Filter"
-                                        #input>
-                                </div>
-                            </div>
-                        </th>
-                        <td mat-cell *matCellDef="let element">{{element.workingStatus}}</td>
-                    </ng-container>
-                
-                
-                    <ng-container matColumnDef="Action">
-                        <th mat-header-cell *matHeaderCellDef>Action</th>
-                        <td mat-cell *matCellDef="let element">
-                            <a class="btn btn-success actionbtn" matTooltip="Edit" matTooltipPosition="below"
-                                (click)="openEditForm(element.id)">
-                                <mat-icon>edit</mat-icon>
-                            </a>
-                            <a class="btn btn-success actionbtn" matTooltip="delete" matTooltipPosition="below"
-                                (click)="deleteEmployee(element.id)">
-                                <mat-icon>delete</mat-icon>
-                            </a>
-                        </td>
-                    </ng-container>
-                
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                </table>
+                <ag-grid-angular
+                style="width: 100%; height: 100%;"
+                [context]="context"
+                [columnDefs]="columnDefs"
+                [defaultColDef]="defaultColDef"
+                [suppressRowClickSelection]="true"
+                [rowSelection]="rowSelection"
+                [rowData]="rowData"
+                [pagination]="true"
+                [class]="themeClass"
+                (gridReady)="onGridReady($event)"
+                (cellValueChanged)="handleCellValueChanged($event)"
+                frameworkComponents="{ }"
+              ></ag-grid-angular>
               </div>
-              <mat-paginator [pageSizeOptions]="[25, 50]" showFirstLastButtons></mat-paginator>
           </div>
         </div>
       </div>

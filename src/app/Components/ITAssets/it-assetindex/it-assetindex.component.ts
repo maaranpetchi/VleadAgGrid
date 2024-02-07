@@ -10,6 +10,9 @@ import { MatSort } from '@angular/material/sort';
 import { environment } from 'src/Environments/environment';
 import { Router } from '@angular/router';
 import { ItassetsService } from 'src/app/Services/ITAssets/itassets.service';
+import { GridApi, ColDef, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { customernormsrenderingcomponent } from '../../CustomerNorms/customernormsindex/customerNormsRendering.component';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 
 @Component({
   selector: 'app-it-assetindex',
@@ -18,77 +21,89 @@ import { ItassetsService } from 'src/app/Services/ITAssets/itassets.service';
 })
 export class ItAssetindexComponent implements OnInit {
   apiResponseData: any;
+context: any="ITASSET";
   ngOnInit(): void {
     this.fetchtableData();
   }
-  constructor(private router: Router, private _coreService: CoreService, private sharedDataService: ItassetsService, private http: HttpClient, private loginservice: LoginService, private coreservice: CoreService, private _dialog: MatDialog, private spinnerService: SpinnerService) { }
-  dataSource: MatTableDataSource<any>;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  constructor(private router: Router, private _coreService: CoreService, private sharedDataService: ItassetsService, private http: HttpClient, private loginservice: LoginService, private coreservice: CoreService, private _dialog: MatDialog, private spinnerService: SpinnerService,private sharedDataSService:SharedService) { 
 
-  displayedColumns: string[] = ['baynumber', 'location', 'pcname', 'pctype', 'roll', 'workingstatus', 'Action'];
-
-  fetchtableData() {
-    this.http.get<any>(environment.apiURL + `ITAsset/nGetTableITAsset`).subscribe(data => {
-      this.dataSource = new MatTableDataSource(data.titDetailList);
-      this.dataSource.paginator = this.paginator;
-      // this.dataSource.sort = this.sort;
+    this.sharedDataSService.refreshData$.subscribe(() => {
+      // Update your data or call the necessary methods to refresh the data
+      this.fetchtableData();
     });
   }
 
-
-  employeeFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+  fetchtableData() {
+    this.http.get<any>(environment.apiURL + `ITAsset/nGetTableITAsset`).subscribe(data => {
+      this.rowData =data.titDetailList;
+    });
   }
 
   openvendor() {
     this.router.navigate(['/topnavbar/addITAsset']);
   }
 
-  openEditForm(id: number) {
-    let payload = {
-      "id": id,
-    }
-    this.http.post<any>(environment.apiURL + `ITAsset/nGetEditedITAsset`,payload).subscribe(results => {
-      this.sharedDataService.setData({ type: 'EDIT', data: results });
-      this.sharedDataService.shouldFetchData = true;
+/////////////////////////Ag-grid module///////////////////////////////
+@ViewChild('agGrid') agGrid: any;
 
-      this.router.navigate(['/topnavbar/addITAsset']);
-    });
-    
+private gridApi!: GridApi<any>;
+public defaultColDef: ColDef = {
+  flex: 1,
+  minWidth: 100,
+  headerCheckboxSelection: isFirstColumn,
+  checkboxSelection: isFirstColumn,
+};
+
+columnDefs: ColDef[] = [
+  { headerName: 'Bay Number ', field:'bayNumber', filter: true, },
+  { headerName: 'Location', field:'location', filter: true, },
+  { headerName: 'PC Name', field:'pcName', filter: true, },
+  { headerName: 'Description', field:'description', filter: true, },
+  { headerName: 'Roll', field:'roll', filter: true, },
+  { headerName: 'Working Status', field:'workingStatus', filter: true, },
+  {
+    headerName: 'Actions',
+    field: 'action',
+    cellRenderer: customernormsrenderingcomponent, // JS comp by Direct Reference
+    autoHeight: true,
   }
+];
 
-  deleteEmployee(id: number) {
+public rowSelection: 'single' | 'multiple' = 'multiple';
+public rowData!: any[];
+public themeClass: string =
+  "ag-theme-quartz";
 
-    let payload = {
-      "id": id
-    }
-    this.http.post<any>(environment.apiURL + `ITAsset/nDeleteITHAsset`, payload).subscribe({
-      next: (res) => {
-        this._coreService.openSnackBar('Employee deleted!', 'done');
-        this.fetchtableData();
-      }
-    });
+onGridReady(params: GridReadyEvent<any>) {
+  this.gridApi = params.api;
+  this.http.get<any>(environment.apiURL + `ITAsset/nGetTableITAsset`).subscribe((response) => (this.rowData = response.titDetailList));
+}
+
+handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {
+  console.log(params, "Parameter");
+  console.log(params.data, "ParameterData");
+  let parameterData = params.data
+  if (params.colDef.field === 'filecount') { // Check if the changed column is 'price'
+
   }
+}
 
 
-  openViewForm(data: any) {
-    // const dialogRef = this._dialog.open(ViewchecklistComponent, {
-    //   height: '60vh',
-    //   width: '50vw',
-    //   data
-    // });
+handlePress(newvalue, parameterData) {
+  console.log(newvalue, "HandlepressNewValue");
+  console.log(parameterData, "ParameterValue");
 
-    // dialogRef.afterClosed().subscribe({
-    //   next: (val) => {
-    //     if (val) {
-    //       this.fetchtableData();
-    //     }
-    //   },
-    // });
-  }
+}
+
+
+}
+
+function isFirstColumn(
+params:
+  | CheckboxSelectionCallbackParams
+  | HeaderCheckboxSelectionCallbackParams
+) {
+var displayedColumns = params.api.getAllDisplayedColumns();
+var thisIsFirstColumn = displayedColumns[0] === params.column;
+return thisIsFirstColumn;
 }

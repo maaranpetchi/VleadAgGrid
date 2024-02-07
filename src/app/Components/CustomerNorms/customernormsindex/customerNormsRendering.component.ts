@@ -14,6 +14,7 @@ import { environment } from 'src/Environments/environment';
 import { catchError } from 'rxjs';
 import { CustomerNormsService } from 'src/app/Services/CustomerNorms/customer-norms.service';
 import { Router } from '@angular/router';
+import { ItassetsService } from 'src/app/Services/ITAssets/itassets.service';
 
 @Component({
     selector: 'app-customernormsrendering',
@@ -21,10 +22,10 @@ import { Router } from '@angular/router';
     <div class="actionbutton">
 
     <span class="total-value-renderer">
-      <i class="fa fa-edit" matTooltip="edit" style="cursor: pointer;color:green" (click)=" CustomerNormsedit(params)"></i>
+      <i class="fa fa-edit" matTooltip="edit" style="cursor: pointer;color:green" (click)=" EditButton(params)"></i>
     </span>
     <span class="total-value-renderer">
-      <i class="fa fa-trash-o" matTooltip="delete" style="cursor: pointer;color:green" (click)=" CustomerNormsDelete(params)"></i>
+      <i class="fa fa-trash-o" matTooltip="delete" style="cursor: pointer;color:green" (click)="DeleteButton(params)"></i>
     </span>
 </div>
   `,
@@ -39,8 +40,14 @@ export class customernormsrenderingcomponent implements ICellRendererAngularComp
     componentParent: any;
     params: ICellRendererParams<any, any, any>;
     private dialog: MatDialog;
+    Context: any;
 
-    constructor(private sharedService: SharedService, private injector: Injector, private spinnerService: SpinnerService, private http: HttpClient, private loginservice: LoginService, private sharedDataService: SharedService,private _empService:CustomerNormsService,private router:Router) { }
+    constructor(private sharedService: SharedService,
+     private injector: Injector, private spinnerService: SpinnerService, private http: HttpClient, private loginservice: LoginService, 
+     private sharedDataService: SharedService,private _empService:CustomerNormsService,private router:Router,
+      private ITAssetService:ItassetsService  
+        
+        ) { }
     iconClicked: boolean = false;
     // gets called once before the renderer is used
     agInit(params: ICellRendererParams): void {
@@ -53,12 +60,47 @@ export class customernormsrenderingcomponent implements ICellRendererAngularComp
     }
 
 
-   
+    
     refresh(params: ICellRendererParams) {
         return false;
     }
     selectedJobs: any[] = [];
     selectedQuery: any[] = [];
+
+
+
+    EditButton(params) {
+        // Set the flag to true when the icon is clicked
+        this.iconClicked = true;
+        let viewData = params.data;
+        console.log(viewData, "ViewData");
+        this.Context = params.context;
+        console.log(this.Context, "params");
+        ///EmployeeVSSKillsetEdit
+        if (this.Context == 'CustomerNorms') {
+          this.CustomerNormsedit(params)
+        }
+        //ITASSET
+        if (this.Context == 'ITASSET') {
+          this.ITASSETedit(params)
+        }
+    }
+    DeleteButton(params) {
+        // Set the flag to true when the icon is clicked
+        this.iconClicked = true;
+        let viewData = params.data;
+        console.log(viewData, "ViewData");
+        this.Context = params.context;
+        console.log(this.Context, "params");
+        ///EmployeeVSSKillsetEdit
+        if (this.Context == 'CustomerNorms') {
+          this.CustomerNormsDelete(params)
+        }
+        //ITASSET
+        if (this.Context == 'ITASSET') {
+            this.ITASSETDelete(params)
+          }
+    }
 
 
 
@@ -106,7 +148,6 @@ CustomerNormsedit(params){
        ).then((response) => {
         if (response.isConfirmed) {
           this.sharedDataService.triggerRefresh();
-  
         }
       })
      },
@@ -124,6 +165,43 @@ CustomerNormsedit(params){
   }
   
   /////////////////////////////CustomerNorms Ended///////////////////////////////////
+
+
+    //////////////////////////ITASSET Started///////////////////////////////////////
+
   
+  ITASSETedit(params){
+    let payload = {
+        "id": this.gettingData.id,
+      }
+      this.http.post<any>(environment.apiURL + `ITAsset/nGetEditedITAsset`,payload).subscribe(results => {
+        this.ITAssetService.setData({ type: 'EDIT', data: results });
+        this.ITAssetService.shouldFetchData = true;
+  
+        this.router.navigate(['/topnavbar/addITAsset']);
+      });
+  }
+
+
+  ITASSETDelete(params){
+
+    let payload = {
+        "id": this.gettingData.id
+      }
+      this.http.post<any>(environment.apiURL + `ITAsset/nDeleteITHAsset`, payload).subscribe({
+        next: (res) => {
+            Swal.fire(
+                'Deleted!',
+                'Data deleted successfully!',
+                'success'
+              ).then((response) => {
+               if (response.isConfirmed) {
+                 this.sharedDataService.triggerRefresh();
+               }
+             })
+        }
+      });
+  }
+  //////////////////////////ITASSET Ended///////////////////////////////////////
 
 }
