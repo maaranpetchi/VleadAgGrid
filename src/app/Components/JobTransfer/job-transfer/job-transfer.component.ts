@@ -143,8 +143,8 @@ export class JobTransferComponent implements OnInit {
       })).subscribe({
         next: (response) => {
           this.spinnerService.requestEnded();
-          console.log(response.jobs,"Response");
-          
+          console.log(response.jobs, "Response");
+
           this.rowData = response.jobs;
           // this.dataSource.sort = this.sort;
         },
@@ -159,8 +159,8 @@ export class JobTransferComponent implements OnInit {
   selectedJobs: any[] = [];
 
   convert(): void {
-    console.log(this.gridApi.getSelectedRows(),"SelectedRows");
-    
+    console.log(this.gridApi.getSelectedRows(), "SelectedRows");
+
     this.selectedJobs = this.gridApi.getSelectedRows();
 
     if (this.selectedJobs.length === 0) {
@@ -184,8 +184,12 @@ export class JobTransferComponent implements OnInit {
             'Done!',
             'Value moved to Selected Jobs!',
             'success'
-          )
-          window.location.reload();
+          ).then((res) => {
+            if (res.isConfirmed) {
+              window.location.reload();
+
+            }
+          })
         } else {
           Swal.fire(
             'Done!',
@@ -215,7 +219,7 @@ export class JobTransferComponent implements OnInit {
     }
   }
   /////////////////////////Ag-grid module///////////////////////////////
-  context: any="jobtransfer";
+  context: any = "jobtransfer";
 
   @ViewChild('agGrid') agGrid: any;
 
@@ -237,11 +241,11 @@ export class JobTransferComponent implements OnInit {
 
     { headerName: 'Client', field: 'customer.shortName', filter: true, },
     { headerName: 'Customer Job Type', field: 'customer.customerJobType', filter: true, },
-   
+
   ];
 
   public rowSelection: 'single' | 'multiple' = 'multiple';
-  public rowData: any[]=[];
+  public rowData: any[] = [];
   public themeClass: string =
     "ag-theme-quartz";
 
