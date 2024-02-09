@@ -17,14 +17,17 @@ export class SSRSReportViewerComponent implements OnInit{
     
     this.parameters = {
       "InvoiceNo": InvoiceNumber,
-     
+     "username":'vleadservices\\visvlead',
+     "password":"V1e@d@!@#"
       };    
+      console.log(this.parameters,"Parameter");
+      
   }
  
   reportServer: string = 'http://servicedesk.vleadservices.com/ReportServer';
   reportUrl: string = 'VleadMigration/Reports/ArtAnnexure';
   ReportServerDomain: "vleadservices.com";
-  ReportServerUserName:"visvlead";
+  ReportServerUserName:"vleadservices\\visvlead";
   ReportServerPassword:"V1e@d@!@#";
   showParameters: string = "false"; 
   parameters: any = {

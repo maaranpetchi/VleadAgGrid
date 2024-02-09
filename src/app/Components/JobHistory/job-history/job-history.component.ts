@@ -217,7 +217,7 @@ export class JobHistoryComponent implements OnInit {
   ];
 
   public rowSelection: 'single' | 'multiple' = 'multiple';
-  public rowData!: any[];
+  public rowData: any[]=[];
   public themeClass: string =
     "ag-theme-quartz";
   @ViewChild(ClientordinationindexComponent) ClientordinationindexComponent: ClientordinationindexComponent;
@@ -231,6 +231,13 @@ export class JobHistoryComponent implements OnInit {
       this.getJobHistory(data);
     }
   }
+
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+    this.columnApi = params.columnApi;
+   
+    }
 
   getJobHistory(data) {
     this.dialog.open(JobhistoryDetailsComponent, {
