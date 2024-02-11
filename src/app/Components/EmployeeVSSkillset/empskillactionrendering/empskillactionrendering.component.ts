@@ -291,8 +291,6 @@ export class EmpskillactionrenderingComponent implements ICellRendererAngularCom
 
   }
   viewEmployee(params) {
-    console.log(params, "Paramete");
-
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Employee/GetEmployeeDetailsByID?employeeID=${params.data.employeeId}`).pipe(catchError((error) => {
       this.spinnerService.requestEnded();
