@@ -18,6 +18,9 @@ import { EditaddemployeecontrollerComponent } from '../../editaddemployeecontrol
 import { catchError } from 'rxjs';
 import { error } from 'jquery';
 import Swal from 'sweetalert2/src/sweetalert2.js'
+import { GridApi, ColDef, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { EmpskillactionrenderingComponent } from 'src/app/Components/EmployeeVSSkillset/empskillactionrendering/empskillactionrendering.component';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 @Component({
   selector: 'app-employeecontroller',
   templateUrl: './employeecontroller.component.html',
@@ -33,6 +36,7 @@ export class EmployeecontrollerComponent implements OnInit {
 
   isDeletedInclude = false;
   isResignInclude = false;
+  context: any = 'employee';
 
   constructor(private _dialog: MatDialog,
     private router: Router,
@@ -41,7 +45,13 @@ export class EmployeecontrollerComponent implements OnInit {
     private loginservice: LoginService,
     private _coreService: CoreService,
     private http: HttpClient,
-    private spinnerService: SpinnerService) { }
+    private spinnerService: SpinnerService,
+    private sharedDataService:SharedService) {
+      this.sharedDataService.refreshData$.subscribe(() => {
+        // Update your data or call the necessary methods to refresh the data
+        this.fetchtableData();
+      });
+     }
 
 
   ngOnInit(): void {
@@ -54,12 +64,12 @@ export class EmployeecontrollerComponent implements OnInit {
 
   openEditForm(id: number) {
     this.spinnerService.requestStarted();
-    this.http.get<any[]>(environment.apiURL + `Employee/GetEmployeeDetailsByID?employeeID=${id}`).pipe(catchError((error)=>{
+    this.http.get<any[]>(environment.apiURL + `Employee/GetEmployeeDetailsByID?employeeID=${id}`).pipe(catchError((error) => {
       this.spinnerService.requestEnded();
-      return Swal.fire('Alert!','An error occurred while processing your request','error');
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
     })).subscribe(results => {
       this.spinnerService.requestEnded();
-      this._empService.setData({ type: 'EDIT', data: results });      
+      this._empService.setData({ type: 'EDIT', data: results });
       this._empService.shouldFetchData = true;
       this.router.navigate(['/topnavbar/Emp-editaddEmpcontroller']);
     });
@@ -68,9 +78,9 @@ export class EmployeecontrollerComponent implements OnInit {
 
   viewEmployee(id: number) {
     this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `Employee/GetEmployeeDetailsByID?employeeID=${id}`).pipe(catchError((error)=>{
+    this.http.get<any>(environment.apiURL + `Employee/GetEmployeeDetailsByID?employeeID=${id}`).pipe(catchError((error) => {
       this.spinnerService.requestEnded();
-      return Swal.fire('Alert!','An error occurred while processing your request','error');
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
     })).subscribe(results => {
       this.spinnerService.requestEnded();
       this._empService.setViewData({ type: 'View', data: results });
@@ -83,18 +93,18 @@ export class EmployeecontrollerComponent implements OnInit {
   deleteEmployee(id: number) {
     this.spinnerService.requestStarted();
 
-    this._empService.deleteEmployee(id).pipe(catchError((error)=>{
+    this._empService.deleteEmployee(id).pipe(catchError((error) => {
       this.spinnerService.requestEnded();
-      return Swal.fire('Alert!','An error occurred while processing your request','error');
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
     })).subscribe({
       next: (res) => {
         this.spinnerService.requestEnded();
 
-        Swal.fire('Done!','Employee Data Deleted Successfully!','success').then((response)=>{
-          if(response.isConfirmed){
+        Swal.fire('Done!', 'Employee Data Deleted Successfully!', 'success').then((response) => {
+          if (response.isConfirmed) {
             this.fetchtableData();
           }
-        });      
+        });
       },
       error: console.log,
     });
@@ -115,35 +125,24 @@ export class EmployeecontrollerComponent implements OnInit {
 
   fetchtableData() {
     this.spinnerService.requestStarted();
-    this._empService.getEmployeeList().pipe(catchError((error)=>{
+    this._empService.getEmployeeList().pipe(catchError((error) => {
       this.spinnerService.requestEnded();
-      return Swal.fire('Alert!','An error occurred while processing your request','error');
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
     })).subscribe({
 
       next: (res) => {
         this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(res);
-        // this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-
+        this.rowData = res;
       },
       error: console.log,
     });
   }
 
 
-  employeeFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
 
   openAddEditEmployee() {
     this._empService.shouldFetchData = false;
     // this._empService.setData({ type: 'ADD'});      
-
     this.router.navigate(['/topnavbar/Emp-editaddEmpcontroller']);
   }
 
@@ -157,17 +156,82 @@ export class EmployeecontrollerComponent implements OnInit {
     }
     if (this.isDeletedInclude || this.isResignInclude) {
       this.spinnerService.requestStarted();
-      this.http.get<any>(environment.apiURL + `Employee/GetEmployeeWithDelete?IsDeleted=${this.isDeletedInclude ? 1 : 0}&IsResigned=${this.isResignInclude ? 1 : 0}`).pipe(catchError((error)=>{
+      this.http.get<any>(environment.apiURL + `Employee/GetEmployeeWithDelete?IsDeleted=${this.isDeletedInclude ? 1 : 0}&IsResigned=${this.isResignInclude ? 1 : 0}`).pipe(catchError((error) => {
         this.spinnerService.requestEnded();
-        return Swal.fire('Alert!','An error occurred while processing your request','error');
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
       })).subscribe(data => {
         this.spinnerService.requestEnded();
-        this.dataSource.data = data;
+        this.rowData = data;
       });
     } else {
       this.fetchtableData();
     }
   }
+  /////////////////////////Ag-grid module///////////////////////////////
+  @ViewChild('agGrid') agGrid: any;
+
+  private gridApi!: GridApi<any>;
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+
+  columnDefs: ColDef[] = [
+    { headerName: 'EmployeeCode ', field: 'employeeCode', filter: true, },
+    { headerName: 'EmployeeName ', field: 'employeeName', filter: true, },
+    { headerName: 'Department', field: 'departmentDesc', filter: true, },
+    { headerName: 'Designation', field: 'designationDesc', filter: true, },
+    { headerName: 'Proficiency', field: 'profiencyDesc', filter: true, },
+    { headerName: 'Reporting Manager', field: 'managerName1', filter: true, },
+    { headerName: 'Reporting Leader', field: 'leaderName1', filter: true, },
+   
+    {
+      headerName: 'Actions',
+      cellStyle: {innerWidth:20},
+
+      field: 'action',
+      cellRenderer: EmpskillactionrenderingComponent, // JS comp by Direct Reference
+      autoHeight: true,
+    }
+  ];
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData!: any[];
+  public themeClass: string =
+    "ag-theme-quartz";
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+    this._empService.getEmployeeList().subscribe((response) => (this.rowData = response));
+  }
+
+  handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {
+    console.log(params, "Parameter");
+    console.log(params.data, "ParameterData");
+    let parameterData = params.data
+    if (params.colDef.field === 'filecount') { // Check if the changed column is 'price'
+
+    }
+  }
 
 
+  handlePress(newvalue, parameterData) {
+    console.log(newvalue, "HandlepressNewValue");
+    console.log(parameterData, "ParameterValue");
+
+  }
+
+
+}
+
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
 }

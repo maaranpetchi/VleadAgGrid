@@ -32,14 +32,21 @@ export class AddEditEmployeecontrollerComponent implements OnInit {
     this.getRole();
     this.getEmployeeProcess();
     let data: any[] = [];
-    if (this._empservice.shouldFetchData) {
-      const data = this._empservice.getData();
-      this.apiResponseData = data.data;
+    // if (this._empservice.shouldFetchData) {
+    //   const data = this._empservice.getData();
+    //   this.apiResponseData = data.data;
 
-      this.fetchUpdateData();
-      this._empservice.shouldFetchData = false;
+    //   this.fetchViewData();
+    //   this._empservice.shouldFetchData = false;
+    // }
+    if (this._empservice.shouldFetchViewData) {
+      const data = this._empservice.getViewData();
+
+   this.apiViewResponseData = data.data;
+      console.log(this.apiViewResponseData, "ApiviewResponse");
+      this.fetchViewData();
+      this._empservice.shouldFetchViewData = false;
     }
-
 
 
   }

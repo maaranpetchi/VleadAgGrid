@@ -186,7 +186,29 @@ export class JobTransferComponent implements OnInit {
             'success'
           ).then((res) => {
             if (res.isConfirmed) {
-              window.location.reload();
+              var jobOrder = {
+                jobId: this.selectedJobNumber,
+                fileName: this.selectedFileName,
+                clientId: this.selectedClientId,
+                fileReceivedDate: this.selectedfromDate,
+              };
+              this.spinnerService.requestStarted();
+              this._service.jobOrderDetails(jobOrder).pipe(catchError((error) => {
+                this.spinnerService.requestEnded();
+                return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+              })).subscribe({
+                next: (response) => {
+                  this.spinnerService.requestEnded();
+                  console.log(response.jobs, "Response");
+        
+                  this.rowData = response.jobs;
+                  // this.dataSource.sort = this.sort;
+                },
+                error: (err: any) => {
+                  console.log(err);
+                  this.spinnerService.resetSpinner();
+                },
+              });
 
             }
           })

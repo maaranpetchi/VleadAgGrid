@@ -24,120 +24,15 @@
               <mat-checkbox (change)="onCheckboxChange($event,1)">Include Delete Employee</mat-checkbox>
               <mat-checkbox (change)="onCheckboxChange($event,2)">Include Resign Employee</mat-checkbox>
             </div>
-            <table class="table table-sm table-responsive" mat-table #table [dataSource]="dataSource" id="custom-table">
 
-              <ng-container matColumnDef="employeeCode">
-                <th mat-header-cell *matHeaderCellDef>
-                  <div class="header-wrapper">
-                    <div class="department-name text-start"> Employee Code </div>
-                    <div class="filter-input">
-                      <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                    </div>
-                  </div>
-                </th>
-                <td mat-cell *matCellDef="let element">{{element.employeeCode }}</td>
-              </ng-container>
+            <div class="AngularTable">
+              <ag-grid-angular style="width: 100%; height: 100%;" [context]="context" [columnDefs]="columnDefs"
+                [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="rowSelection"
+                [rowData]="rowData" [pagination]="true" [class]="themeClass" (gridReady)="onGridReady($event)"
+                (cellValueChanged)="handleCellValueChanged($event)" frameworkComponents="{ }"></ag-grid-angular>
+            </div>
 
-              <ng-container matColumnDef="employeeName">
-                <th mat-header-cell *matHeaderCellDef>
-                  <div class="header-wrapper">
-                    <div class="department-name text-start">Employee Name</div>
-                    <div class="filter-input">
-                      <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                    </div>
-                  </div>
-                </th>
-                <td mat-cell *matCellDef="let element">{{element.employeeName}}</td>
-              </ng-container>
-
-
-              <ng-container matColumnDef="departmentId">
-                <th mat-header-cell *matHeaderCellDef>
-                  <div class="header-wrapper">
-                    <div class="department-name text-start">Department</div>
-                    <div class="filter-input">
-                      <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                    </div>
-                  </div>
-                </th>
-                <td mat-cell *matCellDef="let element">{{element.departmentDesc}}</td>
-              </ng-container>
-
-
-              <ng-container matColumnDef="designationId">
-                <th mat-header-cell *matHeaderCellDef>
-                  <div class="header-wrapper">
-                    <div class="department-name text-start">Designation</div>
-                    <div class="filter-input">
-                      <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                    </div>
-                  </div>
-                </th>
-                <td mat-cell *matCellDef="let element">{{element.designationDesc}}</td>
-              </ng-container>
-
-
-              <ng-container matColumnDef="profiencyId">
-                <th mat-header-cell *matHeaderCellDef>
-                  <div class="header-wrapper">
-                    <div class="department-name text-start">Proficiency</div>
-                    <div class="filter-input">
-                      <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                    </div>
-                  </div>
-                </th>
-                <td mat-cell *matCellDef="let element">{{element.profiencyDesc}}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="reportingManager1">
-                <th mat-header-cell *matHeaderCellDef>
-                  <div class="header-wrapper">
-                    <div class="department-name text-start">Reporting Manager</div>
-                    <div class="filter-input">
-                      <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                    </div>
-                  </div>
-                </th>
-                <td mat-cell *matCellDef="let element">{{element.managerName1}}</td>
-              </ng-container>
-
-
-              <ng-container matColumnDef="reportLeader1">
-                <th mat-header-cell *matHeaderCellDef>
-                  <div class="header-wrapper">
-                    <div class="department-name text-start">Reporting Leader</div>
-                    <div class="filter-input">
-                      <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                    </div>
-                  </div>
-                </th>
-                <td mat-cell *matCellDef="let element">{{element.leaderName1}}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="action">
-                <th mat-header-cell *matHeaderCellDef>Action</th>
-                <td mat-cell *matCellDef="let element">
-                  <!-- <div class="green-button"></div> -->
-                  <a matTooltip="Edit" matTooltipPosition="below" (click)="openEditForm(element.employeeId)">
-                    <mat-icon>edit</mat-icon>
-                  </a>
-
-                  <!-- <div class="red-button"></div> -->
-                  <a matTooltip="delete" matTooltipPosition="below" (click)="deleteEmployee(element.employeeId)">
-                    <mat-icon>delete</mat-icon>
-                  </a>
-
-                  <a matTooltip="view" matTooltipPosition="below" (click)="viewEmployee(element.employeeId)">
-                    <mat-icon>visibility</mat-icon>
-                  </a>
-                </td>
-              </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
           </div>
-          <mat-paginator [pageSizeOptions]="[25, 50]" showFirstLastButtons></mat-paginator>
         </div>
       </div>
     </div>

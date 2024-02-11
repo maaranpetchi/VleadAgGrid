@@ -34,26 +34,32 @@ export class EditaddemployeecontrollerComponent implements OnInit {
     if (this._empservice.shouldFetchData) {
       const data = this._empservice.getData();
       this.apiResponseData = data.data;
-      console.log(data,"GettingData");
-       this.gettingType= data.type
-      this.fetchUpdateData();
-      this._empservice.shouldFetchData = false;
+      console.log(data, "GettingData");
+      this.gettingType = data.type
+      if (this.gettingType == "EDIT") {
+        this.fetchUpdateData();
+        this.homeButton= false;
+        this.updateButton=true;
+        this._empservice.shouldFetchData = false;
+      }
+
     }
 
 
 
-    if (this._empservice.shouldFetchViewData) {
-      const viewdata = this._empservice.getViewData();
-      this.apiViewResponseData = viewdata.data;
-      console.log(this.apiViewResponseData,"ApiviewResponse");
-      
-      this.homeButton = true;
-      this.updateButton = false;
-      this.fetchViewData();
-      this._empservice.shouldFetchViewData = false;
-    }
+    // if (this._empservice.shouldFetchViewData) {
+    //   const viewdata = this._empservice.getViewData();
+    //   console.log(viewdata, "ViewData");
+
+    //   this.apiViewResponseData = viewdata.data;
+    //   console.log(this.apiViewResponseData, "ApiviewResponse");
+    //   this.fetchViewData();
+    //   this._empservice.shouldFetchViewData = false;
+    // }
   }
   fetchViewData() {
+    console.log("VuewMethod");
+
     this.resignShow = true;
     this.submitButton = false;
     this.updateButton = false;
@@ -111,9 +117,16 @@ export class EditaddemployeecontrollerComponent implements OnInit {
   EmployeeEditName: boolean = false;
   fetchUpdateData() {
     console.log(this.apiResponseData.emp, "ApiresponseData");
+    console.log(this.gettingType, "GettingType");
+
+    this.homeButton = false;
+
+    console.log(this.homeButton, "homeButton");
 
     this.resignShow = true;
     this.submitButton = false;
+    console.log(this.submitButton, "submitButton");
+
     this.updateButton = true;
     this.EmployeeEditName = true;
     this.employeeCode = this.apiResponseData.emp.addressDetail.employeeCode,
@@ -157,9 +170,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       this.employeeRoles = this.apiResponseData.emp.role;
     this.employeeProcess = this.apiResponseData.emp.code.map(process => process.id);
     this.personalEmail = this.apiResponseData.emp.addressDetail.personalEmail
-    if (this.gettingType === "view") {
-      this.homeButton = true;
-    }
+
   }
   homeButton: boolean = false;
 
@@ -352,60 +363,60 @@ export class EditaddemployeecontrollerComponent implements OnInit {
   onSubmit() {
     const requiredFields: string[] = [];
     if (!this.employeeCode) {
-        requiredFields.push('Employee Code');
+      requiredFields.push('Employee Code');
     }
     if (!this.employeeName) {
-        requiredFields.push('employeeName');
+      requiredFields.push('employeeName');
     }
     if (!this.selectedDepartment) {
-        requiredFields.push('Department');
+      requiredFields.push('Department');
     }
     if (!this.dob) {
-        requiredFields.push('D.O.B');
+      requiredFields.push('D.O.B');
     }
     if (!this.doj) {
-        requiredFields.push('D.O.J');
+      requiredFields.push('D.O.J');
     }
     if (!this.martialStatus) {
-        requiredFields.push('Martial Status');
+      requiredFields.push('Martial Status');
     }
     if (!this.gender) {
-        requiredFields.push('Gender');
+      requiredFields.push('Gender');
     }
     if (!this.selectedDestination) {
-        requiredFields.push('Destination');
+      requiredFields.push('Destination');
     }
     if (!this.BloodGroup) {
-        requiredFields.push('Blood Group');
+      requiredFields.push('Blood Group');
     }
     if (!this.internetAvailable) {
-        requiredFields.push('Internet Available');
+      requiredFields.push('Internet Available');
     }
     if (!this.systemlaptop) {
-        requiredFields.push('System/Laptop');
+      requiredFields.push('System/Laptop');
     }
     if (!this.proficiency) {
-        requiredFields.push('Proficiency');
+      requiredFields.push('Proficiency');
     }
     if (!this.presentAddress1) {
-        requiredFields.push('Present Address 1');
+      requiredFields.push('Present Address 1');
     }
     if (!this.mobileNumber) {
-        requiredFields.push('Mobile Number');
+      requiredFields.push('Mobile Number');
     }
     if (!this.emergencyContactName) {
-        requiredFields.push('Emergency Contact Name');
+      requiredFields.push('Emergency Contact Name');
     }
     if (!this.emergencyMobilenumber) {
-        requiredFields.push('Emergency Mobile Number');
+      requiredFields.push('Emergency Mobile Number');
     }
     if (!this.personalEmail) {
-        requiredFields.push('Personal Email');
+      requiredFields.push('Personal Email');
     }
     if (!this.selectedWorkingStatus) {
-        requiredFields.push('Working Status');
+      requiredFields.push('Working Status');
     }
-    
+
     if (requiredFields.length === 0) {
       let empRoleList = this.employeeRoles.map((item) => {
         return {
@@ -422,7 +433,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
           // "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
         };
       });
-    
+
       let payload = {
         "employeeId": 0,
         "employeeCode": this.employeeCode,
@@ -514,69 +525,69 @@ export class EditaddemployeecontrollerComponent implements OnInit {
           console.error(err);
         },
       });
-    
+
     } else {
-        // Show validation error message with missing field names
-        const missingFields = requiredFields.join(', ');
-        Swal.fire('Required Fields', `Please fill in the following required fields: ${missingFields}.`, 'error');
+      // Show validation error message with missing field names
+      const missingFields = requiredFields.join(', ');
+      Swal.fire('Required Fields', `Please fill in the following required fields: ${missingFields}.`, 'error');
     }
   }
 
   onUpdate() {
     const requiredFields: string[] = [];
     if (!this.employeeCode) {
-        requiredFields.push('Employee Code');
+      requiredFields.push('Employee Code');
     }
     if (!this.employeeName) {
-        requiredFields.push('employeeName');
+      requiredFields.push('employeeName');
     }
     if (!this.selectedDepartment) {
-        requiredFields.push('Department');
+      requiredFields.push('Department');
     }
     if (!this.dob) {
-        requiredFields.push('D.O.B');
+      requiredFields.push('D.O.B');
     }
     if (!this.doj) {
-        requiredFields.push('D.O.J');
+      requiredFields.push('D.O.J');
     }
     if (!this.martialStatus) {
-        requiredFields.push('Martial Status');
+      requiredFields.push('Martial Status');
     }
     if (!this.gender) {
-        requiredFields.push('Gender');
+      requiredFields.push('Gender');
     }
     if (!this.selectedDestination) {
-        requiredFields.push('Destination');
+      requiredFields.push('Destination');
     }
     if (!this.BloodGroup) {
-        requiredFields.push('Blood Group');
+      requiredFields.push('Blood Group');
     }
     if (!this.internetAvailable) {
-        requiredFields.push('Internet Available');
+      requiredFields.push('Internet Available');
     }
     if (!this.systemlaptop) {
-        requiredFields.push('System/Laptop');
+      requiredFields.push('System/Laptop');
     }
     if (!this.proficiency) {
-        requiredFields.push('Proficiency');
+      requiredFields.push('Proficiency');
     }
     if (!this.presentAddress1) {
-        requiredFields.push('Present Address 1');
+      requiredFields.push('Present Address 1');
     }
     if (!this.mobileNumber) {
-        requiredFields.push('Mobile Number');
+      requiredFields.push('Mobile Number');
     }
     if (!this.emergencyContactName) {
-        requiredFields.push('Emergency Contact Name');
+      requiredFields.push('Emergency Contact Name');
     }
     if (!this.emergencyMobilenumber) {
-        requiredFields.push('Emergency Mobile Number');
+      requiredFields.push('Emergency Mobile Number');
     }
     if (!this.personalEmail) {
-        requiredFields.push('Personal Email');
+      requiredFields.push('Personal Email');
     }
     if (!this.selectedWorkingStatus) {
-        requiredFields.push('Working Status');
+      requiredFields.push('Working Status');
     }
 
     if (requiredFields.length === 0) {
@@ -652,7 +663,7 @@ export class EditaddemployeecontrollerComponent implements OnInit {
           this.spinnerservice.requestEnded();
           return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
         })
-    
+
       ).subscribe({
         next: (val: any) => {
           this.spinnerservice.requestEnded();
@@ -688,11 +699,11 @@ export class EditaddemployeecontrollerComponent implements OnInit {
           console.error(err);
         },
       });
-    
+
     } else {
-        // Show validation error message with missing field names
-        const missingFields = requiredFields.join(', ');
-        Swal.fire('Required Fields', `Please fill in the following required fields: ${missingFields}.`, 'error');
+      // Show validation error message with missing field names
+      const missingFields = requiredFields.join(', ');
+      Swal.fire('Required Fields', `Please fill in the following required fields: ${missingFields}.`, 'error');
     }
   }
 

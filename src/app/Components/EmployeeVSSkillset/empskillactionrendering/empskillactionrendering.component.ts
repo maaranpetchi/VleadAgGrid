@@ -15,6 +15,7 @@ import { catchError } from 'rxjs';
 import { AddchecklistComponent } from '../../CustomerVSChecklist/addchecklist/addchecklist.component';
 import { CustomervschecklistService } from 'src/app/Services/CustomerVSChecklist/customervschecklist.service';
 import { ViewchecklistComponent } from '../../CustomerVSChecklist/viewchecklist/viewchecklist.component';
+import { EmployeeService } from 'src/app/Services/EmployeeController/employee.service';
 
 @Component({
   selector: 'app-empskillactionrendering',
@@ -29,7 +30,7 @@ export class EmpskillactionrenderingComponent implements ICellRendererAngularCom
   private dialog: MatDialog;
   Context: any;
 
-  constructor(private sharedService: SharedService, private injector: Injector, private spinnerService: SpinnerService, private http: HttpClient, private loginservice: LoginService, private _empService: EmployeevsskillsetService, private router: Router, private sharedDataService: SharedService, private _dialog: MatDialog, private checklistservice: CustomervschecklistService,) { }
+  constructor(private sharedService: SharedService, private injector: Injector, private spinnerService: SpinnerService, private http: HttpClient, private loginservice: LoginService, private _empService: EmployeevsskillsetService, private router: Router, private sharedDataService: SharedService, private _dialog: MatDialog, private checklistservice: CustomervschecklistService, private employeeservice: EmployeeService) { }
   iconClicked: boolean = false;
 
   // gets called once before the renderer is used
@@ -65,7 +66,11 @@ export class EmpskillactionrenderingComponent implements ICellRendererAngularCom
     if (this.Context == 'CustomerVSChecklist') {
       this.CustomerVSChecklistview()
     }
- 
+
+    if (this.Context == 'employee') {
+      this.viewEmployee(params);
+    }
+
 
   }
 
@@ -83,6 +88,9 @@ export class EmpskillactionrenderingComponent implements ICellRendererAngularCom
     //CustomerVSChecklist
     if (this.Context == 'CustomerVSChecklist') {
       this.CustomerVSChecklistedit()
+    }
+    if (this.Context == 'employee') {
+      this.openEmployeeEditForm(params);
     }
 
 
@@ -106,7 +114,9 @@ export class EmpskillactionrenderingComponent implements ICellRendererAngularCom
     if (this.Context == 'CustomerVSChecklist') {
       this.CustomerVSChecklistDelete()
     }
-
+    if (this.Context == 'employee') {
+      this.deleteEmployee(params);
+    }
 
 
   }
@@ -195,6 +205,7 @@ export class EmpskillactionrenderingComponent implements ICellRendererAngularCom
   ////////////////////////Employee vs Skillset functions ended////////////////////
 
 
+
   ////////////////////////CustomerVSChecklist functions started////////////////////
 
   CustomerVSChecklistedit() {
@@ -264,4 +275,56 @@ export class EmpskillactionrenderingComponent implements ICellRendererAngularCom
   }
   ////////////////////////CustomerVSChecklist functions ended////////////////////
 
+
+  ////////////////////Employee Controller Started///////////////////
+  openEmployeeEditForm(params) {
+    this.spinnerService.requestStarted();
+    this.http.get<any[]>(environment.apiURL + `Employee/GetEmployeeDetailsByID?employeeID=${params.data.employeeId}`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(results => {
+      this.spinnerService.requestEnded();
+      this.employeeservice.setData({ type: 'EDIT', data: results });
+      this.employeeservice.shouldFetchData = true;
+      this.router.navigate(['/topnavbar/Emp-editaddEmpcontroller']);
+    });
+
+  }
+  viewEmployee(params) {
+    console.log(params, "Paramete");
+
+    this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL + `Employee/GetEmployeeDetailsByID?employeeID=${params.data.employeeId}`).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(results => {
+      this.spinnerService.requestEnded();
+      this.employeeservice.setViewData({ type: 'View', data: results });
+
+      this.employeeservice.shouldFetchViewData = true;
+      this.router.navigate(['/topnavbar/Emp-addeditEmpcontroller']);
+
+    })
+  }
+  deleteEmployee(params) {
+    this.spinnerService.requestStarted();
+
+    this.employeeservice.deleteEmployee(params.data.employeeId).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
+      next: (res) => {
+        this.spinnerService.requestEnded();
+
+        Swal.fire('Done!', 'Employee Data Deleted Successfully!', 'success').then((response) => {
+          if (response.isConfirmed) {
+            this.sharedDataService.triggerRefresh();
+          }
+        });
+      },
+      error: console.log,
+    });
+  }
+
+  ////////////////////Employee Controller Ended/////////////////////
 }
