@@ -17,8 +17,7 @@ export class SSRSReportViewerComponent implements OnInit{
     
     this.parameters = {
       "InvoiceNo": InvoiceNumber,
-     "username":'vleadservices\\visvlead',
-     "password":"V1e@d@!@#"
+
       };    
       console.log(this.parameters,"Parameter");
       

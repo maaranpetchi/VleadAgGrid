@@ -33,4 +33,7 @@ export class PopupinvoiceComponent implements OnInit{
   width: number = 100;
   height: number = 100;
   toolbar: string = "true";
+  ReportServerDomain: "vleadservices.com";
+  ReportServerUserName:"vleadservices\\visvlead";
+  ReportServerPassword:"V1e@d@!@#";
 }

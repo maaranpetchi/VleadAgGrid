@@ -597,7 +597,7 @@ export class InvoiceComponent implements OnInit {
 
 
   openArtInvoice() {
-///here after use map method to filter the invoice number 
+
     if (this.selection3.selected.length === 0) {
       // Show alert message
       Swal.fire(
@@ -612,40 +612,23 @@ export class InvoiceComponent implements OnInit {
 
       this.selection3.selected.forEach(x => this.setConfirmAll(x));
       if (this.selectedConfirmInvoice.length > 0) {
-        console.log(this.selectedConfirmInvoice,"selectedConfirmInvoice");
-        
         this.selectedConfirmInvoiceJobs = this.selectedConfirmInvoice;
+
+        const params = new HttpParams().set('InvoiceNo', this.selectedConfirmInvoice[0].invoiceNo);
+
+        this.sendinginvoiceNumber = this.selectedConfirmInvoice[0].invoiceNo
 
         const invoiceNumber = this.selectedConfirmInvoice[0].invoiceNo;
         console.log(invoiceNumber, "invoiceNumber");
 
-        const params = new HttpParams().set('InvoiceNo', invoiceNumber);
+        const url = this.router.serializeUrl(
+          this.router.createUrlTree(['/topnavbar/acc-SSRS'], { queryParams: { InvoiceNo: invoiceNumber } })
+        );
+        const redirectURL = document.location.origin + '/#' + url;
+        window.open(redirectURL, '_blank');
 
-        // Set responseType to 'blob' to get the response as a Blob
-        this.http.get(environment.apiURL + `Invoice/DownloadReport/${invoiceNumber}`, { responseType: 'blob', params }).subscribe((res) => {
-          // Create a blob URL for the response
-          this.selectedConfirmInvoice=[];
-          const url = this.router.serializeUrl(
-            this.router.createUrlTree(['/topnavbar/acc-popupinvoice'], { queryParams: { InvoiceNo: invoiceNumber } })
-          );
-          const redirectURL = document.location.origin + '/#' + url;
-          window.open(redirectURL, '_blank');
-  
-          const blobURL = window.URL.createObjectURL(res);
+      
 
-          // Create an anchor element
-          const a = document.createElement('a');
-          a.href = blobURL;
-          a.download = `Invoice_${invoiceNumber}.pdf`; // Set the filename
-
-          // Programmatically click the anchor element to trigger the download
-          document.body.appendChild(a);
-          a.click();
-
-          // Clean up
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(blobURL);
-        });
       }
     }
   }

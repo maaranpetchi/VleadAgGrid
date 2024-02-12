@@ -6,28 +6,31 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './generatedinvoice.component.html',
   styleUrls: ['./generatedinvoice.component.scss']
 })
-export class GeneratedinvoiceComponent implements OnInit{
+export class GeneratedinvoiceComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute){
-    
+  constructor(private route: ActivatedRoute) {
+
   }
   ngOnInit(): void {
     let InvoiceNumber = this.route.snapshot.queryParams['InvoiceNo'];
-    console.log(InvoiceNumber,"GettingInvoiceNumber");
-    
+    console.log(InvoiceNumber, "GettingInvoiceNumber");
+
     this.parameters = {
       "InvoiceNo": InvoiceNumber,
-     
-      };     
+
+    };
   }
- 
+
   reportServer: string = 'http://servicedesk.vleadservices.com/ReportServer';
   reportUrl: string = 'VleadMigration/Reports/DigiAnnexure';
-  showParameters: string = "false"; 
+  showParameters: string = "false";
   parameters: any = {
-    "InvoiceNo":" ",
-   
-    };
+    "InvoiceNo": " ",
+
+  };
+  ReportServerDomain: "vleadservices.com";
+  ReportServerUserName: "vleadservices\\visvlead";
+  ReportServerPassword: "V1e@d@!@#";
   language: string = "en-us";
   width: number = 100;
   height: number = 100;

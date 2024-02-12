@@ -28,6 +28,7 @@ import { BirthdayComponent } from './Components/Navigation/Birthday/birthday/bir
 import { AnniversaryComponent } from './Components/Navigation/Anniversary/anniversary/anniversary.component';
 import { AgGridModule } from 'ag-grid-angular';
 import 'ag-grid-enterprise';
+import { DeleteActionRenderingComponent } from './Components/EmployeeVSDivision/delete-action-rendering/delete-action-rendering.component';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import 'ag-grid-enterprise';
     FilterPipe,
     ItemFilterPipe,
     BirthdayComponent,
-    AnniversaryComponent
+    AnniversaryComponent,
+    DeleteActionRenderingComponent
     
    ],
   imports: [
