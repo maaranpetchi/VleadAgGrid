@@ -597,7 +597,6 @@ export class InvoiceComponent implements OnInit {
 
 
   openArtInvoice() {
-
     if (this.selection3.selected.length === 0) {
       // Show alert message
       Swal.fire(
