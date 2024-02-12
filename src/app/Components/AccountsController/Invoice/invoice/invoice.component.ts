@@ -609,26 +609,15 @@ export class InvoiceComponent implements OnInit {
     }
     else {
       // this.spinnerService.requestStarted();
-
       this.selection3.selected.forEach(x => this.setConfirmAll(x));
       if (this.selectedConfirmInvoice.length > 0) {
-        this.selectedConfirmInvoiceJobs = this.selectedConfirmInvoice;
-
-        const params = new HttpParams().set('InvoiceNo', this.selectedConfirmInvoice[0].invoiceNo);
-
-        this.sendinginvoiceNumber = this.selectedConfirmInvoice[0].invoiceNo
-
         const invoiceNumber = this.selectedConfirmInvoice[0].invoiceNo;
-        console.log(invoiceNumber, "invoiceNumber");
-
         const url = this.router.serializeUrl(
           this.router.createUrlTree(['/topnavbar/acc-SSRS'], { queryParams: { InvoiceNo: invoiceNumber } })
         );
-        const redirectURL = document.location.origin + '/#' + url;
+         const redirectURL = document.location.origin + '/#' + url;
         window.open(redirectURL, '_blank');
-
-      
-
+      //  this.router.navigate([url], { queryParams: { InvoiceNo: invoiceNumber } });
       }
     }
   }

@@ -12,6 +12,8 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { throwDialogContentAlreadyAttachedError } from '@angular/cdk/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
 import { catchError } from 'rxjs';
+import { GridApi, ColDef, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { DeleteActionRenderingComponent } from '../delete-action-rendering/delete-action-rendering.component';
 
 @Component({
   selector: 'app-addeditemployeevsdivision',
@@ -36,6 +38,7 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
 
   @ViewChild('paginator1') paginator1: MatPaginator;
   @ViewChild('paginator2') paginator2: MatPaginator;
+context: any;
   constructor(private spinnerService: SpinnerService, private fb: FormBuilder, private http: HttpClient, private dialog: MatDialog) {
 
   }
@@ -65,12 +68,11 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
       })
     ).subscribe(data => {
       // this.table1Data =data.eEvDList ;
-      this.table1Data = new MatTableDataSource(data.eEvDList);
+      this.rowData = data.eEvDList;
       this.spinnerService.requestEnded();
       this.table1Data.data.forEach(row => {
         this.myForm.addControl(row.employeeId.toString(), new FormControl());
       });
-      this.table1Data.paginator = this.paginator1;
 
     });
   }
@@ -84,13 +86,12 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
         return Swal.fire('Alert!','An error occurred while processing your request','error');
       })
     ).subscribe(data => {
-      this.table2Data = new MatTableDataSource(data.dEvDList);
+      this.table2rowData = data.dEvDList;
       this.spinnerService.requestEnded();
 
       this.table2Data.data.forEach(row => {
         this.myForm.addControl(row.id.toString() + "hi", new FormControl());
       });
-      this.table2Data.paginator = this.paginator2;
     });
   }
   onSubmit() {
@@ -209,4 +210,88 @@ applyEmployeeFilter(event: Event) {
     }
  
   }
+
+  
+/////////////////////////Ag-grid module///////////////////////////////
+@ViewChild('agGrid') agGrid: any;
+
+private gridApi!: GridApi<any>;
+public defaultColDef: ColDef = {
+  flex: 1,
+  minWidth: 100,
+  headerCheckboxSelection: isFirstColumn,
+  checkboxSelection: isFirstColumn,
+};
+public table2defaultColDef: ColDef = {
+  flex: 1,
+  minWidth: 100,
+  headerCheckboxSelection: isSecondColumn,
+  checkboxSelection: isSecondColumn,
+};
+
+table1def: ColDef[] = [
+  { headerName: 'EmployeeCode ', field: 'employeeCode', filter: true, },
+  { headerName: 'EmployeeName ', field: 'employeeName', filter: true, },
+
+];
+table2def: ColDef[] = [
+ 
+  { headerName: 'Division', field: 'divisionName', filter: true, },
+];
+
+
+
+
+
+
+public rowSelection: 'single' | 'multiple' = 'multiple';
+public table2rowSelection: 'single' | 'multiple' = 'multiple';
+
+public rowData!: any[];
+public table2rowData!: any[];
+
+public themeClass: string =
+  "ag-theme-quartz";
+
+onGridReady(params: GridReadyEvent<any>) {
+  this.gridApi = params.api;
+ 
+}
+
+handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {
+  console.log(params, "Parameter");
+  console.log(params.data, "ParameterData");
+  let parameterData = params.data
+  if (params.colDef.field === 'filecount') { // Check if the changed column is 'price'
+
+  }
+}
+
+
+handlePress(newvalue, parameterData) {
+  console.log(newvalue, "HandlepressNewValue");
+  console.log(parameterData, "ParameterValue");
+
+}
+
+
+}
+
+function isFirstColumn(
+params:
+  | CheckboxSelectionCallbackParams
+  | HeaderCheckboxSelectionCallbackParams
+) {
+var displayedColumns = params.api.getAllDisplayedColumns();
+var thisIsFirstColumn = displayedColumns[0] === params.column;
+return thisIsFirstColumn;
+}
+function isSecondColumn(
+params:
+  | CheckboxSelectionCallbackParams
+  | HeaderCheckboxSelectionCallbackParams
+) {
+var displayedColumns = params.api.getAllDisplayedColumns();
+var thisisSecondColumn = displayedColumns[0] === params.column;
+return thisisSecondColumn;
 }

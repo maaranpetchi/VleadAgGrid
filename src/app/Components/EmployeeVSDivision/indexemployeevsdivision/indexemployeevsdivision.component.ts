@@ -84,27 +84,6 @@ export class indexemployeevsdivisionComponent implements OnInit {
   }
 
 
-  deleteEmployee(id: number) {
-    this.spinnerService.requestStarted();
-    this._empService.deleteEmployee(id).pipe(
-      catchError((error) => {
-        this.spinnerService.requestEnded();
-        console.error('API Error:', error);
-        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-      })
-    ).subscribe({
-      next: (res) => {
-        this.spinnerService.requestEnded();
-
-        Swal.fire('Done!', 'Division deleted successfully', 'success').then((response) => {
-          if (response.isConfirmed) {
-            this.getEmployeeList();
-          }
-        });
-      },
-      error: console.log,
-    });
-  }
 
   openEditForm(data: any) {
     const dialogRef = this._dialog.open(AddeditemployeevsdivisionComponent, {
