@@ -301,7 +301,7 @@
               <mat-label> EmployeeHierarchy</mat-label>
               <mat-select [(ngModel)]="employeehierarchy" name="employeehierarchy" multiple>
                 <mat-option *ngFor="let employeehierarchyoption of EmployeeHierarchyOptions"
-                  [value]="employeehierarchyoption">
+                  [value]="employeehierarchyoption.employeeId">
                   {{ employeehierarchyoption.employeeName }}
                 </mat-option>
               </mat-select>
@@ -460,7 +460,7 @@
             <mat-form-field appearance="fill">
               <mat-label>EmployeeRoles</mat-label>
               <mat-select [(ngModel)]="employeeRoles" name="employeeRoles" multiple>
-                <mat-option *ngFor="let EmployeeRolesoption of EmployeeRolesoptions" [value]="EmployeeRolesoption">
+                <mat-option *ngFor="let EmployeeRolesoption of EmployeeRolesoptions" [value]="EmployeeRolesoption.id">
                   {{ EmployeeRolesoption.description }}
                 </mat-option>
               </mat-select>

@@ -90,7 +90,9 @@ export class AddEditEmployeecontrollerComponent implements OnInit {
       this.emergencyContactName = this.apiViewResponseData.emp.addressDetail.emergencyContactName,
       this.emergencyMobilenumber = this.apiViewResponseData.emp.addressDetail.emergencyContactNo,
       this.officialemailaddress = this.apiViewResponseData.emp.addressDetail.email,
-      this.employeeRoles = this.apiViewResponseData.emp.role
+      this.employeeRoles = this.apiViewResponseData.emp.role.id
+      console.log(this.employeeRoles,"Roles");
+      
     this.employeeProcess = this.apiViewResponseData.emp.code
     this.personalEmail = this.apiViewResponseData.emp.addressDetail.personalEmail
   }

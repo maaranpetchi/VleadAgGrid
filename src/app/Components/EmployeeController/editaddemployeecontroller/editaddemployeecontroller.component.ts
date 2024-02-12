@@ -167,7 +167,10 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       this.emergencyContactName = this.apiResponseData.emp.addressDetail.emergencyContactName,
       this.emergencyMobilenumber = this.apiResponseData.emp.addressDetail.emergencyContactNo,
       this.officialemailaddress = this.apiResponseData.emp.addressDetail.email,
-      this.employeeRoles = this.apiResponseData.emp.role;
+      this.employeeRoles = this.apiResponseData.emp.role.id;
+      console.log(this.employeeRoles,"Roles");
+
+
     this.employeeProcess = this.apiResponseData.emp.code.map(process => process.id);
     this.personalEmail = this.apiResponseData.emp.addressDetail.personalEmail
 
