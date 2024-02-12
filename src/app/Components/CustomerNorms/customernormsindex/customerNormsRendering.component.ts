@@ -15,6 +15,8 @@ import { catchError } from 'rxjs';
 import { CustomerNormsService } from 'src/app/Services/CustomerNorms/customer-norms.service';
 import { Router } from '@angular/router';
 import { ItassetsService } from 'src/app/Services/ITAssets/itassets.service';
+import { AddEditCustomerVSEmployeeComponent } from '../../CustomerController/CustomerVSEmployee/add-edit-customer-vsemployee/add-edit-customer-vsemployee.component';
+import { CustomerVSEmployeeService } from 'src/app/Services/CustomerVSEmployee/customer-vsemployee.service';
 
 @Component({
     selector: 'app-customernormsrendering',
@@ -45,9 +47,12 @@ export class customernormsrenderingcomponent implements ICellRendererAngularComp
     constructor(private sharedService: SharedService,
      private injector: Injector, private spinnerService: SpinnerService, private http: HttpClient, private loginservice: LoginService, 
      private sharedDataService: SharedService,private _empService:CustomerNormsService,private router:Router,
-      private ITAssetService:ItassetsService  
+      private ITAssetService:ItassetsService  ,
+      private customervsemployeeservice:CustomerVSEmployeeService,
         
-        ) { }
+        ) { 
+
+        }
     iconClicked: boolean = false;
     // gets called once before the renderer is used
     agInit(params: ICellRendererParams): void {
@@ -84,6 +89,11 @@ export class customernormsrenderingcomponent implements ICellRendererAngularComp
         if (this.Context == 'ITASSET') {
           this.ITASSETedit(params)
         }
+        //customervsemployee
+        if (this.Context == 'customervsemployee') {
+          this.customervsemployeeEdit(params)
+        }
+        //
     }
     DeleteButton(params) {
         // Set the flag to true when the icon is clicked
@@ -99,6 +109,10 @@ export class customernormsrenderingcomponent implements ICellRendererAngularComp
         //ITASSET
         if (this.Context == 'ITASSET') {
             this.ITASSETDelete(params)
+          }
+        //customervsemployee
+        if (this.Context == 'customervsemployee') {
+            this.customervsemployeeDelete(params)
           }
     }
 
@@ -203,5 +217,68 @@ CustomerNormsedit(params){
       });
   }
   //////////////////////////ITASSET Ended///////////////////////////////////////
+
+
+
+
+
+
+  /////////////////////////////customervsemployee started//////////////////////////
+  customervsemployeeEdit(params){
+    const dialogRef = this.dialog.open(AddEditCustomerVSEmployeeComponent, {
+      height: '70vh',
+      width: '140vw',
+      data:params.data
+    });
+    dialogRef.afterClosed().subscribe({
+      next: (val) => {
+        if (val) {
+          this.sharedDataService.triggerRefresh();
+        }
+      },
+      error: (err) => {
+        this.spinnerService.resetSpinner(); // Reset spinner on error
+        console.error(err);
+        Swal.fire(
+          'Error!',
+          'An error occurred !.',
+          'error'
+        );
+      }
+    });
+  }
+  customervsemployeeDelete(params){
+    this.spinnerService.requestStarted();
+
+    this.customervsemployeeservice.deleteEmployee(this.gettingData.id).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
+      next: (res) => {
+        this.spinnerService.requestEnded();
+        Swal.fire(
+          'Done!',
+          'Employee Deleted !',
+          'success'
+        ).then((result) => {
+          if (result.isConfirmed) {
+            this.sharedDataService.triggerRefresh();
+          }
+        });
+
+
+      },
+      error: (err) => {
+        this.spinnerService.resetSpinner(); // Reset spinner on error
+        console.error(err);
+        Swal.fire(
+          'Error!',
+          'An error occurred !',
+          'error'
+        );
+      }
+    });
+  }
+  /////////////////////////////customervsemployee Ended//////////////////////////
 
 }

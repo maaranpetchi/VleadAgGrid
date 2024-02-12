@@ -24,7 +24,7 @@
               <div class="table-container table-responsive mt-4">
                 <ag-grid-angular style="width: 100%; height: 100%;" [context]="context" [columnDefs]="table1def"
                 [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="rowSelection"
-                [rowData]="rowData" [pagination]="true" [class]="themeClass" (gridReady)="onGridReady($event)"
+                [rowData]="rowData" [pagination]="true" [class]="themeClass" (gridReady)="onGridReady1($event)"
                 (cellValueChanged)="handleCellValueChanged($event)" frameworkComponents="{ }"></ag-grid-angular>
 
               </div>
@@ -33,8 +33,8 @@
             <div class="col-5">
               <div class="table-container table-responsive mt-4">
                 <ag-grid-angular style="width: 100%; height: 100%;" [context]="context" [columnDefs]="table2def"
-                [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="table2rowSelection"
-                [rowData]="table2rowData" [pagination]="true" [class]="themeClass" (gridReady)="onGridReady($event)"
+                [defaultColDef]="table2defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="table2rowSelection"
+                [rowData]="table2rowData" [pagination]="true" [class]="themeClass" (gridReady)="onGridReady2($event)"
                 (cellValueChanged)="handleCellValueChanged($event)" frameworkComponents="{ }"></ag-grid-angular>
 
 
@@ -43,7 +43,7 @@
           </div>
         </div>
         <div class="col-12 mt-5">
-          <button class="float-end bg-success text-white" mat-raised-button  (click)="onSubmit()">Submit</button>
+          <button class="float-end bg-success text-white" mat-raised-button  (click)="testSubmit()">Submit</button>
         </div>
       </div>
     </div>

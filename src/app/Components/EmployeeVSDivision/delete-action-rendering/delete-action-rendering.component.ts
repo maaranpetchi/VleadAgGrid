@@ -17,6 +17,7 @@ import { CustomervschecklistService } from 'src/app/Services/CustomerVSChecklist
 import { ViewchecklistComponent } from '../../CustomerVSChecklist/viewchecklist/viewchecklist.component';
 import { EmployeeService } from 'src/app/Services/EmployeeController/employee.service';
 import { EmpvsdivService } from 'src/app/Services/EmployeeVSDivision/empvsdiv.service';
+import { EmployeevsprocessService } from 'src/app/Services/CustomerVSProcess/employeevsprocess.service';
 
 @Component({
   selector: 'app-delete-action-rendering',
@@ -31,7 +32,10 @@ export class DeleteActionRenderingComponent implements ICellRendererAngularComp 
   private dialog: MatDialog;
   Context: any;
 
-  constructor(private sharedService: SharedService, private injector: Injector, private spinnerService: SpinnerService, private http: HttpClient, private loginservice: LoginService, private empvsdivservice: EmpvsdivService, private router: Router, private sharedDataService: SharedService, private _dialog: MatDialog, private checklistservice: CustomervschecklistService, private employeeservice: EmployeeService) { }
+  constructor(private sharedService: SharedService, private injector: Injector, private spinnerService: SpinnerService, private http: HttpClient, private loginservice: LoginService, private empvsdivservice: EmpvsdivService, private router: Router, private sharedDataService: SharedService, private _dialog: MatDialog, private checklistservice: CustomervschecklistService, private employeeservice: EmployeeService,
+    private empvsprocesssservice: EmployeevsprocessService,
+ 
+    ) { }
   iconClicked: boolean = false;
 
   // gets called once before the renderer is used
@@ -66,6 +70,11 @@ export class DeleteActionRenderingComponent implements ICellRendererAngularComp 
     if (this.Context == 'EmployeeVsDivision') {
       this.empvsdivdelete(params)
     }
+
+    ///customervsprocess
+    if (this.Context == 'customervsprocess') {
+      this.customervsprocessDelete(params)
+    }
     
   }
 /////////EmployeeVSDivision Delete//////////////
@@ -87,6 +96,28 @@ export class DeleteActionRenderingComponent implements ICellRendererAngularComp 
 
           }
         });
+      },
+      error: console.log,
+    });
+  }
+
+
+  //////////////////////customervsproces//////////////////////
+  customervsprocessDelete(params){
+    console.log(params,"Parameter");
+    
+    this.spinnerService.requestStarted();
+    this.empvsprocesssservice.deleteEmployee(params.data.id).subscribe({
+      next: (res) => {
+        this.spinnerService.requestEnded();
+        this.empvsprocesssservice.changeapi({
+          "customerId": this.gettingData.customerId ? this.gettingData.customerId: 0,
+           "deptId": this.gettingData.departmentId ? this.gettingData.departmentId:0,
+          "customerJobType": this.gettingData.customJobType,
+        }).subscribe(data => {
+          this.sharedDataService.triggerRefresh();
+        })
+
       },
       error: console.log,
     });

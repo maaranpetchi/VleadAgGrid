@@ -14,6 +14,10 @@ import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { catchError } from 'rxjs';
 import FileSaver from 'file-saver';
+import { GridApi, ColDef, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { customernormsrenderingcomponent } from 'src/app/Components/CustomerNorms/customernormsindex/customerNormsRendering.component';
+import { environment } from 'src/Environments/environment';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 @Component({
   selector: 'app-customer-vsemployee',
   templateUrl: './customer-vsemployee.component.html',
@@ -34,21 +38,29 @@ export class CustomerVSEmployeeComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   isDeletedInclude = false;
   isResignInclude = false;
+context: any="customervsemployee";
 
   constructor(private _dialog: MatDialog,
     private spinnerService: SpinnerService,
     private _empService: CustomerVSEmployeeService,
     private _coreService: CoreService,
     private router: Router,
-    private http: HttpClient) { }
+    private sharedDataService:SharedService,
+    private http: HttpClient) {
+
+      this.sharedDataService.refreshData$.subscribe(() => {
+        // Update your data or call the necessary methods to refresh the data
+        this.getEmployeeList();
+      });
+     }
 
   ngOnInit(): void {
     this.getEmployeeList();
   }
   openAddEditEmpForm() {
     const dialogRef = this._dialog.open(AddEditCustomerVSEmployeeComponent, {
-       height: '70vh',
-       width: '140vw'
+      height: '70vh',
+      width: '140vw'
     });
     dialogRef.afterClosed().subscribe({
       next: (val) => {
@@ -68,13 +80,8 @@ export class CustomerVSEmployeeComponent implements OnInit {
     })).subscribe({
 
       next: (res) => {
-
-        this.dataSource = new MatTableDataSource(res);
-
-        // this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+        this.rowData = res;
         this.spinnerService.requestEnded();
-
       },
       error: (err) => {
         this.spinnerService.resetSpinner(); // Reset spinner on error
@@ -88,95 +95,65 @@ export class CustomerVSEmployeeComponent implements OnInit {
     });
   }
 
-  employeeFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+  /////////////////////////Ag-grid module///////////////////////////////
+  @ViewChild('agGrid') agGrid: any;
+
+  private gridApi!: GridApi<any>;
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+
+  columnDefs: ColDef[] = [
+    { headerName: 'customer Classification', field: 'customerClassification', filter: true, },
+    { headerName: 'Employee', field: 'employeeName', filter: true, },
+    { headerName: 'Customer Name', field: 'name', filter: true, },
+    { headerName: 'Short Name', field: 'shortName', filter: true, },
+    {
+      headerName: 'Actions',
+      field: 'action',
+      cellRenderer: customernormsrenderingcomponent, // JS comp by Direct Reference
+      autoHeight: true,
+    }
+  ];
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData!: any[];
+  public themeClass: string =
+    "ag-theme-quartz";
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+    this._empService.getEmployeeList().subscribe((response) => (this.rowData = response));
+  }
+
+  handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {
+    console.log(params, "Parameter");
+    console.log(params.data, "ParameterData");
+    let parameterData = params.data
+    if (params.colDef.field === 'filecount') { // Check if the changed column is 'price'
+
     }
   }
 
-  deleteEmployee(id: number) {
-    this.spinnerService.requestStarted();
 
-    this._empService.deleteEmployee(id).pipe(catchError((error) => {
-      this.spinnerService.requestEnded();
-      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-    })).subscribe({
-      next: (res) => {
-        this.spinnerService.requestEnded();
-        Swal.fire(
-          'Done!',
-          'Employee Deleted !',
-          'success'
-        ).then((result) => {
-          if (result.isConfirmed) {
-            this.getEmployeeList();
-          }
-        });
+  handlePress(newvalue, parameterData) {
+    console.log(newvalue, "HandlepressNewValue");
+    console.log(parameterData, "ParameterValue");
 
-
-      },
-      error: (err) => {
-        this.spinnerService.resetSpinner(); // Reset spinner on error
-        console.error(err);
-        Swal.fire(
-          'Error!',
-          'An error occurred !',
-          'error'
-        );
-      }
-    });
   }
 
-  openEditForm(data: any) {
 
-    const dialogRef = this._dialog.open(AddEditCustomerVSEmployeeComponent, {
-      height: '70vh',
-      width: '140vw',
-      data
-    });
-    dialogRef.afterClosed().subscribe({
-      next: (val) => {
-        if (val) {
-          this.getEmployeeList();
+}
 
-        }
-      },
-      error: (err) => {
-        this.spinnerService.resetSpinner(); // Reset spinner on error
-        console.error(err);
-        Swal.fire(
-          'Error!',
-          'An error occurred !.',
-          'error'
-        );
-      }
-    });
-  }
-  exportToCsv() {
-    // Check if there is no data in the table
-    if (this.dataSource.data.length === 0) {
-      Swal.fire('Alert', 'No Records in the table', 'info');
-      return;
-    }
-
-    const header = ['customerClassification', 'employeeNameCode', 'name', 'shortName'];
-
-    // Access the data array from the MatTableDataSource
-    const csvData = this.dataSource.data.map(row => {
-      return [
-        row.customerClassification,
-        row.employeeName,
-        row.name,
-        row.shortName
-      ].join(',');
-    });
-
-    const csv = [header.join(','), ...csvData].join('\n');
-
-    const blob = new Blob([csv], { type: 'text/csv' });
-    FileSaver.saveAs(blob, 'customerVsEmployee.csv');
-  }
-
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
 }

@@ -14,6 +14,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { catchError } from 'rxjs';
 import { GridApi, ColDef, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
 import { DeleteActionRenderingComponent } from '../delete-action-rendering/delete-action-rendering.component';
+import { AgGridAngular } from 'ag-grid-angular';
+import { LoginService } from 'src/app/Services/Login/login.service';
 
 @Component({
   selector: 'app-addeditemployeevsdivision',
@@ -26,7 +28,7 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
   table1Data: MatTableDataSource<any>;
 
   table2Data: MatTableDataSource<any>;
-  public dialogRef: MatDialogRef<AddeditemployeevsdivisionComponent>;
+  // public dialogRef: MatDialogRef<AddeditemployeevsdivisionComponent>;
 
   myForm: FormGroup;
   // table1Data: any;
@@ -38,8 +40,9 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
 
   @ViewChild('paginator1') paginator1: MatPaginator;
   @ViewChild('paginator2') paginator2: MatPaginator;
-context: any;
-  constructor(private spinnerService: SpinnerService, private fb: FormBuilder, private http: HttpClient, private dialog: MatDialog) {
+  context: any;
+  constructor(private spinnerService: SpinnerService, private fb: FormBuilder, private http: HttpClient, private dialog: MatDialog, private loginservice: LoginService,
+    private dialogRef: MatDialogRef<AddeditemployeevsdivisionComponent> ) {
 
   }
 
@@ -64,7 +67,7 @@ context: any;
       catchError((error) => {
         this.spinnerService.requestEnded();
         console.error('API Error:', error);
-        return Swal.fire('Alert!','An error occurred while processing your request','error');
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
       })
     ).subscribe(data => {
       // this.table1Data =data.eEvDList ;
@@ -83,7 +86,7 @@ context: any;
       catchError((error) => {
         this.spinnerService.requestEnded();
         console.error('API Error:', error);
-        return Swal.fire('Alert!','An error occurred while processing your request','error');
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
       })
     ).subscribe(data => {
       this.table2rowData = data.dEvDList;
@@ -95,12 +98,12 @@ context: any;
     });
   }
   onSubmit() {
-    this.selection.selected.forEach(x=>this.setAll2(x));
+    this.selection.selected.forEach(x => this.setAll2(x));
     this.spinnerService.requestStarted();
     if (this.table1selectedarray.length > 0 && this.table2selectedarray.length > 0) {
       const selectedValues = this.myForm.get('selectedValues')?.value
       const data = { selectedValues };
-    
+
       // Submit the selected values to the REST API using HttpClient
 
       this.http.post<any>(environment.apiURL + 'EmployeeVsDivision/SetEmployeeVsDivision', {
@@ -111,7 +114,7 @@ context: any;
         catchError((error) => {
           this.spinnerService.requestEnded();
           console.error('API Error:', error);
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+          return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
         })
       ).subscribe(response => {
         this.spinnerService.requestEnded();
@@ -121,26 +124,26 @@ context: any;
         this.table2selectedarray = [];
 
 
-        if (response.sEvDList =="Inserted Sucessfully") {
+        if (response.sEvDList == "Inserted Sucessfully") {
           Swal.fire(
             'Done!',
             response.sEvDList,
             'success'
-          ).then((result)=>{
-            if(result.isConfirmed){
-              window.location.reload();
+          ).then((result) => {
+            if (result.isConfirmed) {
+              this.dialogRef.close(true);
             }
           })
         }
 
         else {
           Swal.fire(
-            'Error!',
+            'info!',
             response.sEvDList,
             'error'
-          ).then((result)=>{
-            if(result.isConfirmed){
-              window.location.reload();
+          ).then((result) => {
+            if (result.isConfirmed) {
+              this.dialogRef.close(true);
             }
           })
         }
@@ -168,8 +171,8 @@ context: any;
   }
 
 
-  setAll2( item: any) {
-      this.table2selectedarray.push({ id: item.id })
+  setAll2(item: any) {
+    this.table2selectedarray.push({ id: item.id })
   }
   selection = new SelectionModel<Element>(true, []);
   isAllSelected() {
@@ -178,120 +181,175 @@ context: any;
     return numSelected === numRows;
   }
 
-  filterValue:any;
-  filterValue1:any;
+  filterValue: any;
+  filterValue1: any;
   applyFilter(event: Event): void {
     this.filterValue = (event.target as HTMLInputElement).value;
     this.table1Data.filter = this.filterValue.trim().toLowerCase();
-  
+
     if (this.table1Data.paginator) {
       this.table1Data.paginator.firstPage();
     }
-}
-
-applyEmployeeFilter(event: Event) {
-  this.filterValue1 = (event.target as HTMLInputElement).value;
-  this.table2Data.filter = this.filterValue1.trim().toLowerCase();
-  // this.selection.clear();
-  // this.dataSource.filteredData.forEach(x=>this.selection.select(x));
-  if (this.table2Data.paginator) {
-    this.table2Data.paginator.firstPage();
   }
-}
+
+  applyEmployeeFilter(event: Event) {
+    this.filterValue1 = (event.target as HTMLInputElement).value;
+    this.table2Data.filter = this.filterValue1.trim().toLowerCase();
+    // this.selection.clear();
+    // this.dataSource.filteredData.forEach(x=>this.selection.select(x));
+    if (this.table2Data.paginator) {
+      this.table2Data.paginator.firstPage();
+    }
+  }
   masterToggle() {
     if (this.isAllSelected()) {
       this.selection.clear();
     }
-    else if(this.filterValue){
-    this.selection.clear();
-      this.table2Data.filteredData.forEach(x=>this.selection.select(x));
+    else if (this.filterValue) {
+      this.selection.clear();
+      this.table2Data.filteredData.forEach(x => this.selection.select(x));
     } else {
       this.table2Data.data.forEach(row => this.selection.select(row));
     }
- 
-  }
-
-  
-/////////////////////////Ag-grid module///////////////////////////////
-@ViewChild('agGrid') agGrid: any;
-
-private gridApi!: GridApi<any>;
-public defaultColDef: ColDef = {
-  flex: 1,
-  minWidth: 100,
-  headerCheckboxSelection: isFirstColumn,
-  checkboxSelection: isFirstColumn,
-};
-public table2defaultColDef: ColDef = {
-  flex: 1,
-  minWidth: 100,
-  headerCheckboxSelection: isSecondColumn,
-  checkboxSelection: isSecondColumn,
-};
-
-table1def: ColDef[] = [
-  { headerName: 'EmployeeCode ', field: 'employeeCode', filter: true, },
-  { headerName: 'EmployeeName ', field: 'employeeName', filter: true, },
-
-];
-table2def: ColDef[] = [
- 
-  { headerName: 'Division', field: 'divisionName', filter: true, },
-];
-
-
-
-
-
-
-public rowSelection: 'single' | 'multiple' = 'multiple';
-public table2rowSelection: 'single' | 'multiple' = 'multiple';
-
-public rowData!: any[];
-public table2rowData!: any[];
-
-public themeClass: string =
-  "ag-theme-quartz";
-
-onGridReady(params: GridReadyEvent<any>) {
-  this.gridApi = params.api;
- 
-}
-
-handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {
-  console.log(params, "Parameter");
-  console.log(params.data, "ParameterData");
-  let parameterData = params.data
-  if (params.colDef.field === 'filecount') { // Check if the changed column is 'price'
 
   }
+
+
+  /////////////////////////Ag-grid module///////////////////////////////
+  @ViewChild('agGrid1') agGrid1: AgGridAngular;
+  @ViewChild('agGrid2') agGrid2: AgGridAngular;
+
+  private gridApi1!: GridApi;
+  private gridApi2!: GridApi;
+
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+  public table2defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isSecondColumn,
+    checkboxSelection: isSecondColumn,
+  };
+
+  table1def: ColDef[] = [
+    { headerName: 'EmployeeCode ', field: 'employeeCode', filter: true, },
+    { headerName: 'EmployeeName ', field: 'employeeName', filter: true, },
+
+  ];
+  table2def: ColDef[] = [
+
+    { headerName: 'Division', field: 'divisionName', filter: true, },
+  ];
+
+
+
+
+
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public table2rowSelection: 'single' | 'multiple' = 'multiple';
+
+  public rowData!: any[];
+  public table2rowData!: any[];
+
+  public themeClass: string =
+    "ag-theme-quartz";
+
+  onGridReady1(params: GridReadyEvent) {
+    this.gridApi1 = params.api;
+  }
+
+  onGridReady2(params: GridReadyEvent) {
+    this.gridApi2 = params.api;
+  }
+
+  handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {
+    console.log(params, "Parameter");
+    console.log(params.data, "ParameterData");
+    let parameterData = params.data
+    if (params.colDef.field === 'filecount') { // Check if the changed column is 'price'
+
+    }
+  }
+
+
+  handlePress(newvalue, parameterData) {
+    console.log(newvalue, "HandlepressNewValue");
+    console.log(parameterData, "ParameterValue");
+
+  }
+  selectedRows1: any;
+  selectedRows2: any;
+  testSubmit() {
+    this.selectedRows1 = this.gridApi1.getSelectedRows();
+    this.selectedRows2 = this.gridApi2.getSelectedRows();
+
+    console.log('Selected Rows from Table 1:', this.selectedRows1);
+    console.log('Selected Rows from Table 2:', this.selectedRows2);
+
+    this.spinnerService.requestStarted();
+
+    this.http.post<any>(environment.apiURL + 'EmployeeVsDivision/SetEmployeeVsDivision', {
+      "selectedEmployee": this.selectedRows1,
+      "selectedDivision": this.selectedRows2,
+      "createdBy": this.loginservice.getUsername(),
+    }).pipe(
+      catchError((error) => {
+        this.spinnerService.requestEnded();
+        console.error('API Error:', error);
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+      })
+    ).subscribe(response => {
+      this.spinnerService.requestEnded();
+
+      // Handle the response from the API
+      this.selectedRows1 = [];
+      this.selectedRows2 = [];
+
+
+      if (response.sEvDList == "Inserted Sucessfully") {
+        Swal.fire(
+          'Done!',
+          response.sEvDList,
+          'success'
+        ).then((result) => {
+          if (result.isConfirmed) {
+            this.dialogRef.close(true);
+          }
+        })
+      }
+
+      else {
+        Swal.fire(
+          'Error!',
+          response.sEvDList,
+          'error'
+        ).then((result) => {
+          if (result.isConfirmed) {
+            this.dialogRef.close(true);
+          }
+        })
+      }
+    });
+  }
+
 }
-
-
-handlePress(newvalue, parameterData) {
-  console.log(newvalue, "HandlepressNewValue");
-  console.log(parameterData, "ParameterValue");
-
-}
-
-
-}
-
 function isFirstColumn(
-params:
-  | CheckboxSelectionCallbackParams
-  | HeaderCheckboxSelectionCallbackParams
+  params: CheckboxSelectionCallbackParams | HeaderCheckboxSelectionCallbackParams
 ) {
-var displayedColumns = params.api.getAllDisplayedColumns();
-var thisIsFirstColumn = displayedColumns[0] === params.column;
-return thisIsFirstColumn;
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
 }
+
 function isSecondColumn(
-params:
-  | CheckboxSelectionCallbackParams
-  | HeaderCheckboxSelectionCallbackParams
+  params: CheckboxSelectionCallbackParams | HeaderCheckboxSelectionCallbackParams
 ) {
-var displayedColumns = params.api.getAllDisplayedColumns();
-var thisisSecondColumn = displayedColumns[0] === params.column;
-return thisisSecondColumn;
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsSecondColumn = displayedColumns[0] === params.column;
+  return thisIsSecondColumn;
 }
