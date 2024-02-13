@@ -153,9 +153,17 @@ import { StartRenderingComponent } from 'src/app/Components/TopToolbarComponents
 import { EmpskillactionrenderingComponent } from 'src/app/Components/EmployeeVSSkillset/empskillactionrendering/empskillactionrendering.component';
 import { VendoractionrenderingComponent } from 'src/app/Components/Vendor/vendor/Vendoractionrendering.component';
 import { customernormsrenderingcomponent } from 'src/app/Components/CustomerNorms/customernormsindex/customerNormsRendering.component';
+import { ViewActionRenderingComponent } from 'src/app/Components/AccountsController/CustomerReceipts/view-action-rendering/view-action-rendering.component';
 
 @NgModule({
   declarations: [
+
+    ///ViewActionRenderingComponent
+    ViewActionRenderingComponent,
+
+
+
+
     DashboardComponent,
     //Login
     LoginComponent,

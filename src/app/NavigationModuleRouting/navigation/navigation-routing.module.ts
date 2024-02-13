@@ -129,6 +129,7 @@ import { SSRSReportViewerComponent } from 'src/app/Components/AccountsController
 import { ActionsCellRendererComponent } from 'src/app/Components/TopToolbarComponents/ClientCordination/ClientOrder/actions-cell-renderer/actions-cell-renderer.component';
 import { EmpskillactionrenderingComponent } from 'src/app/Components/EmployeeVSSkillset/empskillactionrendering/empskillactionrendering.component';
 import { customernormsrenderingcomponent } from 'src/app/Components/CustomerNorms/customernormsindex/customerNormsRendering.component';
+import { ViewActionRenderingComponent } from 'src/app/Components/AccountsController/CustomerReceipts/view-action-rendering/view-action-rendering.component';
 
 //Routing to another components 
 const routes: Routes = [
@@ -225,6 +226,7 @@ const routes: Routes = [
       { path: 'acc-customer', component: CustomerreceiptsindexComponent, canActivate: [authGuard] },
       { path: 'acc-viewcustomer', component: AddEditCustomerreceiptsComponent, canActivate: [authGuard] },
       { path: 'addreceivables', component: AddReceivablesComponent, canActivate: [authGuard] },
+      { path: 'viewAction', component: ViewActionRenderingComponent, canActivate: [authGuard] },
       //ScopeChange
       { path: 'acc-scopechange', component: ScopechangeComponent, canActivate: [authGuard] },
       //Advance-Adjustment

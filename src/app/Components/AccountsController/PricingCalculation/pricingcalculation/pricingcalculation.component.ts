@@ -13,6 +13,8 @@ import { LoginService } from 'src/app/Services/Login/login.service';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js';
 import { SelectionModel } from '@angular/cdk/collections';
+import { GridApi, ColDef, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { customernormsrenderingcomponent } from 'src/app/Components/CustomerNorms/customernormsindex/customerNormsRendering.component';
 
 @Component({
   selector: 'app-pricingcalculation',
@@ -23,6 +25,7 @@ export class PricingcalculationComponent implements OnInit {
   getClientId: any[] = [];
 
   selection = new SelectionModel<any>(true, []); // Create a selection model for row selection
+  context: any = "pricingcalculation";
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
@@ -129,7 +132,7 @@ export class PricingcalculationComponent implements OnInit {
 
 
     clientid = parseInt(this.myForm?.value.ClientId ? this.myForm?.value.ClientId : "0")
-    let temporaryarray: any[] = this.selection.selected.map(selectedRow => {
+    let temporaryarray: any[] = this.gridApi.getSelectedRows().map(selectedRow => {
       return {
         "jobId": selectedRow.jobId,
         "shortName": selectedRow.shortName,
@@ -177,6 +180,8 @@ export class PricingcalculationComponent implements OnInit {
       "isWaiver": true,
       "jobStatusId": 0
     }
+    console.log(result, "Payload");
+
     this.onInvoiceCalculation(result)
 
 
@@ -187,10 +192,9 @@ export class PricingcalculationComponent implements OnInit {
 
       next: (res) => {
 
-        this.dataSource = new MatTableDataSource(res);
+        this.rowData = res;
 
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+
       }
     });
   }
@@ -226,9 +230,8 @@ export class PricingcalculationComponent implements OnInit {
         "toDate": this.myForm.value?.toDate
       }).subscribe((results: any) => {
         this.spinnerService.requestEnded();
-        this.dataSource.data = results.getInvoice;
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+        this.rowData = results.getInvoice;
+
       }
       )
     }
@@ -248,7 +251,8 @@ export class PricingcalculationComponent implements OnInit {
           'success'
         ).then((result) => {
           if (result.isConfirmed) {
-            window.location.reload();
+            this.myForm.reset();
+            this.rowData = [];
           }
         })
       }
@@ -259,11 +263,75 @@ export class PricingcalculationComponent implements OnInit {
           'info'
         ).then((result) => {
           if (result.isConfirmed) {
-            window.location.reload();
-          }
+            this.myForm.reset();
+            this.rowData = [];          }
         })
       }
     }
     )
   }
+
+  
+  /////////////////////////Ag-grid module///////////////////////////////
+  @ViewChild('agGrid') agGrid: any;
+
+  private gridApi!: GridApi<any>;
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+
+  columnDefs: ColDef[] = [
+    { headerName: 'Department Name ', field: 'shortName', filter: true, },
+    { headerName: 'Job Id', field: 'jobId', filter: true, },
+    { headerName: 'File Name', field: 'fileName', filter: true, },
+    { headerName: 'Department', field: 'department', filter: true, },
+    { headerName: 'Project Code', field: 'projectCode', filter: true, },
+    { headerName: 'Special Price', field: 'specialPrice', filter: true, },
+    { headerName: 'Scope', field: 'description', filter: true, },
+    { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
+    { headerName: 'Stitch Count', field: 'stitchCount', filter: true, },
+    { headerName: 'ESTFileReceivedDate', field: 'estFileReceivedDate', filter: true, },
+    { headerName: 'ESTDateofUpload', field: 'estDateofUpload', filter: true, },
+
+  ];
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData: any[] = [];
+  public themeClass: string =
+    "ag-theme-quartz";
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+  }
+
+  handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {
+    console.log(params, "Parameter");
+    console.log(params.data, "ParameterData");
+    let parameterData = params.data
+    if (params.colDef.field === 'filecount') { // Check if the changed column is 'price'
+
+    }
+  }
+
+
+  handlePress(newvalue, parameterData) {
+    console.log(newvalue, "HandlepressNewValue");
+    console.log(parameterData, "ParameterValue");
+
+  }
+
+
+}
+
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
 }

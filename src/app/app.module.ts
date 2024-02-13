@@ -30,7 +30,6 @@ import { AgGridModule } from 'ag-grid-angular';
 import 'ag-grid-enterprise';
 import { DeleteActionRenderingComponent } from './Components/EmployeeVSDivision/delete-action-rendering/delete-action-rendering.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,7 +46,8 @@ import { DeleteActionRenderingComponent } from './Components/EmployeeVSDivision/
     ItemFilterPipe,
     BirthdayComponent,
     AnniversaryComponent,
-    DeleteActionRenderingComponent
+    DeleteActionRenderingComponent,
+    
     
    ],
   imports: [
