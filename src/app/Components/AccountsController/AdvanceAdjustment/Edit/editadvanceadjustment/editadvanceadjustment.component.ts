@@ -32,11 +32,14 @@ export class EditadvanceadjustmentComponent {
   input6: any;
 
   constructor(private spinnerService: SpinnerService,
-    private advanceadjustment:AdvanceadjustmentComponent,
+    private advanceadjustment: AdvanceadjustmentComponent,
     private index: AdvanceadjustmentComponent, private _coreService: CoreService, private advanceservice: AdvanceadjustmentService, private formBuilder: FormBuilder, private http: HttpClient,
     public dialogRef: MatDialogRef<EditadvanceadjustmentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
+
+    
   ) {
+    console.log(this.data,"InjectedData");
 
   }
 
@@ -111,7 +114,7 @@ export class EditadvanceadjustmentComponent {
     if (!itemForm.valid) {
       return; // prevent adding the item if the form is not valid
     }
-  
+
     if (!this.input6) {
       Swal.fire(
         'Alert!',
@@ -120,7 +123,7 @@ export class EditadvanceadjustmentComponent {
       ); // prevent adding the item if the quantity field is empty
       return; // exit the function after displaying the alert
     }
-  
+
     this.items.push({
       invoicetype: this.invoicetype,
       selectedValue: this.selectedValue,
@@ -132,7 +135,7 @@ export class EditadvanceadjustmentComponent {
       input6: this.input6,
       id: this.InvoiceId
     });
-  
+
     this.InvoiceId = 0;
     this.invoicetype = '';
     this.selectedValue = '';
@@ -142,10 +145,10 @@ export class EditadvanceadjustmentComponent {
     this.input4 = '';
     this.InvoiceAmount = null;
     this.input6 = null;
-  
+
     itemForm.reset();
   }
-  
+
 
   amountvalidationerror: boolean = true;
 
@@ -153,7 +156,7 @@ export class EditadvanceadjustmentComponent {
     // 
 
     const enteredAmount = this.invoiceForm.get('enteramount')?.value;
-    
+
 
     if (this.input6 > this.InvoiceAmount) {
       this.amountvalidationerror = true;
@@ -168,7 +171,7 @@ export class EditadvanceadjustmentComponent {
   }
   onFormSubmit() {
     this.spinnerService.requestStarted();
-    
+
     let temparray = this.items.map(x => {
       return {
         "invoiceId": x.id,
@@ -190,8 +193,7 @@ export class EditadvanceadjustmentComponent {
         ).then((result) => {
 
           if (result.isConfirmed) {
-            this.advanceadjustment.loadData();
-            this.dialogRef.close();
+            this.dialogRef.close(true);
           }
 
         })
@@ -201,7 +203,13 @@ export class EditadvanceadjustmentComponent {
           'Error!',
           'Error Occured',
           'error'
-        )
+        ).then((result) => {
+
+          if (result.isConfirmed) {
+            this.dialogRef.close(true);
+          }
+
+        })
       }
     })
   }

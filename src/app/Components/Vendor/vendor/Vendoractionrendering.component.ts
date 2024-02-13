@@ -5,7 +5,7 @@ import { SharedService } from 'src/app/Services/SharedService/shared.service';
 import Swal from 'sweetalert2';
 
 import { HttpClient } from '@angular/common/http';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
@@ -13,12 +13,13 @@ import { LoginService } from 'src/app/Services/Login/login.service';
 import { environment } from 'src/Environments/environment';
 import { catchError } from 'rxjs';
 import { UpdatevendorComponent } from '../updatevendor/updatevendor.component';
+import { EditadvanceadjustmentComponent } from '../../AccountsController/AdvanceAdjustment/Edit/editadvanceadjustment/editadvanceadjustment.component';
 
 @Component({
     selector: 'app-vendorrenderer',
     template: `
     <span class="total-value-renderer">
-      <i class="fa fa-edit" matTooltip="edit" style="cursor: pointer;color:green" (click)=" openclientorder(params)"></i>
+      <i class="fa fa-edit" matTooltip="edit" style="cursor: pointer;color:green" (click)=" EditButton(params)"></i>
     </span>
   `,
     styles: [``]
@@ -29,6 +30,9 @@ export class VendoractionrenderingComponent implements ICellRendererAngularComp 
     componentParent: any;
     params: ICellRendererParams<any, any, any>;
     private dialog: MatDialog;
+    Context: any;
+    AdvanceAdjustmentContext: any;
+    AdvanceAdjustmentSelectedDepartment: any;
 
     constructor(private sharedService: SharedService, private injector: Injector, private spinnerService: SpinnerService, private http: HttpClient, private loginservice: LoginService, private sharedDataService: SharedService) { }
     iconClicked: boolean = false;
@@ -43,6 +47,29 @@ export class VendoractionrenderingComponent implements ICellRendererAngularComp 
 
     }
 
+
+
+    EditButton(params) {
+        this.iconClicked = true;
+        let viewData = params.data;
+        console.log(viewData, "ViewData");
+        this.Context = params.context;
+        console.log(this.Context, "params");
+        this.AdvanceAdjustmentContext = params.context.context;
+        console.log(this.AdvanceAdjustmentContext, "AdvanceAdjustmentContext");
+        this.AdvanceAdjustmentSelectedDepartment = params.context.department
+
+        ///EmployeeVSDivision
+        if (this.Context == 'vendor') {
+            this.openclientorder(params)
+        }
+        ///AdvanceAdjustment
+        if (this.AdvanceAdjustmentContext == 'advanceadjustment') {
+            this.editAdvanceAdjustment(params)
+        }
+
+
+    }
 
     openclientorder(params) {
         const dialogRef = this.dialog.open(UpdatevendorComponent, {
@@ -69,5 +96,15 @@ export class VendoractionrenderingComponent implements ICellRendererAngularComp 
 
 
 
-
+    editAdvanceAdjustment(params){
+        const dialogRef: MatDialogRef<EditadvanceadjustmentComponent> = this.dialog.open(EditadvanceadjustmentComponent, {
+            width: '70vw',
+            height: '90vh',
+            data: {
+              id: params.data.id,
+              availableAdvance: params.data.availableAdvance,
+              department: this.AdvanceAdjustmentSelectedDepartment,
+            },
+          });
+    }
 }
