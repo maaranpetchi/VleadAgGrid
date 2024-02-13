@@ -271,7 +271,7 @@ export class PricingcalculationComponent implements OnInit {
     )
   }
 
-  
+
   /////////////////////////Ag-grid module///////////////////////////////
   @ViewChild('agGrid') agGrid: any;
 
@@ -297,7 +297,6 @@ export class PricingcalculationComponent implements OnInit {
     { headerName: 'ESTDateofUpload', field: 'estDateofUpload', filter: true, },
 
   ];
-
   public rowSelection: 'single' | 'multiple' = 'multiple';
   public rowData: any[] = [];
   public themeClass: string =
