@@ -171,7 +171,6 @@ export class EditadvanceadjustmentComponent {
   }
   onFormSubmit() {
     this.spinnerService.requestStarted();
-
     let temparray = this.items.map(x => {
       return {
         "invoiceId": x.id,
