@@ -256,7 +256,6 @@ const routes: Routes = [
       { path: 'acc-confirminvoice', component: ConfirminvoiceComponent, canActivate: [authGuard] },
       { path: 'acc-popupinvoice', component: PopupinvoiceComponent, canActivate: [authGuard]    },
       { path: 'acc-SSRS', component: SSRSReportViewerComponent, canActivate: [authGuard]   },
-
       // Master Order
       { path: 'master-user', component: UserMasterComponent, canActivate: [authGuard] },
       // Scope
