@@ -142,7 +142,7 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
             'success'
           ).then((response) => {
             if (response.isConfirmed) {
-              window.location.reload();
+              
             }
           });
         }, error: (err) => {
@@ -184,7 +184,7 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
               'success'
             ).then((result) => {
               if (result.isConfirmed) {
-                window.location.reload();
+                this._dialogRef.close(true);
               }
             })
           }
@@ -195,7 +195,8 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
               'info'
             ).then((result) => {
               if (result.isConfirmed) {
-                window.location.reload();
+                this._dialogRef.close(true);
+
               }
             })
           }

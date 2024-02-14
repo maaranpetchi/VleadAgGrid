@@ -13,16 +13,25 @@ import { CustomervschecklistService } from 'src/app/Services/CustomerVSChecklist
 import { SpinnerService } from '../../Spinner/spinner.service';
 import { ViewchecklistComponent } from '../viewchecklist/viewchecklist.component';
 import Swal from 'sweetalert2/src/sweetalert2.js';
+import { GridApi, ColDef, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { EmpskillactionrenderingComponent } from '../../EmployeeVSSkillset/empskillactionrendering/empskillactionrendering.component';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 @Component({
   selector: 'app-indexchecklist',
   templateUrl: './indexchecklist.component.html',
   styleUrls: ['./indexchecklist.component.scss']
 })
 export class IndexchecklistComponent implements OnInit {
+  context: any = "CustomerVSChecklist";
   ngOnInit(): void {
     this.fetchtableData();
   }
-  constructor(private _coreService: CoreService, private checklistservice: CustomervschecklistService, private http: HttpClient, private loginservice: LoginService, private coreservice: CoreService, private _dialog: MatDialog, private spinnerService: SpinnerService) { }
+  constructor(private _coreService: CoreService, private checklistservice: CustomervschecklistService, private http: HttpClient, private loginservice: LoginService, private coreservice: CoreService, private _dialog: MatDialog, private spinnerService: SpinnerService,private sharedDataService:SharedService) { 
+    this.sharedDataService.refreshData$.subscribe(() => {
+      // Update your data or call the necessary methods to refresh the data
+      this.fetchtableData();
+    });
+  }
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -32,10 +41,9 @@ export class IndexchecklistComponent implements OnInit {
 
   fetchtableData() {
     this.checklistservice.getEmployeeList().subscribe(data => {
-      
-      this.dataSource = new MatTableDataSource(data.gCvCList);
-      this.dataSource.paginator = this.paginator;
-      // this.dataSource.sort = this.sort;
+
+      this.rowData = data.gCvCList;
+
     });
   }
 
@@ -82,36 +90,14 @@ export class IndexchecklistComponent implements OnInit {
   }
 
   deleteEmployee(id: number) {
-    this.spinnerService.requestStarted();
-
-    this.checklistservice.deleteEmployee(id).subscribe({
-      next: (res) => {
-        this.spinnerService.requestEnded();
-
-        Swal.fire(
-          'Done!',
-          'Employee deleted!',
-          'success'
-        )
-        this.fetchtableData();
-      },
-      error: (err) => {
-        this.spinnerService.resetSpinner(); // Reset spinner on error
-        Swal.fire(
-          'Error!',
-          'An error occurred !.',
-          'error'
-        );
-      }
-  
-    });
+   
   }
 
 
-  openViewForm(data: any){
+  openViewForm(data: any) {
     const dialogRef = this._dialog.open(ViewchecklistComponent, {
-     height: '40vh',
-     width: '50vw',
+      height: '40vh',
+      width: '50vw',
       data
     });
 
@@ -123,4 +109,67 @@ export class IndexchecklistComponent implements OnInit {
       },
     });
   }
+  /////////////////////////Ag-grid module///////////////////////////////
+  @ViewChild('agGrid') agGrid: any;
+
+  private gridApi!: GridApi<any>;
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+
+  columnDefs: ColDef[] = [
+    { headerName: 'ShortName ', field: 'shortName', filter: true, },
+    { headerName: 'Description ', field: 'description', filter: true, },
+    { headerName: 'Department', field: 'department', filter: true, },
+    {
+      headerName: 'Actions',
+      field: 'action',
+      cellRenderer: EmpskillactionrenderingComponent, // JS comp by Direct Reference
+      autoHeight: true,
+    }
+  ];
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData!: any[];
+  public themeClass: string =
+    "ag-theme-quartz";
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+    this.checklistservice.getEmployeeList().subscribe(data => {
+      this.rowData = data.gCvCList;
+    })
+  }
+
+  handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {
+    console.log(params, "Parameter");
+    console.log(params.data, "ParameterData");
+    let parameterData = params.data
+    if (params.colDef.field === 'filecount') { // Check if the changed column is 'price'
+
+    }
+  }
+
+
+  handlePress(newvalue, parameterData) {
+    console.log(newvalue, "HandlepressNewValue");
+    console.log(parameterData, "ParameterValue");
+
+  }
+
+
+}
+
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
+
 }

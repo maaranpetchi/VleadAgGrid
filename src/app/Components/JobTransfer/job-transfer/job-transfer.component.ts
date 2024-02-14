@@ -14,6 +14,9 @@ import { DialogComponent } from '../../dialog/dialog.component';
 import Swal from 'sweetalert2/src/sweetalert2.js';
 import { catchError } from 'rxjs';
 import { error } from 'jquery';
+import { GridApi, ColDef, CellClickedEvent, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { ClientordinationindexComponent } from '../../TopToolbarComponents/ClientCordination/clientordinationindex/clientordinationindex.component';
+import { JobDetailsClientIndexComponent } from '../../TopToolbarComponents/ClientCordination/query-to-client/job-details-client-index/job-details-client-index.component';
 
 @Component({
   selector: 'app-job-transfer',
@@ -49,6 +52,7 @@ export class JobTransferComponent implements OnInit {
   dataSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  columnApi: any;
   constructor(
     private _service: JobTransferService,
     private spinnerService: SpinnerService,
@@ -56,9 +60,9 @@ export class JobTransferComponent implements OnInit {
     private loginservice: LoginService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
   myForm = new FormGroup({
     selectdropdown: new FormControl('', Validators.required),
     client: new FormControl('', Validators.required),
@@ -133,15 +137,16 @@ export class JobTransferComponent implements OnInit {
         fileReceivedDate: this.selectedfromDate,
       };
       this.spinnerService.requestStarted();
-      this._service.jobOrderDetails(jobOrder).pipe(catchError((error)=>{
+      this._service.jobOrderDetails(jobOrder).pipe(catchError((error) => {
         this.spinnerService.requestEnded();
-        return Swal.fire('Alert!','An error occurred while processing your request','error');
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
       })).subscribe({
         next: (response) => {
           this.spinnerService.requestEnded();
-          this.dataSource = new MatTableDataSource(response.jobs);
+          console.log(response.jobs, "Response");
+
+          this.rowData = response.jobs;
           // this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
         },
         error: (err: any) => {
           console.log(err);
@@ -150,55 +155,77 @@ export class JobTransferComponent implements OnInit {
       });
     }
   }
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
+
   selectedJobs: any[] = [];
 
   convert(): void {
-      this.selectedJobs = this.selectedQuery;
+    console.log(this.gridApi.getSelectedRows(), "SelectedRows");
 
-      if (this.selectedJobs.length === 0) {
-        throw new Error('Please Select Job(s).');
-      }
+    this.selectedJobs = this.gridApi.getSelectedRows();
 
-      const convertdata = {
-        ConvertDepartment: this.selectedJobs,
-        UpdatedBy: this.loginservice.getUsername(),
-      };
-this.spinnerService.requestStarted();
-      this.http
-        .post(environment.apiURL + `JobTransfer/ConvertDepartment`, convertdata).pipe(catchError((error)=>{
-          this.spinnerService.requestEnded();
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
-        }))
-        .subscribe((response: any) => {
-          this.spinnerService.requestEnded();
-          if (response) {
-            Swal.fire(
-              'Done!',
-              'Value moved to Selected Jobs!',
-              'success'
-            )
-            window.location.reload();
-          } else{
-            Swal.fire(
-              'Done!',
-              'Value Not moved to Selected Jobs!',
-              'success'
-            )
-          }
-        });
-    
+    if (this.selectedJobs.length === 0) {
+      throw new Error('Please Select Job(s).');
+    }
+
+    const convertdata = {
+      ConvertDepartment: this.selectedJobs,
+      UpdatedBy: this.loginservice.getUsername(),
+    };
+    this.spinnerService.requestStarted();
+    this.http
+      .post(environment.apiURL + `JobTransfer/ConvertDepartment`, convertdata).pipe(catchError((error) => {
+        this.spinnerService.requestEnded();
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+      }))
+      .subscribe((response: any) => {
+        this.spinnerService.requestEnded();
+        if (response) {
+          Swal.fire(
+            'Done!',
+            'Value moved to Selected Jobs!',
+            'success'
+          ).then((res) => {
+            if (res.isConfirmed) {
+              var jobOrder = {
+                jobId: this.selectedJobNumber,
+                fileName: this.selectedFileName,
+                clientId: this.selectedClientId,
+                fileReceivedDate: this.selectedfromDate,
+              };
+              this.spinnerService.requestStarted();
+              this._service.jobOrderDetails(jobOrder).pipe(catchError((error) => {
+                this.spinnerService.requestEnded();
+                return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+              })).subscribe({
+                next: (response) => {
+                  this.spinnerService.requestEnded();
+                  console.log(response.jobs, "Response");
+        
+                  this.rowData = response.jobs;
+                  // this.dataSource.sort = this.sort;
+                },
+                error: (err: any) => {
+                  console.log(err);
+                  this.spinnerService.resetSpinner();
+                },
+              });
+
+            }
+          })
+        } else {
+          Swal.fire(
+            'Done!',
+            'Value Not moved to Selected Jobs!',
+            'success'
+          )
+        }
+      });
+
   }
 
   selectedQuery: any[] = [];
   setAll(completed: boolean, item: any) {
- 
+
     if (completed == true) {
       this.selectedQuery.push({
         ...item,
@@ -213,4 +240,65 @@ this.spinnerService.requestStarted();
       }
     }
   }
+  /////////////////////////Ag-grid module///////////////////////////////
+  context: any = "jobtransfer";
+
+  @ViewChild('agGrid') agGrid: any;
+
+  private gridApi!: GridApi<any>;
+
+
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+  columnDefs: ColDef[] = [
+    { headerName: 'File Name', field: 'fileName', filter: true },
+
+    { headerName: 'File Received Date', field: 'fileReceivedDate', filter: true, },
+    { headerName: 'Department', field: 'department.description', filter: true, },
+    { headerName: 'File Received EST Date', field: 'fileReceivedDate', filter: true, },
+
+    { headerName: 'Client', field: 'customer.shortName', filter: true, },
+    { headerName: 'Customer Job Type', field: 'customer.customerJobType', filter: true, },
+
+  ];
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData: any[] = [];
+  public themeClass: string =
+    "ag-theme-quartz";
+
+
+
+
+
+  onCellClicked(event: CellClickedEvent) {
+    const { colDef, data } = event;
+    if (colDef.field === 'jobId') {
+      console.log(data, "PopupData");
+
+    }
+  }
+
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+    this.columnApi = params.columnApi;
+
+  }
 }
+
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
+}
+
+

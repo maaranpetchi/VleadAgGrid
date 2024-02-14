@@ -10,8 +10,10 @@
   border-top-left-radius: 1px;
 }
 
+
+
 .customerReceiptDetails {
-  height: 131vh;
+  min-height: 140vh;
 }
 .panel-title {
   margin-top: 0;
@@ -19,7 +21,12 @@
   font-size: 15px;
   color: inherit;
 }
-
+.invoicetable {
+  height: 36vh;
+}
+.Receipttable {
+  height: 36vh;
+}
 
 .pull-right {
   float: right !important;

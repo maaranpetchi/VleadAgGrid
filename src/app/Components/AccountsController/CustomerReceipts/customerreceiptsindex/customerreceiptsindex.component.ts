@@ -11,6 +11,9 @@ import { CustomerreceiptsService } from 'src/app/Services/AccountController/Cust
 
 import { AddEditCustomerreceiptsComponent } from '../add-edit-customerreceipts/add-edit-customerreceipts.component';
 import { environment } from 'src/Environments/environment';
+import { GridApi, ColDef, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { EmpskillactionrenderingComponent } from 'src/app/Components/EmployeeVSSkillset/empskillactionrendering/empskillactionrendering.component';
+import { ViewActionRenderingComponent } from '../view-action-rendering/view-action-rendering.component';
 @Component({
   selector: 'app-customerreceiptsindex',
   templateUrl: './customerreceiptsindex.component.html',
@@ -34,6 +37,7 @@ export class CustomerreceiptsindexComponent implements OnInit{
   @ViewChild(MatSort) sort!: MatSort;
   isDeletedInclude = false;
   isResignInclude = false;
+context: any="customerreceipts";
 
 
 constructor( private _dialog: MatDialog,
@@ -57,11 +61,7 @@ constructor( private _dialog: MatDialog,
      
       next: (res) => {
       
-        this.dataSource = new MatTableDataSource(res);
-        
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-     
+        this.rowData = res;     
       },
       error: console.log,
     });
@@ -85,5 +85,68 @@ constructor( private _dialog: MatDialog,
 
 
  
- 
+ /////////////////////////Ag-grid module///////////////////////////////
+ @ViewChild('agGrid') agGrid: any;
+
+ private gridApi!: GridApi<any>;
+ public defaultColDef: ColDef = {
+   flex: 1,
+   minWidth: 100,
+   headerCheckboxSelection: isFirstColumn,
+   checkboxSelection: isFirstColumn,
+ };
+
+ columnDefs: ColDef[] = [
+   { headerName: 'Voucher Number', field: 'voucherNo', filter: true, },
+   { headerName: 'Voucher Date ', field: 'collectionDate', filter: true, },
+   { headerName: 'Customer', field: 'shortName', filter: true, },
+   { headerName: 'Receipt Amount', field: 'collectionAmount', filter: true, },
+   { headerName: 'Reference Number', field: 'referenceNo', filter: true, },
+   { headerName: 'Reference Date', field: 'referenceDate', filter: true, },
+   { headerName: 'Description', field: 'description', filter: true, },
+   {
+     headerName: 'Actions',
+     field: 'action',
+     cellRenderer: ViewActionRenderingComponent, // JS comp by Direct Reference
+     autoHeight: true,
+   }
+ ];
+
+ public rowSelection: 'single' | 'multiple' = 'multiple';
+ public rowData!: any[];
+ public themeClass: string =
+   "ag-theme-quartz";
+
+ onGridReady(params: GridReadyEvent<any>) {
+   this.gridApi = params.api;
+   this._empService.getEmployeeList().subscribe((response) => (this.rowData = response));
+ }
+
+ handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {
+   console.log(params, "Parameter");
+   console.log(params.data, "ParameterData");
+   let parameterData = params.data
+   if (params.colDef.field === 'filecount') { // Check if the changed column is 'price'
+
+   }
+ }
+
+
+ handlePress(newvalue, parameterData) {
+   console.log(newvalue, "HandlepressNewValue");
+   console.log(parameterData, "ParameterValue");
+
+ }
+
+
+}
+
+function isFirstColumn(
+ params:
+   | CheckboxSelectionCallbackParams
+   | HeaderCheckboxSelectionCallbackParams
+) {
+ var displayedColumns = params.api.getAllDisplayedColumns();
+ var thisIsFirstColumn = displayedColumns[0] === params.column;
+ return thisIsFirstColumn;
 }

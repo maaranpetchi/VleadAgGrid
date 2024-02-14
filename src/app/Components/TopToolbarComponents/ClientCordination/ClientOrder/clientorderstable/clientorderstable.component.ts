@@ -206,6 +206,15 @@ export class ClientorderstableComponent implements OnInit {
   errorShowingClientName: string = '';
   bindingjobs() {
     this.spinnerService.requestStarted();
+    this.gridApi.setColumnVisible('filecount', true);
+    this.gridApi.setColumnVisible('action', true);
+    this.gridApi.setColumnVisible('fileInwardMode', false);
+    this.gridApi.setColumnVisible('transactionType', true);
+    this.gridApi.setColumnVisible('quoteparentid', true);
+    this.gridApi.setColumnVisible('transactionType', true);
+    this.gridApi.setColumnVisible('jobId', false);
+    this.gridApi.setColumnVisible('clientName', true);
+    this.gridApi.setColumnVisible('shortName', false);
     this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/1').subscribe((response)=>{
       this.spinnerService.requestEnded();
       this.rowData = response.data;
@@ -221,6 +230,9 @@ export class ClientorderstableComponent implements OnInit {
     this.gridApi.setColumnVisible('quoteparentid', true);
     this.gridApi.setColumnVisible('transactionType', true);
     this.gridApi.setColumnVisible('jobId', false);
+
+    this.gridApi.setColumnVisible('clientName', true);
+    this.gridApi.setColumnVisible('shortName', false);
     this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/2').pipe(
 
       catchError((error) => {
@@ -253,6 +265,8 @@ export class ClientorderstableComponent implements OnInit {
     this.gridApi.setColumnVisible('quoteparentid', true);
     this.gridApi.setColumnVisible('transactionType', true);
     this.gridApi.setColumnVisible('jobId', false);
+    this.gridApi.setColumnVisible('clientName', true);
+    this.gridApi.setColumnVisible('shortName', false);
     this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/3').pipe(
 
       catchError((error) => {
@@ -285,6 +299,8 @@ export class ClientorderstableComponent implements OnInit {
     this.gridApi.setColumnVisible('quoteparentid', true);
     this.gridApi.setColumnVisible('transactionType', true);
     this.gridApi.setColumnVisible('jobId', false);
+    this.gridApi.setColumnVisible('clientName', true);
+    this.gridApi.setColumnVisible('shortName', false);
     this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/4').pipe(
 
       catchError((error) => {
@@ -318,6 +334,8 @@ export class ClientorderstableComponent implements OnInit {
     this.gridApi.setColumnVisible('quoteparentid', true);
     this.gridApi.setColumnVisible('transactionType', true);
     this.gridApi.setColumnVisible('jobId', false);
+    this.gridApi.setColumnVisible('clientName', true);
+    this.gridApi.setColumnVisible('shortName', false);
     this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/5').pipe(
       catchError((error) => {
         this.spinnerService.requestEnded();
@@ -341,6 +359,8 @@ export class ClientorderstableComponent implements OnInit {
     this.gridApi.setColumnVisible('quoteparentid', false);
     this.gridApi.setColumnVisible('transactionType', true);
     this.gridApi.setColumnVisible('jobId', true);
+    this.gridApi.setColumnVisible('clientName', false);
+    this.gridApi.setColumnVisible('shortName', true);
     this.http.get<any>(environment.apiURL + 'CustomerQuery/GetNotApprovedQueryForSPJobsToCC').pipe(
       catchError((error) => {
         this.spinnerService.requestEnded();
@@ -971,6 +991,7 @@ export class ClientorderstableComponent implements OnInit {
   columnDefs: ColDef[] = [
     { headerName: 'JobId', field: 'jobId', filter: true, },
     { headerName: 'ClientName', field: 'clientName', filter: true, },
+    { headerName: 'Client Name', field: 'shortName', filter: true, },
     { headerName: 'CustomerClassification', field: 'customerClassification', filter: true, },
     { headerName: 'FileName', field: 'fileName', filter: true, },
     { headerName: 'File Received EST Date', field: 'estFileReceivedDate', filter: true, },
@@ -1006,6 +1027,8 @@ export class ClientorderstableComponent implements OnInit {
     this.gridApi.setColumnVisible('quoteparentid', true);
     this.gridApi.setColumnVisible('transactionType', true);
     this.gridApi.setColumnVisible('jobId', false);
+    this.gridApi.setColumnVisible('clientName', true);
+    this.gridApi.setColumnVisible('shortName', false);
 
 
     this.http

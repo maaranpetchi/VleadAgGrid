@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,17 +9,6 @@
     <title>Document</title>
 </head>
 <body>
-    <div class="container">
-        <ssrs-reportviewer
-            [reportserver]="reportServer"
-            [reporturl]="reportUrl"
-            [showparameters]="showParameters" 
-            [parameters]="parameters" 
-            [language]="language" 
-            [width] ="width" 
-            [height]="height" 
-            [toolbar]="toolbar" >
-        </ssrs-reportviewer>
-    </div>
+    <iframe [src]="pdfurl" width="1000" height="1000"></iframe>
 </body>
 </html>

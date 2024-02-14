@@ -127,6 +127,9 @@ import { AddeditBillingComponent } from 'src/app/Components/BillingCycleMonthly/
 import { UpdateBillingComponent } from 'src/app/Components/BillingCycleMonthly/update-billing/update-billing.component';
 import { SSRSReportViewerComponent } from 'src/app/Components/AccountsController/Invoice/SSRS-REPORTVIEWER/ssrsreport-viewer/ssrsreport-viewer.component';
 import { ActionsCellRendererComponent } from 'src/app/Components/TopToolbarComponents/ClientCordination/ClientOrder/actions-cell-renderer/actions-cell-renderer.component';
+import { EmpskillactionrenderingComponent } from 'src/app/Components/EmployeeVSSkillset/empskillactionrendering/empskillactionrendering.component';
+import { customernormsrenderingcomponent } from 'src/app/Components/CustomerNorms/customernormsindex/customerNormsRendering.component';
+import { ViewActionRenderingComponent } from 'src/app/Components/AccountsController/CustomerReceipts/view-action-rendering/view-action-rendering.component';
 
 //Routing to another components 
 const routes: Routes = [
@@ -223,6 +226,7 @@ const routes: Routes = [
       { path: 'acc-customer', component: CustomerreceiptsindexComponent, canActivate: [authGuard] },
       { path: 'acc-viewcustomer', component: AddEditCustomerreceiptsComponent, canActivate: [authGuard] },
       { path: 'addreceivables', component: AddReceivablesComponent, canActivate: [authGuard] },
+      { path: 'viewAction', component: ViewActionRenderingComponent, canActivate: [authGuard] },
       //ScopeChange
       { path: 'acc-scopechange', component: ScopechangeComponent, canActivate: [authGuard] },
       //Advance-Adjustment
@@ -252,7 +256,6 @@ const routes: Routes = [
       { path: 'acc-confirminvoice', component: ConfirminvoiceComponent, canActivate: [authGuard] },
       { path: 'acc-popupinvoice', component: PopupinvoiceComponent, canActivate: [authGuard]    },
       { path: 'acc-SSRS', component: SSRSReportViewerComponent, canActivate: [authGuard]   },
-
       // Master Order
       { path: 'master-user', component: UserMasterComponent, canActivate: [authGuard] },
       // Scope
@@ -353,6 +356,7 @@ const routes: Routes = [
       { path: 'addeditskillset', component: AddEditSkillsetComponent, canActivate: [authGuard] },
       { path: 'viewskillset', component: ViewSkillsetComponent, canActivate: [authGuard] },
       { path: 'updateskillset', component: UpdateSkillSetComponent, canActivate: [authGuard] },
+      { path: 'empskillaction', component: EmpskillactionrenderingComponent, canActivate: [authGuard] },
 
 
       //JOBFILESLOCATIONMASTER
@@ -362,6 +366,7 @@ const routes: Routes = [
       { path: 'customerNorms', component: CustomernormsindexComponent, canActivate: [authGuard] },
       { path: 'addcustomerNorms', component: AddCustomerNormsComponent, canActivate: [authGuard] },
       { path: 'updatecustomerNorms', component: UpdateCustomerNormsComponent, canActivate: [authGuard] },
+      { path: 'customerNormsrendering', component: customernormsrenderingcomponent, canActivate: [authGuard] },
 
 
       //Attendance

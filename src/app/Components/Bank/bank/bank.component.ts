@@ -9,6 +9,8 @@ import { LoginService } from 'src/app/Services/Login/login.service';
 import { SpinnerService } from '../../Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { catchError } from 'rxjs';
+import { GridApi, ColDef, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { EmpskillactionrenderingComponent } from '../../EmployeeVSSkillset/empskillactionrendering/empskillactionrendering.component';
 
 
 @Component({
@@ -23,6 +25,7 @@ export class BankComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+context: any = "Bank";
 
   constructor(private http: HttpClient, private loginservice: LoginService, private coreservice: CoreService, private spinnerService: SpinnerService) { }
   ngOnInit(): void {
@@ -93,9 +96,8 @@ export class BankComponent implements OnInit {
     })).subscribe({
       next: (data) => {
         this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(data.getBDetailList);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.rowData = data.getBDetailList;
+      
       },
       error: (err) => {
         this.spinnerService.resetSpinner(); // Reset spinner on error
@@ -137,4 +139,59 @@ export class BankComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+  /////////////////////////Ag-grid module///////////////////////////////
+  @ViewChild('agGrid') agGrid: any;
+
+  private gridApi!: GridApi<any>;
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+
+  columnDefs: ColDef[] = [
+    { headerName: 'Bank Name ', field: 'bankName', filter: true, },
+    { headerName: 'Closing Date ', field: 'closingDate', filter: true, },
+    { headerName: 'Closing Balance', field: 'closingBalance', filter: true, },
+    
+  ];
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData!: any[];
+  public themeClass: string =
+    "ag-theme-quartz";
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+    this.http.get<any>(environment.apiURL + 'ITAsset/nGetBankDetails').subscribe((response) => (this.rowData = response.getBDetailList));
+  }
+
+  handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {
+    console.log(params, "Parameter");
+    console.log(params.data, "ParameterData");
+    let parameterData = params.data
+    if (params.colDef.field === 'filecount') { // Check if the changed column is 'price'
+
+    }
+  }
+
+
+  handlePress(newvalue, parameterData) {
+    console.log(newvalue, "HandlepressNewValue");
+    console.log(parameterData, "ParameterValue");
+
+  }
+
+
+}
+
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
 }

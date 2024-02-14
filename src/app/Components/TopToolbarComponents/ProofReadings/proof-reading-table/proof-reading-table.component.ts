@@ -16,6 +16,14 @@ import { ProofjobhistorypopupComponent } from '../proofjobhistorypopup/proofjobh
 import { QualityWorkflowComponent } from '../../Quality/quality-workflow/quality-workflow.component';
 import Swal from 'sweetalert2/src/sweetalert2.js';
 import { catchError } from 'rxjs';
+import { GridApi, ColDef, CellClickedEvent, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { ClientordinationindexComponent } from '../../ClientCordination/clientordinationindex/clientordinationindex.component';
+import { actionrendering } from '../../Production/actionrendering.component';
+import { bulkuploadrendering } from '../../Production/bulkuploadrendering.component';
+import { EndRenderingComponent } from '../../Production/endrendering.component';
+import { StartRenderingComponent } from '../../Production/startrendering.component';
+import { workflowrendering } from '../../Production/workflowrendering.component';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 
 
 @Component({
@@ -69,6 +77,7 @@ export class ProofReadingTableComponent implements OnInit {
     'end': true,
     'bulkupload': true
   };
+  columnApi: any;
 
   visibility() {
     let result: string[] = [];
@@ -147,7 +156,7 @@ export class ProofReadingTableComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private spinnerService: SpinnerService, private loginservice: LoginService, private http: HttpClient, private proofReadingService: ProofReadingService, private proofreadingcomponent: ProofreadingComponent,private dialog:MatDialog) { }
+  constructor(private spinnerService: SpinnerService, private loginservice: LoginService, private http: HttpClient, private proofReadingService: ProofReadingService, private proofreadingcomponent: ProofreadingComponent,private dialog:MatDialog,private sharedDataService:SharedService) { }
 
   ngOnInit(): void {
     // //ScopeDropdown
@@ -215,9 +224,7 @@ export class ProofReadingTableComponent implements OnInit {
     ).subscribe({
       next: (freshJobs) => {
         this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(freshJobs.getWorkflowDetails);
-        // this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+        this.rowData = freshJobs.getWorkflowDetails;
       },
       error: (err) => {
         this.spinnerService.resetSpinner();
@@ -243,9 +250,8 @@ export class ProofReadingTableComponent implements OnInit {
     ).subscribe({
       next: (revisionJobs) => {
         this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(revisionJobs.getWorkflowDetails);
-        // this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+        this.rowData = revisionJobs.getWorkflowDetails;
+
       },
       error: (err) => {
         this.spinnerService.resetSpinner();
@@ -268,9 +274,8 @@ export class ProofReadingTableComponent implements OnInit {
     ).subscribe({
       next: (reworkJobs) => {
         this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(reworkJobs.getWorkflowDetails);
-        // this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+        this.rowData = reworkJobs.getWorkflowDetails;
+
       },
       error: (err) => {
         this.spinnerService.resetSpinner();
@@ -293,9 +298,8 @@ export class ProofReadingTableComponent implements OnInit {
     ).subscribe({
       next: (quoteJobs) => {
         this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(quoteJobs.getWorkflowDetails);
+        this.rowData = quoteJobs.getWorkflowDetails;
         // this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
       },
       error: (err) => {
         this.spinnerService.resetSpinner();
@@ -325,9 +329,8 @@ export class ProofReadingTableComponent implements OnInit {
     ).subscribe({
       next: (bulkJobs) => {
         this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(bulkJobs.getWorkflowDetails);
-        // this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+        this.rowData = bulkJobs.getWorkflowDetails;
+
       },
       error: (err) => {
         this.spinnerService.resetSpinner();
@@ -352,9 +355,8 @@ export class ProofReadingTableComponent implements OnInit {
     ).subscribe({
       next: (bulkUploadJobs) => {
         this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(bulkUploadJobs.getWorkflowDetails);
-        // this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+        this.rowData = bulkUploadJobs.getWorkflowDetails;
+
       },
       error: (err) => {
         console.log(err);
@@ -365,7 +367,7 @@ export class ProofReadingTableComponent implements OnInit {
     });
   }
 
-  selectedScope: string = "";
+  selectedScope:any;
   scopes: any[];
   scopeDropdown() {
     this.spinnerService.requestStarted();
@@ -496,5 +498,91 @@ BindPendingJobs() {
     'Rush': data.jobStatusId === 2 || data.jobStatusId === 4 || data.jobStatusId === 8
   };
 }
+/////////////////Start end workflow bulkupload/////////////////////
+
+
+
+context: any;
+
+@ViewChild('agGrid') agGrid: any;
+
+private gridApi!: GridApi<any>;
+
+
+public defaultColDef: ColDef = {
+  flex: 1,
+  minWidth: 100,
+  headerCheckboxSelection: isFirstColumn,
+  checkboxSelection: isFirstColumn,
+};
+columnDefs: ColDef[] = [
+  { headerName: 'Job Id', field: 'jobId', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
+
+  { headerName: 'EST Job/Query Date', field: 'jobDateQueryDate', filter: true, },
+  { headerName: 'Actions', cellRenderer: actionrendering, field: 'actions', filter: true, },// Use cellRenderer for customization},
+  { headerName: 'Client', field: 'shortName', filter: true, },
+  { headerName: 'Customer Classification', field: 'customerClassification', filter: true, },
+  { headerName: 'File Name', field: 'fileName', filter: true, },
+  { headerName: 'File Inward Mode', field: 'fileInwardType', filter: true, },
+  { headerName: 'Scope', field: 'scopeDesc', filter: true, },
+  { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
+  { headerName: 'Project Code', field: 'projectCode', filter: true, },
+  { headerName: 'Allocated By', field: 'employeeName ', filter: true, },
+  { headerName: 'Process Status', field: 'workStatus', filter: true, },
+  { headerName: 'Est Time', field: 'estimatedTime', filter: true, },
+  { headerName: 'Job Category', field: 'jobCategoryDesc', filter: true, },
+  { headerName: 'DeliveryDate', field: 'dateofDelivery ', filter: true, },
+  { headerName: 'start', cellRenderer: StartRenderingComponent, field: 'start', filter: true, },
+  { headerName: 'Workfiles', cellRenderer: workflowrendering, field: 'workfiles', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
+  { headerName: 'End', cellRenderer: EndRenderingComponent, field: 'end', filter: true, },
+  { headerName: 'Bulk Upload', cellRenderer: bulkuploadrendering, field: 'bulkupload', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
+
+];
+
+public rowSelection: 'single' | 'multiple' = 'multiple';
+public rowData!: any[];
+public themeClass: string =
+  "ag-theme-quartz";
+@ViewChild(ClientordinationindexComponent) ClientordinationindexComponent: ClientordinationindexComponent;
+
+
+onDivisionChange() {
+  console.log(this.selectedScope, "SelectDivi");
+
+  this.sharedDataService.setData(this.selectedScope);
 }
+
+
+
+
+onCellClicked(event: CellClickedEvent) {
+  const { colDef, data } = event;
+  if (colDef.field === 'jobId') {
+    console.log(data, "PopupData");
+
+    this.getProductionJob(data);
+  }
+
+}
+
+onGridReady(params: GridReadyEvent<any>) {
+  this.gridApi = params.api;
+  this.columnApi = params.columnApi;
+ 
+  this.http.get<any>(environment.apiURL + `Allocation/getWorkflowJobList/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`).subscribe((response) => (this.rowData = response.getWorkflowDetails));
+  this.freshJobs();
+
+}
+}
+
+function isFirstColumn(
+params:
+  | CheckboxSelectionCallbackParams
+  | HeaderCheckboxSelectionCallbackParams
+) {
+var displayedColumns = params.api.getAllDisplayedColumns();
+var thisIsFirstColumn = displayedColumns[0] === params.column;
+return thisIsFirstColumn;
+}
+
 

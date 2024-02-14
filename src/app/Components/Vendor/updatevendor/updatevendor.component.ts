@@ -11,6 +11,7 @@ import { SpinnerService } from '../../Spinner/spinner.service';
 import { catchError } from 'rxjs';
 import { Router } from '@angular/router';
 import { error } from 'jquery';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 
 @Component({
   selector: 'app-updatevendor',
@@ -29,6 +30,7 @@ export class UpdatevendorComponent implements OnInit {
     public sharedService: VendorService,
     private http: HttpClient,
     private router: Router,
+    private sharedDataService:SharedService,
     private _dialogRef: MatDialogRef<UpdatevendorComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _coreService: CoreService
@@ -76,10 +78,12 @@ export class UpdatevendorComponent implements OnInit {
           'Done!',
           'Employee added successfully',
           'success'
-        )
-        window.location.reload()
-
-        this._dialogRef.close();
+        ).then((res)=>{
+          if(res.isConfirmed){
+            this.sharedDataService.triggerRefresh();
+            this._dialogRef.close();
+          }
+        })
       },
       error: (err: any) => {
         this.spinnerService.resetSpinner();
@@ -168,8 +172,8 @@ export class UpdatevendorComponent implements OnInit {
         'success'
       ).then((response) => {
         if (response.isConfirmed) {
+          this.sharedDataService.triggerRefresh();
           this._dialogRef.close();
-          window.location.reload();
         }
       },(error)=>{
         Swal.fire(
@@ -178,8 +182,8 @@ export class UpdatevendorComponent implements OnInit {
           'error'
         ).then((response)=>{
           if (response.isConfirmed) {
+            this.sharedDataService.triggerRefresh();
             this._dialogRef.close();
-            window.location.reload();
           }
         })
       })

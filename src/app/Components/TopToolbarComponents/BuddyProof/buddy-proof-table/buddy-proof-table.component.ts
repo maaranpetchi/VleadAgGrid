@@ -15,6 +15,14 @@ import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { catchError } from 'rxjs';
 import { error } from 'jquery';
 import Swal from 'sweetalert2/src/sweetalert2.js'
+import { GridApi, ColDef, CellClickedEvent, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { ClientordinationindexComponent } from '../../ClientCordination/clientordinationindex/clientordinationindex.component';
+import { actionrendering } from '../../Production/actionrendering.component';
+import { bulkuploadrendering } from '../../Production/bulkuploadrendering.component';
+import { EndRenderingComponent } from '../../Production/endrendering.component';
+import { StartRenderingComponent } from '../../Production/startrendering.component';
+import { workflowrendering } from '../../Production/workflowrendering.component';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 
 @Component({
   selector: 'app-buddy-proof-table',
@@ -49,8 +57,9 @@ export class BuddyProofTableComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  columnApi: any;
 
-  constructor(private http: HttpClient, private buddyService: BuddyProofService, private buddyproofcomponent: BuddyProofComponent, private loginservice: LoginService, private sewOutService: SewOutService, private _coreService: CoreService, private router: Router, private workflowservice: WorkflowService, private spinnerservice: SpinnerService) { }
+  constructor(private http: HttpClient, private buddyService: BuddyProofService, private buddyproofcomponent: BuddyProofComponent, private loginservice: LoginService, private sewOutService: SewOutService, private _coreService: CoreService, private router: Router, private workflowservice: WorkflowService, private spinnerservice: SpinnerService,private sharedDataService:SharedService) { }
 
   ngOnInit(): void {
     //maintable
@@ -124,9 +133,7 @@ export class BuddyProofTableComponent implements OnInit {
     this.spinnerservice.requestStarted();
     this.buddyService.getTabValue1().subscribe(freshJobs => {
       this.spinnerservice.requestEnded();
-      this.dataSource = new MatTableDataSource(freshJobs.getWorkflowDetails);
-      this.dataSource.paginator = this.paginator;
-      // this.dataSource.sort = this.sort;
+      this.rowData = freshJobs.getWorkflowDetails;
       this.displayScopeDropdown = false;
     });
   }
@@ -134,9 +141,7 @@ export class BuddyProofTableComponent implements OnInit {
     this.spinnerservice.requestStarted();
     this.buddyService.getTabValue2().subscribe(revisionJobs => {
       this.spinnerservice.requestEnded();
-      this.dataSource = new MatTableDataSource(revisionJobs.getWorkflowDetails);
-      this.dataSource.paginator = this.paginator;
-      // this.dataSource.sort = this.sort;
+      this.rowData = revisionJobs.getWorkflowDetails;
       this.displayScopeDropdown = false;
     });
   }
@@ -144,9 +149,7 @@ export class BuddyProofTableComponent implements OnInit {
     this.spinnerservice.requestStarted();
     this.buddyService.getTabValue3().subscribe(reworkJobs => {
       this.spinnerservice.requestEnded();
-      this.dataSource = new MatTableDataSource(reworkJobs.getWorkflowDetails);
-      this.dataSource.paginator = this.paginator;
-      // this.dataSource.sort = this.sort;
+      this.rowData = reworkJobs.getWorkflowDetails;
       this.displayScopeDropdown = false;
     });
   }
@@ -154,9 +157,7 @@ export class BuddyProofTableComponent implements OnInit {
     this.spinnerservice.requestStarted();
     this.buddyService.getTabValue4().subscribe(quoteJobs => {
       this.spinnerservice.requestEnded();
-      this.dataSource = new MatTableDataSource(quoteJobs.getWorkflowDetails);
-      this.dataSource.paginator = this.paginator;
-      // this.dataSource.sort = this.sort;
+      this.rowData = quoteJobs.getWorkflowDetails;
       this.displayScopeDropdown = false;
     });
   }
@@ -164,9 +165,7 @@ export class BuddyProofTableComponent implements OnInit {
     this.spinnerservice.requestStarted();
     this.buddyService.getTabValue5().subscribe(sewOut => {
       this.spinnerservice.requestEnded();
-      this.dataSource = new MatTableDataSource(sewOut.getWorkflowDetails);
-      this.dataSource.paginator = this.paginator;
-      // this.dataSource.sort = this.sort;
+      this.rowData =sewOut.getWorkflowDetails;
       this.displayScopeDropdown = false;
 
     });
@@ -177,9 +176,7 @@ export class BuddyProofTableComponent implements OnInit {
     this.spinnerservice.requestStarted();
     this.buddyService.getTabValue6().subscribe(bulkJobs => {
       this.spinnerservice.requestEnded();
-      this.dataSource = new MatTableDataSource(bulkJobs.getWorkflowDetails);
-      this.dataSource.paginator = this.paginator;
-      // this.dataSource.sort = this.sort;
+      this.rowData = bulkJobs.getWorkflowDetails;
       this.displayScopeDropdown = true;
     });
   }
@@ -187,9 +184,7 @@ export class BuddyProofTableComponent implements OnInit {
     this.spinnerservice.requestStarted();
     this.buddyService.getTabValue7().subscribe(bulkUploadJobs => {
       this.spinnerservice.requestEnded();
-      this.dataSource = new MatTableDataSource(bulkUploadJobs.getWorkflowDetails);
-      this.dataSource.paginator = this.paginator;
-      // this.dataSource.sort = this.sort;
+      this.rowData = bulkUploadJobs.getWorkflowDetails;
       this.displayScopeDropdown = false;
 
     });
@@ -213,7 +208,7 @@ export class BuddyProofTableComponent implements OnInit {
 
   lnkviewedit(data) {
 
-console.log(data,"BulkData");
+    console.log(data, "BulkData");
 
 
     if (data.processId == 8 || data.processId == 10) {
@@ -290,8 +285,8 @@ console.log(data,"BulkData");
       })).subscribe(result => {
         this.spinnerservice.requestEnded();
         if (result.Success == true) {
-          console.log(result,"ProcessId9");
-          
+          console.log(result, "ProcessId9");
+
           localStorage.setItem("WFTId", result.wftId);
           localStorage.setItem("WFMId", result.wfmid);
           localStorage.setItem("JId", data.JId);
@@ -301,7 +296,7 @@ console.log(data,"BulkData");
           this.router.navigate(['/topnavbar/qualityworkflow']);
         }
         else {
-          if(result.success == true){
+          if (result.success == true) {
             localStorage.setItem("WFTId", result.wftId);
             localStorage.setItem("WFMId", result.wfmid);
             localStorage.setItem("JId", data.JId);
@@ -309,13 +304,13 @@ console.log(data,"BulkData");
             this.workflowservice.setData(data);
             this.router.navigate(['/topnavbar/qualityworkflow']);
           }
-        else{
-          Swal.fire('info',result.message,'info').then((res)=>{
-            if(res.isConfirmed){
-              this.BindPendingJobs();
-            }
-          });
-        }
+          else {
+            Swal.fire('info', result.message, 'info').then((res) => {
+              if (res.isConfirmed) {
+                this.BindPendingJobs();
+              }
+            });
+          }
         }
       });
     }
@@ -350,18 +345,82 @@ console.log(data,"BulkData");
 
 
 
-   //textcolor
-   getCellClass(data) {
-    
-    return {
-      'text-color-green': data.employeeCount === 1,
-      'text-color-brown': data.queryJobDate !== null,
-      'text-color-blue': data.employeeCount > 1,
-      'text-color-DeepSkyBlue': data.customerJobType === 'Trial',
-      'text-color-yellow': data.statusId === 10,
-      'text-color-red': data.statusId === 11,
-      'SuperRush': data.jobStatusId === 1 || data.jobStatusId === 3 || data.jobStatusId === 7,
-      'Rush': data.jobStatusId === 2 || data.jobStatusId === 4 || data.jobStatusId === 8
-    };
+
+  /////////////////Start end workflow bulkupload/////////////////////
+
+
+  context: any;
+
+  @ViewChild('agGrid') agGrid: any;
+
+  private gridApi!: GridApi<any>;
+
+
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+  columnDefs: ColDef[] = [
+    { headerName: 'Job Id', field: 'jobId', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
+
+    { headerName: 'EST Job/Query Date', field: 'estjobDate', filter: true, },
+    { headerName: 'Actions', cellRenderer: actionrendering, field: 'actions', filter: true, },// Use cellRenderer for customization},
+    { headerName: 'Client', field: 'shortName', filter: true, },
+    { headerName: 'Customer Classification', field: 'customerClassification', filter: true, },
+    { headerName: 'File Name', field: 'fileName', filter: true, },
+    { headerName: 'File Inward Mode', field: 'fileInwardType', filter: true, },
+    { headerName: 'Scope', field: 'scopeDesc', filter: true, },
+    { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
+    { headerName: 'Project Code', field: 'projectCode', filter: true, },
+    { headerName: 'Allocated By', field: 'employeeName', filter: true, },
+    { headerName: 'Artist Name', field: 'employeeName', filter: true, },
+    { headerName: 'Process Status', field: 'workStatus', filter: true, },
+    { headerName: 'Est Time', field: 'estimatedTime', filter: true, },
+    { headerName: 'Job Category', field: 'jobCategoryDesc', filter: true, },
+    { headerName: 'DeliveryDate', field: 'dateofDelivery ', filter: true, },
+  ];
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData!: any[];
+  public themeClass: string =
+    "ag-theme-quartz";
+  @ViewChild(ClientordinationindexComponent) ClientordinationindexComponent: ClientordinationindexComponent;
+
+
+  onDivisionChange() {
+    console.log(this.selectedScope, "SelectDivi");
+
+    this.sharedDataService.setData(this.selectedScope);
   }
+
+
+
+
+  onCellClicked(event: CellClickedEvent) {
+    const { colDef, data } = event;
+    if (colDef.field === 'jobId') {
+      console.log(data, "PopupData");
+
+    }
+
+  }
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+    this.columnApi = params.columnApi;
+    this.freshJobs();
+
+  }
+}
+
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
 }

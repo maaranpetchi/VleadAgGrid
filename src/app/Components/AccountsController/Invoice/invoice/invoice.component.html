@@ -60,6 +60,7 @@
                         <div class="button">
                           <button class="btn btn-primary"  mat-raised-button color="primary">Search</button>
                         </div>
+                <h3 class="selectedRecord">Selected Jobs For Invoice: {{this.SelectedListItem}} </h3>
 
                       </div>
                     </div>
@@ -68,193 +69,12 @@
               </div>
 
               <div class="table-container">
-                <h3 class="selectedRecord">Selected Jobs For Invoice: {{this.SelectedListItem}} </h3>
-                <table mat-table class="table table-sm table-responsive" id="custom-table" [dataSource]="dataSource"
-                   class="table table-sm">
-
-                  <!--Checkbox to select the values-->
-                  <ng-container matColumnDef="selected">
-                    <th  mat-header-cell *matHeaderCellDef>
-                      <mat-checkbox (change)="$event ? masterToggle() : null"
-                                    [checked]="selection.hasValue() && isAllSelected()"
-                                    [indeterminate]="selection.hasValue() && !isAllSelected()">
-                      </mat-checkbox>
-                    </th>
-                    <td mat-cell *matCellDef="let row">
-                      <mat-checkbox (click)="$event.stopPropagation()"
-                                    (change)="$event ? selection.toggle(row) : null"
-                                    [checked]="selection.isSelected(row)">
-                      </mat-checkbox>
-                    </td>
-                  </ng-container>
-                  <!-- ID Column -->
-                  <ng-container matColumnDef="Client">
-                    <th mat-header-cell *matHeaderCellDef >
-                      <div class="header-wrapper">
-                        <div class="department-name text-start">Client</div>
-                        <div class="filter-input">
-                          <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                        </div>
-                      </div>
-                    </th>
-                    <td mat-cell *matCellDef="let row"> {{row.shortName}} </td>
-                  </ng-container>
-
-                  <!-- Progress Column -->
-                  <ng-container matColumnDef="Jobid">
-                    <th mat-header-cell *matHeaderCellDef >
-                      <div class="header-wrapper">
-                        <div class="department-name text-start">Job Id</div>
-                        <div class="filter-input">
-                          <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                        </div>
-                      </div>
-                    </th>
-                    <td mat-cell *matCellDef="let row"> {{row.jobId}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="Jobdate">
-                    <th mat-header-cell *matHeaderCellDef >
-                      <div class="header-wrapper">
-                        <div class="department-name text-start">Job Date</div>
-                        <div class="filter-input">
-                          <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                        </div>
-                      </div>
-                    </th>
-                    <td mat-cell *matCellDef="let row"> {{row.jobId}}</td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="FileName">
-                    <th mat-header-cell *matHeaderCellDef >
-                      <div class="header-wrapper">
-                        <div class="department-name text-start">File Name</div>
-                        <div class="filter-input">
-                          <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                        </div>
-                      </div>
-                    </th>
-                    <td mat-cell *matCellDef="let row"> {{row.fileName}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="ProjectCode">
-                    <th mat-header-cell *matHeaderCellDef >
-                      <div class="header-wrapper">
-                        <div class="department-name text-start">Project Code</div>
-                        <div class="filter-input">
-                          <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                        </div>
-                      </div>
-                    </th>
-                    <td mat-cell *matCellDef="let row"> {{row.projectCode}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="Department">
-                    <th mat-header-cell *matHeaderCellDef >
-                      <div class="header-wrapper">
-                        <div class="department-name text-start">Department</div>
-                        <div class="filter-input">
-                          <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                        </div>
-                      </div>
-                    </th>
-                    <td mat-cell *matCellDef="let row"> {{row.departmentId}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="JobStatus">
-                    <th mat-header-cell *matHeaderCellDef >
-                      <div class="header-wrapper">
-                        <div class="department-name text-start">Job Status</div>
-                        <div class="filter-input">
-                          <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                        </div>
-                      </div>
-                    </th>
-                    <td mat-cell *matCellDef="let row"> {{row.jobStatusDescription}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="scope">
-                    <th mat-header-cell *matHeaderCellDef >
-                      <div class="header-wrapper">
-                        <div class="department-name text-start">Scope</div>
-                        <div class="filter-input">
-                          <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                        </div>
-                      </div>
-                    </th>
-                    <td mat-cell *matCellDef="let row"> {{row.description}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="StitchCount">
-                    <th mat-header-cell *matHeaderCellDef >
-                      <div class="header-wrapper">
-                        <div class="department-name text-start">Stitch Count</div>
-                        <div class="filter-input">
-                          <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                        </div>
-                      </div>
-                    </th>
-                    <td mat-cell *matCellDef="let row"> {{row.stitchCount}}</td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="estimatedtime">
-                    <th mat-header-cell *matHeaderCellDef >
-                      <div class="header-wrapper">
-                        <div class="department-name text-start">Estimated Time</div>
-                        <div class="filter-input">
-                          <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                        </div>
-                      </div>
-                    </th>
-                    <td mat-cell *matCellDef="let row"> {{row.estimatedTime}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="rate">
-                    <th mat-header-cell *matHeaderCellDef >
-                      <div class="header-wrapper">
-                        <div class="department-name text-start">Rate</div>
-                        <div class="filter-input">
-                          <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                        </div>
-                      </div>
-                    </th>
-                    <td mat-cell *matCellDef="let row"> {{row.specialPrice}}</td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="ESTFileReceivedDate">
-                    <th mat-header-cell *matHeaderCellDef >
-                      <div class="header-wrapper">
-                        <div class="department-name text-start">EST File Received Date</div>
-                        <div class="filter-input">
-                          <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                        </div>
-                      </div>
-                    </th>
-                    <td mat-cell *matCellDef="let row"> {{row.estFileReceivedDate}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="ESTDateofUpload">
-                    <th mat-header-cell *matHeaderCellDef >
-                      <div class="header-wrapper">
-                        <div class="department-name text-start">ESTDateofUpload</div>
-                        <div class="filter-input">
-                          <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                        </div>
-                      </div>
-                    </th>
-                    <td mat-cell *matCellDef="let row"> {{row.estDateofUpload}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="nonbillableupload">
-                    <th mat-header-cell *matHeaderCellDef >
-                      <div class="header-wrapper">
-                        <div class="department-name text-start">Non-Billable </div>
-                        <div class="filter-input">
-                          <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                        </div>
-                      </div>
-                    </th>
-                    <td mat-cell *matCellDef="let row"> {{row.nonBillable ? row.nonBillable:''}}</td>
-                  </ng-container>
-
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-
-                </table>
+                <ag-grid-angular style="width: 100%; height: 100%;" [context]="context" [columnDefs]="table1def"
+                [defaultColDef]="defaultColDef"   (selectionChanged)="onSelectionChanged()"
+                [suppressRowClickSelection]="true" [rowSelection]="rowSelection"
+                [rowData]="rowData" [pagination]="true" [class]="themeClass" (gridReady)="onGridReady1($event)"
+                (cellValueChanged)="handleCellValueChanged($event)" frameworkComponents="{ }"></ag-grid-angular>
               </div>
-              <mat-paginator #table1Paginator [pageSizeOptions]="[25, 50, 75,100]" showFirstLastButtons></mat-paginator>
             </div>
           </div>
           <div class="matbuttonaign">
@@ -288,7 +108,6 @@
                           </mat-option>
                         </mat-select>
                       </mat-form-field>
-
                     </div>
                   </div>
 
@@ -303,195 +122,15 @@
 
 
             <div class="table-container">
-              <table mat-table [dataSource]="GenratedInvoicedataSource"  class="table table-sm table-responsive"
-                id="custom-table">
+              <ag-grid-angular style="width: 100%; height: 100%;" [context]="context" [columnDefs]="table2def"
+                [defaultColDef]="table2defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="table2rowSelection"
+                [rowData]="table2rowData" [pagination]="true" [class]="themeClass" (gridReady)="onGridReady2($event)"
+                (cellValueChanged)="handleCellValueChanged($event)" frameworkComponents="{ }"></ag-grid-angular>
 
-                <!--Checkbox to select the values-->
-                <ng-container matColumnDef="selected">
-                  <th  mat-header-cell *matHeaderCellDef>
-                    <mat-checkbox (change)="$event ? emplMasterToggle() : null"
-                                  [checked]="selection1.hasValue() && isEmplSelected()"
-                                  [indeterminate]="selection1.hasValue() && !isEmplSelected()">
-                    </mat-checkbox>
-                  </th>
-                  <td mat-cell *matCellDef="let row">
-                    <mat-checkbox (click)="$event.stopPropagation()"
-                                  (change)="$event ? selection1.toggle(row) : null"
-                                  [checked]="selection1.isSelected(row)">
-                    </mat-checkbox>
-                  </td>
-                </ng-container>
-                <!-- ID Column -->
-                <ng-container matColumnDef="Client">
-                  <th mat-header-cell *matHeaderCellDef >
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">Client</div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.shortName}} </td>
-                </ng-container>
-
-                <!-- Progress Column -->
-                <ng-container matColumnDef="JobId">
-                  <th mat-header-cell *matHeaderCellDef >
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">Job ID</div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.jobId}}</td>
-                </ng-container>
-                <ng-container matColumnDef="JobDate">
-                  <th mat-header-cell *matHeaderCellDef >
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">JobDate</div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.estJobDate}}</td>
-                </ng-container>
-
-                <ng-container matColumnDef="FileName">
-                  <th mat-header-cell *matHeaderCellDef >
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">File Name</div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.fileName}}</td>
-                </ng-container>
-                <ng-container matColumnDef="ProjectCode">
-                  <th mat-header-cell *matHeaderCellDef >
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">Project Code</div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.projectCode}}</td>
-                </ng-container>
-                <ng-container matColumnDef="Department">
-                  <th mat-header-cell *matHeaderCellDef >
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">Department</div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.department}}</td>
-                </ng-container>
-                <ng-container matColumnDef="JobStatus">
-                  <th mat-header-cell *matHeaderCellDef >
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">Job Status</div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.jobStatusDescription}}</td>
-                </ng-container>
-                <ng-container matColumnDef="Scope">
-                  <th mat-header-cell *matHeaderCellDef >
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">Scope</div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.scopeDesc}}</td>
-                </ng-container>
-                <ng-container matColumnDef="StitchCount">
-                  <th mat-header-cell *matHeaderCellDef >
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">StitchCount</div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.stitchCount}}</td>
-                </ng-container>
-
-                <ng-container matColumnDef="EstimatedTime">
-                  <th mat-header-cell *matHeaderCellDef >
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">EstimatedTime</div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.estimatedTime}}</td>
-                </ng-container>
-                <ng-container matColumnDef="PricingType">
-                  <th mat-header-cell *matHeaderCellDef >
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">PricingType</div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.description}}</td>
-                </ng-container>
-
-                <ng-container matColumnDef="ESTFileReceived">
-                  <th mat-header-cell *matHeaderCellDef >
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">ESTFileReceivedDate</div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.estFileReceivedDate}}</td>
-                </ng-container>
-                <ng-container matColumnDef="ESTDateofUpload">
-                  <th mat-header-cell *matHeaderCellDef >
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">EST Date of upload</div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.estDateofUpload}}</td>
-                </ng-container>
-                <ng-container matColumnDef="Rate">
-                  <th mat-header-cell *matHeaderCellDef >
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">Rate</div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.rate}}</td>
-                </ng-container>
-
-                <tr mat-header-row *matHeaderRowDef="displayedGenaratedInvoiceColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedGenaratedInvoiceColumns;"></tr>
-
-
-              </table>
 
             </div>
             <p class="Rate">Total Rate:{{this.totalRate}}</p>
 
-            <mat-paginator #table2Paginator [pageSizeOptions]="[25, 50, 75,100]" showFirstLastButtons></mat-paginator>
             <div class="footerButtons"
               style="display: flex;align-items: center;justify-content: center;gap:20px;padding:20px">
               <button class="btn btn-success" (click)="btnSubmitRecalculate()">Move To Details</button>
@@ -521,231 +160,27 @@
                 <div class="container1">
                   <div class="row">
                     <div class="col">
+                      <!-- <mat-form-field appearance="fill">
+                        <mat-label>Client</mat-label>
+                        <mat-select ngDefaultControl formControlName="ClientId">
+                          <mat-option *ngFor="let Client of data.clientList" [value]="Client.id">
+                            {{Client.shortName}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field> -->
                     </div>
                   </div>
                 </div>
 
                 <div class="table-container">
-                  <table mat-table [dataSource]="ConfirmInvoicedataSource" 
-                    class="table table-sm table-responsive" id="custom-table">
-
-                    <!--Checkbox to select the values-->
-                    <ng-container matColumnDef="selected">
-                      <th mat-header-cell *matHeaderCellDef>
-                        <mat-checkbox (change)="$event ? confcMasterToggle() : null"
-                                      [checked]="isConfirmSelected()"
-                                      [indeterminate]="selection3.hasValue() && !isConfirmSelected()">
-                        </mat-checkbox>
-                      </th>
-                      <td mat-cell *matCellDef="let row">
-                        <mat-checkbox (click)="$event.stopPropagation()"
-                                      (change)="$event ? setConfirmAll(row) : null"
-                                      [checked]="selection3.isSelected(row)">
-                        </mat-checkbox>
-                      </td>
-                    </ng-container>
-                    <!-- ID Column -->
-                    <ng-container matColumnDef="Client">
-                      <th mat-header-cell *matHeaderCellDef >
-                        <div class="header-wrapper">
-                          <div class="department-name text-start">Client</div>
-                          <div class="filter-input">
-                            <input matInput (keyup)="confirmFilter($event)" placeholder="Filter" #input>
-                          </div>
-                        </div>
-                      </th>
-                      <td mat-cell *matCellDef="let row"> <a style="color:rgb(47, 129, 170)">{{row.shortName}}</a> </td>
-                    </ng-container>
-
-                    <!-- Progress Column -->
-                    <ng-container matColumnDef="InvoiceNo">
-                      <th mat-header-cell *matHeaderCellDef >
-                        <div class="header-wrapper">
-                          <div class="department-name text-start">Invoice No</div>
-                          <div class="filter-input">
-                            <input matInput (keyup)="confirmFilter($event)" placeholder="Filter" #input>
-                          </div>
-                        </div>
-                      </th>
-                      <td mat-cell *matCellDef="let row"
-                        [ngClass]="{'disabled': row.discount !== 0 || row.isTallyIntegrated === 1}">
-                        <a style="color:skyblue;cursor: pointer;" (click)="openConfirmDialog(row)">
-                          {{row.invoiceNo}}</a>
-                      </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="InvoiceDate">
-                      <th mat-header-cell *matHeaderCellDef >
-                        <div class="header-wrapper">
-                          <div class="department-name text-start">InvoiceDate</div>
-                          <div class="filter-input">
-                            <input matInput (keyup)="confirmFilter($event)" placeholder="Filter" #input>
-                          </div>
-                        </div>
-                      </th>
-                      <td mat-cell *matCellDef="let row"> {{row.invoiceDate}}</td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="ProductValue">
-                      <th mat-header-cell *matHeaderCellDef >
-                        <div class="header-wrapper">
-                          <div class="department-name text-start">ProductValue</div>
-                          <div class="filter-input">
-                            <input matInput (keyup)="confirmFilter($event)" placeholder="Filter" #input>
-                          </div>
-                        </div>
-                      </th>
-                      <td mat-cell *matCellDef="let row"> {{row.productValue}}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="WaiverAmount">
-                      <th mat-header-cell *matHeaderCellDef >
-                        <div class="header-wrapper">
-                          <div class="department-name text-start">WaiverAmount</div>
-                          <div class="filter-input">
-                            <input matInput (keyup)="confirmFilter($event)" placeholder="Filter" #input>
-                          </div>
-                        </div>
-                      </th>
-                      <td mat-cell *matCellDef="let row"> {{row.waiver}}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="RoundOff">
-                      <th mat-header-cell *matHeaderCellDef >
-                        <div class="header-wrapper">
-                          <div class="department-name text-start">RoundOff</div>
-                          <div class="filter-input">
-                            <input matInput (keyup)="confirmFilter($event)" placeholder="Filter" #input>
-                          </div>
-                        </div>
-                      </th>
-                      <td mat-cell *matCellDef="let row"> {{row.roundOff}}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="ArtInvoiceAmount">
-                      <th mat-header-cell *matHeaderCellDef >
-                        <div class="header-wrapper">
-                          <div class="department-name text-start">ArtInvoiceAmount</div>
-                          <div class="filter-input">
-                            <input matInput (keyup)="confirmFilter($event)" placeholder="Filter" #input>
-                          </div>
-                        </div>
-                      </th>
-                      <td mat-cell *matCellDef="let row"> {{row.artInvoiceAmount}}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="DigiInvoiceAmount">
-                      <th mat-header-cell *matHeaderCellDef >
-                        <div class="header-wrapper">
-                          <div class="department-name text-start">DigiInvoiceAmount</div>
-                          <div class="filter-input">
-                            <input matInput (keyup)="confirmFilter($event)" placeholder="Filter" #input>
-                          </div>
-                        </div>
-                      </th>
-                      <td mat-cell *matCellDef="let row"> {{row.digiInvoiceAmount}}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="Invoice">
-                      <th mat-header-cell *matHeaderCellDef >
-                        <div class="header-wrapper">
-                          <div class="department-name text-start">Invoice</div>
-                          <div class="filter-input">
-                            <input matInput (keyup)="confirmFilter($event)" placeholder="Filter" #input>
-                          </div>
-                        </div>
-                      </th>
-                      <td mat-cell *matCellDef="let row"> {{row.invoiceValue}}</td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="Discount">
-                      <th mat-header-cell *matHeaderCellDef >
-                        <div class="header-wrapper">
-                          <div class="department-name text-start">Discount</div>
-                          <div class="filter-input">
-                            <input matInput (keyup)="confirmFilter($event)" placeholder="Filter" #input>
-                          </div>
-                        </div>
-                      </th>
-                      <td mat-cell *matCellDef="let row"> {{row.discount}}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="ArtPayableAmount">
-                      <th mat-header-cell *matHeaderCellDef >
-                        <div class="header-wrapper">
-                          <div class="department-name text-start">ArtPayableAmount</div>
-                          <div class="filter-input">
-                            <input matInput (keyup)="confirmFilter($event)" placeholder="Filter" #input>
-                          </div>
-                        </div>
-                      </th>
-                      <td mat-cell *matCellDef="let row"> {{row.artPayableAmount}}</td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="ArtFileCount">
-                      <th mat-header-cell *matHeaderCellDef >
-                        <div class="header-wrapper">
-                          <div class="department-name text-start">ArtFileCount</div>
-                          <div class="filter-input">
-                            <input matInput (keyup)="confirmFilter($event)" placeholder="Filter" #input>
-                          </div>
-                        </div>
-                      </th>
-                      <td mat-cell *matCellDef="let row"> {{row.artFileCount}}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="DigiPayableAmount">
-                      <th mat-header-cell *matHeaderCellDef >
-                        <div class="header-wrapper">
-                          <div class="department-name text-start">DigiPayableAmount</div>
-                          <div class="filter-input">
-                            <input matInput (keyup)="confirmFilter($event)" placeholder="Filter" #input>
-                          </div>
-                        </div>
-                      </th>
-                      <td mat-cell *matCellDef="let row"> {{row.digiPayableAmount}}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="DigiFileCount">
-                      <th mat-header-cell *matHeaderCellDef >
-                        <div class="header-wrapper">
-                          <div class="department-name text-start">DigiFileCount</div>
-                          <div class="filter-input">
-                            <input matInput (keyup)="confirmFilter($event)" placeholder="Filter" #input>
-                          </div>
-                        </div>
-                      </th>
-                      <td mat-cell *matCellDef="let row"> {{row.digiFileCount}}</td>
-                    </ng-container>
-
-
-                    <ng-container matColumnDef="Payable">
-                      <th mat-header-cell *matHeaderCellDef >
-                        <div class="header-wrapper">
-                          <div class="department-name text-start">Payable</div>
-                          <div class="filter-input">
-                            <input matInput (keyup)="confirmFilter($event)" placeholder="Filter" #input>
-                          </div>
-                        </div>
-                      </th>
-                      <td mat-cell *matCellDef="let row"> {{row.totalInvoiceValue}}</td>
-                    </ng-container>
-
-
-                    <ng-container matColumnDef="PaymentMode">
-                      <th mat-header-cell *matHeaderCellDef >
-                        <div class="header-wrapper">
-                          <div class="department-name text-start">PaymentMode</div>
-                          <div class="filter-input">
-                            <input matInput (keyup)="confirmFilter($event)" placeholder="Filter" #input>
-                          </div>
-                        </div>
-                      </th>
-                      <td mat-cell *matCellDef="let row"> {{row.paymentMode}}</td>
-                    </ng-container>
-
-                    <tr mat-header-row *matHeaderRowDef="displayedConfirmInvoiceColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedConfirmInvoiceColumns;"></tr>
-
-                    <!-- Row shown when there is no matching data. -->
-
-                  </table>
+                  <ag-grid-angular style="width: 100%; height: 100%;" [context]="context" [columnDefs]="table3def"
+                  [defaultColDef]="table3defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="table3rowSelection"
+                  [rowData]="table3rowData" [pagination]="true" [class]="themeClass" (gridReady)="onGridReady3($event)"       (cellClicked)="onCellClicked($event)"
+                  (cellValueChanged)="handleCellValueChanged($event)" frameworkComponents="{ }"></ag-grid-angular>
+  
 
                 </div>
-                <mat-paginator #table3Paginator [pageSizeOptions]="[25, 50,75,100]"
-                  aria-label="Select page of users"></mat-paginator>
+            
                 <div class="footerButtons" style="display: flex;align-items: center;justify-content: center;gap:20px">
                   <button  id="invoice-button" class="btn btn-success" (click)="openArtInvoice()">Art Invoice</button>
                   <div class="button-gap"></div>

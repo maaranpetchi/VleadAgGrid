@@ -313,7 +313,7 @@ export class QualityWorkflowComponent implements OnInit {
         // $('#checklistPopupup').modal('show');
         if (this.data.processName == 'Production') {   //        the below code 154 to 193 STARTS     
           if (this.Status == 'Query' || this.Status == 'Query for Special Pricing') {
-            if (this.AttachedFiles.length == 0 && this.CopyPreviousFiles == false) {
+            if (this.AttachedFiles.length == 0 && this.checked == false) {
               this.alertMessage = 'Please Copy Previous Files (or) Upload Files!';
               //  $('#alertPopup').modal('show');
             }
@@ -332,7 +332,7 @@ export class QualityWorkflowComponent implements OnInit {
           }
         }
         else if (this.data.processName == 'Quality') {
-          if (this.AttachedFiles.length == 0 && this.CopyPreviousFiles == false) {
+          if (this.AttachedFiles.length == 0 && this.checked == false) {
             this.alertMessage = 'Please Copy Previous Files (or) Upload Files!';
             //   $('#alertPopup').modal('show');
           }
@@ -342,7 +342,7 @@ export class QualityWorkflowComponent implements OnInit {
           }
         }
         else if (this.data.processName == 'Sew Out' || this.data.processName == 'Buddy Proof') {
-          if (this.AttachedFiles.length == 0 && this.CopyPreviousFiles == false && this.AttachedFiles1.length == 0) {
+          if (this.AttachedFiles.length == 0 && this.checked == false && this.AttachedFiles1.length == 0) {
             this.alertMessage = 'Please Copy Previous Files (or) Upload Files!';
             // $('#alertPopup').modal('show');
           }
@@ -352,7 +352,7 @@ export class QualityWorkflowComponent implements OnInit {
           }
         }
         else if (this.data.processName == 'Proof Reading') {
-          if (this.CopyPreviousFiles == false) {
+          if (this.checked == false) {
             this.alertMessage = 'Please Copy Previous Files!';
             //  $('#alertPopup').modal('show');
           }
@@ -369,7 +369,7 @@ export class QualityWorkflowComponent implements OnInit {
       else {
         if (this.data.processName == 'Production') {         //the below code 154 to 193 STARTS          
           if (this.Status == 'Query' || this.Status == 'Query for Special Pricing') {
-            if (this.AttachedFiles.length == 0 && this.CopyPreviousFiles == false) {
+            if (this.AttachedFiles.length == 0 && this.checked == false) {
               this.alertMessage = 'Please Copy Previous Files (or) Upload Files!';
               //   $('#alertPopup').modal('show');
             }
@@ -388,7 +388,7 @@ export class QualityWorkflowComponent implements OnInit {
           }
         }
         else if (this.data.processName == 'Quality') {
-          if (this.AttachedFiles.length == 0 && this.CopyPreviousFiles == false) {
+          if (this.AttachedFiles.length == 0 && this.checked == false) {
             this.alertMessage = 'Please Copy Previous Files (or) Upload Files!';
             //  $('#alertPopup').modal('show');
           }
@@ -398,7 +398,7 @@ export class QualityWorkflowComponent implements OnInit {
           }
         }
         else if (this.data.processName == 'Sew Out' || this.data.processName == 'Buddy Proof') {
-          if (this.AttachedFiles.length == 0 && this.CopyPreviousFiles == false && this.AttachedFiles1.length == 0) {
+          if (this.AttachedFiles.length == 0 && this.checked == false && this.AttachedFiles1.length == 0) {
             this.alertMessage = 'Please Copy Previous Files (or) Upload Files!';
             //  $('#alertPopup').modal('show');
           }
@@ -408,7 +408,7 @@ export class QualityWorkflowComponent implements OnInit {
           }
         }
         else if (this.data.processName == 'Proof Reading') {
-          if (this.CopyPreviousFiles == false) {
+          if (this.checked == false) {
             this.alertMessage = 'Please Copy Previous Files!';
             // $('#alertPopup').modal('show');
           }

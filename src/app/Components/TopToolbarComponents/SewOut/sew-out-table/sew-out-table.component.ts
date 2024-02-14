@@ -17,6 +17,10 @@ import { WorkflowService } from 'src/app/Services/CoreStructure/WorkFlow/workflo
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { catchError } from 'rxjs';
+import { GridApi, ColDef, CellClickedEvent, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { ClientordinationindexComponent } from '../../ClientCordination/clientordinationindex/clientordinationindex.component';
+import { actionrendering } from '../../Production/actionrendering.component';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 @Component({
   selector: 'app-sew-out-table',
   templateUrl: './sew-out-table.component.html',
@@ -51,7 +55,8 @@ export class SewOutTableComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('sewout') SewOutComponent: SewOutComponent;
-  constructor(private http: HttpClient, private sewOutService: SewOutService, private router: Router, private dialog: MatDialog, private loginservice: LoginService, private _coreService: CoreService, private SewOutComponent1: SewOutComponent, private workflowservice: WorkflowService, private spinnerservice: SpinnerService) {
+  columnApi: any;
+  constructor(private http: HttpClient, private sewOutService: SewOutService, private router: Router, private dialog: MatDialog, private loginservice: LoginService, private _coreService: CoreService, private SewOutComponent1: SewOutComponent, private workflowservice: WorkflowService, private spinnerservice: SpinnerService, private sharedDataService: SharedService) {
     this.SewOutComponent = SewOutComponent1
   }
 
@@ -146,9 +151,8 @@ export class SewOutTableComponent implements OnInit {
     this.sewOutService.getTabValue1().subscribe(freshJobs => {
       this.spinnerservice.requestEnded();
 
-      this.dataSource = new MatTableDataSource(freshJobs.getWorkflowDetails);
-      this.dataSource.paginator = this.paginator;
-      // this.dataSource.sort = this.sort;
+      this.rowData = freshJobs.getWorkflowDetails;
+
     });
   }
 
@@ -158,9 +162,8 @@ export class SewOutTableComponent implements OnInit {
     this.sewOutService.getTabValue2().subscribe(revisionJobs => {
       this.spinnerservice.requestStarted();
 
-      this.dataSource = new MatTableDataSource(revisionJobs.getWorkflowDetails);
-      this.dataSource.paginator = this.paginator;
-      // this.dataSource.sort = this.sort;
+      this.rowData = revisionJobs.getWorkflowDetails;
+
     });
   }
 
@@ -168,9 +171,8 @@ export class SewOutTableComponent implements OnInit {
     this.spinnerservice.requestStarted();
     this.sewOutService.getTabValue3().subscribe(reworkJobs => {
       this.spinnerservice.requestEnded();
-      this.dataSource = new MatTableDataSource(reworkJobs.getWorkflowDetails);
-      this.dataSource.paginator = this.paginator;
-      // this.dataSource.sort = this.sort;
+      this.rowData = reworkJobs.getWorkflowDetails;
+
     });
   }
 
@@ -179,9 +181,8 @@ export class SewOutTableComponent implements OnInit {
     this.sewOutService.getTabValue4().subscribe(quoteJobs => {
       this.spinnerservice.requestEnded()
 
-      this.dataSource = new MatTableDataSource(quoteJobs.getWorkflowDetails);
-      this.dataSource.paginator = this.paginator;
-      // this.dataSource.sort = this.sort;
+      this.rowData = quoteJobs.getWorkflowDetails;
+
     });
   }
 
@@ -191,9 +192,8 @@ export class SewOutTableComponent implements OnInit {
     this.sewOutService.getTabValue5().subscribe(sewOut => {
       this.spinnerservice.requestEnded();
 
-      this.dataSource = new MatTableDataSource(sewOut.getWorkflowDetails);
-      this.dataSource.paginator = this.paginator;
-      // this.dataSource.sort = this.sort;
+      this.rowData = sewOut.getWorkflowDetails;
+
     });
   }
 
@@ -202,9 +202,8 @@ export class SewOutTableComponent implements OnInit {
     this.spinnerservice.requestStarted();
     this.sewOutService.getTabValue6().subscribe(bulkJobs => {
       this.spinnerservice.requestEnded();
-      this.dataSource = new MatTableDataSource(bulkJobs.getWorkflowDetails);
-      this.dataSource.paginator = this.paginator;
-      // this.dataSource.sort = this.sort;
+      this.rowData = bulkJobs.getWorkflowDetails;
+
       this.displayScopeDropdown = true;
     });
   }
@@ -214,9 +213,8 @@ export class SewOutTableComponent implements OnInit {
     this.sewOutService.getTabValue7().subscribe(bulkUploadJobs => {
       this.spinnerservice.requestEnded();
 
-      this.dataSource = new MatTableDataSource(bulkUploadJobs.getWorkflowDetails);
-      this.dataSource.paginator = this.paginator;
-      // this.dataSource.sort = this.sort;
+      this.rowData = bulkUploadJobs.getWorkflowDetails;
+
     });
   }
 
@@ -465,7 +463,7 @@ export class SewOutTableComponent implements OnInit {
           this.router.navigate(['/topnavbar/qualityworkflow']);
         }
         else {
-          if(result.success == true){
+          if (result.success == true) {
             localStorage.setItem("WFTId", result.wftId);
             localStorage.setItem("WFMId", result.wfmid);
             localStorage.setItem("JId", data.JId);
@@ -473,13 +471,13 @@ export class SewOutTableComponent implements OnInit {
             this.workflowservice.setData(data);
             this.router.navigate(['/topnavbar/qualityworkflow']);
           }
-        else{
-          Swal.fire('info',result.message,'info').then((res)=>{
-            if(res.isConfirmed){
-              this.BindPendingJobs();
-            }
-          });
-        }
+          else {
+            Swal.fire('info', result.message, 'info').then((res) => {
+              if (res.isConfirmed) {
+                this.BindPendingJobs();
+              }
+            });
+          }
         }
       });
     }
@@ -513,21 +511,80 @@ export class SewOutTableComponent implements OnInit {
     });
   }
 
+  /////////////////Start end workflow bulkupload/////////////////////
 
-   //textcolor
-   getCellClass(data) {
-    console.log(data,"Colordata");
-    
-    return {
-      'text-color-green': data.employeeCount === 1,
-      'text-color-brown': data.queryJobDate !== null,
-      'text-color-blue': data.employeeCount > 1,
-      'text-color-DeepSkyBlue': data.customerJobType === 'Trial',
-      'text-color-yellow': data.statusId === 10,
-      'text-color-red': data.statusId === 11,
-      'SuperRush': data.jobStatusId === 1 || data.jobStatusId === 3 || data.jobStatusId === 7,
-      'Rush': data.jobStatusId === 2 || data.jobStatusId === 4 || data.jobStatusId === 8
-    };
+
+  context: any;
+
+  @ViewChild('agGrid') agGrid: any;
+
+  private gridApi!: GridApi<any>;
+
+
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+  columnDefs: ColDef[] = [
+    { headerName: 'Job Id', field: 'jobId', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
+
+    { headerName: 'EST Job/Query Date', field: 'estjobDate', filter: true, },
+    { headerName: 'Actions', cellRenderer: actionrendering, field: 'actions', filter: true, },// Use cellRenderer for customization},
+    { headerName: 'Client', field: 'shortName', filter: true, },
+    { headerName: 'Customer Classification', field: 'customerClassification', filter: true, },
+    { headerName: 'File Name', field: 'fileName', filter: true, },
+    { headerName: 'File Inward Mode', field: 'fileInwardType', filter: true, },
+    { headerName: 'Scope', field: 'scopeDesc', filter: true, },
+    { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
+    { headerName: 'Project Code', field: 'projectCode', filter: true, },
+    { headerName: 'Allocated By', field: 'employeeName', filter: true, },
+    { headerName: 'Process Status', field: 'workStatus', filter: true, },
+    { headerName: 'Est Time', field: 'estimatedTime', filter: true, },
+    { headerName: 'Job Category', field: 'jobCategoryDesc', filter: true, },
+    { headerName: 'DeliveryDate', field: 'dateofDelivery ', filter: true, },
+  ];
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData!: any[];
+  public themeClass: string =
+    "ag-theme-quartz";
+  @ViewChild(ClientordinationindexComponent) ClientordinationindexComponent: ClientordinationindexComponent;
+
+
+  onDivisionChange() {
+    console.log(this.selectedScope, "SelectDivi");
+
+    this.sharedDataService.setData(this.selectedScope);
   }
 
+
+
+
+  onCellClicked(event: CellClickedEvent) {
+    const { colDef, data } = event;
+    if (colDef.field === 'jobId') {
+      console.log(data, "PopupData");
+      this.getWorkflowJobList(data);
+    }
+
+  }
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+    this.columnApi = params.columnApi;
+    this.freshJobs();
+
+  }
+}
+
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
 }

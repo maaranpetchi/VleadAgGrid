@@ -2,16 +2,40 @@
 @import 'ag-grid-community/styles/ag-grid.css';
 /* Quartz Theme Specific CSS */
 @import 'ag-grid-community/styles/ag-theme-quartz.css';
-html, body { height: 100% }
+
+html,
+body {
+  height: 100%
+}
+
 /* styles.css */
 body {
-    min-height: 123vh !important; /* Set a minimum height to fill the viewport initially */
-    height: auto !important; /* Allow the body to expand based on its content */
-    margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-    overflow-y: auto; /* Add vertical scroll bar if the content overflows */
-  }
-  
+  min-height: 123vh !important;
+  /* Set a minimum height to fill the viewport initially */
+  height: auto !important;
+  /* Allow the body to expand based on its content */
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  overflow-y: auto;
+  /* Add vertical scroll bar if the content overflows */
+}
 
 
 
+
+.ag-theme-quartz {
+  --ag-header-foreground-color: rgb(0,77,109);
+  --ag-header-background-color: rgb(236,246,250);
+  --ag-pagination-panel-background-color:rgb(236,246,250); // Replace with your desired blue color
+
+}
+
+
+.ag-paging-panel {
+  border-top: 1px solid;
+  border-top-color: var(--ag-border-color);
+  color: rgb(0,77,109) ;
+  height: var(--ag-header-height);
+  background-color :rgb(236,246,250);
+
+}

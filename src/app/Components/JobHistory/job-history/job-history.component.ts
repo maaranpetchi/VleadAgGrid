@@ -14,6 +14,9 @@ import { catchError } from 'rxjs';
 import { error } from 'jquery';
 import * as FileSaver from 'file-saver';
 import Swal from 'sweetalert2/src/sweetalert2.js'
+import { GridApi, ColDef, CellClickedEvent, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { ClientordinationindexComponent } from '../../TopToolbarComponents/ClientCordination/clientordinationindex/clientordinationindex.component';
+import { JobDetailsClientIndexComponent } from '../../TopToolbarComponents/ClientCordination/query-to-client/job-details-client-index/job-details-client-index.component';
 @Component({
   selector: 'app-job-history',
   templateUrl: './job-history.component.html',
@@ -35,6 +38,7 @@ export class JobHistoryComponent implements OnInit {
   customers: boolean = false;
   dateFields: boolean = false;
   inputField: boolean = false;
+  columnApi: any;
 
 
   constructor(
@@ -63,10 +67,6 @@ export class JobHistoryComponent implements OnInit {
   ];
 
 
-
-  dataSource = new MatTableDataSource<any>([]); // Replace YourDataType with the actual type of your data
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
 
   ngOnInit(): void {
     this.onGoButtonClick()
@@ -159,10 +159,9 @@ export class JobHistoryComponent implements OnInit {
         return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
       })).subscribe(response => {
         this.spinnerService.requestEnded();
-        this.dataSource.data = response.jobMovement;
+        this.rowData = response.jobMovement;
         this.recordCount = response.jobMovement.length;
-        // this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+   
 
       })
     }
@@ -182,14 +181,63 @@ export class JobHistoryComponent implements OnInit {
       }
     }
   }
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+
+
+
+  /////////////////////////Ag-grid module///////////////////////////////
+  context: any;
+
+  @ViewChild('agGrid') agGrid: any;
+
+  private gridApi!: GridApi<any>;
+
+
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+  columnDefs: ColDef[] = [
+    { headerName: 'JobId', field: 'jobId', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
+    { headerName: 'Est Job/Query Date', field: 'estJobDate', filter: true, },
+    { headerName: 'Department Query', field: 'description', filter: true, },
+    { headerName: 'Client', field: 'shortName', filter: true, },
+
+    { headerName: 'Client Status', field: 'customerJobType', filter: true, },
+    { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
+    { headerName: 'Project Code', field: 'projectCode', filter: true, },
+    { headerName: 'File Name', field: 'fileName', filter: true, },
+    { headerName: 'File Inward Mode', field: 'fileInwardType', filter: true, },
+    { headerName: 'File Received Date', field: 'fileReceivedDate', filter: true, },
+    { headerName: 'Process Name', field: 'processName', filter: true, },
+    { headerName: 'Status', field: 'status', filter: true, },
+    { headerName: 'Comments To Client', field: 'commentsToClient', filter: true, },
+  ];
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData: any[]=[];
+  public themeClass: string =
+    "ag-theme-quartz";
+  @ViewChild(ClientordinationindexComponent) ClientordinationindexComponent: ClientordinationindexComponent;
+
+
+  onCellClicked(event: CellClickedEvent) {
+    const { colDef, data } = event;
+    if (colDef.field === 'jobId') {
+      console.log(data, "PopupData");
+
+      this.getJobHistory(data);
     }
   }
+
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+    this.columnApi = params.columnApi;
+   
+    }
 
   getJobHistory(data) {
     this.dialog.open(JobhistoryDetailsComponent, {
@@ -198,41 +246,14 @@ export class JobHistoryComponent implements OnInit {
       data: data
     })
   }
+}
 
-
-  // Function to export table data as CSV
-  exportToCsv() {
-    // Check if there is no data in the table
-    if (this.dataSource.data.length === 0) {
-      Swal.fire('Alert', 'No Records in the table', 'info');
-      return;
-    }
-
-    const header = ['JobNumber', 'Est Job/Query Date', 'Department', 'Client', 'Client Status', 'JobStatus', 'Project Code', 'FileName', 'File Inward Mode', 'File Recevied Date', 'Process', 'Status', 'Comments To Client'];
-
-    // Access the data array from the MatTableDataSource
-    const csvData = this.dataSource.data.map(row => {
-      return [
-        row.jobId,
-        row.estJobDate,
-        row.description,
-        row.name,
-        row.customerJobType,
-        row.jobStatusDescription,
-        row.projectCode,
-        row.fileName,
-        row.fileInwardType,
-        row.fileReceivedDate,
-        row.processName,
-        row.status,
-        row.commentsToClient
-      ].join(',');
-    });
-
-    const csv = [header.join(','), ...csvData].join('\n');
-
-    const blob = new Blob([csv], { type: 'text/csv' });
-    FileSaver.saveAs(blob, 'Job-History.csv');
-  }
-
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
 }

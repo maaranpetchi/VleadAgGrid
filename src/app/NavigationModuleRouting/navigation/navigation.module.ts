@@ -140,7 +140,7 @@ import { UpdateCustomerNormsComponent } from 'src/app/Components/CustomerNorms/u
 import { AttendanceIndexComponent } from 'src/app/Components/Attendance/attendance-index/attendance-index.component';
 import { ProductionQuotationComponent } from 'src/app/Components/TopToolbarComponents/ProductionAllocation/production-quotation/production-quotation.component';
 import { QuotationPopupComponent } from 'src/app/Components/TopToolbarComponents/ProductionAllocation/quotation-popup/quotation-popup.component';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { IndexBillingCycleComponent } from 'src/app/Components/BillingCycleMonthly/index-billing-cycle/index-billing-cycle.component';
 import { UpdateBillingComponent } from 'src/app/Components/BillingCycleMonthly/update-billing/update-billing.component';
 import { AddeditBillingComponent } from 'src/app/Components/BillingCycleMonthly/addedit-billing/addedit-billing.component';
@@ -150,9 +150,20 @@ import { AgGridModule } from 'ag-grid-angular';
 import 'ag-grid-enterprise';
 import { ActionsCellRendererComponent } from 'src/app/Components/TopToolbarComponents/ClientCordination/ClientOrder/actions-cell-renderer/actions-cell-renderer.component';
 import { StartRenderingComponent } from 'src/app/Components/TopToolbarComponents/Production/startrendering.component';
+import { EmpskillactionrenderingComponent } from 'src/app/Components/EmployeeVSSkillset/empskillactionrendering/empskillactionrendering.component';
+import { VendoractionrenderingComponent } from 'src/app/Components/Vendor/vendor/Vendoractionrendering.component';
+import { customernormsrenderingcomponent } from 'src/app/Components/CustomerNorms/customernormsindex/customerNormsRendering.component';
+import { ViewActionRenderingComponent } from 'src/app/Components/AccountsController/CustomerReceipts/view-action-rendering/view-action-rendering.component';
 
 @NgModule({
   declarations: [
+
+    ///ViewActionRenderingComponent
+    ViewActionRenderingComponent,
+
+
+
+
     DashboardComponent,
     //Login
     LoginComponent,
@@ -164,7 +175,7 @@ import { StartRenderingComponent } from 'src/app/Components/TopToolbarComponents
     ClientordinationindexComponent,
     //SUBCATEGOROFCLIENTCORDINATION
     ProductionallocationComponent,
-    
+
     ProductionQuotationComponent,
     QuotationPopupComponent,
     GetJobHistoryPopupComponent,
@@ -283,8 +294,8 @@ import { StartRenderingComponent } from 'src/app/Components/TopToolbarComponents
     IndexCustomerSalesApprovalComponent,
     TabcustomertableComponent,
     SalesMultiStepFormComponent,
-//CustomerVsDivision
-CustomervsdivisionindexComponent,
+    //CustomerVsDivision
+    CustomervsdivisionindexComponent,
     // Master.
     UserMasterComponent,
     AddEditUsermasterComponent,
@@ -332,7 +343,7 @@ CustomervsdivisionindexComponent,
     VendorComponent,
     EditVendorComponent,
     UpdatevendorComponent,
-
+    VendoractionrenderingComponent,
 
     //CUSTOMERVSCHECKLIST
     IndexchecklistComponent,
@@ -355,8 +366,7 @@ CustomervsdivisionindexComponent,
     AddEditSkillsetComponent,
     ViewSkillsetComponent,
     UpdateSkillSetComponent,
-
-
+    EmpskillactionrenderingComponent,
     //JOBFILESLOCATIONMASTER
     JobFilesLocationMasterIndexComponent,
 
@@ -365,15 +375,15 @@ CustomervsdivisionindexComponent,
     CustomernormsindexComponent,
     AddCustomerNormsComponent,
     UpdateCustomerNormsComponent,
-  
+    customernormsrenderingcomponent,
 
     //Attendance
     AttendanceIndexComponent,
 
-      //BillingCycle
-      IndexBillingCycleComponent,
-      AddeditBillingComponent,
-      UpdateBillingComponent
+    //BillingCycle
+    IndexBillingCycleComponent,
+    AddeditBillingComponent,
+    UpdateBillingComponent
 
   ],
   imports: [

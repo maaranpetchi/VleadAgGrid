@@ -17,7 +17,7 @@
           <p>Employee Name</p>
         </div>
         <div class="col">
-          {{this.apiResponseData.emp.addressDetail.employeeName}}
+          {{this.apiViewResponseData.emp.addressDetail.employeeName}}
         </div>
       </div>
       <div class="personal">
@@ -226,7 +226,7 @@
           <p>Employee Name</p>
         </div>
         <div class="col">
-          {{this.apiResponseData.emp.addressDetail.employeeName}}
+          {{this.apiViewResponseData.emp.addressDetail.employeeName}}
         </div>
       </div>
       <div class="product">
@@ -290,7 +290,7 @@
               <mat-label> EmployeeHierarchy<span style="color: red;">*</span></mat-label>
               <mat-select [disabled]="isInputDisabled" [(ngModel)]="employeehierarchy" name="employeehierarchy" multiple>
                 <mat-option *ngFor="let employeehierarchyoption of EmployeeHierarchyOptions"
-                  [value]="employeehierarchyoption">
+                  [value]="employeehierarchyoption.employeeId">
                   {{ employeehierarchyoption.employeeName }}
                 </mat-option>
               </mat-select>
@@ -313,7 +313,7 @@
           <p>Employee Name</p>
         </div>
         <div class="col">
-          {{this.apiResponseData.emp.addressDetail.employeeName}}
+          {{this.apiViewResponseData.emp.addressDetail.employeeName}}
         </div>
       </div>
       <div class="communication">
@@ -442,7 +442,7 @@
             <mat-form-field appearance="fill">
               <mat-label>EmployeeRoles</mat-label>
               <mat-select [disabled]="isInputDisabled" [(ngModel)]="employeeRoles" name="employeeRoles" multiple>
-                <mat-option *ngFor="let EmployeeRolesoption of EmployeeRolesoptions" [value]="EmployeeRolesoption">
+                <mat-option *ngFor="let EmployeeRolesoption of EmployeeRolesoptions" [value]="EmployeeRolesoption.id">
                   {{ EmployeeRolesoption.description }}
                 </mat-option>
               </mat-select>
