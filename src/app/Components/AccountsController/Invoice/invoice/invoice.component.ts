@@ -15,6 +15,8 @@ import Swal from 'sweetalert2/src/sweetalert2.js'
 import { catchError } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router } from '@angular/router';
+import { AgGridAngular } from 'ag-grid-angular';
+import { GridApi, ColDef, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams, CellClickedEvent } from 'ag-grid-community';
 @Component({
   selector: 'app-invoice',
   templateUrl: './invoice.component.html',
@@ -35,6 +37,7 @@ export class InvoiceComponent implements OnInit {
   totalRate: number = 0;
   SelectedListItem: number = 0;
   sendinginvoiceNumber: any;
+  context: any;
 
 
   constructor(private http: HttpClient, private loginservice: LoginService, private _empService: PricingcalculationService, private dialog: MatDialog, private spinnerService: SpinnerService, private router: Router) { }
@@ -110,7 +113,7 @@ export class InvoiceComponent implements OnInit {
 
   openDialog() {
 
-    if (this.selection.selected.length === 0) {
+    if (this.gridApi1.getSelectedRows().length === 0) {
       // Show alert message
       Swal.fire(
         'Alert!',
@@ -122,7 +125,7 @@ export class InvoiceComponent implements OnInit {
     else {
       this.spinnerService.requestStarted();
 
-      this.selection.selected.forEach(x => this.setAll(x));
+      this.gridApi1.getSelectedRows().forEach(x => this.setAll(x));
       if (this.selectedInvoice.length > 0) {
         this.selectedInvoiceJobs = this.selectedInvoice;
       }
@@ -133,7 +136,7 @@ export class InvoiceComponent implements OnInit {
         "scopeDesc": " ",
         "clientId": this.myForm.value?.ClientId,
         "billingCycleType": "",
-        "dateofUpload": "2023-04-06T08:51:10.069Z",
+        "dateofUpload": new Date().toISOString,
         "createdBy": this.loginservice.getUsername(),
         "departmentId": 0,
         "tranId": 0,
@@ -141,7 +144,7 @@ export class InvoiceComponent implements OnInit {
         "jId": 0,
         "pricingTypeId": 0,
         "getInvoice": this.selectedInvoiceJobs,
-        "fileReceivedDate": "2023-04-06T08:51:10.069Z",
+        "fileReceivedDate": new Date().toISOString,
         "isBillable": true,
         "specialPrice": 0,
         "estimatedTime": 0,
@@ -163,7 +166,8 @@ export class InvoiceComponent implements OnInit {
           'info'
         ).then((response) => {
           if (response.isConfirmed) {
-            this.ngOnInit()
+            this.myForm.reset();
+            this.rowData = [];
           }
         })
       }
@@ -237,10 +241,7 @@ export class InvoiceComponent implements OnInit {
     })).subscribe((results: any) => {
       // Set the search results in the data source
       this.spinnerService.requestEnded();
-      this.dataSource.data = results.getInvoice;
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.table1Paginator;
-
+      this.rowData = results.getInvoice;
     }
     )
   }
@@ -271,10 +272,7 @@ export class InvoiceComponent implements OnInit {
 
       // Calculate the total rate
       this.totalRate = result.getInvoice.reduce((acc, row) => acc + row.rate, 0);
-
-
-      this.GenratedInvoicedataSource.data = result.getInvoice;
-      this.GenratedInvoicedataSource.paginator = this.table2Paginator;
+      this.table2rowData = result.getInvoice;
     })
   }
 
@@ -288,9 +286,7 @@ export class InvoiceComponent implements OnInit {
       return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
     })).subscribe(results => {
       this.spinnerService.requestEnded();
-      this.ConfirmInvoicedataSource = new MatTableDataSource(results.getInvoice);
-      this.ConfirmInvoicedataSource.sort = this.sort;
-      this.ConfirmInvoicedataSource.paginator = this.table3Paginator;
+      this.table3rowData = results.getInvoice;
     })
   }
 
@@ -323,7 +319,7 @@ export class InvoiceComponent implements OnInit {
 
   btnSubmitRecalculate() {
 
-    if (this.selection1.selected.length === 0) {
+    if (this.gridApi2.getSelectedRows().length === 0) {
       Swal.fire(
         'Alert!',
         'Please Select a Client.',
@@ -331,7 +327,7 @@ export class InvoiceComponent implements OnInit {
       )
     }
     else {
-      this.selection1.selected.forEach(x => this.setEmployeeAll(x));
+      this.gridApi2.getSelectedRows().forEach(x => this.setEmployeeAll(x));
       if (this.selectedGeneratedInvoice.length > 0) {
         this.selectedGeneratedInvoiceJobs = this.selectedGeneratedInvoice;
       }
@@ -372,8 +368,7 @@ export class InvoiceComponent implements OnInit {
           'success'
         ).then((res) => {
           if (res.isConfirmed) {
-            this.getGeneratedInvoice();
-            this.ClientGeneratedId = 0;
+            this.table2rowData = [];
           }
         })
       })
@@ -385,7 +380,7 @@ export class InvoiceComponent implements OnInit {
 
   btnSubmitConfirm() {
 
-    if (this.selection1.selected.length === 0) {
+    if (this.gridApi2.getSelectedRows().length === 0) {
       Swal.fire(
         'Alert!',
         'Please Select a Client.',
@@ -394,7 +389,7 @@ export class InvoiceComponent implements OnInit {
     }
     else {
 
-      this.selection1.selected.forEach(x => this.setEmployeeAll(x));
+      this.gridApi2.getSelectedRows().forEach(x => this.setEmployeeAll(x));
       if (this.selectedGeneratedInvoice.length > 0) {
         this.selectedGeneratedInvoiceJobs = this.selectedGeneratedInvoice;
       }
@@ -439,7 +434,12 @@ export class InvoiceComponent implements OnInit {
             'Done!',
             results.stringList,
             'success'
-          )
+          ).then((res) => {
+            if (res.isConfirmed) {
+              this.table2rowData = [];
+
+            }
+          })
         }
       })
     }
@@ -597,33 +597,32 @@ export class InvoiceComponent implements OnInit {
 
 
   openArtInvoice() {
-    if (this.selection3.selected.length === 0) {
+    const selectedRows = this.gridApi3.getSelectedRows();
+
+    if (selectedRows.length === 0) {
       // Show alert message
       Swal.fire(
         'Alert!',
-        'Please select the list item!',
+        'Please select at least one invoice!',
         'info'
-      )
+      );
       return;
     }
-    else {
-      // this.spinnerService.requestStarted();
-      this.selection3.selected.forEach(x => this.setConfirmAll(x));
-      if (this.selectedConfirmInvoice.length > 0) {
-        const invoiceNumber = this.selectedConfirmInvoice[0].invoiceNo;
-        const url = this.router.serializeUrl(
-          this.router.createUrlTree(['/topnavbar/acc-SSRS'], { queryParams: { InvoiceNo: invoiceNumber } })
-        );
-         const redirectURL = document.location.origin + '/#' + url;
-        window.open(redirectURL, '_blank');
-      //  this.router.navigate([url], { queryParams: { InvoiceNo: invoiceNumber } });
-      }
-    }
+  
+    selectedRows.forEach(row => {
+      const invoiceNumber = row.invoiceNo;
+      const queryParams = { InvoiceNo: invoiceNumber };
+      const url = this.router.serializeUrl(
+        this.router.createUrlTree(['/topnavbar/acc-SSRS'], { queryParams })
+      );
+      const redirectURL = document.location.origin + '/#' + url;
+      window.open(redirectURL, '_blank');
+    });
   }
 
   DigiArtInvoice() {
 
-    if (this.selection3.selected.length === 0) {
+    if (this.gridApi3.getSelectedRows().length === 0) {
       // Show alert message
       Swal.fire(
         'Alert!',
@@ -635,29 +634,19 @@ export class InvoiceComponent implements OnInit {
     else {
       // this.spinnerService.requestStarted();
 
-      this.selection3.selected.forEach(x => this.setConfirmAll(x));
-      if (this.selectedConfirmInvoice.length > 0) {
-        this.selectedConfirmInvoiceJobs = this.selectedConfirmInvoice;
-
-        const params = new HttpParams().set('InvoiceNo', this.selectedConfirmInvoice[0].invoiceNo);
-
-        this.sendinginvoiceNumber = this.selectedConfirmInvoice[0].invoiceNo
-
-        const invoiceNumber = this.selectedConfirmInvoice[0].invoiceNo;
-        console.log(invoiceNumber, "invoiceNumber");
-
+      this.gridApi3.getSelectedRows().forEach(row => {
+        const invoiceNumber = row.invoiceNo;
         const url = this.router.serializeUrl(
-          this.router.createUrlTree(['/topnavbar/acc-generatedinvoice'], { queryParams: { InvoiceNo: invoiceNumber } })
+          this.router.createUrlTree(['/topnavbar/acc-SSRS'], { queryParams: { InvoiceNo: invoiceNumber } })
         );
         const redirectURL = document.location.origin + '/#' + url;
         window.open(redirectURL, '_blank');
-
-      }
+      });
     }
   }
   Invoice() {
 
-    if (this.selection3.selected.length === 0) {
+    if (this.gridApi3.getSelectedRows().length === 0) {
       // Show alert message
       Swal.fire(
         'Alert!',
@@ -669,7 +658,7 @@ export class InvoiceComponent implements OnInit {
     else {
       // this.spinnerService.requestStarted();
 
-      this.selection3.selected.forEach(x => this.setConfirmAll(x));
+      this.gridApi3.getSelectedRows().forEach(x => this.setConfirmAll(x));
       if (this.selectedConfirmInvoice.length > 0) {
         this.selectedConfirmInvoiceJobs = this.selectedConfirmInvoice;
 
@@ -691,4 +680,169 @@ export class InvoiceComponent implements OnInit {
   }
 
 
+
+  /////////////////////////Ag-grid module///////////////////////////////
+  @ViewChild('agGrid1') agGrid1: AgGridAngular;
+  @ViewChild('agGrid2') agGrid2: AgGridAngular;
+  @ViewChild('agGrid3') agGrid3: AgGridAngular;
+
+  private gridApi1!: GridApi;
+  private gridApi2!: GridApi;
+  private gridApi3!: GridApi;
+
+
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+  public table2defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isSecondColumn,
+    checkboxSelection: isSecondColumn,
+  };
+  public table3defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isThirdColumn,
+    checkboxSelection: isThirdColumn,
+  };
+
+  table1def: ColDef[] = [
+    { headerName: 'Client ', field: 'shortName', filter: true, },
+    { headerName: 'Job Id', field: 'jobId', filter: true, },
+    { headerName: 'Job Date', field: 'estJobDate', filter: true, },
+    { headerName: 'File Name', field: 'fileName', filter: true, },
+    { headerName: 'Project Code', field: 'projectCode', filter: true, },
+    { headerName: 'Department', field: 'department', filter: true, },
+    { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
+    { headerName: 'Scope', field: 'description', filter: true, },
+    { headerName: 'Stitch Count', field: 'stitchCount', filter: true, },
+    { headerName: 'Estimated Time', field: 'estimatedTime', filter: true, },
+    { headerName: 'Rate', field: 'specialPrice', filter: true, },
+    { headerName: 'EST File Received Date', field: 'estFileReceivedDate', filter: true, },
+    { headerName: 'ESTDateofUpload', field: 'estDateofUpload', filter: true, },
+    { headerName: 'Non-Billable', field: 'nonBillable' ? 'nonBillable' : '', filter: true, },
+
+  ];
+  table2def: ColDef[] = [
+
+    { headerName: 'Client', field: 'shortName', filter: true, },
+    { headerName: 'Job Id', field: 'jobId', filter: true, },
+    { headerName: 'Job Date', field: 'estJobDate', filter: true, },
+    { headerName: 'File Name', field: 'fileName', filter: true, },
+    { headerName: 'Project Code', field: 'projectCode', filter: true, },
+    { headerName: 'Department', field: 'department', filter: true, },
+    { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
+    { headerName: 'Scope', field: 'scopeDesc', filter: true, },
+    { headerName: 'Stitch Count', field: 'stitchCount', filter: true, },
+    { headerName: 'EstimatedTime', field: 'estimatedTime', filter: true, },
+    { headerName: 'PricingType', field: 'description', filter: true, },
+    { headerName: 'ESTFileReceivedDate', field: 'estFileReceivedDate', filter: true, },
+    { headerName: 'EST Date of upload', field: 'estDateofUpload', filter: true, },
+    { headerName: 'Rate', field: 'rate', filter: true, },
+  ];
+
+  table3def: ColDef[] = [
+
+    { headerName: 'Client', field: 'shortName', filter: true, },
+    { headerName: 'Invoice Number', field: 'invoiceNo', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
+    { headerName: 'Invoice Date', field: 'invoiceDate', filter: true, },
+    { headerName: 'Product Value', field: 'productValue', filter: true, },
+    { headerName: 'waiver Amount', field: 'waiver', filter: true, },
+    { headerName: 'RoundOff', field: 'roundOff', filter: true, },
+    { headerName: 'ArtInvoiceAmount', field: 'artInvoiceAmount', filter: true, },
+    { headerName: 'DigiInvoiceAmount', field: 'digiInvoiceAmount', filter: true, },
+    { headerName: 'Invoice', field: 'invoiceValue', filter: true, },
+    { headerName: 'Discount', field: 'discount', filter: true, },
+    { headerName: 'ArtPayableAmount', field: 'artPayableAmount', filter: true, },
+    { headerName: 'ArtFileCount', field: 'artFileCount', filter: true, },
+    { headerName: 'DigiPayableAmount', field: 'digiPayableAmount', filter: true, },
+    { headerName: 'DigiFileCount', field: 'digiFileCount', filter: true, },
+    { headerName: 'Payable', field: 'totalInvoiceValue', filter: true, },
+    { headerName: 'PaymentMode', field: 'paymentMode', filter: true, },
+  ];
+
+  onCellClicked(event: CellClickedEvent) {
+    const { colDef, data } = event;
+    if (colDef.field === 'invoiceNo') {
+      console.log(data, "invoiceNo");
+
+      this.openConfirmDialog(data);
+    }
+  }
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public table2rowSelection: 'single' | 'multiple' = 'multiple';
+  public table3rowSelection: 'single' | 'multiple' = 'multiple';
+
+  public rowData: any[] = [];
+  public table2rowData: any[] = [];
+  public table3rowData: any[] = [];
+
+  public themeClass: string =
+    "ag-theme-quartz";
+
+  onGridReady1(params: GridReadyEvent) {
+    this.gridApi1 = params.api;
+  }
+
+  onGridReady2(params: GridReadyEvent) {
+    this.gridApi2 = params.api;
+  }
+
+  onGridReady3(params: GridReadyEvent) {
+    this.gridApi3 = params.api;
+    this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL + `Invoice/GetAllInvoiceMasterDetails`).subscribe(results => {
+      this.table3rowData = results.getInvoice;
+      this.spinnerService.requestEnded();
+
+    })
+  }
+  onSelectionChanged() {
+    const selectedRows1 = this.gridApi1.getSelectedRows();
+    this.SelectedListItem = selectedRows1.length
+  }
+  handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {
+    console.log(params, "Parameter");
+    console.log(params.data, "ParameterData");
+    let parameterData = params.data
+    if (params.colDef.field === 'filecount') { // Check if the changed column is 'price'
+
+    }
+  }
+
+
+  handlePress(newvalue, parameterData) {
+    console.log(newvalue, "HandlepressNewValue");
+    console.log(parameterData, "ParameterValue");
+
+  }
+}
+
+function isFirstColumn(
+  params: CheckboxSelectionCallbackParams | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
+}
+
+function isSecondColumn(
+  params: CheckboxSelectionCallbackParams | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsSecondColumn = displayedColumns[0] === params.column;
+  return thisIsSecondColumn;
+}
+
+function isThirdColumn(
+  params: CheckboxSelectionCallbackParams | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsSecondColumn = displayedColumns[0] === params.column;
+  return thisIsSecondColumn;
 }

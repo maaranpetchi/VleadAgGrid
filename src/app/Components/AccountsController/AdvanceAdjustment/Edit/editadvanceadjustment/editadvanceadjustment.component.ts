@@ -178,11 +178,11 @@ export class EditadvanceadjustmentComponent {
         "adjustmentAmount": x.adjustmentAmount
       }
     })
-    let data = {
+    let receivableAdjustments = {
       "receivableAdjustments": temparray,
       "advanceId": this.data.id
     }
-    this.http.post<any>(environment.apiURL + 'AdvanceAdjustment/CreateAdvanceAdjustment', data).subscribe(results => {
+    this.http.post<any>(environment.apiURL + 'AdvanceAdjustment/CreateAdvanceAdjustment', receivableAdjustments).subscribe(results => {
       this.spinnerService.requestEnded();
       if (results == true) {
         Swal.fire(
