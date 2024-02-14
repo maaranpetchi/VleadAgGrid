@@ -611,7 +611,9 @@ export class InvoiceComponent implements OnInit {
   
     selectedRows.forEach(row => {
       const invoiceNumber = row.invoiceNo;
-      const queryParams = { InvoiceNo: invoiceNumber };
+      const shortName = row.shortName;
+
+      const queryParams = { InvoiceNo: invoiceNumber ,ShortName:shortName};
       const url = this.router.serializeUrl(
         this.router.createUrlTree(['/topnavbar/acc-SSRS'], { queryParams })
       );
@@ -637,7 +639,9 @@ export class InvoiceComponent implements OnInit {
 
       selectedRows.forEach(row => {
         const invoiceNumber = row.invoiceNo;
-        const queryParams = { InvoiceNo: invoiceNumber };
+        const shortName = row.shortName;
+
+        const queryParams = { InvoiceNo: invoiceNumber ,ShortName:shortName};
         const url = this.router.serializeUrl(
           this.router.createUrlTree(['/topnavbar/acc-generatedinvoice'], { queryParams })
         );
@@ -663,8 +667,11 @@ export class InvoiceComponent implements OnInit {
 
 
       selectedRows.forEach(row => {
+        console.log(row,"RowData");
+        
         const invoiceNumber = row.invoiceNo;
-        const queryParams = { InvoiceNo: invoiceNumber };
+        const shortName = row.shortName;
+        const queryParams = { InvoiceNo: invoiceNumber ,ShortName:shortName};
         const url = this.router.serializeUrl(
           this.router.createUrlTree(['/topnavbar/acc-popupinvoice'], { queryParams })
         );

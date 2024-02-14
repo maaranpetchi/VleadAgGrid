@@ -12,6 +12,7 @@ import { environment } from 'src/Environments/environment';
 })
 export class PopupinvoiceComponent  implements OnInit {
   InvoiceNumber: any;
+  shortName:any;
 
   constructor(private route: ActivatedRoute, private sanitizer: DomSanitizer, private http: HttpClient) {
 
@@ -20,6 +21,7 @@ export class PopupinvoiceComponent  implements OnInit {
 
     this.route.queryParams.subscribe(params => {
       this.InvoiceNumber = params['InvoiceNo'];
+      this.shortName = params['ShortName'];
       console.log(this.InvoiceNumber, "GettingInvoiceNumber");
 
       const url = environment.apiURL + `Invoice/Reports?invoiceNumber=${this.InvoiceNumber}&type=invoice`;
@@ -44,7 +46,7 @@ export class PopupinvoiceComponent  implements OnInit {
       // Create an anchor element
       const a = document.createElement('a');
       a.href = blobURL;
-      a.download = `Invoice_${this.InvoiceNumber}.pdf`; // Set the filename
+      a.download = `${this.shortName}_${this.InvoiceNumber}.pdf`; // Set the filename
 
       // Programmatically click the anchor element to trigger the download
       document.body.appendChild(a);

@@ -11,6 +11,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 })
 export class SSRSReportViewerComponent implements OnInit {
   InvoiceNumber: any;
+  shortName:any;
 
   constructor(private route: ActivatedRoute, private sanitizer: DomSanitizer, private http: HttpClient) {
 
@@ -19,6 +20,8 @@ export class SSRSReportViewerComponent implements OnInit {
 
     this.route.queryParams.subscribe(params => {
       this.InvoiceNumber = params['InvoiceNo'];
+      this.shortName = params['ShortName'];
+
       console.log(this.InvoiceNumber, "GettingInvoiceNumber");
 
       const url = environment.apiURL + `Invoice/Reports?invoiceNumber=${this.InvoiceNumber}&type=artwork`;
@@ -43,7 +46,7 @@ export class SSRSReportViewerComponent implements OnInit {
       // Create an anchor element
       const a = document.createElement('a');
       a.href = blobURL;
-      a.download = `Invoice_${this.InvoiceNumber}.pdf`; // Set the filename
+      a.download = `${this.shortName}_${this.InvoiceNumber}.pdf`; // Set the filename
 
       // Programmatically click the anchor element to trigger the download
       document.body.appendChild(a);
