@@ -9,6 +9,7 @@ import { PopupwavierconfirmationComponent } from '../popupwavierconfirmation/pop
 import { environment } from 'src/Environments/environment';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
+import { GridApi, ColDef, CellClickedEvent, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
 declare var $: any;
 @Component({
   selector: 'app-wavier',
@@ -24,11 +25,12 @@ export class WavierComponent {
 
 
 
-  message:string='';
+  message: string = '';
 
   clients: any[]; // Change to match the shape of your client data
+  columnApi: any;
 
-  constructor(private http: HttpClient, private dialog: MatDialog,private spinnerservice:SpinnerService) { }
+  constructor(private http: HttpClient, private dialog: MatDialog, private spinnerservice: SpinnerService) { }
   displayedColumns: string[] = [
     'selected',
     'jobnumber',
@@ -54,7 +56,7 @@ export class WavierComponent {
 
   setAll(completed: boolean, item: any) {
     if (completed == true) {
-      this.selectedInvoices.push({id:item.id})
+      this.selectedInvoices.push({ id: item.id })
     }
     else {
 
@@ -68,7 +70,7 @@ export class WavierComponent {
     }
   }
 
-  
+
 
 
   ngOnInit(): void {
@@ -105,8 +107,8 @@ export class WavierComponent {
     this.fetchData();
   }
 
-  submitassignvalue(){
-    if (this.selectedInvoices.length == 0) {
+  submitassignvalue() {
+    if (this.gridApi.getSelectedRows().length == 0) {
       // const dialogRef = this.dialog.open(PopupwavierconfirmationComponent, {
       //   width: '500px',
       //   height: '150px',
@@ -114,11 +116,11 @@ export class WavierComponent {
 
       // }
       // );
-      this.message="please select the list items!"
+      this.message = "please select the list items!"
       $('#myModal1').appendTo("body").modal('show');
     }
-    else{
-      
+    else {
+
       $('#myModal').appendTo("body").modal('show');
     }
   }
@@ -149,21 +151,22 @@ export class WavierComponent {
       this.selectedFileName = '';
       this.fromDate = '';
       this.toDate = '';
-this.spinnerservice.requestStarted();
-      this.http.get<any[]>(environment.apiURL+'Customer/GetCustomers').subscribe({next:(clientdata) => {
-        this.spinnerservice.requestEnded();
+      this.spinnerservice.requestStarted();
+      this.http.get<any[]>(environment.apiURL + 'Customer/GetCustomers').subscribe({
+        next: (clientdata) => {
+          this.spinnerservice.requestEnded();
 
-        this.clients = clientdata;
-      },
-      error: (err) => {
-        this.spinnerservice.resetSpinner(); // Reset spinner on error
-        console.error(err); 
-        Swal.fire(
-          'Error!',
-          'An error occurred !.',
-          'error'
-        );
-      }
+          this.clients = clientdata;
+        },
+        error: (err) => {
+          this.spinnerservice.resetSpinner(); // Reset spinner on error
+          console.error(err);
+          Swal.fire(
+            'Error!',
+            'An error occurred !.',
+            'error'
+          );
+        }
       });
 
 
@@ -188,7 +191,7 @@ this.spinnerservice.requestStarted();
     }
   };
 
-  closebutton(){
+  closebutton() {
     $('#myModal').modal('hide');
     $('#myModal1').modal('hide');
   }
@@ -217,24 +220,22 @@ this.spinnerservice.requestStarted();
       };
       this.spinnerservice.requestStarted();
 
-      this.http.post<any>(environment.apiURL+'Invoice/GetWaiverJobWithclientIdfileName', jobOrder).subscribe({next:(response) => {
-        this.spinnerservice.requestEnded();
-        
-      this.dataSource.data = response.waiverJobList;
-        // Sort dataSource based on MatSort
-        this.dataSource.sort = this.sort;
-        // Paginate dataSource based on MatPaginator
-        this.dataSource.paginator = this.paginator;
-      },
-      error: (err) => {
-        this.spinnerservice.resetSpinner(); // Reset spinner on error
-        console.error(err); 
-        Swal.fire(
-          'Error!',
-          'An error occurred !.',
-          'error'
-        );
-      }
+      this.http.post<any>(environment.apiURL + 'Invoice/GetWaiverJobWithclientIdfileName', jobOrder).subscribe({
+        next: (response) => {
+          this.spinnerservice.requestEnded();
+
+          this.rowData = response.waiverJobList;
+
+        },
+        error: (err) => {
+          this.spinnerservice.resetSpinner(); // Reset spinner on error
+          console.error(err);
+          Swal.fire(
+            'Error!',
+            'An error occurred !.',
+            'error'
+          );
+        }
       });
       // PricingBillingInvoiceFactory.GetJobsHistory('GetWaiverJobWithclientIdfileName', jobOrder).$promise.then(function (result) {
       //    completedjobs.data = result.WaiverJobList;
@@ -243,13 +244,69 @@ this.spinnerservice.requestStarted();
   };
 
 
-  savechanges(){
-    
+  savechanges() {
+
     $('#myModal').modal('hide');
-    this.http.post<any>(environment.apiURL+'Invoice/AddWaiverJobList',this.selectedInvoices).subscribe(data => {
-     this.onGoButtonClick();
-    this.message=data.message;
+    this.http.post<any>(environment.apiURL + 'Invoice/AddWaiverJobList', this.gridApi.getSelectedRows()).subscribe(data => {
+      this.onGoButtonClick();
+      this.message = data.message;
       $('#myModal1').appendTo("body").modal('show');
     });
   }
+  /////////////////////////Ag-grid module///////////////////////////////
+  context: any;
+
+  @ViewChild('agGrid') agGrid: any;
+
+  private gridApi!: GridApi<any>;
+
+
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+  columnDefs: ColDef[] = [
+    { headerName: 'Job Number', field: 'jobId', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
+    { headerName: 'Job Date', field: 'jobDate', filter: true, },
+    { headerName: 'Department', field: 'department', filter: true, },
+    { headerName: 'Client', field: 'shortName', filter: true, },
+
+    { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
+    { headerName: 'File Name', field: 'fileName', filter: true, },
+    { headerName: 'Job Date', field: 'jobDate', filter: true, },
+  ];
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData: any[] = [];
+  public themeClass: string =
+    "ag-theme-quartz";
+
+
+  onCellClicked(event: CellClickedEvent) {
+    const { colDef, data } = event;
+    if (colDef.field === 'invoiceNo') {
+      console.log(data, "PopupData");
+
+    }
+  }
+
+
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+    this.columnApi = params.columnApi;
+
+  }
+}
+
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
 }

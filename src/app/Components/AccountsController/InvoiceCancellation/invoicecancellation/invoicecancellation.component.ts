@@ -9,6 +9,8 @@ import { InvoicecancelleddetailsComponent } from '../invoicecancelleddetails/inv
 import { environment } from 'src/Environments/environment';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import Swal from 'sweetalert2/src/sweetalert2.js';
+import { GridApi, ColDef, CellClickedEvent, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { ClientordinationindexComponent } from 'src/app/Components/TopToolbarComponents/ClientCordination/clientordinationindex/clientordinationindex.component';
 
 @Component({
   selector: 'app-invoicecancellation',
@@ -17,12 +19,13 @@ import Swal from 'sweetalert2/src/sweetalert2.js';
 })
 export class InvoicecancellationComponent {
   @Output() invoiceNumberSelected = new EventEmitter<string>();
- 
- 
+
+
   invoicenumbers: any;
   invoiceNumber: any;
+  columnApi: any;
 
-  constructor(private http: HttpClient,private dialog: MatDialog,private loginservice:LoginService) { }
+  constructor(private http: HttpClient, private dialog: MatDialog, private loginservice: LoginService) { }
 
   displayedColumns: string[] = [
     'invoicenumber',
@@ -41,12 +44,12 @@ export class InvoicecancellationComponent {
       width: '800px',
       data: { invoiceNo: this.myForm.value.invoicenumber }
     });
-  
+
     dialogRef.afterClosed().subscribe(result => {
     });
     this.invoiceNumberSelected.emit(invoiceNo);
   }
-  
+
   selectedInvoices: any[] = [];
 
 
@@ -78,12 +81,12 @@ export class InvoicecancellationComponent {
   ngOnInit(): void {
     this.invoicenumbers = [];
     //client dropdown
-    this.http.get<any>(environment.apiURL+'invoice/getdropclientforinvoicecancel').subscribe(data => {
+    this.http.get<any>(environment.apiURL + 'invoice/getdropclientforinvoicecancel').subscribe(data => {
       this.clientdata = data;
     });
 
     //invoicenumber dropdown
-    this.http.get<any>(environment.apiURL+'invoice/getallinvoicemasterdetails').subscribe(invoicedata => {
+    this.http.get<any>(environment.apiURL + 'invoice/getallinvoicemasterdetails').subscribe(invoicedata => {
       this.invoicenumberdata = invoicedata;
     });
   }
@@ -107,7 +110,7 @@ export class InvoicecancellationComponent {
   storinginvoicevalue: any[] = [];
 
   onOptionSelected(event: any, myform: FormGroup) {
-    const apiUrl = environment.apiURL+"Invoice/GetDropInvoiceforCancel"; // replace with your actual API URL
+    const apiUrl = environment.apiURL + "Invoice/GetDropInvoiceforCancel"; // replace with your actual API URL
     const requestData = {
       id: myform.value.ClientId
     };
@@ -119,16 +122,15 @@ export class InvoicecancellationComponent {
 
   onSubmit() {
     // Call the API to get the search results
-    this.http.post<any>(environment.apiURL+'Invoice/GetInvoiceMasterforSalesCancel', {
+    this.http.post<any>(environment.apiURL + 'Invoice/GetInvoiceMasterforSalesCancel', {
       "Id": 0,
-      "invoiceNo":this.myForm.value.invoicenumber
+      "invoiceNo": this.myForm.value.invoicenumber
     }).subscribe((results: any) => {
       // Set the search results in the data source
 
 
-      this.dataSource.data = results.invoicesc;
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
+      this.rowData = results.invoicesc;
+
 
       this.invoiceNumber = results.invoicesc.invoiceNo;
 
@@ -137,16 +139,16 @@ export class InvoicecancellationComponent {
     )
   }
 
-  cancelInvoice(){
-    let payload={
+  cancelInvoice() {
+    let payload = {
       "id": 0,
       "customerID": 0,
       "employeeId": this.loginservice.getUsername(),
       "invoiceNo": this.myForm.value.invoicenumber,
-      "invoicesc": [ ]
+      "invoicesc": []
     }
-    this.http.post<any>(environment.apiURL+`Invoice/GetUpdateMasterforSalesCancel`,payload).subscribe(data=>{
-      
+    this.http.post<any>(environment.apiURL + `Invoice/GetUpdateMasterforSalesCancel`, payload).subscribe(data => {
+
       Swal.fire({
         title: 'Are you sure wanting to cancel this Invoice?',
         showDenyButton: true,
@@ -160,6 +162,64 @@ export class InvoicecancellationComponent {
         } else if (result.isDenied) {
           Swal.fire('Changes are not saved', '', 'info')
         }
-      })    })
+      })
+    })
   }
+  /////////////////////////Ag-grid module///////////////////////////////
+  context: any;
+
+  @ViewChild('agGrid') agGrid: any;
+
+  private gridApi!: GridApi<any>;
+
+
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+  columnDefs: ColDef[] = [
+    { headerName: 'Invoice Number', field: 'invoiceNo', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
+    { headerName: 'Invoice Date', field: 'invoiceDate', filter: true, },
+    { headerName: 'Product Value', field: 'productValue', filter: true, },
+    { headerName: 'Waiver', field: 'waiver', filter: true, },
+
+    { headerName: 'Round Off', field: 'roundOff', filter: true, },
+    { headerName: 'Discount', field: 'discount', filter: true, },
+    { headerName: 'Invoice Value', field: 'invoiceValue', filter: true, },
+  ];
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData: any[]=[];
+  public themeClass: string =
+    "ag-theme-quartz";
+
+
+  onCellClicked(event: CellClickedEvent) {
+    const { colDef, data } = event;
+    if (colDef.field === 'invoiceNo') {
+      console.log(data, "PopupData");
+
+      this.openPopupForm(data);
+    }
+  }
+
+
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+    this.columnApi = params.columnApi;
+
+  }
+}
+
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
 }

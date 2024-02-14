@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { GridApi, ColDef, CellClickedEvent, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams, RowNode } from 'ag-grid-community';
 import { error } from 'jquery';
 import { environment } from 'src/Environments/environment';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
@@ -16,6 +17,7 @@ import Swal from 'sweetalert2/src/sweetalert2.js'
 })
 export class TallyComponent implements OnInit {
   exchangeHeader: number;
+  columnApi: any;
 
   constructor(private http: HttpClient, private dialog: MatDialog, private spinnerService: SpinnerService) { }
 
@@ -65,28 +67,13 @@ export class TallyComponent implements OnInit {
   }
 
   setExchangeHeader() {
-    let temparray: any[] = [];
-    let skip: boolean;
-    this.dataSource.data.filter((y: any) => {
-      skip = false;
-      this.selectedInvoices.forEach((x) => {
-        if (y.id === x.id) {
-          temparray.push({
-            ...y,
-            exchangeRate: this.exchangeHeader,
-            isSelected: true
-          });
-          skip = true;
-        }
+    const selectedNodes: RowNode[] = this.gridApi.getSelectedNodes() as RowNode[]; // Cast to RowNode[]
+    if (selectedNodes.length > 0) {
+      selectedNodes.forEach((node: RowNode) => {
+        node.setDataValue('exchangeRate', this.exchangeHeader);
       });
-      if (!skip) {
-        temparray.push(y);
-      }
-    });
-
-
-    this.dataSource.data = temparray;
-
+      // Refresh the grid after updating data
+    }
   }
 
   ngOnInit(): void {
@@ -139,11 +126,9 @@ export class TallyComponent implements OnInit {
       "toDate": this.myForm.value?.toDate
     }).subscribe({
       next: (results: any) => {
-        // Set the search results in the data source
+        this.rowData = results.getInvoice;
         this.spinnerService.requestEnded();
-        this.dataSource.data = results.getInvoice;
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+
 
       },
       error: (err) => {
@@ -161,8 +146,9 @@ export class TallyComponent implements OnInit {
 
 
   updateintegration() {
+console.log(this.gridApi.getSelectedRows(),"SelectedRows");
 
-    var invintigxchange = this.selectedInvoices.map(x => {
+    var invintigxchange = this.gridApi.getSelectedRows().map(x => {
       return {
         "id": x.id,
         "invoiceNo": "",
@@ -184,10 +170,11 @@ export class TallyComponent implements OnInit {
           'Done!',
           data.stringList,
           'success'
-        ).then((result)=>{
-          if(result.isConfirmed){
-            this.selectedInvoices = [];
+        ).then((result) => {
+          if (result.isConfirmed) {
             this.onSubmit();
+
+            this.selectedInvoices = [];
           }
         });
 
@@ -207,8 +194,9 @@ export class TallyComponent implements OnInit {
 
 
   movetointegration() {
+    console.log(this.gridApi.getSelectedRows(),"SelectedRows");
 
-    let invintiglist = this.selectedInvoices.map(x => {
+    let invintiglist = this.gridApi.getSelectedRows().map(x => {
       return {
         "id": x.id,
         "invoiceNo": x.invoiceNo,
@@ -280,10 +268,10 @@ export class TallyComponent implements OnInit {
           'Done!',
           data.stringList,
           'success'
-        ).then((result)=>{
-          if(result.isConfirmed){
-            this.selectedInvoices = [];
+        ).then((result) => {
+          if (result.isConfirmed) {
             this.onSubmit();
+            this.selectedInvoices = [];
           }
         });
       },
@@ -299,4 +287,63 @@ export class TallyComponent implements OnInit {
 
     })
   }
+  /////////////////////////Ag-grid module///////////////////////////////
+  context: any;
+
+  @ViewChild('agGrid') agGrid: any;
+
+  private gridApi!: GridApi<any>;
+
+
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+  columnDefs: ColDef[] = [
+    { headerName: 'Client Name', field: 'shortName', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
+    { headerName: 'Invoice Number', field: 'invoiceNo', filter: true, },
+    { headerName: 'Invoice Date', field: 'invoiceDate', filter: true, },
+    { headerName: 'Product Amount', field: 'invoiceValue', filter: true, },
+
+    { headerName: 'Round Off', field: 'roundOff', filter: true, },
+    { headerName: 'Waiver', field: 'waiver', filter: true, },
+    { headerName: 'Discount', field: 'discount', filter: true, },
+    { headerName: 'Invoice Amount', field: 'invoiceValue', filter: true, },
+    { headerName: 'Payment Mode', field: 'paymentMode', filter: true, },
+    { headerName: 'Exchange Rate', field: 'exchangeRate', filter: true, },
+  ];
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData: any[] = [];
+  public themeClass: string =
+    "ag-theme-quartz";
+
+
+  onCellClicked(event: CellClickedEvent) {
+    const { colDef, data } = event;
+    if (colDef.field === 'invoiceNo') {
+      console.log(data, "PopupData");
+
+    }
+  }
+
+
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+    this.columnApi = params.columnApi;
+
+  }
+}
+
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
 }

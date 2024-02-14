@@ -179,6 +179,8 @@ th {
   padding: 20px;
 }
 .matbuttonaign {
+  position: relative;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -186,7 +188,10 @@ th {
 .mat-elevation-z8 {
   overflow-x: scroll;
 }
-
+.footerButton {
+  position: absolute;
+  left: 550px;
+}
 .clickable-link {
   cursor: pointer;
 }

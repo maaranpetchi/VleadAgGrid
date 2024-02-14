@@ -12,6 +12,7 @@ import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { SelectionModel } from '@angular/cdk/collections';
 import { LoginComponent } from 'src/app/Components/Navigation/TopNavbar/login/login.component';
+import { GridApi, ColDef, CellClickedEvent, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
 //MARTIAL INTERFACE
 interface Department {
   value: string;
@@ -47,6 +48,7 @@ export class ScopechangeComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   empForm: FormGroup;
+  columnApi: any;
 
   constructor(
     private _fb: FormBuilder,
@@ -77,7 +79,7 @@ export class ScopechangeComponent implements OnInit {
       return;
     }
     else {
-      this.selection.selected.forEach(x => this.setAll(x));
+      this.gridApi.getSelectedRows().forEach(x => this.setAll(x));
       if (this.selectedQuery.length > 0) {
         this.selectedJobs = this.selectedQuery;
       }
@@ -103,8 +105,7 @@ export class ScopechangeComponent implements OnInit {
             ).then((result) => {
 
               if (result.isConfirmed) {
-                window.location.reload();
-
+                this.getJobOrderList();
               }
 
             })
@@ -212,12 +213,7 @@ export class ScopechangeComponent implements OnInit {
     this._empService.getEmployeeList().subscribe({
 
       next: (res) => {
-
-        this.dataSource = new MatTableDataSource(res);
-
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-
+        this.rowData = res;
       },
       error: (err) => {
         this.spinnerService.resetSpinner(); // Reset spinner on error
@@ -241,9 +237,8 @@ export class ScopechangeComponent implements OnInit {
     }).subscribe({
       next: (results: any) => {
         this.spinnerService.requestEnded();
-        this.dataSource.data = results.jobOrderDetailsReport;
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+        this.rowData = results.jobOrderDetailsReport;
+
       },
       error: (err) => {
         this.spinnerService.resetSpinner(); // Reset spinner on error
@@ -265,15 +260,7 @@ export class ScopechangeComponent implements OnInit {
   selection = new SelectionModel<any>(true, []);
 
   filterValue: any = null;
-  applyFilter(event: Event): void {
-    this.filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = this.filterValue.trim().toLowerCase();
-    // this.selection.clear();
-    // this.dataSource.filteredData.forEach(x=>this.selection.select(x));
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
+
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -300,5 +287,60 @@ export class ScopechangeComponent implements OnInit {
     });
   }
 
+  /////////////////////////Ag-grid module///////////////////////////////
+  context: any;
 
+  @ViewChild('agGrid') agGrid: any;
+
+  private gridApi!: GridApi<any>;
+
+
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+  columnDefs: ColDef[] = [
+    { headerName: 'Job Number', field: 'jobId', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
+    { headerName: 'Job Date', field: 'estJobDate', filter: true, },
+    { headerName: 'Department', field: 'departmentName', filter: true, },
+    { headerName: 'Client', field: 'shortName', filter: true, },
+
+    { headerName: 'File Name', field: 'fileName', filter: true, },
+    { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
+    { headerName: 'Scope', field: 'scopeName', filter: true, },
+  ];
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData: any[] = [];
+  public themeClass: string =
+    "ag-theme-quartz";
+
+
+  onCellClicked(event: CellClickedEvent) {
+    const { colDef, data } = event;
+    if (colDef.field === 'invoiceNo') {
+      console.log(data, "PopupData");
+
+    }
+  }
+
+
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+    this.columnApi = params.columnApi;
+
+  }
+}
+
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
 }
