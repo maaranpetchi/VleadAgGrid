@@ -681,8 +681,6 @@ export class InvoiceComponent implements OnInit {
     }
   }
 
-
-
   /////////////////////////Ag-grid module///////////////////////////////
   @ViewChild('agGrid1') agGrid1: AgGridAngular;
   @ViewChild('agGrid2') agGrid2: AgGridAngular;
