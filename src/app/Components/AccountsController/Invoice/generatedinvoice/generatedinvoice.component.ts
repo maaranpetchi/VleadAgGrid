@@ -1,5 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+import { environment } from 'src/Environments/environment';
 
 @Component({
   selector: 'app-generatedinvoice',
@@ -7,32 +10,49 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./generatedinvoice.component.scss']
 })
 export class GeneratedinvoiceComponent implements OnInit {
+  InvoiceNumber: any;
 
-  constructor(private route: ActivatedRoute) {
+  constructor(private route: ActivatedRoute, private sanitizer: DomSanitizer, private http: HttpClient) {
 
   }
   ngOnInit(): void {
-    let InvoiceNumber = this.route.snapshot.queryParams['InvoiceNo'];
-    console.log(InvoiceNumber, "GettingInvoiceNumber");
 
-    this.parameters = {
-      "InvoiceNo": InvoiceNumber,
+    this.route.queryParams.subscribe(params => {
+      this.InvoiceNumber = params['InvoiceNo'];
+      console.log(this.InvoiceNumber, "GettingInvoiceNumber");
 
-    };
+      const url = environment.apiURL + `Invoice/Reports?invoiceNumber=${this.InvoiceNumber}&type=digitizing`;
+      this.pdfurl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    });
+
+    this.download();
+
   }
+  pdfurl: any;
 
-  reportServer: string = 'http://servicedesk.vleadservices.com/ReportServer';
-  reportUrl: string = 'VleadMigration/Reports/DigiAnnexure';
-  showParameters: string = "false";
-  parameters: any = {
-    "InvoiceNo": " ",
 
-  };
-  ReportServerDomain: "vleadservices.com";
-  ReportServerUserName: "vleadservices\\visvlead";
-  ReportServerPassword: "V1e@d@!@#";
-  language: string = "en-us";
-  width: number = 100;
-  height: number = 100;
-  toolbar: string = "true";
+  download() {
+
+    // Set responseType to 'blob' to get the response as a Blob
+    this.http.get(environment.apiURL + `Invoice/Reports?invoiceNumber=${this.InvoiceNumber}&type=digitizing`, { responseType: 'blob' }).subscribe((res) => {
+      console.log(res, "Resukt");
+
+
+      const blobURL = window.URL.createObjectURL(res);
+
+      // Create an anchor element
+      const a = document.createElement('a');
+      a.href = blobURL;
+      a.download = `Invoice_${this.InvoiceNumber}.pdf`; // Set the filename
+
+      // Programmatically click the anchor element to trigger the download
+      document.body.appendChild(a);
+      a.click();
+
+      // Clean up
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(blobURL);
+    });
+
+  }
 }
