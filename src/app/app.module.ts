@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {HttpClientModule} from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -29,7 +29,6 @@ import { AnniversaryComponent } from './Components/Navigation/Anniversary/annive
 import { AgGridModule } from 'ag-grid-angular';
 import 'ag-grid-enterprise';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,8 +44,8 @@ import 'ag-grid-enterprise';
     FilterPipe,
     ItemFilterPipe,
     BirthdayComponent,
-    AnniversaryComponent
-   ],
+    AnniversaryComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -56,17 +55,14 @@ import 'ag-grid-enterprise';
     MaterialModule,
     NavigationModule,
     MatDialogModule,
-    AgGridModule
+    AgGridModule,
   ],
-  exports:[
-    FilterPipe
-  ],
+  exports: [FilterPipe],
   providers: [
     EditadvanceadjustmentComponent,
     AdvanceadjustmentComponent,
     VendorService,
-    
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

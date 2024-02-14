@@ -5,13 +5,14 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { environment } from 'src/Environments/environment';
 import { LoginService } from 'src/app/Services/Login/login.service';
-import { Observable } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 import { QualitypopupjobassignComponent } from '../qualitypopupjobassign/qualitypopupjobassign.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EmployeePopupTableComponent } from '../employee-popup-table/employee-popup-table.component';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js';
 import { SelectionModel } from '@angular/cdk/collections';
+import { CellValueChangedEvent, CheckboxSelectionCallbackParams, ColDef, GridApi, GridReadyEvent, HeaderCheckboxSelectionCallbackParams, SelectionChangedEvent } from 'ag-grid-community';
 interface Employee {
   id: number;
   name: string;
@@ -33,6 +34,91 @@ export class QualityallocationtableComponent implements OnInit {
   selectedScope: any = 0;
   selectedJobs: any[] = [];
 
+  // AG Grid Table Data
+  rowData!:any;
+  rowEmpData!:any;
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  private gridApi;
+  private gridEmplApi!: GridApi<any>;
+  private gridColumnApi;
+  colDefs:ColDef[]=[
+    { field: 'jobId',checkboxSelection: true, width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true ,cellStyle: { color: 'blue' },cellRenderer:function(params){
+      return '<button class="btn btn-sm btn-link p-0">'+ params.value +'</button>';
+    } },
+    { field: 'jobDate_QueryDate',headerClass:"text-wrap", width: 100, suppressSizeToFit: true,sortable:true, filter:true },
+    { field: 'name', width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true },
+    { field: 'customerJobType', headerClass:"text-wrap",width: 100, suppressSizeToFit: true,sortable:true, filter:true },
+    { field: 'jobStatusDescription', headerClass:"text-wrap",width: 100, suppressSizeToFit: true,sortable:true, filter:true },
+    { field: 'projectCode', width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true },
+    { field: 'fileName', width: 100, headerClass:"text-wrap",suppressSizeToFit: true,sortable:true, filter:true },
+    { field: 'fileInwardType', width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true },
+    { field: 'processName', width: 100, headerClass:"text-wrap",suppressSizeToFit: true,sortable:true, filter:true },
+    { field: 'status', width: 100, suppressSizeToFit: true,sortable:true, filter:true },
+  ]
+  colEmpDefs:ColDef[]=[
+    { field: 'employeeCode',checkboxSelection: true, width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true ,editable:true },
+    { field: 'employeeName',headerClass:"text-wrap", width: 100, suppressSizeToFit: true,sortable:true, filter:true },
+  
+  ]
+  public defaultEmpColDef: ColDef = {
+    resizable: true,sortable:true, filter:true,    editable: true,  flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+  public defaultColDef: ColDef = {
+    resizable: true,sortable:true, filter:true,    editable: true,  flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+  onGridReady(params: GridReadyEvent) {
+    this.gridApi = params.api;
+    this.gridColumnApi = params.columnApi;
+    // this.http
+    // .get<any>(
+    //   environment.apiURL +
+    //   `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+    //     this.loginservice.getUsername()
+    //   )}/${parseInt(this.loginservice.getProcessId())}/1/0`
+    // )
+    //   .subscribe((data) => (this.rowData = data.employees));
+  }
+  onGridEmpReady(params: GridReadyEvent<any>) {
+    // this.gridApi = params.api;
+    this.gridEmplApi = params.api;
+    this.http
+      .get<any>(
+        environment.apiURL +
+          `Allocation/getPendingAllocationJobsAndEmployees/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`
+      )
+      .subscribe((response) => {
+        this.rowEmpData = response.employees;
+      });
+  }
+onSelectionChanged = (event: SelectionChangedEvent) => {
+  console.log('Row Selected!')
+  const selectedRows = this.gridApi.getSelectedRows();
+   
+  // Perform your bulk convert action with the selected rows
+  console.log('Selected Rows:', selectedRows);
+
+}
+onSelectionEmpChanged(event: SelectionChangedEvent){
+  const selectedEmpNodes = this.gridEmplApi.getSelectedNodes();
+  console.log('SelectedEmp Rows:', selectedEmpNodes); // Update exchangeHeader with the estimated time of the first selected row
+  // if (selectedEmpNodes.length > 0) {
+  //   this.exchangeHeader = selectedEmpNodes[0].data.estimatedTime;
+  // }
+}
+// Handle cell editing event
+onCellValueChanged = (event: CellValueChangedEvent) => {
+  console.log(`New Cell Value: ${event.value}`)
+}
+onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
+  console.log(`New Cell Value: ${event.value}`)
+}
+  // 
   displayedColumns: string[] = [
     'selected',
     'jobId',
@@ -152,7 +238,7 @@ export class QualityallocationtableComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
+  
   applyEmployeeFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataEmployeeSource.filter = filterValue.trim().toLowerCase();
@@ -167,8 +253,6 @@ export class QualityallocationtableComponent implements OnInit {
   selectedEmployee: any[] = [];
 
   setAllJobs(item: any) {
-
-    // if (completed == true) {
     if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
     if (item.employeeId == null) item.employeeId = 0;
     if (item.estimatedTime == null) item.estimatedTime = 0;
@@ -181,15 +265,6 @@ export class QualityallocationtableComponent implements OnInit {
       SelectedEmployees: [],
       SelectedRows: [],
     });
-    // } else {
-    //   if (this.selectedQuery.find((x) => x.id == item.id)) {
-    //     this.selectedQuery = this.selectedQuery.filter((x) => {
-    //       if (x.id != item.id) {
-    //         return item;
-    //       }
-    //     });
-    //   }
-    // }
   }
 
   setEmployeeAll(completed: boolean, item: any) {
@@ -270,27 +345,19 @@ export class QualityallocationtableComponent implements OnInit {
     this.displayedColumnsvisibility.querydate = false;
     this.displayedColumnsvisibility.estjob = true;
     this.http
-      .get<any>(
-        environment.apiURL +
-        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-          this.loginservice.getUsername()
-        )}/${parseInt(this.loginservice.getProcessId())}/1/0`
-      )
-      .subscribe({
-        next: (freshJobs) => {
-          this.spinner.requestEnded();
-          this.dataSource = new MatTableDataSource(freshJobs.allocationJobs);
-          this.dataSource.paginator = this.paginator1;
-          // this.dataSource.sort = this.sort;
-          this.dataEmployeeSource = new MatTableDataSource(freshJobs.employees);
-          this.dataEmployeeSource.paginator = this.paginator2;
-          // this.dataEmployeeSource.sort = this.sort;
-        },
-        error: (err) => {
-          this.spinner.resetSpinner();
-          console.log(err);
-        },
-      });
+    .get<any>(
+      environment.apiURL +
+      `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+        this.loginservice.getUsername()
+      )}/${parseInt(this.loginservice.getProcessId())}/1/0`
+    ).pipe(catchError((error) => {
+      this.spinner.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(response => {
+      this.spinner.requestEnded();
+      this.rowData= response.allocationJobs;
+      this.rowEmpData =response.employees;
+    })
   }
   revisionJobs() {
     this.spinner.requestStarted();
@@ -369,14 +436,8 @@ export class QualityallocationtableComponent implements OnInit {
       .subscribe({
         next: (allocaetdJobs) => {
           this.spinner.requestEnded();
-          this.dataSource = new MatTableDataSource(
-            allocaetdJobs.allocationJobs
-          );
-          this.dataEmployeeSource = new MatTableDataSource(
-            allocaetdJobs.employees
-          );
-          this.dataSource.paginator = this.paginator1;
-          // this.dataSource.sort = this.sort;
+          this.rowData= allocaetdJobs.allocationJobs;
+          this.rowEmpData =allocaetdJobs.employees;
         },
         error: (err) => {
           this.spinner.resetSpinner();
@@ -581,14 +642,14 @@ export class QualityallocationtableComponent implements OnInit {
   }
   data: any;
   onSubmit(data: any) {
-
-    this.selection.selected.forEach((x) => this.setAllJobs(x));
-
-    if (this.selectedQuery.length > 0) {
-      this.selectedJobs = this.selectedQuery;
-    }
-    var selectedJobCount = this.selectedJobs.length;
-    var selectedEmployeeCount = this.selectedEmployee.length;
+    // let selectedRow = this.gridApi.setAllJobs();
+    // console.log(selectedRow, "SelectedRowws");
+    // this.selection.selected.forEach((x) => this.setAllJobs(x));
+    // if (this.selectedQuery.length > 0) {
+    //   this.selectedJobs = this.selectedQuery;
+    // }
+    var selectedJobCount = this.gridApi.getSelectedRows();
+    var selectedEmployeeCount:any = this.gridEmplApi.getSelectedRows();
     if (this.loginservice.getProcessName() == 'Production Allocation') {
       if (selectedJobCount != 0 && selectedEmployeeCount != 0) {
         if (selectedJobCount > 1) {
@@ -672,8 +733,8 @@ export class QualityallocationtableComponent implements OnInit {
       jId: 0,
       estimatedTime: this.estTime !== 0 ? this.estTime : 0,
       tranMasterId: 0,
-      selectedRows: this.selectedJobs,
-      selectedEmployees: this.selectedEmployee,
+      selectedRows: this.gridApi.getSelectedRows(),
+      selectedEmployees: this.gridEmplApi.getSelectedRows(),
       departmentId: 0,
       updatedUTC: '2023-06-22T11:47:25.193Z',
       categoryDesc: 'string',
@@ -877,5 +938,14 @@ export class QualityallocationtableComponent implements OnInit {
       'Rush': data.jobStatusId === 2 || data.jobStatusId === 4 || data.jobStatusId === 8
     };
   }
-
+  
+}
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
 }

@@ -50,7 +50,6 @@
 }
 
 .table-container {
-  height: 50vh;
   /* Set the maximum height for the table container */
   overflow-y: auto;
   /* Enable vertical scrolling */
@@ -74,7 +73,9 @@ th {
   position: sticky;
   top: 0;
 }
-
+.employeetable{
+  margin-top: 20px;
+}
 .table-header {
   display: flex;
   align-items: center;
