@@ -7,12 +7,19 @@ import { MatSort } from '@angular/material/sort';
 import { MatStepper } from '@angular/material/stepper';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AgGridAngular } from 'ag-grid-angular';
+import { GridApi, ColDef, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { catchError } from 'rxjs';
 import { environment } from 'src/Environments/environment';
+import { customernormsrenderingcomponent } from 'src/app/Components/CustomerNorms/customernormsindex/customerNormsRendering.component';
+import { DeleteActionRenderingComponent } from 'src/app/Components/EmployeeVSDivision/delete-action-rendering/delete-action-rendering.component';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 import { CustomerSalesApprovalService } from 'src/app/Services/sales/CustomerSalesApproval/customer-sales-approval.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
+import { CustomersalesRenderingComponent } from '../../customersales-rendering/customersales-rendering.component';
 
 
 @Component({
@@ -45,6 +52,13 @@ export class SalesMultiStepFormComponent implements OnInit {
   selectedJobStatusDescription: any;
   customerTatid: any;
   ShortNamePayload: any;
+  context: any = "customersalesapproval";
+  getContext(): any {
+    return {
+      CustomerId: this.apiResponseData.id,
+      context: "customersalesapproval"
+    };
+  }
   employeeFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -56,6 +70,15 @@ export class SalesMultiStepFormComponent implements OnInit {
   ngOnInit(): void {
     this.apiResponseData = this.sharedDataService.getData();
     console.log(this.apiResponseData, "APIResponseData");
+    this.sharedService.refreshData$.subscribe(() => {
+      // Update your data or call the necessary methods to refresh the data
+      this.getTableData();
+    });
+    this.sharedService.customersalesapprovalrefreshData$.subscribe(() => {
+      // Update your data or call the necessary methods to refresh the data
+      this.getCustomerTatTable();
+    });
+
 
     this.fetchUpdateData();
     this.getCustomervsscopeDepartments();
@@ -64,12 +87,10 @@ export class SalesMultiStepFormComponent implements OnInit {
     this.getCountry();
     this.getUserAddress();
   }
-  constructor(private activatedRoute: ActivatedRoute, private http: HttpClient, private _coreService: CoreService, private sharedDataService: CustomerSalesApprovalService, private loginservice: LoginService, private spinnerService: SpinnerService, private router: Router) {
+  constructor(private activatedRoute: ActivatedRoute, private http: HttpClient, private _coreService: CoreService, private sharedDataService: CustomerSalesApprovalService, private loginservice: LoginService, private spinnerService: SpinnerService, private router: Router, private sharedService: SharedService) {
     this.getCustomerData();
     this.getDepartments();
-    // this.getCountry();
-    // this.GetStatesList();
-    // this.GetCitiesList();
+
   }
 
 
@@ -441,12 +462,8 @@ export class SalesMultiStepFormComponent implements OnInit {
 
 
   getTableData() {
-    this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `CustomerMapping/CustomerScopeByCusId?cusId=${this.apiResponseData.id}`).subscribe(results => {
-      this.dataSource = results;
-      this.spinnerService.requestEnded();
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      this.rowData = results;
     });
   }
   addDataToTable() {
@@ -482,8 +499,9 @@ export class SalesMultiStepFormComponent implements OnInit {
       this.spinnerService.requestStarted();
 
       this.http.post<any>(environment.apiURL + `CustomerMapping/AddCustomerVsScope`, payload).subscribe(results => {
-        this.dataSource = results
         this.spinnerService.requestEnded();
+
+        this.rowData = results
 
         Swal.fire('Done', results.message, 'success').then((respone) => {
           if (respone.isConfirmed) {
@@ -539,9 +557,10 @@ export class SalesMultiStepFormComponent implements OnInit {
   }
 
   getCustomerTatTable() {
+    console.log(this.apiResponseData, "Apiresponse in tat");
 
     this.http.get<any>(environment.apiURL + `CustomerMapping/GetAllCustomerTATbyCusId?custId=${this.apiResponseData.id}`).subscribe(results => {
-      this.customertatdatasource = results;
+      this.table2rowData = results;
       this.customerTatid = results[0].id;
       this.jobStatusDescription = results[0].jobStatusDescription;
 
@@ -567,8 +586,9 @@ export class SalesMultiStepFormComponent implements OnInit {
       }
     ]
     this.http.post<any>(environment.apiURL + `CustomerMapping/AddCustomerTAT`, payload).subscribe(results => {
-      this.customertatdatasource = results;
       this.spinnerService.requestEnded();
+
+      this.table2rowData = results;
       Swal.fire('Done', results.message, 'success').then((respone) => {
         if (respone.isConfirmed) {
           this.SelectedJobStatus = '';
@@ -598,6 +618,7 @@ export class SalesMultiStepFormComponent implements OnInit {
   uptcustat: boolean = false;
   addcustat: boolean = true;
   openEditForm() {
+console.log(this.apiResponseData.id,"APIRESPONSEID");
 
     this.http.get<any>(environment.apiURL + `CustomerMapping/GetAllCustomerTATbyCusId?custId=${this.apiResponseData.id}`).subscribe(results => {
       this.jobStatusdisplay = true;
@@ -641,8 +662,8 @@ export class SalesMultiStepFormComponent implements OnInit {
     this.spinnerService.requestStarted();
 
     this.http.post<any>(environment.apiURL + `CustomerMapping/UpdateCustomerTATData`, payload).subscribe(results => {
-      this.customertatdatasource = results;
       this.spinnerService.requestEnded();
+      this.table2rowData = results;
       Swal.fire('Done', 'Data Updated Successfully', 'success').then((respone) => {
         if (respone.isConfirmed) {
           this.getCustomerTatTable();
@@ -677,4 +698,109 @@ export class SalesMultiStepFormComponent implements OnInit {
       }
     })
   }
+
+  @ViewChild('agGrid1') agGrid1: AgGridAngular;
+  @ViewChild('agGrid2') agGrid2: AgGridAngular;
+
+  private gridApi1!: GridApi;
+  private gridApi2!: GridApi;
+
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+  public table2defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isSecondColumn,
+    checkboxSelection: isSecondColumn,
+  };
+
+  table1def: ColDef[] = [
+    { headerName: 'Customer', field: 'customerName', filter: true, },
+    { headerName: 'Department ', field: 'deptName', filter: true, },
+    { headerName: 'Scope', field: 'scopeName', filter: true, },
+    { headerName: 'Status', field: 'customerJobType', filter: true, },
+
+    {
+      headerName: 'Actions',
+      cellStyle: { innerWidth: 20 },
+
+      field: 'action',
+      cellRenderer: CustomersalesRenderingComponent, // JS comp by Direct Reference
+      autoHeight: true,
+    }
+
+  ];
+  table2def: ColDef[] = [
+
+    { headerName: 'Customer Name ', field: 'name', filter: true, },
+    { headerName: 'Customer Short Name ', field: 'shortName', filter: true, },
+    { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
+    { headerName: 'TAT', field: 'tat', filter: true, },
+    {
+      headerName: 'Actions',
+      field: 'action',
+      cellRenderer: customernormsrenderingcomponent, // JS comp by Direct Reference
+      autoHeight: true,
+    }];
+
+
+
+
+
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public table2rowSelection: 'single' | 'multiple' = 'multiple';
+
+  public rowData!: any[];
+  public table2rowData!: any[];
+
+  public themeClass: string =
+    "ag-theme-quartz";
+
+  onGridReady1(params: GridReadyEvent) {
+    this.gridApi1 = params.api;
+  }
+
+  onGridReady2(params: GridReadyEvent) {
+    this.gridApi2 = params.api;
+  }
+
+  handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {
+    console.log(params, "Parameter");
+    console.log(params.data, "ParameterData");
+    let parameterData = params.data
+    if (params.colDef.field === 'filecount') { // Check if the changed column is 'price'
+
+    }
+  }
+
+
+  handlePress(newvalue, parameterData) {
+    console.log(newvalue, "HandlepressNewValue");
+    console.log(parameterData, "ParameterValue");
+
+  }
+  selectedRows1: any;
+  selectedRows2: any;
+
+
+}
+function isFirstColumn(
+  params: CheckboxSelectionCallbackParams | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
+}
+
+function isSecondColumn(
+  params: CheckboxSelectionCallbackParams | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsSecondColumn = displayedColumns[0] === params.column;
+  return thisIsSecondColumn;
 }

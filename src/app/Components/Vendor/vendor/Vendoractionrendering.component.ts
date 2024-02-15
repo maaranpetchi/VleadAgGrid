@@ -14,6 +14,8 @@ import { environment } from 'src/Environments/environment';
 import { catchError } from 'rxjs';
 import { UpdatevendorComponent } from '../updatevendor/updatevendor.component';
 import { EditadvanceadjustmentComponent } from '../../AccountsController/AdvanceAdjustment/Edit/editadvanceadjustment/editadvanceadjustment.component';
+import { Router } from '@angular/router';
+import { CustomerSalesApprovalService } from 'src/app/Services/sales/CustomerSalesApproval/customer-sales-approval.service';
 
 @Component({
     selector: 'app-vendorrenderer',
@@ -34,7 +36,10 @@ export class VendoractionrenderingComponent implements ICellRendererAngularComp 
     AdvanceAdjustmentContext: any;
     AdvanceAdjustmentSelectedDepartment: any;
 
-    constructor(private sharedService: SharedService, private injector: Injector, private spinnerService: SpinnerService, private http: HttpClient, private loginservice: LoginService, private sharedDataService: SharedService) { }
+    constructor(private sharedService: SharedService, private injector: Injector, private spinnerService: SpinnerService, private http: HttpClient, private loginservice: LoginService, private sharedDataService: SharedService,
+        private router: Router,
+        private SharedCustomerResult:CustomerSalesApprovalService
+    ) { }
     iconClicked: boolean = false;
 
     // gets called once before the renderer is used
@@ -67,9 +72,14 @@ export class VendoractionrenderingComponent implements ICellRendererAngularComp 
         if (this.AdvanceAdjustmentContext == 'advanceadjustment') {
             this.editAdvanceAdjustment(params)
         }
+        ///CustomerSalesApproval
+        if (this.Context == 'customersalesapproval') {
+            this.editCustomerSalesApproval(params)
+        }
 
 
     }
+    ///EmployeeVSDivision
 
     openclientorder(params) {
         const dialogRef = this.dialog.open(UpdatevendorComponent, {
@@ -94,17 +104,32 @@ export class VendoractionrenderingComponent implements ICellRendererAngularComp 
     selectedJobs: any[] = [];
     selectedQuery: any[] = [];
 
+    ///AdvanceAdjustment
 
 
-    editAdvanceAdjustment(params){
+    editAdvanceAdjustment(params) {
         const dialogRef: MatDialogRef<EditadvanceadjustmentComponent> = this.dialog.open(EditadvanceadjustmentComponent, {
             width: '70vw',
             height: '90vh',
             data: {
-              id: params.data.id,
-              availableAdvance: params.data.availableAdvance,
-              department: this.AdvanceAdjustmentSelectedDepartment,
+                id: params.data.id,
+                availableAdvance: params.data.availableAdvance,
+                department: this.AdvanceAdjustmentSelectedDepartment,
             },
-          });
+        });
+    }
+
+    ///CustomerSalesApproval
+    editCustomerSalesApproval(params) {
+
+        console.log(params.data.id ,"Idgetting");
+        
+        let payload = {
+            "id": params.data.id,
+        }
+        this.http.get<any>(environment.apiURL + `Customer/getAppAllCustomerContactDetails?customerId=${params.data.id}`).subscribe(results => {
+            this.SharedCustomerResult.setData(results);
+            this.router.navigate(['/topnavbar/multistepform']);
+        });
     }
 }

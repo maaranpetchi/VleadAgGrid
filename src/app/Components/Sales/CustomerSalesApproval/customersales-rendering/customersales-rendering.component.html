@@ -1,0 +1,14 @@
+<div class="button">
+  <div class="actionbutton" *ngIf="params.data.customerJobType !== 'Live'">
+    <span class="total-value-renderer">
+      <i class="fa fa-edit" matTooltip="edit" style="cursor: pointer;color:green" (click)=" EditButton(params)"></i>
+    </span>
+  </div>
+  <div class="DeleteButton">
+    <span class="total-value-renderer">
+      <span class="total-value-renderer">
+        <i class="fa fa-trash-o" matTooltip="delete" style="cursor: pointer;color:green"
+          (click)="DeleteButton(params)"></i>
+      </span> </span>
+  </div>
+</div>
