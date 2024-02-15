@@ -79,6 +79,10 @@ export class DeleteActionRenderingComponent implements ICellRendererAngularComp 
     if (this.Context == 'customersalesapproval') {
       this.customersalesapprovalDelete(params)
     }
+    ///customervsdivision
+    if (this.Context == 'customervsdivision') {
+      this.customervsdivisionDelete(params)
+    }
 
   }
   /////////EmployeeVSDivision Delete//////////////
@@ -141,5 +145,32 @@ export class DeleteActionRenderingComponent implements ICellRendererAngularComp 
         })
       }
     });
+  }
+
+  //////////////////customervsdivision////////
+  customervsdivisionDelete(params){
+    this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL + `CustomerVsDivision/RemoveCvsD?id=${params.data.id}`).subscribe(results => {
+      this.spinnerService.requestEnded();
+      if (results == true) {
+        Swal.fire(
+          'Done!',
+          'Employee Deleted Successfully',
+          'success'
+        ).then((res)=>{
+          if(res.isConfirmed){
+            this.sharedDataService.triggerRefresh();
+
+          }
+        })
+      }
+      else {
+        Swal.fire(
+          'Error!',
+          'Employee Not Deleted ',
+          'error'
+        )
+      }
+    })
   }
 }
