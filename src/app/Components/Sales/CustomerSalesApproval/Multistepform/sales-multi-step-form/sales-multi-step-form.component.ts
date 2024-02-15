@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { ResourceLoader } from '@angular/compiler';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -9,7 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { GridApi, ColDef, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
-import { catchError } from 'rxjs';
+import { Subscription, catchError } from 'rxjs';
 import { environment } from 'src/Environments/environment';
 import { customernormsrenderingcomponent } from 'src/app/Components/CustomerNorms/customernormsindex/customerNormsRendering.component';
 import { DeleteActionRenderingComponent } from 'src/app/Components/EmployeeVSDivision/delete-action-rendering/delete-action-rendering.component';
@@ -20,6 +20,7 @@ import { SharedService } from 'src/app/Services/SharedService/shared.service';
 import { CustomerSalesApprovalService } from 'src/app/Services/sales/CustomerSalesApproval/customer-sales-approval.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { CustomersalesRenderingComponent } from '../../customersales-rendering/customersales-rendering.component';
+import { EditService } from 'src/app/Services/Displayorhideform/edit-service.service';
 
 
 @Component({
@@ -28,7 +29,7 @@ import { CustomersalesRenderingComponent } from '../../customersales-rendering/c
   styleUrls: ['./sales-multi-step-form.component.scss'],
 
 })
-export class SalesMultiStepFormComponent implements OnInit {
+export class SalesMultiStepFormComponent implements OnInit ,OnDestroy {
   customerProfile: FormGroup;
   CustomerVsScope: FormGroup;
   customerVsTAT: FormGroup;
@@ -53,6 +54,8 @@ export class SalesMultiStepFormComponent implements OnInit {
   customerTatid: any;
   ShortNamePayload: any;
   context: any = "customersalesapproval";
+  private subscription: Subscription;
+  thidTableGettingData: any;
   getContext(): any {
     return {
       CustomerId: this.apiResponseData.id,
@@ -66,6 +69,9 @@ export class SalesMultiStepFormComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 
   ngOnInit(): void {
     this.apiResponseData = this.sharedDataService.getData();
@@ -78,7 +84,16 @@ export class SalesMultiStepFormComponent implements OnInit {
       // Update your data or call the necessary methods to refresh the data
       this.getCustomerTatTable();
     });
+    this.subscription = this.editservice.editTriggered$.subscribe(() => {
 
+      this.thidTableGettingData = this.editservice.getViewData();
+      console.log(this.thidTableGettingData,"thirdTableGettingData");
+      this.jobStatusdisplay = true;
+      this.jobstatusdropdown = false;
+      this.addcustat = false;
+      this.uptcustat = true;
+      this.tatValue = this.thidTableGettingData.tat;
+    });
 
     this.fetchUpdateData();
     this.getCustomervsscopeDepartments();
@@ -87,7 +102,7 @@ export class SalesMultiStepFormComponent implements OnInit {
     this.getCountry();
     this.getUserAddress();
   }
-  constructor(private activatedRoute: ActivatedRoute, private http: HttpClient, private _coreService: CoreService, private sharedDataService: CustomerSalesApprovalService, private loginservice: LoginService, private spinnerService: SpinnerService, private router: Router, private sharedService: SharedService) {
+  constructor(private activatedRoute: ActivatedRoute, private http: HttpClient, private _coreService: CoreService, private sharedDataService: CustomerSalesApprovalService, private loginservice: LoginService, private spinnerService: SpinnerService, private router: Router, private sharedService: SharedService,private editservice:EditService) {
     this.getCustomerData();
     this.getDepartments();
 
@@ -621,11 +636,7 @@ export class SalesMultiStepFormComponent implements OnInit {
 console.log(this.apiResponseData.id,"APIRESPONSEID");
 
     this.http.get<any>(environment.apiURL + `CustomerMapping/GetAllCustomerTATbyCusId?custId=${this.apiResponseData.id}`).subscribe(results => {
-      this.jobStatusdisplay = true;
-      this.jobstatusdropdown = false;
-      this.addcustat = false;
-      this.uptcustat = true;
-      this.tatValue = results[0].tat;
+   
 
 
     });

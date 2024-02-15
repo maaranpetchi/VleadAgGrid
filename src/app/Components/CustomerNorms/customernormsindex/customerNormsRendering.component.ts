@@ -17,6 +17,7 @@ import { Router } from '@angular/router';
 import { ItassetsService } from 'src/app/Services/ITAssets/itassets.service';
 import { AddEditCustomerVSEmployeeComponent } from '../../CustomerController/CustomerVSEmployee/add-edit-customer-vsemployee/add-edit-customer-vsemployee.component';
 import { CustomerVSEmployeeService } from 'src/app/Services/CustomerVSEmployee/customer-vsemployee.service';
+import { EditService } from 'src/app/Services/Displayorhideform/edit-service.service';
 
 @Component({
   selector: 'app-customernormsrendering',
@@ -51,6 +52,7 @@ export class customernormsrenderingcomponent implements ICellRendererAngularComp
     private sharedDataService: SharedService, private _empService: CustomerNormsService, private router: Router,
     private ITAssetService: ItassetsService,
     private customervsemployeeservice: CustomerVSEmployeeService,
+    private viewDataService: EditService
 
   ) {
 
@@ -58,8 +60,8 @@ export class customernormsrenderingcomponent implements ICellRendererAngularComp
   iconClicked: boolean = false;
   // gets called once before the renderer is used
   agInit(params: ICellRendererParams): void {
-    console.log(params,"Getting Params");
-    
+    console.log(params, "Getting Params");
+
     this.gettingData = params.data;
     console.log(this.gettingData, "GettingData");
     this.params = params;
@@ -86,11 +88,11 @@ export class customernormsrenderingcomponent implements ICellRendererAngularComp
     this.Context = params.context;
     console.log(this.Context, "params");
 
-    this.customerSalesApprovalContext =  params.context.context;
-    this.customerSalesApprovalCustomerId =  params.context.CustomerId;
+    this.customerSalesApprovalContext = params.context.context;
+    this.customerSalesApprovalCustomerId = params.context.CustomerId;
 
     console.log(this);
-    
+
     ///EmployeeVSSKillsetEdit
     if (this.Context == 'CustomerNorms') {
       this.CustomerNormsedit(params)
@@ -310,12 +312,10 @@ export class customernormsrenderingcomponent implements ICellRendererAngularComp
   /////////////customersalesapproval Started///////////////
   customersalesapprovaledit(params) {
     this.http.get<any>(environment.apiURL + `CustomerMapping/GetAllCustomerTATbyCusId?custId=${this.customerSalesApprovalCustomerId}`).subscribe(results => {
-      // this.jobStatusdisplay = true;
-      // this.jobstatusdropdown = false;
-      // this.addcustat = false;
-      // this.uptcustat = true;
-      // this.tatValue = results[0].tat;
-      console.log(results, "Customersalesapproval");
+      this.viewDataService.setViewData(params.data);
+      let sendData = this.viewDataService.setViewData(params.data);
+      console.log(sendData, "Customersalesapproval");
+      this.viewDataService.triggerEdit();
 
     }
     )
