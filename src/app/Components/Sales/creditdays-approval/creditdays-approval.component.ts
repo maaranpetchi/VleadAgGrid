@@ -80,7 +80,6 @@ context: any="creditdaysapproval";
         },
       });
   }
-
  /////////////////////////Ag-grid module///////////////////////////////
  @ViewChild('agGrid') agGrid: any;
 
