@@ -20,101 +20,21 @@
 
           <div class="table-container">
 
-            <table mat-table [dataSource]="dataSource" id="custom-table"
-            class="table table-sm table-responsive table table-bordered text-center">
-              <ng-container matColumnDef="fileName">
-                <th mat-header-cell *matHeaderCellDef>
-                  <div class="header-wrapper">
-                    <div class="department-name text-start">File Name</div>
-                    <div class="filter-input">
-                      <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-                    </div>
-                  </div>
-                </th>
-                <td mat-cell *matCellDef="let row"> {{row.fileName}} </td>
-              </ng-container>
-              <ng-container matColumnDef="po">
-                  <th mat-header-cell *matHeaderCellDef>
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">PO#</div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.pono}} </td>
-              </ng-container>
-              <ng-container matColumnDef="CustomerName">
-                <th mat-header-cell *matHeaderCellDef>
-                  <div class="header-wrapper">
-                    <div class="department-name text-start">Customer Name</div>
-                    <div class="filter-input">
-                      <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-                    </div>
-                  </div>
-                </th>
-                <td mat-cell *matCellDef="let row"> {{row.companyName}} </td>
-              </ng-container>
-              <ng-container matColumnDef="Instruction">
-                  <th mat-header-cell *matHeaderCellDef>
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">Instruction</div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.jobStatusDescription}} </td>
-              </ng-container>
-              <ng-container matColumnDef="Salespersonname">
-                  <th mat-header-cell *matHeaderCellDef>
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">Sales Person Name</div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.salesPersonName}} </td>
-              </ng-container>
-              <ng-container matColumnDef="Jobstatus">
-                  <th mat-header-cell *matHeaderCellDef>
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">Job Status</div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.jobStatusDescription}} </td>
-              </ng-container>
-            
-              <ng-container matColumnDef="action">
-                <th mat-header-cell *matHeaderCellDef> Action </th>
-                <td mat-cell *matCellDef="let row">
-                  <button mat-icon-button color="primary" (click)="openViewForm(row.orderId)">
-                    <mat-icon>remove_red_eye</mat-icon>
-                  </button>
-                </td>
-              </ng-container>
-            
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            
-              <!-- Row shown when there is no matching data. -->
-              <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" colspan="4">No data matching the filter "{{dataSource.filter}}"</td>
-              </tr>
-              <!-- Row shown when there is no matching data. -->
-              <ng-container *ngIf="dataSource?.data?.length === 0">
-                <tr class="mat-row" *matNoDataRow>
-                  <td class="mat-cell" colspan="8">No data available</td>
-                </tr>
-              </ng-container>
-            
-            </table>
+                 <ag-grid-angular
+            style="width: 100%; height: 100%;"
+            [context]="context"
+            [columnDefs]="columnDefs"
+            [defaultColDef]="defaultColDef"
+            [suppressRowClickSelection]="true"
+            [rowSelection]="rowSelection"
+            [rowData]="rowData"
+            [pagination]="true"
+            [class]="themeClass"
+            (gridReady)="onGridReady($event)"
+            (cellValueChanged)="handleCellValueChanged($event)"
+            frameworkComponents="{ }"
+          ></ag-grid-angular>
           </div>
-          <mat-paginator [pageSizeOptions]="[25, 50,75,100]" aria-label="Select page of users"></mat-paginator>
 
         </div>
 
