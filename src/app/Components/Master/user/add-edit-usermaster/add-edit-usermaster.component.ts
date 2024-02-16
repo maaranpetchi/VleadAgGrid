@@ -153,9 +153,12 @@ onMenuSelection =  (event:any ,id) => {
 };
 
 
-onCancel():void {
-    this.dialogRef.close();
+dialogClose() {
+    this.dialogRef.close(true);
 }
+
+
+
   onFormSubmit(id:any){
     let str:string = this.selectedMenu.reduce((str,item)=>{
       return str+"|" + item+"|,";

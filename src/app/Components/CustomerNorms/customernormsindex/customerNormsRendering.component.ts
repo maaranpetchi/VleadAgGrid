@@ -18,6 +18,10 @@ import { ItassetsService } from 'src/app/Services/ITAssets/itassets.service';
 import { AddEditCustomerVSEmployeeComponent } from '../../CustomerController/CustomerVSEmployee/add-edit-customer-vsemployee/add-edit-customer-vsemployee.component';
 import { CustomerVSEmployeeService } from 'src/app/Services/CustomerVSEmployee/customer-vsemployee.service';
 import { EditService } from 'src/app/Services/Displayorhideform/edit-service.service';
+import { AddEditUsermasterComponent } from '../../Master/user/add-edit-usermaster/add-edit-usermaster.component';
+import { UserMasterService } from 'src/app/Services/Master/user-master.service';
+import { BenchStatusService } from 'src/app/Services/Benchstatus/bench-status.service';
+import { WorkflowService } from 'src/app/Services/CoreStructure/WorkFlow/workflow.service';
 
 @Component({
   selector: 'app-customernormsrendering',
@@ -52,8 +56,10 @@ export class customernormsrenderingcomponent implements ICellRendererAngularComp
     private sharedDataService: SharedService, private _empService: CustomerNormsService, private router: Router,
     private ITAssetService: ItassetsService,
     private customervsemployeeservice: CustomerVSEmployeeService,
-    private viewDataService: EditService
-
+    private viewDataService: EditService,
+    private usermasterservice: UserMasterService,
+    private benchstatusservice: BenchStatusService,
+    private workflowservice: WorkflowService
   ) {
 
   }
@@ -109,6 +115,15 @@ export class customernormsrenderingcomponent implements ICellRendererAngularComp
     if (this.Context.context == "customersalesapproval") {
       this.customersalesapprovaledit(params)
     }
+    //master-user
+    if (this.Context == 'user') {
+      this.userEdit(params)
+    }
+    //master-benchstatus
+    if (this.Context == 'benchstatus') {
+      this.benchstatusEdit(params)
+    }
+
   }
   DeleteButton(params) {
     // Set the flag to true when the icon is clicked
@@ -132,6 +147,14 @@ export class customernormsrenderingcomponent implements ICellRendererAngularComp
     //customervsemployee
     if (this.Context.context == "customersalesapproval") {
       this.customersalesapprovaldelete(params)
+    }
+    //Master-User
+    if (this.Context == "user") {
+      this.userDelete(params)
+    }
+    //Master-benchstatus
+    if (this.Context == "benchstatus") {
+      this.benchstatusDelete(params)
     }
   }
 
@@ -301,14 +324,6 @@ export class customernormsrenderingcomponent implements ICellRendererAngularComp
   /////////////////////////////customervsemployee Ended//////////////////////////
 
 
-
-
-
-
-
-
-
-
   /////////////customersalesapproval Started///////////////
   customersalesapprovaledit(params) {
     this.http.get<any>(environment.apiURL + `CustomerMapping/GetAllCustomerTATbyCusId?custId=${this.customerSalesApprovalCustomerId}`).subscribe(results => {
@@ -335,4 +350,62 @@ export class customernormsrenderingcomponent implements ICellRendererAngularComp
     });
   }
   /////////////customersalesapproval Ended///////////////
+
+  ///////////////////Master-User started/////////////////
+  userEdit(params) {
+    const dialogRef = this.dialog.open(AddEditUsermasterComponent, {
+      width: '100%',
+      height: '400px',
+      data: params.data,
+    })
+    dialogRef.afterClosed().subscribe({
+      next: (val) => {
+        if (val) {
+          this.sharedDataService.triggerRefresh();
+        }
+      },
+    });
+  }
+
+  userDelete(params) {
+    let deleteUser = {
+      "id": params.data.id,
+      "username": " ",
+      "password": " ",
+      "userType": " ",
+    }
+    this.usermasterservice.deleteMasterUser(deleteUser).subscribe({
+      next: (res) => {
+        Swal.fire('Done!', 'User Deleted Successfully', 'success').then((response) => {
+          if (response.isConfirmed) {
+            this.sharedDataService.triggerRefresh();
+          }
+        });
+
+      },
+      error: console.log,
+    })
+  }
+  ///////////////////Master-User Ended/////////////////
+
+
+
+  /////////////Master-BenchStatus Started///////
+  benchstatusEdit(params) {
+    this.spinnerService.requestStarted();
+
+    this.benchstatusservice.editBenchStatus(params.data).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe((response: any) => {
+      this.spinnerService.requestEnded();
+      let sendData = this.viewDataService.setViewData(response);
+      console.log(sendData, "Customersalesapproval");
+      this.viewDataService.triggerEdit();
+    });
+  }
+  benchstatusDelete(params) {
+
+  }
+  /////////////Master-BenchStatus Ended///////
 }

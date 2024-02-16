@@ -1,3 +1,9 @@
 .cursor:hover{
     cursor: not-allowed;
 }
+
+
+.footerButtons {
+    display: flex;
+    justify-content: space-between;
+}

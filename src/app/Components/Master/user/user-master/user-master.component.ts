@@ -11,6 +11,10 @@ import { AddEditUsermasterComponent } from '../add-edit-usermaster/add-edit-user
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { catchError } from 'rxjs';
 import Swal from 'sweetalert2/src/sweetalert2.js'
+import { GridApi, ColDef, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { customernormsrenderingcomponent } from 'src/app/Components/CustomerNorms/customernormsindex/customerNormsRendering.component';
+import { environment } from 'src/Environments/environment';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 
 @Component({
   selector: 'app-user-master',
@@ -28,17 +32,20 @@ export class UserMasterComponent implements OnInit {
   ]
 
   employees: any = {};
-  dataSource!: MatTableDataSource<any>;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  context: any = "user";
 
   constructor(
     private _dialog: MatDialog,
     private _empService: UserMasterService,
     private _coreService: CoreService,
     private spinnerService: SpinnerService,
-  ) { }
+    private sharedDataService:SharedService
+  ) { 
+    this.sharedDataService.refreshData$.subscribe(() => {
+      // Update your data or call the necessary methods to refresh the data
+      this.getMasterUsers();
+    });}
   myForm = new FormGroup({
     name: new FormControl('', Validators.required),
     userName: new FormControl('', Validators.required),
@@ -58,9 +65,8 @@ export class UserMasterComponent implements OnInit {
     })).subscribe({
       next: (data) => {
         this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(data);
-        // this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+        this.rowData = data;
+
       },
       error: (err) => {
         this.spinnerService.resetSpinner();
@@ -69,13 +75,7 @@ export class UserMasterComponent implements OnInit {
     })
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
+
 
   openAddUsers() {
     const dialogRef = this._dialog.open(AdduserMasterComponent, {
@@ -91,40 +91,67 @@ export class UserMasterComponent implements OnInit {
     });
   }
 
-  openEditForm(data: any) {
-    const dialogRef = this._dialog.open(AddEditUsermasterComponent, {
-      width: '100%',
-      height: '400px',
-      data: data,
-    })
-    dialogRef.afterClosed().subscribe({
-      next: (val) => {
-        if (val) {
-          this.getMasterUsers();
-        }
-      },
-    });
-  }
 
-  deleteMasterUser(data) {
-    let deleteUser = {
-      "id": data.id,
-      "username": "string",
-      "password": "string",
-      "userType": "string",
+
+
+  /////////////////////////Ag-grid module///////////////////////////////
+  @ViewChild('agGrid') agGrid: any;
+
+  private gridApi!: GridApi<any>;
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+
+  columnDefs: ColDef[] = [
+    { headerName: 'Name ', field: 'userTypeDesc', filter: true, },
+    { headerName: 'User Name ', field: 'username', filter: true, },
+    { headerName: 'User Type', field: 'userType', filter: true, },
+    { headerName: 'Role', field: 'roles', filter: true, },
+    {
+      headerName: 'Actions',
+      field: 'action',
+      cellRenderer: customernormsrenderingcomponent, // JS comp by Direct Reference
+      autoHeight: true,
     }
-    this._empService.deleteMasterUser(deleteUser).subscribe({
-      next: (res) => {
-        Swal.fire('Done!', 'User Deleted Successfully', 'error').then((response)=>{
-          if(response.isConfirmed){
-            this.getMasterUsers();
-          }
-        });        
+  ];
 
-      },
-      error: console.log,
-    })
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData: any[] = [];
+  public themeClass: string =
+    "ag-theme-quartz";
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+  }
+
+  handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {
+    console.log(params, "Parameter");
+    console.log(params.data, "ParameterData");
+    let parameterData = params.data
+    if (params.colDef.field === 'filecount') { // Check if the changed column is 'price'
+
+    }
   }
 
 
+  handlePress(newvalue, parameterData) {
+    console.log(newvalue, "HandlepressNewValue");
+    console.log(parameterData, "ParameterValue");
+
+  }
+
+
+}
+
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
 }
