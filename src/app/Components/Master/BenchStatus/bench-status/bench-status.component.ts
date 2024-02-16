@@ -95,9 +95,6 @@ export class BenchStatusComponent implements OnInit {
     });
   }
 
-  deleteBenchStatus(id: any) {
-
-  }
   upateChanges() {
 
     let updateData = {
