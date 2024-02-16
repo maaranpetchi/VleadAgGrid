@@ -33,7 +33,8 @@
                     <input type="text" [(ngModel)]="editDescription">
                   </div>
                   <div class="col-2">
-                    <button type="submit" class="btn btn-success btn-sm mb-2" (click)="upateChanges()">submit</button>
+                    <button type="submit" class="btn btn-success btn-sm mb-2"  *ngIf="ShowAddButton" (click)="AddChanges()">Add</button>
+                 <button type="submit" class="btn btn-success btn-sm mb-2" *ngIf="ShowUpdateButton" (click)="upateChanges()" > Update</button>
                   </div>
                 </div>
               </div>

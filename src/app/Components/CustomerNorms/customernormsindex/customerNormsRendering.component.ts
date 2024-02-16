@@ -394,7 +394,7 @@ export class customernormsrenderingcomponent implements ICellRendererAngularComp
   benchstatusEdit(params) {
     this.spinnerService.requestStarted();
 
-    this.benchstatusservice.editBenchStatus(params.data).pipe(catchError((error) => {
+    this.benchstatusservice.editBenchStatus(params.data.id).pipe(catchError((error) => {
       this.spinnerService.requestEnded();
       return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
     })).subscribe((response: any) => {
@@ -405,7 +405,24 @@ export class customernormsrenderingcomponent implements ICellRendererAngularComp
     });
   }
   benchstatusDelete(params) {
+    this.spinnerService.requestStarted();
 
+    this.benchstatusservice.deleteBenchStatusDescription(params.data.id).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
+      next: (res) => {
+        this.spinnerService.requestEnded();
+        Swal.fire('Done!', 'Data deleted Successfully', 'success').then((res)=>{
+          if(res.isConfirmed){
+            this.sharedDataService.triggerRefresh();
+          }
+        });
+      },
+      error: (err: any) => {
+        console.log(err);
+      },
+    });
   }
   /////////////Master-BenchStatus Ended///////
 }

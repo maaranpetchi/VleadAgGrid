@@ -13,6 +13,8 @@ import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.servi
 import { LoginService } from 'src/app/Services/Login/login.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { EditService } from 'src/app/Services/Displayorhideform/edit-service.service';
+import { HttpClient } from '@angular/common/http';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-bench-status',
@@ -30,30 +32,39 @@ export class BenchStatusComponent implements OnInit {
   private subscription: Subscription;
   tableGettingData: any;
 
-
+  ShowAddButton: boolean = true;
   constructor(
     private loginservice: LoginService,
     private _service: BenchStatusService,
     private _coreService: CoreService,// private modalService: NgbModal
     private spinnerService: SpinnerService,
-    private editservice: EditService
+    private editservice: EditService,
+    private http: HttpClient,
+    private sharedDataService: SharedService
   ) {
+
+
+    this.sharedDataService.refreshData$.subscribe(() => {
+      this.viewBenchStatus();
+    });
+
+
+  }
+
+  ngOnInit(): void {
+    this.viewBenchStatus();
+    this.responseData = history.state.data;
 
     this.subscription = this.editservice.editTriggered$.subscribe(() => {
 
       this.tableGettingData = this.editservice.getViewData();
-      console.log(this.thidTableGettingData, "thirdTableGettingData");
-      this.editDescription = this.tableGettingData
+      console.log(this.tableGettingData, "thirdTableGettingData");
+      this.editDescription = this.tableGettingData.description;
+      this.ShowAddButton = false;
+      this.ShowUpdateButton = true;
     });
   }
-  thidTableGettingData(thidTableGettingData: any, arg1: string) {
-    throw new Error('Method not implemented.');
-  }
-  ngOnInit(): void {
-    this.viewBenchStatus();
-    this.responseData = history.state.data;
-  }
-
+  ShowUpdateButton: boolean = false;
   viewBenchStatus() {
     this.spinnerService.requestStarted();
     this._service.viewBenchStatusDescription().pipe(catchError((error) => {
@@ -62,7 +73,7 @@ export class BenchStatusComponent implements OnInit {
     })).subscribe({
       next: (data) => {
         this.spinnerService.requestEnded();
-        this.rowData =data;
+        this.rowData = data;
 
       },
       error: (err: any) => {
@@ -85,39 +96,22 @@ export class BenchStatusComponent implements OnInit {
   }
 
   deleteBenchStatus(id: any) {
-    this.spinnerService.requestStarted();
 
-    this._service.deleteBenchStatusDescription(id).pipe(catchError((error) => {
-      this.spinnerService.requestEnded();
-      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-    })).subscribe({
-      next: (res) => {
-        this.spinnerService.requestEnded();
-        Swal.fire('Done!', 'Data deleted Successfully', 'success');
-        if (res.status === 'success') {
-          this.viewBenchStatus();
-        }
-        window.location.reload();
-      },
-      error: (err: any) => {
-        console.log(err);
-      },
-    });
   }
   upateChanges() {
 
     let updateData = {
-      "id": this.id,
+      "id": this.tableGettingData.id,
       "description": this.editDescription,
       "division": " ",
-      "createdBy": this.loginservice.getUsername(),
-      "createdUtc":  new Date().toISOString(),
-      "updatedBy":this.loginservice.getUsername(),
+      "createdBy": this.tableGettingData.createdBy,
+      "createdUtc": this.tableGettingData.createdUtc,
+      "updatedBy": this.loginservice.getUsername(),
       "updatedUtc": new Date().toISOString(),
-      "isDeleted": true
+      "isDeleted": false
     };
 
-    
+
     this.spinnerService.requestStarted();
 
     this._service.updateBenchStatus(updateData).pipe(catchError((error) => {
@@ -130,6 +124,9 @@ export class BenchStatusComponent implements OnInit {
         if (response.message === "Updated Bench Status Successfully....!") {
           Swal.fire('Done!', 'Updated Bench Status Successfully', 'success').then((response) => {
             if (response.isConfirmed) {
+              this.editDescription = '';
+              this.ShowUpdateButton = false;
+              this.ShowAddButton = true;
               this.viewBenchStatus();
             }
           });
@@ -145,7 +142,43 @@ export class BenchStatusComponent implements OnInit {
       }
     })
   }
+  AddChanges() {
+    let AddData = {
+      "id": 0,
+      "description": this.editDescription,
+      "division": " ",
+      "createdBy": this.loginservice.getUsername(),
+      "createdUtc": new Date().toISOString(),
+      "updatedBy": this.loginservice.getUsername(),
+      "updatedUtc": new Date().toISOString(),
+      "isDeleted": false
+    };
 
+
+    this.spinnerService.requestStarted();
+    this.http.post<any>(environment.apiURL + `Scope/AddBenchStatus`, AddData).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
+      next: (response) => {
+        this.spinnerService.requestEnded();
+
+        Swal.fire('Done!', 'Bench Status Saved Successfully....!', 'success').then((response) => {
+          if (response.isConfirmed) {
+            this.editDescription = '';
+       
+            this.viewBenchStatus();
+          }
+        });
+        // window.location.reload();
+
+      },
+      error: (err) => {
+        throw new Error('API Error', err);
+
+      }
+    })
+  }
   /////////////////////////Ag-grid module///////////////////////////////
   @ViewChild('agGrid') agGrid: any;
 
@@ -168,7 +201,7 @@ export class BenchStatusComponent implements OnInit {
   ];
 
   public rowSelection: 'single' | 'multiple' = 'multiple';
-  public rowData: any[]=[];
+  public rowData: any[] = [];
   public themeClass: string =
     "ag-theme-quartz";
 
