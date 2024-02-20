@@ -33,6 +33,7 @@
         (gridReady)="onGridReady($event)"
         (cellValueChanged)="onCellValueChanged($event)"
         (selectionChanged)="onSelectionChanged($event)"
+        (cellClicked)="onCellJobClicked($event)"
       >
       </ag-grid-angular>
     </div>
@@ -58,8 +59,9 @@
               [pagination]="true"
               [rowSelection]="'multiple'"
               (gridReady)="onGridEmpReady($event)"
-              (cellValueChanged)="onCellValueChanged($event)"
+              (cellValueChanged)="onCellValueEmpChanged($event)"
               (selectionChanged)="onSelectionEmpChanged($event)"
+              (cellClicked)="onCellEmpClicked($event)"
             >
             </ag-grid-angular>
           </div>

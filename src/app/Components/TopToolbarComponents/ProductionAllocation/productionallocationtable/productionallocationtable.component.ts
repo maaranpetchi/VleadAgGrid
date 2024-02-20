@@ -1,3 +1,4 @@
+
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatTableDataSource } from '@angular/material/table';
@@ -18,6 +19,7 @@ import Swal from 'sweetalert2/src/sweetalert2.js';
 import { ProductionQuotationComponent } from '../production-quotation/production-quotation.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import {
+  CellClickedEvent,
   CellValueChangedEvent,
   CheckboxCellRenderer,
   CheckboxSelectionCallbackParams,
@@ -105,6 +107,7 @@ export class ProductionallocationtableComponent implements OnInit {
       sortable: true,
       filter: true,
       cellStyle: { color: 'blue' },
+     
       cellRenderer: function (params) {
         return (
           '<button class="btn btn-sm btn-link p-0">' +
@@ -113,6 +116,7 @@ export class ProductionallocationtableComponent implements OnInit {
         );
       },
     },
+    
     {
       field: 'jobDate_QueryDate',
       headerClass: 'text-wrap',
@@ -196,9 +200,16 @@ export class ProductionallocationtableComponent implements OnInit {
       filter: true,
     },
   ];
+  cellRenderer(params) {
+    if (params.data.currentTab === 'tab1') {
+      return 'JobId: ' + params.value;
+    } else {
+      return 'EmployeeId: ' + params.value;
+    }
+  }
   colEmpDefs: ColDef[] = [
     {
-      field: 'employeeCode',
+      field: 'employeenameWithCode',
       checkboxSelection: true,
       width: 100,
       headerClass: 'text-wrap',
@@ -300,6 +311,22 @@ export class ProductionallocationtableComponent implements OnInit {
         this.rowEmpData = response.employees;
       });
   }
+  onCellJobClicked(event: CellClickedEvent) {
+      const { colDef, data } = event;
+      if (colDef.field === 'jobId') {
+        console.log(data,"PopupData");
+        
+       this.getProductionJob(data);
+      }
+  }
+  onCellEmpClicked(event: CellClickedEvent) {
+    const { colDef, data } = event;
+    if (colDef.field === 'employeenameWithCode') {
+      console.log(data,"PopupData");
+      
+     this.employeeProduction(data);
+    }
+}
   handleCellValueChanged(params: { colDef: ColDef; newValue: any; data: any }) {
     console.log(params, 'Parameter');
     console.log(params.data, 'ParameterData');
@@ -310,8 +337,61 @@ export class ProductionallocationtableComponent implements OnInit {
     }
   }
   onCellValueChanged = (event: CellValueChangedEvent) => {
-    this.afterCellEdit(event);
-    console.log(`New Cell Value: ${event.value}`);
+    console.log(`New Cell Valuejob: ${event.value}`);
+  };
+  onCellValueEmpChanged= (event: CellValueChangedEvent) => {
+    console.log(event)
+    if (parseInt(this.loginservice.getProcessId()) == 2) {
+      console.log(this.loginservice.getProcessId(),"ulla");
+      
+      var colls = this.estTimeinput;
+      console.table(colls);
+      
+      var Esttime1 = colls[0].estimatedTime;
+      var Esttime2 = colls[1].estimatedTime;
+      var Esttime3 = colls[2].estimatedTime;
+      var Esttime4 = colls[3].estimatedTime;
+      var desc1 = colls[0].description;
+      var desc2 = colls[1].description;
+      var desc3 = colls[2].description;
+      var desc4 = colls[3].description;
+      var desc5 = colls[4].description;
+      if (event.data.estTime <= Esttime1 && event.data.estTime > 0) {
+        event.node.data.status= desc1;
+      } else if (
+        event.data.estTime <= Esttime2 &&
+        event.data.estTime > Esttime1
+      ) {
+        event.node.data.status= desc2;
+      } else if (
+        event.data.estTime <= Esttime3 &&
+        event.data.estTime > Esttime2
+      ) {
+        event.node.data.status= desc3;
+      } else if (
+        event.data.estTime <= Esttime4 &&
+        event.data.estTime > Esttime3
+      ) {
+        event.node.data.status= desc4;
+      } else if (event.data.estTime > Esttime4) {
+        event.node.data.status= desc5;
+      }
+      
+   //   console.log(this.selectedEmployee, 'ujjh');
+      // this.emplselection.selected.map((x) => {
+      //   if (x.employeeId == event.data.employeeId) {
+      //     //this.updateTotalEstimateTime();
+      //     return {
+      //       ...x,
+      //       estimatedTime: event.value,
+      //       status: event.data.status,
+      //     };
+      //   } else return x;
+      // });
+     // console.table(this.selectedEmployee);
+    }
+    console.log(`New Cell Valueemp: ${event.value}`);
+    console.log(event)
   };
   onSelectionChangeds = (event: SelectionChangedEvent) => {
     const selectedNodes = this.gridApi.getSelectedNodes();
@@ -332,7 +412,7 @@ export class ProductionallocationtableComponent implements OnInit {
       if (item.data.allocatedEstimatedTime == null) item.data.allocatedEstimatedTime = 0;
     if (item.data.employeeId == null) item.data.employeeId = 0;
     if (item.data.estimatedTime == null) item.data.estimatedTime = 0;
-    this.gridApi.getSelectedRows().push({
+    this.selectedQuery.push({
       ...item.data,
       CategoryDesc: '',
       Comments: '',
@@ -394,10 +474,11 @@ export class ProductionallocationtableComponent implements OnInit {
   selectedQuery: any[] = [];
   selectedEmployee: any[] = [];
 
-  setEmployeeAll(completed: boolean, item: any) {
-    if (completed == true) {
+  setEmployeeAll(item: any) {
+
+   // if (completed == true) {
       if (item.jId != null)
-        this.selectedEmployee.push({
+        return {
           ...item,
           CategoryDesc: '',
           Comments: '',
@@ -407,10 +488,11 @@ export class ProductionallocationtableComponent implements OnInit {
           Remarks: '',
           SelectedEmployees: [],
           SelectedRows: [],
-          TimeStamp: '', // estimatedTime: this.totalEstimateTime
-        });
+          TimeStamp: '',
+          estimatedTime: item.estTime
+        };
       else {
-        this.selectedEmployee.push({
+        return{
           ...item,
           jId: 0,
           CategoryDesc: '',
@@ -422,17 +504,18 @@ export class ProductionallocationtableComponent implements OnInit {
           SelectedEmployees: [],
           SelectedRows: [],
           TimeStamp: '',
-        });
+          estimatedTime: item.estTime
+        };
       }
-    } else {
-      if (this.selectedEmployee.find((x) => x.id == item.id)) {
-        this.selectedEmployee = this.selectedEmployee.filter((x) => {
-          if (x.id != item.id) {
-            return item;
-          }
-        });
-      }
-    }
+   // } else {
+      // if (this.selectedEmployee.find((x) => x.id == item.id)) {
+      //   this.selectedEmployee = this.selectedEmployee.filter((x) => {
+      //     if (x.id != item.id) {
+      //       return item;
+      //     }
+      //   });
+      // }
+   // }
   }
   benchChecked: boolean = false;
   onBenchCheckboxChange(event: any) {
@@ -759,6 +842,7 @@ export class ProductionallocationtableComponent implements OnInit {
     });
   }
   selectedJobs: any[] = [];
+  selectedEmployees:any[]=[];
   sampleData() {
     const firstTable = this.gridApi.getSelectedRows();
     console.log(firstTable, 'FirstTable');
@@ -780,7 +864,7 @@ export class ProductionallocationtableComponent implements OnInit {
       console.error('AG Grid API not available');
     }
   }
-  onSubmit() {
+  onSubmitss() {
     // let selectedRow = this.selection.selected.forEach((x) => this.setAll(x));
     // let selectedRows = this.gridApi
     //   .getSelectedRows()
@@ -793,10 +877,10 @@ export class ProductionallocationtableComponent implements OnInit {
     if (this.selectedQuery.length > 0) {
       this.selectedJobs = this.selectedQuery;
     }
-    this.spinnerService.requestStarted();
-    var selectedJobCount: any = this.gridApi.getSelectedRows();
+    // this.spinnerService.requestStarted();
+    var selectedJobCount: any = this.selectedQuery;
     // var selectedJobCount = this.gridApi.getSelectedRows().length;
-    var selectedEmployeeCount:any = this.gridEmplApi.getSelectedRows();
+    var selectedEmployeeCount:any =this.selectedEmployee;
     console.log(selectedJobCount, 'selectedJobCountInitial');
     console.log(selectedEmployeeCount, 'selectedEmployeeCountInitial');
     if (this.loginservice.getProcessName() == 'Production Allocation') {
@@ -903,22 +987,22 @@ export class ProductionallocationtableComponent implements OnInit {
   scopeChange(scope) {
     this.ScopeId = scope;
   }
-  onSubmitss() {
+  onSubmit() {
     console.log(this.gridApi.getSelectedRows(), 'rowselection');
 
-    let selectedJobs: any[] = this.gridApi.getSelectedRows(); // let selectedJobs = this.gridApi.getSelectedRows().forEach(x => this.setAll(x)); // let seleectedJobsData = selectedJobs.push([{...selectedJobs,employeeId:'',allocatedEstimatedTime:'',jId:''}])
-    let selectedEmployees: any[] = this.gridEmplApi.getSelectedRows(); // let selectedEmployees =   this.gridEmplApi.getSelectedRows().forEach(x => this.setEmployeeAll(true, x)); // let seleectedEmployeeData = selectedEmployees.push([{...selectedEmployees,employeeId:'',allocatedEstimatedTime:'',jId:''}]) // console.log(seleectedEmployeeData,"seleectedEmployeeData"); // console.log(seleectedJobsData,"seleectedJobsData"); // Reset variables
+    this. selectedJobs= this.gridApi.getSelectedRows(); // let selectedJobs = this.gridApi.getSelectedRows().forEach(x => this.setAll(x)); // let seleectedJobsData = selectedJobs.push([{...selectedJobs,employeeId:'',allocatedEstimatedTime:'',jId:''}])
+    this. selectedEmployees= this.gridEmplApi.getSelectedRows(); // let selectedEmployees =   this.gridEmplApi.getSelectedRows().forEach(x => this.setEmployeeAll(true, x)); // let seleectedEmployeeData = selectedEmployees.push([{...selectedEmployees,employeeId:'',allocatedEstimatedTime:'',jId:''}]) // console.log(seleectedEmployeeData,"seleectedEmployeeData"); // console.log(seleectedJobsData,"seleectedJobsData"); // Reset variables
     // this.selectedJobs = [];
     // this.selectedQuery = [];
     // this.selectedEmployee = []; // Display selected rows in the console for debugging
-    console.log(selectedJobs, 'SelectedJobs');
-    console.log(selectedEmployees, 'selectedEmployees'); // Handle the case where no jobs or employees are selected
-    if (selectedJobs.length === 0 || selectedEmployees.length === 0) {
+    console.log(this.selectedJobs, 'SelectedJobs');
+    console.log(this.selectedEmployees, 'selectedEmployees'); // Handle the case where no jobs or employees are selected
+    if (this.selectedJobs.length === 0 || this.selectedEmployees.length === 0) {
       Swal.fire('Info!', 'Please select Job and Employee!', 'info');
       this.spinnerService.requestEnded();
       return;
     } // Handle the case where multiple employees are selected
-    if (selectedEmployees.length > 1) {
+    if (this.selectedEmployees.length > 1) {
       Swal.fire('Info!', 'Please select one Employee!', 'info');
       this.spinnerService.requestEnded();
       this.postJobs();
@@ -934,9 +1018,9 @@ export class ProductionallocationtableComponent implements OnInit {
       }); // Reset exchangeHeader after updating the selected rows
       // this.exchangeHeader = null;
     } // Handle the case where multiple jobs are selected
-    if (selectedJobs.length > 1) {
-      for (let i = 0; i < selectedJobs.length; i++) {
-        if (!selectedJobs[i].estimatedTime) {
+    if (this.selectedJobs.length > 1) {
+      for (let i = 0; i < this.selectedJobs.length; i++) {
+        if (!this.selectedJobs[i].this.exchangeHeader) {
           Swal.fire(
             'Info!',
             'Please enter Estimated Time for Selected Job!',
@@ -948,22 +1032,25 @@ export class ProductionallocationtableComponent implements OnInit {
         }
       }
     } // Update estimatedTime for selected jobs
-    // selectedJobs.forEach((job) => (job.estimatedTime = this.exchangeHeader)); // Update estimatedTime for selected employees
-    // selectedEmployees.forEach((employee) => {
-    //   if (!employee.estimatedTime) {
-    //     Swal.fire(
-    //       'Info!',
-    //       'Please enter Estimated Time for Selected Employee!',
-    //       'info'
-    //     );
-    //     this.spinnerService.requestEnded();
-    //     this.postJobs();
-    //     return;
-    //   }
-    // }); // Reset exchangeHeader after updating the selected rows // this.exchangeHeader = null; // Continue with your logic to post jobs
+    this.selectedJobs.forEach((job) => (job.estimatedTime = this.exchangeHeader)); // Update estimatedTime for selected employees
+    this.selectedEmployees.forEach((employee) => {
+      if (!employee.estTime) {
+        Swal.fire(
+          'Info!',
+          'Please enter Estimated Time for Selected Employee!',
+          'info'
+        );
+        this.spinnerService.requestEnded();
+        this.postJobs();
+        return;
+      }
+    }); // Reset exchangeHeader after updating the selected rows // this.exchangeHeader = null; // Continue with your logic to post jobs
     this.postJobs();
   }
   postJobs() {
+    console.log(this.selectedJobs,"selectedjobs");
+    console.log(this.selectedJobs, "selectedemployee");
+    
     let processMovement = {
       id: 0,
       processId: this.loginservice.getProcessId(),
@@ -977,21 +1064,30 @@ export class ProductionallocationtableComponent implements OnInit {
       value: 0,
       amount: 0,
       stitchCount: 0,
-      estimationTime: this.totalEstimateTime,
+      estimationTime: this.selectedEmployees.reduce(
+        (total, employee) => total + employee.estTime,
+        0
+      ),
       dateofDelivery: '2023-06-22T11:47:25.193Z',
       comments: 'string',
       validity: 0,
       copyFiles: true,
       updatedBy: 0,
       jId: 0,
-      estimatedTime: this.totalEstimateTime,
+      estimatedTime:this.selectedEmployees.reduce(
+        (total, employee) => total + employee.estTime,
+        0
+      ),
       tranMasterId: 0,
-      selectedRows: this.gridApi.getSelectedRows(),
-      selectedEmployees: this.selectedEmployee,
+      selectedRows: this.selectedJobs.map(x=>this.setAll(x)),
+      selectedEmployees: this.selectedEmployees.map(x=>this.setEmployeeAll(x)),
       departmentId: 0,
       updatedUTC: new Date().toISOString,
       categoryDesc: 'string',
-      allocatedEstimatedTime: this.exchangeHeader,
+      allocatedEstimatedTime: this.exchangeHeader??this.selectedEmployees.reduce(
+        (total, employee) => total + employee.estTime,
+        0
+      ),
       tranId: 0,
       fileInwardType: 'string',
       timeStamp: '',
@@ -1007,16 +1103,16 @@ export class ProductionallocationtableComponent implements OnInit {
     if (this.loginservice.getProcessName() == 'Quality Allocation') {
       this.ProcessMovementData('QARestriction', processMovement).subscribe(
         (result) => {
-          var SameQAEmployeeJobList = processMovement.selectedRows.filter(
-            function (item) {
-              var exists = result.jids.some((x) => x == item.jId);
+          var SameQAEmployeeJobList:any[] = processMovement.selectedRows.filter(
+            function (item:any) {
+              var exists = result.jids.some((x) => x == item?.jId);
               return exists;
             }
           );
           var processedRows = processMovement.selectedRows.filter(function (
-            item
+            item:any
           ) {
-            var exists = result.jids.some((x) => x == item.jId);
+            var exists = result.jids.some((x) => x == item?.jId);
             return !exists;
           });
           if (processedRows.length > 0) {
@@ -1140,20 +1236,20 @@ export class ProductionallocationtableComponent implements OnInit {
       0
     );
   }
-  // setAll(item: any) {
-  //   if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
-  //   if (item.employeeId == null) item.employeeId = 0;
-  //   if (item.estimatedTime == null) item.estimatedTime = 0;
-  //   this.selectedQuery.push({
-  //     ...item,
-  //     CategoryDesc: '',
-  //     Comments: '',
-  //     CommentsToClient: '',
-  //     Remarks: '',
-  //     SelectedEmployees: [],
-  //     SelectedRows: [],
-  //   });
-  // } //textcolor
+  setAll(item: any) {
+    if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
+    if (item.employeeId == null) item.employeeId = 0;
+    if (item.estimatedTime == null) item.estimatedTime = 0;
+    return {
+      ...item,
+      CategoryDesc: '',
+      Comments: '',
+      CommentsToClient: '',
+      Remarks: '',
+      SelectedEmployees: [],
+      SelectedRows: [],
+    };
+  } //textcolor
 
   getCellClass(data) {
     return {

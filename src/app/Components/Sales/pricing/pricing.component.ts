@@ -33,6 +33,7 @@ export class PricingComponent implements OnInit {
   showcounttabletime: boolean = false;
   ScopeBasedRateBasedFileCountTable: boolean = false;
   EstimatedTimeTable: boolean = false;
+  StaffingdataCountTable:boolean = false;
   StaffingCountTable: boolean = false;
   showtodate: boolean = false;
 
@@ -204,9 +205,10 @@ export class PricingComponent implements OnInit {
         this.showeffective = false;
         this.notshowntodigi = false;
         //$scope.showstaffing = false;
-        this.showcounttable = false;
+        this.showcounttable = true;
         this.showcounttabletime = false;
         this.showstaffingcounttable = true;
+        this.StaffingdataCountTable= false
         this.showstaffingcount = true;
         this.notshowntocount = false;
         this.ScopeBasedRateBasedFileCountTable = false;
@@ -222,6 +224,7 @@ export class PricingComponent implements OnInit {
         this.showcounttable = false;
         this.showcounttabletime = false;
         this.showstaffingcounttable = false;
+
         this.notshowntocount = true;
         this.ScopeBasedRateBasedFileCountTable = false;
         this.EstimatedTimeTable = false;

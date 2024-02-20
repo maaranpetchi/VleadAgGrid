@@ -96,20 +96,67 @@ export class QualityallocationtableComponent implements OnInit {
         this.rowEmpData = response.employees;
       });
   }
-onSelectionChanged = (event: SelectionChangedEvent) => {
-  console.log('Row Selected!')
-  const selectedRows = this.gridApi.getSelectedRows();
-   
-  // Perform your bulk convert action with the selected rows
-  console.log('Selected Rows:', selectedRows);
-
+onSelectionChanged =(event: SelectionChangedEvent)=> {
+  const selectedNodes = this.gridApi.getSelectedNodes();
+  console.log('Selected Rows:', selectedNodes); // Update exchangeHeader with the estimated time of the first selected row
+  // if (selectedNodes.length > 0) {
+  //   this.exchangeHeader = selectedNodes[0].data.estimatedTime;
+  // } else {
+  //   // If no row is selected, reset exchangeHeader
+  //   this.exchangeHeader = null;
+  // }
+  selectedNodes.forEach((item:any)=>{
+    if (item.data.allocatedEstimatedTime == null) item.data.allocatedEstimatedTime = 0;
+  if (item.data.employeeId == null) item.data.employeeId = 0;
+  if (item.data.estimatedTime == null) item.data.estimatedTime = 0;
+  this.selectedQuery.push({
+    ...item.data,
+    CategoryDesc: '',
+    Comments: '',
+    CommentsToClient: '',
+    Remarks: '',
+    SelectedEmployees: [],
+    SelectedRows: [],
+  });
+  })
 }
 onSelectionEmpChanged(event: SelectionChangedEvent){
   const selectedEmpNodes = this.gridEmplApi.getSelectedNodes();
-  console.log('SelectedEmp Rows:', selectedEmpNodes); // Update exchangeHeader with the estimated time of the first selected row
-  // if (selectedEmpNodes.length > 0) {
-  //   this.exchangeHeader = selectedEmpNodes[0].data.estimatedTime;
-  // }
+  console.log('Selected Rows:', selectedEmpNodes); // Update exchangeHeader with the estimated time of the first selected row
+  selectedEmpNodes.forEach((item:any)=>{
+    if (item.data.jId != null)
+    this.selectedEmployee.push({
+      ...item.data,
+      CategoryDesc: '',
+      Comments: '',
+      CommentsToClient: '',
+      FileInwardType: '',
+      JobId: 0,
+      Remarks: '',
+      SelectedEmployees: [],
+      SelectedRows: [],
+      TimeStamp: '',
+      jId:0
+     // estimatedTime: this.totalEstimateTime
+    });
+  else {
+    this.selectedEmployee.push({
+      ...item.data,
+      jId: 0,
+        CategoryDesc: '',
+        Comments: '',
+        CommentsToClient: '',
+        FileInwardType: '',
+        JobId: 0,
+        Remarks: '',
+        SelectedEmployees: [],
+        SelectedRows: [],
+        TimeStamp: '',
+      
+    });
+  }
+  })
+  
 }
 // Handle cell editing event
 onCellValueChanged = (event: CellValueChangedEvent) => {
@@ -734,8 +781,8 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
       jId: 0,
       estimatedTime: this.estTime !== 0 ? this.estTime : 0,
       tranMasterId: 0,
-      selectedRows: this.gridApi.getSelectedRows(),
-      selectedEmployees: this.gridEmplApi.getSelectedRows(),
+      selectedRows: this.selectedQuery,
+      selectedEmployees: this.selectedEmployee,
       departmentId: 0,
       updatedUTC: '2023-06-22T11:47:25.193Z',
       categoryDesc: 'string',

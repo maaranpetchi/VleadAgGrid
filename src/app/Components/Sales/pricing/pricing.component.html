@@ -392,18 +392,6 @@
                   <input type="text" name="countPriceFormControl" [(ngModel)]="selectedCountPrice" [ngModelOptions]="{standalone: true}" matInput placeholder="To" name="to">
                 </mat-form-field>
               </div>
-              <!-- <div class="col-xs-2" *ngIf="showstaffingcount">
-                <div class="col-xs-2">
-                  <button mat-icon-button class="square-button " data-bs-toggle="tooltip" data-bs-placement="bottom"
-                    title="Add Record!" color="success" (click)="CreateStaffing()">
-                    <span class="add-icon-bg">
-                      <mat-icon class="add-icon">add_box</mat-icon>
-                    </span>
-                  </button>
-                  <button type="button"><a href="#" class="text-primary" (click)="back()">Cancel</a></button>
-                </div>
-    
-              </div> -->
             <div class="col-md-12" *ngIf="ScopeBasedRateBasedFileCountTable">
               <table class="table table-hover">
                 <thead>
@@ -456,7 +444,7 @@
                 </tbody>
               </table>
             </div>
-            <div class="col-md-12" *ngIf="StaffingCountTable">
+            <div class="col-md-12" *ngIf="StaffingdataCountTable">
               <table class="table table-hover">
                 <thead>
                   <tr>
@@ -474,7 +462,7 @@
                     <td class="text-center">{{item.ScopeTempDesc}}</td>
                     <td class="text-center">{{item.FromDate | date:'MM-dd-yyyy'}}</td>
                     <td class="text-center">{{item.ToDate | date:'MM-dd-yyyy'}}</td>
-                    <td class="text-center">{{item.Price}}</td>
+                    <td class="text-center">{{item.selectedCountPrice}}</td>
                     <td><a href="" class="btn btn-danger actionbtn" tooltip-html-unsafe="Remove"
                         tooltip-placement="bottom" (click)="btnRemoveScope(i)"><i
                           class="glyphicon glyphicon-trash"></i></a></td>
