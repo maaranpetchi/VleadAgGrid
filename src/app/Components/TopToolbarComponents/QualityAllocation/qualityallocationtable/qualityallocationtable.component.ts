@@ -12,7 +12,7 @@ import { EmployeePopupTableComponent } from '../employee-popup-table/employee-po
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js';
 import { SelectionModel } from '@angular/cdk/collections';
-import { CellValueChangedEvent, CheckboxSelectionCallbackParams, ColDef, GridApi, GridReadyEvent, HeaderCheckboxSelectionCallbackParams, SelectionChangedEvent } from 'ag-grid-community';
+import { CellClickedEvent, CellValueChangedEvent, CheckboxSelectionCallbackParams, ColDef, GridApi, GridReadyEvent, HeaderCheckboxSelectionCallbackParams, SelectionChangedEvent } from 'ag-grid-community';
 interface Employee {
   id: number;
   name: string;
@@ -42,7 +42,7 @@ export class QualityallocationtableComponent implements OnInit {
   private gridEmplApi!: GridApi<any>;
   private gridColumnApi;
   colDefs:ColDef[]=[
-    { field: 'jobId',checkboxSelection: true, width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true ,cellStyle: { color: 'blue' },cellRenderer:function(params){
+    { field: 'jobId',checkboxSelection: true, width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true ,colId: 'jobIdColumn' ,cellStyle: { color: 'blue' },cellRenderer:function(params){
       return '<button class="btn btn-sm btn-link p-0">'+ params.value +'</button>';
     } },
     { field: 'jobDate_QueryDate',headerClass:"text-wrap", width: 100, suppressSizeToFit: true,sortable:true, filter:true },
@@ -56,8 +56,10 @@ export class QualityallocationtableComponent implements OnInit {
     { field: 'status', width: 100, suppressSizeToFit: true,sortable:true, filter:true },
   ]
   colEmpDefs:ColDef[]=[
-    { field: 'employeeCode',checkboxSelection: true, width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true ,editable:true },
-    { field: 'employeeName',headerClass:"text-wrap", width: 100, suppressSizeToFit: true,sortable:true, filter:true },
+    { field: 'employeenameWithCode',checkboxSelection: true, width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true ,colId: 'jobIdColumn' ,cellStyle: { color: 'blue' },cellRenderer:function(params){
+      return '<button class="btn btn-sm btn-link p-0">'+ params.value +'</button>';
+    } },
+    { field: 'shiftName',headerClass:"text-wrap", width: 100, suppressSizeToFit: true,sortable:true, filter:true },
   
   ]
   public defaultEmpColDef: ColDef = {
@@ -75,6 +77,7 @@ export class QualityallocationtableComponent implements OnInit {
   onGridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
+    this.gridApi.setColumnVisible('jobIdColumn', true);
     // this.http
     // .get<any>(
     //   environment.apiURL +
@@ -96,6 +99,22 @@ export class QualityallocationtableComponent implements OnInit {
         this.rowEmpData = response.employees;
       });
   }
+  onCellJobClicked(event: CellClickedEvent) {
+    const { colDef, data } = event;
+    if (colDef.colId === 'jobIdColumn') {
+      console.log(data,"PopupData");
+      
+     this.openjobDialog(data);
+    }
+}
+onCellEmpClicked(event: CellClickedEvent) {
+  const { colDef, data } = event;
+  if (colDef.field === 'employeenameWithCode') {
+    console.log(data,"PopupData");
+    
+   this.openEmployeeDialog(data);
+  }
+}
 onSelectionChanged =(event: SelectionChangedEvent)=> {
   const selectedNodes = this.gridApi.getSelectedNodes();
   console.log('Selected Rows:', selectedNodes); // Update exchangeHeader with the estimated time of the first selected row

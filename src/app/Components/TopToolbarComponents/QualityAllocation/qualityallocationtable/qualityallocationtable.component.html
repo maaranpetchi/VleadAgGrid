@@ -211,6 +211,7 @@
                 (gridReady)="onGridReady($event)"
                 (cellValueChanged)="onCellValueChanged($event)"
                 (selectionChanged)="onSelectionChanged($event)"
+                (cellClicked)="onCellJobClicked($event)"
               >
               </ag-grid-angular>
             <!-- </div> -->
@@ -279,6 +280,7 @@
                     (gridReady)="onGridEmpReady($event)"
                     (cellValueChanged)="onCellEmployeeValueChanged($event)"
                     (selectionChanged)="onSelectionEmpChanged($event)"
+                    (cellClicked)="onCellEmpClicked($event)"
                   >
                   </ag-grid-angular>
               </div>

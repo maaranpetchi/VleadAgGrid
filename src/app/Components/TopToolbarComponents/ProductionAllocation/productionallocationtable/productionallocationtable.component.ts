@@ -106,6 +106,7 @@ export class ProductionallocationtableComponent implements OnInit {
       suppressSizeToFit: true,
       sortable: true,
       filter: true,
+      colId: 'jobIdColumn' ,
       cellStyle: { color: 'blue' },
      
       cellRenderer: function (params) {
@@ -116,7 +117,44 @@ export class ProductionallocationtableComponent implements OnInit {
         );
       },
     },
-    
+    {
+      field: 'jobId',
+      checkboxSelection: true,
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      colId: 'quotationIdColumn' ,
+      cellStyle: { color: 'blue' },
+     
+      cellRenderer: function (params) {
+        return (
+          '<button class="btn btn-sm btn-link p-0">' +
+          params.value +
+          '</button>'
+        );
+      },
+    },
+    {
+      field: 'jobId',
+      checkboxSelection: true,
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      colId: 'allocatedIdColumn' ,
+      cellStyle: { color: 'blue' },
+     
+      cellRenderer: function (params) {
+        return (
+          '<button class="btn btn-sm btn-link p-0">' +
+          params.value +
+          '</button>'
+        );
+      },
+    },
     {
       field: 'jobDate_QueryDate',
       headerClass: 'text-wrap',
@@ -200,13 +238,6 @@ export class ProductionallocationtableComponent implements OnInit {
       filter: true,
     },
   ];
-  cellRenderer(params) {
-    if (params.data.currentTab === 'tab1') {
-      return 'JobId: ' + params.value;
-    } else {
-      return 'EmployeeId: ' + params.value;
-    }
-  }
   colEmpDefs: ColDef[] = [
     {
       field: 'employeenameWithCode',
@@ -298,6 +329,9 @@ export class ProductionallocationtableComponent implements OnInit {
   } //
   onGridReady(params: GridReadyEvent<any>) {
     this.gridApi = params.api;
+    this.gridApi.setColumnVisible('jobIdColumn', true);
+    this.gridApi.setColumnVisible('quotationIdColumn', false);
+    this.gridApi.setColumnVisible('allocatedIdColumn', false);
   }
   onGridEmpReady(params: GridReadyEvent<any>) {
     // this.gridApi = params.api;
@@ -313,11 +347,19 @@ export class ProductionallocationtableComponent implements OnInit {
   }
   onCellJobClicked(event: CellClickedEvent) {
       const { colDef, data } = event;
-      if (colDef.field === 'jobId') {
+      if (colDef.colId === 'jobIdColumn') {
         console.log(data,"PopupData");
         
        this.getProductionJob(data);
-      }
+      }else if (colDef.colId === 'quotationIdColumn') {
+        console.log(data,"PopupData");
+        
+       this.getQuatationJobId(data);
+      } else if (colDef.colId === 'allocatedIdColumn') {
+        console.log(data,"PopupData");
+        
+       this.getAllocatedJobId(data);
+      } 
   }
   onCellEmpClicked(event: CellClickedEvent) {
     const { colDef, data } = event;
@@ -524,19 +566,34 @@ export class ProductionallocationtableComponent implements OnInit {
   tab(action) {
     if (action == '1') {
       this.freshJobs();
+      this.gridApi.setColumnVisible('jobIdColumn', true);
+      this.gridApi.setColumnVisible('quotationIdColumn', false);
+      this.gridApi.setColumnVisible('allocatedIdColumn', false);
     } else if (action == '2') {
+      this.gridApi.setColumnVisible('jobIdColumn', true);
+        this.gridApi.setColumnVisible('quotationIdColumn', false);
+        this.gridApi.setColumnVisible('allocatedIdColumn', false);
       this.revisionJobs();
     } else if (action == '3') {
       this.reworkJobs();
     } else if (action == '4') {
       this.allocaetdJobs();
+      this.gridApi.setColumnVisible('jobIdColumn', false);
+        this.gridApi.setColumnVisible('quotationIdColumn', false);
+        this.gridApi.setColumnVisible('allocatedIdColumn', true);
     } else if (action == '5') {
       this.queries();
     } else if (action == '6') {
       this.queryResposne();
     } else if (action == '7') {
+      this.gridApi.setColumnVisible('jobIdColumn', true);
+        this.gridApi.setColumnVisible('quotationIdColumn', false);
+        this.gridApi.setColumnVisible('allocatedIdColumn', false);
       this.errorJobs();
     } else if (action == '8') {
+      this.gridApi.setColumnVisible('jobIdColumn', false);
+        this.gridApi.setColumnVisible('quotationIdColumn', true);
+        this.gridApi.setColumnVisible('allocatedIdColumn', false);
       this.quotationJobs();
     }
   }
@@ -551,7 +608,7 @@ export class ProductionallocationtableComponent implements OnInit {
       .subscribe({
         next: (freshJobs) => {
           if (this.gridApi) {
-            this.gridApi.setColumnVisible('jobId', true); // Show 'jobId' column // this.gridApi.setColumnVisible('AllocatedjobId', false); // Hide 'AllocatedjobId' column
+            // this.gridApi.setColumnVisible('jobId', true); // Show 'jobId' column // this.gridApi.setColumnVisible('AllocatedjobId', false); // Hide 'AllocatedjobId' column
           } else {
             console.error('gridApi is not initialized.');
           }
@@ -657,11 +714,11 @@ export class ProductionallocationtableComponent implements OnInit {
       .subscribe({
         next: (freshJobs) => {
           if (this.gridApi) {
-            this.gridApi.setColumnVisible('jobId', true); // Show 'jobId' column // this.gridApi.setColumnVisible('AllocatedjobId', false); // Hide 'AllocatedjobId' column
+            // this.gridApi.setColumnVisible('jobId', true); // Show 'jobId' column // this.gridApi.setColumnVisible('AllocatedjobId', false); // Hide 'AllocatedjobId' column
           } else {
             console.error('gridApi is not initialized.');
           }
-          this.rowData = freshJobs.allocationJobs;
+          this.rowData = freshJobs.queryResponseJobs;
         },
         error: (err) => {
           console.error(err);
@@ -679,7 +736,7 @@ export class ProductionallocationtableComponent implements OnInit {
       .subscribe({
         next: (freshJobs) => {
           if (this.gridApi) {
-            this.gridApi.setColumnVisible('jobId', true); // Show 'jobId' column // this.gridApi.setColumnVisible('AllocatedjobId', false); // Hide 'AllocatedjobId' column
+            // this.gridApi.setColumnVisible('jobId', true); // Show 'jobId' column // this.gridApi.setColumnVisible('AllocatedjobId', false); // Hide 'AllocatedjobId' column
           } else {
             console.error('gridApi is not initialized.');
           }
@@ -701,7 +758,7 @@ export class ProductionallocationtableComponent implements OnInit {
       .subscribe({
         next: (freshJobs) => {
           if (this.gridApi) {
-            this.gridApi.setColumnVisible('jobId', true); // Show 'jobId' column // this.gridApi.setColumnVisible('AllocatedjobId', false); // Hide 'AllocatedjobId' column
+            // this.gridApi.setColumnVisible('jobId', true); // Show 'jobId' column // this.gridApi.setColumnVisible('AllocatedjobId', false); // Hide 'AllocatedjobId' column
           } else {
             console.error('gridApi is not initialized.');
           }
