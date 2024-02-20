@@ -46,7 +46,7 @@ export class SSRSReportViewerComponent implements OnInit {
       // Create an anchor element
       const a = document.createElement('a');
       a.href = blobURL;
-      a.download = `${this.shortName}_${this.InvoiceNumber}.pdf`; // Set the filename
+      a.download = `${this.shortName}_${this.InvoiceNumber}_ArtAnnexure.pdf`; // Set the filename
 
       // Programmatically click the anchor element to trigger the download
       document.body.appendChild(a);

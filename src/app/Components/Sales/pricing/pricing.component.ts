@@ -175,8 +175,8 @@ export class PricingComponent implements OnInit {
         this.showeffective = true;
         this.notshowntodigi = false;
         //$scope.showstaffing = false;
-        this.showcounttable = false;
-        this.showcounttabletime = true;
+        this.showcounttable = true;
+        this.showcounttabletime = false;
         this.showstaffingcounttable = false;
         this.showstaffingcount = false;
         this.notshowntocount = false;
@@ -500,7 +500,7 @@ export class PricingComponent implements OnInit {
         createdBy: this.loginservice.getUsername(),
         customerId: this.selectedCustomers,
         departmentId: this.selectedValue,
-        scopeId: 0,
+        scopeId: this.selectedScope,
         jobStatusId: this.selectedValueEfect,
         pricingTypeId: this.selectedPricing,
         fromDate: '2023-08-03T06:48:55.900Z',
