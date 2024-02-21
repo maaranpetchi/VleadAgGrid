@@ -61,7 +61,6 @@ export class PricingComponent implements OnInit {
   ViewFileCountTable: any[]=[];
   AddedRecord: any = [];
   newItem: any = {};
-
   pricingtype: any;
   submitted: boolean;
   jobStatusFormControl: any;
