@@ -294,7 +294,6 @@ export class PricingComponent implements OnInit {
   }
   onCancel() {
     window.location.reload();
-    // this.router.navigate(['topnavbar/pricing'])
   }
   back() {
     window.location.reload();
