@@ -45,21 +45,20 @@ export class QualityallocationtableComponent implements OnInit {
     { field: 'jobId',checkboxSelection: true, width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true ,colId: 'jobIdColumn' ,cellStyle: { color: 'blue' },cellRenderer:function(params){
       return '<button class="btn btn-sm btn-link p-0">'+ params.value +'</button>';
     } },
-    { field: 'jobDate_QueryDate',headerClass:"text-wrap", width: 100, suppressSizeToFit: true,sortable:true, filter:true },
-    { field: 'name', width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true },
-    { field: 'customerJobType', headerClass:"text-wrap",width: 100, suppressSizeToFit: true,sortable:true, filter:true },
-    { field: 'jobStatusDescription', headerClass:"text-wrap",width: 100, suppressSizeToFit: true,sortable:true, filter:true },
-    { field: 'projectCode', width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true },
-    { field: 'fileName', width: 100, headerClass:"text-wrap",suppressSizeToFit: true,sortable:true, filter:true },
-    { field: 'fileInwardType', width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true },
-    { field: 'processName', width: 100, headerClass:"text-wrap",suppressSizeToFit: true,sortable:true, filter:true },
-    { field: 'status', width: 100, suppressSizeToFit: true,sortable:true, filter:true },
+    {headerName: 'Est Job/ Qurey Date', field: 'jobDate_QueryDate',headerClass:"text-wrap", width: 100, suppressSizeToFit: true,sortable:true, filter:true },
+    {  headerName: 'Customer Job',field: 'customerJobType', headerClass:"text-wrap",width: 100, suppressSizeToFit: true,sortable:true, filter:true },
+    {  headerName: 'Job Status ',field: 'jobStatusDescription', headerClass:"text-wrap",width: 100, suppressSizeToFit: true,sortable:true, filter:true },
+    { headerName: 'Project Code', field: 'projectCode', width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true },
+    {headerName: 'File Name', field: 'fileName', width: 100, headerClass:"text-wrap",suppressSizeToFit: true,sortable:true, filter:true },
+    { headerName: 'File Inward Type', field: 'fileInwardType', width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true },
+    {   headerName: 'Process Name',field: 'processName', width: 100, headerClass:"text-wrap",suppressSizeToFit: true,sortable:true, filter:true },
+    { headerName: 'Status',field: 'status', width: 100, suppressSizeToFit: true,sortable:true, filter:true },
   ]
   colEmpDefs:ColDef[]=[
-    { field: 'employeenameWithCode',checkboxSelection: true, width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true ,colId: 'jobIdColumn' ,cellStyle: { color: 'blue' },cellRenderer:function(params){
+    {  headerName:'Employee', field: 'employeenameWithCode',checkboxSelection: true, width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true ,colId: 'jobIdColumn' ,cellStyle: { color: 'blue' },cellRenderer:function(params){
       return '<button class="btn btn-sm btn-link p-0">'+ params.value +'</button>';
     } },
-    { field: 'shiftName',headerClass:"text-wrap", width: 100, suppressSizeToFit: true,sortable:true, filter:true },
+    { headerName:'Shift', field: 'shiftName',headerClass:"text-wrap", width: 100, suppressSizeToFit: true,sortable:true, filter:true },
   
   ]
   public defaultEmpColDef: ColDef = {
