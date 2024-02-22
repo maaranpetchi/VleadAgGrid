@@ -3,8 +3,8 @@
     <div class="card-body" id="AllocationJobs">
       <div class="selectedJobTable mt-4">
         <div class="mat-elevation-z8">
-          <div class="table-container">
-            <table mat-table [dataSource]="dataSource" id="custom-table"
+          <!-- <div class="table-container"> -->
+            <!-- <table mat-table [dataSource]="dataSource" id="custom-table"
               class="table table-sm table-responsive table table-bordered text-center">
               <ng-container matColumnDef="selected">
                 <mat-header-cell *matHeaderCellDef>
@@ -196,10 +196,29 @@
               </ng-container>
               <tr mat-header-row *matHeaderRowDef="visibility()"></tr>
               <tr mat-row *matRowDef="let job; columns: visibility();"></tr>
-            </table>
+            </table> -->
+
+            <div class="content">
+              <!-- The AG Grid component, with various Grid Option properties -->
+              <ag-grid-angular
+                style="width: 100%; height: 550px;"
+                class="ag-theme-quartz"
+                [rowData]="rowData"
+                [columnDefs]="colDefs"
+                [defaultColDef]="defaultColDef" 
+                [pagination]="true" 
+                [rowSelection]="'multiple'" 
+                (gridReady)="onGridReady($event)"
+                (cellValueChanged)="onCellValueChanged($event)"
+                (selectionChanged)="onSelectionChanged($event)"
+                (cellClicked)="onCellJobClicked($event)"
+              >
+              </ag-grid-angular>
+            <!-- </div> -->
           </div>
-          <mat-paginator #paginator1 [pageSizeOptions]="[25, 50,75,100]"
-            aria-label="Select page of users"></mat-paginator>
+          
+          <!-- <mat-paginator #paginator1 [pageSizeOptions]="[25, 50,75,100]"
+            aria-label="Select page of users"></mat-paginator> -->
         </div>
       </div>
       <!-- Empl data Table -->
@@ -209,7 +228,7 @@
             <div class="mat-elevation-z8">
               <h3 style="font-family: 'Times New Roman', Times, serif;color:#ff9710df">Assigned To:</h3>
               <div class="table-container">
-                <table mat-table [dataSource]="dataEmployeeSource" id="custom-table"
+                <!-- <table mat-table [dataSource]="dataEmployeeSource" id="custom-table"
                   class="table table-sm table-responsive table table-bordered text-center">
                   <ng-container matColumnDef="selected">
                     <th mat-header-cell *matHeaderCellDef>
@@ -235,7 +254,6 @@
                       </a>
                     </td>
                   </ng-container>
-                  <!-- Customer Satisfaction Column -->
                   <ng-container matColumnDef="shift">
                     <th mat-header-cell *matHeaderCellDef>
                       <div class="header-wrapper">
@@ -247,14 +265,28 @@
                     </th>
                     <td  mat-cell *matCellDef="let job"> {{ job.shiftName }} </td>
                   </ng-container>
-                  <!-- Table Header -->
                   <tr mat-header-row *matHeaderRowDef="displayedEmployeeColumns"></tr>
-                  <!-- Table Rows -->
                   <tr mat-row *matRowDef="let job; columns: displayedEmployeeColumns;"></tr>
-                </table>
+                </table> -->
+                <div class="content">
+                  <ag-grid-angular
+                    style="width: 100%; height: 550px;"
+                    class="ag-theme-quartz"
+                    [rowData]="rowEmpData"
+                    [columnDefs]="colEmpDefs"
+                    [defaultColDef]="defaultEmpColDef" 
+                    [pagination]="true" 
+                    [rowSelection]="'multiple'" 
+                    (gridReady)="onGridEmpReady($event)"
+                    (cellValueChanged)="onCellEmployeeValueChanged($event)"
+                    (selectionChanged)="onSelectionEmpChanged($event)"
+                    (cellClicked)="onCellEmpClicked($event)"
+                  >
+                  </ag-grid-angular>
               </div>
-              <mat-paginator #paginator2 [pageSizeOptions]="[25, 50,75,100]"
-                aria-label="Select page of users"></mat-paginator>
+              </div>
+              <!-- <mat-paginator #paginator2 [pageSizeOptions]="[25, 50,75,100]"
+                aria-label="Select page of users"></mat-paginator> -->
             </div>
           </div>
           <div class="col-4 mt-5">

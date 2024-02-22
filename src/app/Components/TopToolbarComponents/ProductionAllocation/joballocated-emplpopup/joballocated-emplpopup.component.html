@@ -1,28 +1,28 @@
 <div class="container">
-    <div class="card">
-      <h3>Employee Details</h3>
-    </div>
+  <div class="card">
+    <h3>Employee Details</h3>
+  </div>
 </div>
 <div>
-  <table mat-table [dataSource]="dataSource" matSort
-            class="table table-sm  table-responsive table table-bordered text-center">
-            <ng-container matColumnDef="employee">
-              <th mat-sort-header mat-header-cell *matHeaderCellDef>Employee </th>
-              <td mat-cell *matCellDef="let job">
-                {{ job.employeeName }} </td>
-            </ng-container>
-            <ng-container matColumnDef="estimatedTime">
-              <th mat-sort-header mat-header-cell *matHeaderCellDef>Estimated Time in Mins </th>
-              <td mat-cell *matCellDef="let job"> {{ job.estTime }} </td>
-            </ng-container>
-            <ng-container matColumnDef="status">
-              <th mat-sort-header mat-header-cell *matHeaderCellDef> Status </th>
-              <td mat-cell *matCellDef="let job"> {{ job.status }} </td>
-            </ng-container>
-            <!-- Table Header -->
-            <tr class="bg-primary" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+<table mat-table [dataSource]="dataSource" matSort
+          class="table table-sm  table-responsive table table-bordered text-center">
+          <ng-container matColumnDef="employee">
+            <th mat-sort-header mat-header-cell *matHeaderCellDef>Employee </th>
+            <td mat-cell *matCellDef="let job">
+              {{ job.employeeName }} </td>
+          </ng-container>
+          <ng-container matColumnDef="estimatedTime">
+            <th mat-sort-header mat-header-cell *matHeaderCellDef>Estimated Time in Mins </th>
+            <td mat-cell *matCellDef="let job"> {{ job.estTime }} </td>
+          </ng-container>
+          <ng-container matColumnDef="status">
+            <th mat-sort-header mat-header-cell *matHeaderCellDef> Status </th>
+            <td mat-cell *matCellDef="let job"> {{ job.status }} </td>
+          </ng-container>
+          <!-- Table Header -->
+          <tr class="bg-primary" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 
-            <!-- Table Rows -->
-            <tr mat-row *matRowDef="let job; columns: displayedColumns;"></tr>
-          </table>
+          <!-- Table Rows -->
+          <tr mat-row *matRowDef="let job; columns: displayedColumns;"></tr>
+        </table>
 </div>

@@ -12,6 +12,7 @@ import { EmployeePopupComponent } from '../employee-popup/employee-popup.compone
 import { JobCategorypopupComponent } from '../job-categorypopup/job-categorypopup.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import Swal from 'sweetalert2';
+import { CellValueChangedEvent, CheckboxSelectionCallbackParams, ColDef, GridApi, GridReadyEvent, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
 interface Employee {
   id: number;
   name: string;
@@ -48,6 +49,185 @@ export class ProofreadingAlocationtableComponent implements OnInit {
     'deliverydate',
   ];
   dataSource: MatTableDataSource<any>;
+  // 
+
+  rowData!: any;
+  rowEmpData!: any;
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  private gridApi!: GridApi<any>;
+  private gridEmplApi!: GridApi<any>;
+  colDefs: ColDef[] = [
+    {
+      field: 'jobId',
+      checkboxSelection: true,
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      cellStyle: { color: 'blue' },
+      cellRenderer: function (params) {
+        return (
+          '<button class="btn btn-sm btn-link p-0">' +
+          params.value +
+          '</button>'
+        );
+      },
+    },
+    {
+      field: 'jobDate_QueryDate',
+      headerClass: 'text-wrap',
+      width: 100,
+      sortable: true,
+      filter: true,
+    },
+    {
+      field: 'name',
+      width: 100,
+      headerClass: 'text-wrap',
+      sortable: true,
+      filter: true,
+    },
+    {
+      field: 'customerJobType',
+      headerClass: 'text-wrap',
+      width: 100,
+      sortable: true,
+      filter: true,
+    },
+    {
+      field: 'jobStatusDescription',
+      headerClass: 'text-wrap',
+      width: 100,
+      sortable: true,
+      filter: true,
+    },
+    {
+      field: 'projectCode',
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+    },
+    {
+      field: 'fileName',
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+    },
+    {
+      field: 'fileInwardType',
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+    },
+    {
+      field: 'processName',
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+    },
+    {
+      field: 'status',
+      width: 100,
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+    },
+    {
+      field: 'estimatedTime',
+      width: 100,
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      editable: true,
+    },
+    {
+      field: 'deliverydate',
+      width: 100,
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+    },
+  ];
+  colEmpDefs: ColDef[] = [
+    {
+      field: 'employeeCode',
+      checkboxSelection: true,
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      cellStyle: { color: 'blue' },
+      cellRenderer: function (params) {
+        return (
+          '<button class="btn btn-sm btn-link p-0">' +
+          params.value +
+          '</button>'
+        );
+      },
+    },
+    {
+      field: 'estTime',
+      headerClass: 'text-wrap',
+      width: 100,
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      editable: true,
+    },
+    {
+      field: 'status',
+      headerClass: 'text-wrap',
+      width: 100,
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      editable: true,
+    },
+    {
+      field: 'shift',
+      headerClass: 'text-wrap',
+      width: 100,
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      editable: true,
+    },
+  ];
+  gridOptions1 = {
+    pagination: true,
+    paginationPageSize: 25,
+  };
+  EmpgridOptions = {
+    pagination: true,
+    paginationPageSize: 25,
+  };
+  context: any;
+  @ViewChild('agGrid') agGrid: any;
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+  public defaultEmpColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    field: 'empCheckBoxValue',
+    headerCheckboxSelection: isEmpColumn,
+    checkboxSelection: isEmpColumn,
+  };
+  public themeClass: string = 'ag-theme-quartz';
+  //
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -66,7 +246,24 @@ export class ProofreadingAlocationtableComponent implements OnInit {
     this.freshJobs();
     //Employeetable
   }
-
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+  }
+  onGridEmpReady(params: GridReadyEvent<any>) {
+    // this.gridApi = params.api;
+    this.gridEmplApi = params.api;
+    this.http
+      .get<any>(
+        environment.apiURL +
+          `Allocation/getPendingAllocationJobsAndEmployees/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`
+      )
+      .subscribe((response) => {
+        this.rowEmpData = response.employees;
+      });
+  }
+  onCellValueChanged = (event: CellValueChangedEvent) => {
+    console.log(`New Cell Valuejob: ${event.value}`);
+  };
   filterValue: any = null;
   applyFilter(event: Event): void {
     this.filterValue = (event.target as HTMLInputElement).value;
@@ -777,4 +974,22 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       'Rush': data.jobStatusId === 2 || data.jobStatusId === 4 || data.jobStatusId === 8
     };
   }
+}
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
+}
+function isEmpColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsisEmpColumn = displayedColumns[0] === params.column;
+  return thisIsisEmpColumn;
 }

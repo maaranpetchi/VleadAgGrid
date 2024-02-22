@@ -1,3 +1,4 @@
+
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatTableDataSource } from '@angular/material/table';
@@ -17,7 +18,19 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2/src/sweetalert2.js';
 import { ProductionQuotationComponent } from '../production-quotation/production-quotation.component';
 import { SelectionModel } from '@angular/cdk/collections';
-
+import {
+  CellClickedEvent,
+  CellValueChangedEvent,
+  CheckboxCellRenderer,
+  CheckboxSelectionCallbackParams,
+  ColDef,
+  GridApi,
+  GridReadyEvent,
+  HeaderCheckboxSelectionCallbackParams,
+  SelectionChangedEvent,
+} from 'ag-grid-community';
+import { ActionsCellRendererComponent } from '../../ClientCordination/ClientOrder/actions-cell-renderer/actions-cell-renderer.component';
+import { param } from 'jquery';
 @Component({
   selector: 'app-productionallocationtable',
   templateUrl: './productionallocationtable.component.html',
@@ -34,7 +47,6 @@ export class ProductionallocationtableComponent implements OnInit {
     jobCategory: true,
     shift: true,
   };
-
   dataSource: MatTableDataSource<any>;
   displayedColumnsVisibility: any = {
     selected: true,
@@ -57,7 +69,6 @@ export class ProductionallocationtableComponent implements OnInit {
   scopes: any[] = [];
   selectedScope: any = 0;
   estTime = 0;
-
   selection = new SelectionModel<any>(true, []);
   emplselection = new SelectionModel<any>(true, []);
   @ViewChild('paginator1') paginator1: MatPaginator;
@@ -65,7 +76,7 @@ export class ProductionallocationtableComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   pendingJobsCount: any;
   exchangeHeader: any;
-  exmployeeEstTime: any
+  exmployeeEstTime: any;
   freshJobsCount: number;
   revisionJobsCount: number;
   reworkJobsCount: number;
@@ -79,8 +90,224 @@ export class ProductionallocationtableComponent implements OnInit {
   CustomerJobType: any;
   StatusId: any;
   JobStatusId: any;
-  totalEstimateTime: any;
+  totalEstimateTime: any; // AG grid
 
+  rowData!: any;
+  rowEmpData!: any;
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  private gridApi!: GridApi<any>;
+  private gridEmplApi!: GridApi<any>;
+  colDefs: ColDef[] = [
+    {
+      field: 'jobId',
+      checkboxSelection: true,
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      colId: 'jobIdColumn' ,
+      cellStyle: { color: 'blue' },
+     
+      cellRenderer: function (params) {
+        return (
+          '<button class="btn btn-sm btn-link p-0">' +
+          params.value +
+          '</button>'
+        );
+      },
+    },
+    {
+      field: 'jobId',
+      checkboxSelection: true,
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      colId: 'quotationIdColumn' ,
+      cellStyle: { color: 'blue' },
+     
+      cellRenderer: function (params) {
+        return (
+          '<button class="btn btn-sm btn-link p-0">' +
+          params.value +
+          '</button>'
+        );
+      },
+    },
+    {
+      field: 'jobId',
+      checkboxSelection: true,
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      colId: 'allocatedIdColumn' ,
+      cellStyle: { color: 'blue' },
+     
+      cellRenderer: function (params) {
+        return (
+          '<button class="btn btn-sm btn-link p-0">' +
+          params.value +
+          '</button>'
+        );
+      },
+    },
+    {
+      field: 'jobDate_QueryDate',
+      headerClass: 'text-wrap',
+      width: 100,
+      sortable: true,
+      filter: true,
+    },
+    {
+      field: 'name',
+      width: 100,
+      headerClass: 'text-wrap',
+      sortable: true,
+      filter: true,
+    },
+    {
+      field: 'customerJobType',
+      headerClass: 'text-wrap',
+      width: 100,
+      sortable: true,
+      filter: true,
+    },
+    {
+      field: 'jobStatusDescription',
+      headerClass: 'text-wrap',
+      width: 100,
+      sortable: true,
+      filter: true,
+    },
+    {
+      field: 'projectCode',
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+    },
+    {
+      field: 'fileName',
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+    },
+    {
+      field: 'fileInwardType',
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+    },
+    {
+      field: 'processName',
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+    },
+    {
+      field: 'status',
+      width: 100,
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+    },
+    {
+      field: 'estimatedTime',
+      width: 100,
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      editable: true,
+    },
+    {
+      field: 'deliverydate',
+      width: 100,
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+    },
+  ];
+  colEmpDefs: ColDef[] = [
+    {
+      field: 'employeenameWithCode',
+      checkboxSelection: true,
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      cellStyle: { color: 'blue' },
+      cellRenderer: function (params) {
+        return (
+          '<button class="btn btn-sm btn-link p-0">' +
+          params.value +
+          '</button>'
+        );
+      },
+    },
+    {
+      field: 'estTime',
+      headerClass: 'text-wrap',
+      width: 100,
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      editable: true,
+    },
+    {
+      field: 'status',
+      headerClass: 'text-wrap',
+      width: 100,
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      editable: true,
+    },
+    {
+      field: 'shift',
+      headerClass: 'text-wrap',
+      width: 100,
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      editable: true,
+    },
+  ];
+  gridOptions1 = {
+    pagination: true,
+    paginationPageSize: 25,
+  };
+  EmpgridOptions = {
+    pagination: true,
+    paginationPageSize: 25,
+  };
+  context: any;
+  @ViewChild('agGrid') agGrid: any;
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+  public defaultEmpColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    field: 'empCheckBoxValue',
+    headerCheckboxSelection: isEmpColumn,
+    checkboxSelection: isEmpColumn,
+  };
+  public themeClass: string = 'ag-theme-quartz';
   constructor(
     private http: HttpClient,
     private loginservice: LoginService,
@@ -96,131 +323,204 @@ export class ProductionallocationtableComponent implements OnInit {
   }
   editTime: number;
   ngOnInit(): void {
-    this.freshJobs();
-    //scopes
+    this.freshJobs(); //scopes
     this.fetchScopes();
     this.getJobCategoryStatus();
+  } //
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+    this.gridApi.setColumnVisible('jobIdColumn', true);
+    this.gridApi.setColumnVisible('quotationIdColumn', false);
+    this.gridApi.setColumnVisible('allocatedIdColumn', false);
   }
-  visibility() {
-    let result: string[] = [];
-    if (this.displayedColumnsVisibility.selected) {
-      result.push('selected');
-    }
-    if (this.displayedColumnsVisibility.jobId) {
-      result.push('jobId');
-    }
-    if (this.displayedColumnsVisibility.allocatedJobId) {
-      result.push('allocatedJobId');
-    }
-    if (this.displayedColumnsVisibility.quatationJobId) {
-      result.push('quatationJobId');
-    }
-    if (this.displayedColumnsVisibility.employee) {
-      result.push('employee');
-    }
-
-    if (this.displayedColumnsVisibility.estjob) {
-      result.push('estjob');
-    }
-    if (this.displayedColumnsVisibility.fileName) {
-      result.push('fileName');
-    }
-    if (this.displayedColumnsVisibility.fileInwardMode) {
-      result.push('fileInwardMode');
-    }
-    if (this.displayedColumnsVisibility.client) {
-      result.push('client');
-    }
-    if (this.displayedColumnsVisibility.customerSatisfaction) {
-      result.push('customerSatisfaction');
-    }
-    if (this.displayedColumnsVisibility.jobstatus) {
-      result.push('jobstatus');
-    }
-    if (this.displayedColumnsVisibility.projectcode) {
-      result.push('projectcode');
-    }
-    if (this.displayedColumnsVisibility.status) {
-      result.push('status');
-    }
-    if (this.displayedColumnsVisibility.scope) {
-      result.push('scope');
-    }
-    if (this.displayedColumnsVisibility.esttime) {
-      result.push('esttime');
-    }
-    if (this.displayedColumnsVisibility.deliverydate) {
-      result.push('deliverydate');
-    }
-
-    return result;
+  onGridEmpReady(params: GridReadyEvent<any>) {
+    // this.gridApi = params.api;
+    this.gridEmplApi = params.api;
+    this.http
+      .get<any>(
+        environment.apiURL +
+          `Allocation/getPendingAllocationJobsAndEmployees/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`
+      )
+      .subscribe((response) => {
+        this.rowEmpData = response.employees;
+      });
   }
-  employeeVisibility() {
-    let result: string[] = [];
-    if (this.displayedEmployeeColumnsVisibility.emplselected) {
-      result.push('emplselected');
+  onCellJobClicked(event: CellClickedEvent) {
+      const { colDef, data } = event;
+      if (colDef.colId === 'jobIdColumn') {
+        console.log(data,"PopupData");
+        
+       this.getProductionJob(data);
+      }else if (colDef.colId === 'quotationIdColumn') {
+        console.log(data,"PopupData");
+        
+       this.getQuatationJobId(data);
+      } else if (colDef.colId === 'allocatedIdColumn') {
+        console.log(data,"PopupData");
+        
+       this.getAllocatedJobId(data);
+      } 
+  }
+  onCellEmpClicked(event: CellClickedEvent) {
+    const { colDef, data } = event;
+    if (colDef.field === 'employeenameWithCode') {
+      console.log(data,"PopupData");
+      
+     this.employeeProduction(data);
     }
-    if (this.displayedEmployeeColumnsVisibility.employees) {
-      result.push('employees');
+}
+  handleCellValueChanged(params: { colDef: ColDef; newValue: any; data: any }) {
+    console.log(params, 'Parameter');
+    console.log(params.data, 'ParameterData');
+    let parameterData = params.data;
+    if (params.colDef.field === 'filecount') {
+      // Check if the changed column is 'price'
+      // this.openPopup(params.newValue, parameterData);
     }
-    if (this.displayedEmployeeColumnsVisibility.allocatedEmployee) {
-      result.push('allocatedEmployee');
+  }
+  onCellValueChanged = (event: CellValueChangedEvent) => {
+    console.log(`New Cell Valuejob: ${event.value}`);
+  };
+  onCellValueEmpChanged= (event: CellValueChangedEvent) => {
+    console.log(event)
+    if (parseInt(this.loginservice.getProcessId()) == 2) {
+      console.log(this.loginservice.getProcessId(),"ulla");
+      
+      var colls = this.estTimeinput;
+      console.table(colls);
+      
+      var Esttime1 = colls[0].estimatedTime;
+      var Esttime2 = colls[1].estimatedTime;
+      var Esttime3 = colls[2].estimatedTime;
+      var Esttime4 = colls[3].estimatedTime;
+      var desc1 = colls[0].description;
+      var desc2 = colls[1].description;
+      var desc3 = colls[2].description;
+      var desc4 = colls[3].description;
+      var desc5 = colls[4].description;
+      if (event.data.estTime <= Esttime1 && event.data.estTime > 0) {
+        event.node.data.status= desc1;
+      } else if (
+        event.data.estTime <= Esttime2 &&
+        event.data.estTime > Esttime1
+      ) {
+        event.node.data.status= desc2;
+      } else if (
+        event.data.estTime <= Esttime3 &&
+        event.data.estTime > Esttime2
+      ) {
+        event.node.data.status= desc3;
+      } else if (
+        event.data.estTime <= Esttime4 &&
+        event.data.estTime > Esttime3
+      ) {
+        event.node.data.status= desc4;
+      } else if (event.data.estTime > Esttime4) {
+        event.node.data.status= desc5;
+      }
+      
+   //   console.log(this.selectedEmployee, 'ujjh');
+      // this.emplselection.selected.map((x) => {
+      //   if (x.employeeId == event.data.employeeId) {
+      //     //this.updateTotalEstimateTime();
+      //     return {
+      //       ...x,
+      //       estimatedTime: event.value,
+      //       status: event.data.status,
+      //     };
+      //   } else return x;
+      // });
+     // console.table(this.selectedEmployee);
     }
-    if (this.displayedEmployeeColumnsVisibility.estTime) {
-      result.push('estTime');
+    console.log(`New Cell Valueemp: ${event.value}`);
+    console.log(event)
+  };
+  onSelectionChangeds = (event: SelectionChangedEvent) => {
+    const selectedNodes = this.gridApi.getSelectedNodes();
+    console.log('Row Selected!');
+    const selectedRows = this.gridApi.getSelectedRows(); // Perform your bulk convert action with the selected rows
+    console.log('Selected Rows:', selectedRows);
+  };
+  onSelectionChanged(event: SelectionChangedEvent) {
+    const selectedNodes = this.gridApi.getSelectedNodes();
+    console.log('Selected Rows:', selectedNodes); // Update exchangeHeader with the estimated time of the first selected row
+    if (selectedNodes.length > 0) {
+      this.exchangeHeader = selectedNodes[0].data.estimatedTime;
+    } else {
+      // If no row is selected, reset exchangeHeader
+      this.exchangeHeader = null;
     }
-    if (this.displayedEmployeeColumnsVisibility.jobCategory) {
-      result.push('jobCategory');
+    selectedNodes.forEach((item:any)=>{
+      if (item.data.allocatedEstimatedTime == null) item.data.allocatedEstimatedTime = 0;
+    if (item.data.employeeId == null) item.data.employeeId = 0;
+    if (item.data.estimatedTime == null) item.data.estimatedTime = 0;
+    this.selectedQuery.push({
+      ...item.data,
+      CategoryDesc: '',
+      Comments: '',
+      CommentsToClient: '',
+      Remarks: '',
+      SelectedEmployees: [],
+      SelectedRows: [],
+    });
+    })
+  }
+  onSelectionEmpChanged(event: SelectionChangedEvent){
+    const selectedEmpNodes = this.gridEmplApi.getSelectedNodes();
+    console.log('Selected Rows:', selectedEmpNodes); // Update exchangeHeader with the estimated time of the first selected row
+    selectedEmpNodes.forEach((item:any)=>{
+      if (item.data.jId != null)
+      this.selectedEmployee.push({
+        ...item.data,
+        CategoryDesc: '',
+        Comments: '',
+        CommentsToClient: '',
+        FileInwardType: '',
+        JobId: 0,
+        Remarks: '',
+        SelectedEmployees: [],
+        SelectedRows: [],
+        TimeStamp: '',
+       // estimatedTime: this.totalEstimateTime
+      });
+    else {
+      this.selectedEmployee.push({
+        ...item.data,
+        jId: 0,
+          CategoryDesc: '',
+          Comments: '',
+          CommentsToClient: '',
+          FileInwardType: '',
+          JobId: 0,
+          Remarks: '',
+          SelectedEmployees: [],
+          SelectedRows: [],
+          TimeStamp: '',
+        
+      });
     }
-    if (this.displayedEmployeeColumnsVisibility.shift) {
-      result.push('shift');
-    }
-    return result;
+    })
+    
   }
   fetchScopes() {
     this.http
       .get<any>(
         environment.apiURL +
-        `Allocation/getScopeValues/${this.loginservice.getUsername()}`
+          `Allocation/getScopeValues/${this.loginservice.getUsername()}`
       )
       .subscribe((scopedata) => {
         this.scopes = scopedata.scopeDetails;
         this.scopes.sort((a, b) => a.name.localeCompare(b.name)); // Sort the scopes based on the 'name' property
       });
   }
-  filterValue: any = null;
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-  applyFilters(event: Event): void {
-    this.filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = this.filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-  employeeFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataEmployeeSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataEmployeeSource.paginator) {
-      this.dataEmployeeSource.paginator.firstPage();
-    }
-  }
-
   selectedQuery: any[] = [];
   selectedEmployee: any[] = [];
 
+  setEmployeeAll(item: any) {
 
-  setEmployeeAll(completed: boolean, item: any) {
-
-    if (completed == true) {
+   // if (completed == true) {
       if (item.jId != null)
-        this.selectedEmployee.push({
+        return {
           ...item,
           CategoryDesc: '',
           Comments: '',
@@ -231,10 +531,10 @@ export class ProductionallocationtableComponent implements OnInit {
           SelectedEmployees: [],
           SelectedRows: [],
           TimeStamp: '',
-          // estimatedTime: this.totalEstimateTime
-        });
+          estimatedTime: item.estTime
+        };
       else {
-        this.selectedEmployee.push({
+        return{
           ...item,
           jId: 0,
           CategoryDesc: '',
@@ -246,322 +546,231 @@ export class ProductionallocationtableComponent implements OnInit {
           SelectedEmployees: [],
           SelectedRows: [],
           TimeStamp: '',
-
-        });
+          estimatedTime: item.estTime
+        };
       }
-    } else {
-      if (this.selectedEmployee.find((x) => x.id == item.id)) {
-        this.selectedEmployee = this.selectedEmployee.filter((x) => {
-          if (x.id != item.id) {
-            return item;
-          }
-        });
-      }
-    }
-  }
-  setExchangeHeader() {
-    this.selection.selected.forEach((x: any) => x.allocatedEstimatedTime = this.exchangeHeader);
+   // } else {
+      // if (this.selectedEmployee.find((x) => x.id == item.id)) {
+      //   this.selectedEmployee = this.selectedEmployee.filter((x) => {
+      //     if (x.id != item.id) {
+      //       return item;
+      //     }
+      //   });
+      // }
+   // }
   }
   benchChecked: boolean = false;
   onBenchCheckboxChange(event: any) {
     this.benchChecked = event.checked;
   }
-
-  freshJobs() {
-    this.spinnerService.requestStarted();
-    try {
-      const username = parseInt(this.loginservice.getUsername());
-      const processId = parseInt(this.loginservice.getProcessId());
-
-      const allocationJobs$ = this.http.get<any>(
-        environment.apiURL +
-        `Allocation/getPendingAllocationJobsAndEmployees/${username}/${processId}/1/0`
-      );
-
-      allocationJobs$
-        .pipe(
-          catchError((error) => {
-            this.spinnerService.resetSpinner();
-            console.error(error);
-            return throwError(error);
-          }),
-          switchMap((freshJobs) => {
-            this.spinnerService.requestEnded();
-            this.displayedColumnsVisibility.employee = false;
-            this.displayedColumnsVisibility.allocatedJobId = false;
-            this.displayedColumnsVisibility.quatationJobId = false;
-            this.displayedColumnsVisibility.jobId = true;
-            this.displayedEmployeeColumnsVisibility.allocatedEmployee = false;
-            this.displayedEmployeeColumnsVisibility.employees = true;
-            this.dataSource = new MatTableDataSource(freshJobs.allocationJobs);
-            this.dataSource.paginator = this.paginator1;
-            // this.dataSource.sort = this.sort;
-            this.dataEmployeeSource = new MatTableDataSource(
-              freshJobs.employees
-            );
-            this.dataEmployeeSource.paginator = this.paginator2;
-            // this.dataEmployeeSource.sort = this.sort;
-
-            this.employeeCount = freshJobs.allocationJobs.employeeCount;
-            this.QueryJobDate = freshJobs.allocationJobs.queryJobDate;
-            this.CustomerJobType = freshJobs.allocationJobs.customerJobType;
-            this.StatusId = freshJobs.allocationJobs.statusId;
-            this.JobStatusId = freshJobs.allocationJobs.jobStatusId;
-
-            // Return an observable with the processed data
-            return forkJoin([allocationJobs$]);
-          })
-        )
-        .subscribe(() => {
-          this.spinnerService.requestEnded();
-          // Success logic here
-        });
-    } catch (error) {
-      // Handle synchronous errors here
-      console.error('Synchronous error:', error);
-      this.spinnerService.resetSpinner();
-    }
-  }
-  revisionJobs() {
-    this.spinnerService.requestStarted();
-    this.http
-      .get<any>(
-        environment.apiURL +
-        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-          this.loginservice.getUsername()
-        )}/${parseInt(this.loginservice.getProcessId())}/2/0`
-      )
-      .subscribe({
-        next: (revisionJobs) => {
-          this.spinnerService.requestEnded();
-          this.dataSource = new MatTableDataSource(revisionJobs.allocationJobs);
-          this.dataSource.paginator = this.paginator1;
-          // this.dataSource.sort = this.sort;
-          this.displayedColumnsVisibility.employee = false;
-          this.displayedColumnsVisibility.quatationJobId = false;
-          this.dataEmployeeSource = new MatTableDataSource(
-            revisionJobs.employees
-          );
-          this.dataEmployeeSource.paginator = this.paginator2;
-          // this.dataEmployeeSource.sort = this.sort;
-        },
-        error: (err) => {
-          this.spinnerService.resetSpinner();
-          console.log(err);
-        },
-      });
-  }
-  reworkJobs() {
-    this.spinnerService.requestStarted();
-    this.http
-      .get<any>(
-        environment.apiURL +
-        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-          this.loginservice.getUsername()
-        )}/${parseInt(this.loginservice.getProcessId())}/3/0`
-      )
-      .subscribe({
-        next: (reworkJobs) => {
-          this.spinnerService.requestEnded();
-          this.dataSource = new MatTableDataSource(reworkJobs.allocationJobs);
-          this.dataSource.paginator = this.paginator1;
-          // this.dataSource.sort = this.sort;
-          this.displayedColumnsVisibility.employee = false;
-          this.displayedColumnsVisibility.quatationJobId = false;
-          this.dataEmployeeSource = new MatTableDataSource(
-            reworkJobs.employees
-          );
-          // this.dataEmployeeSource.sort = this.sort;
-          this.dataEmployeeSource.paginator = this.paginator2;
-        },
-        error: (err) => {
-          this.spinnerService.resetSpinner();
-          console.log(err);
-        },
-      });
-  }
-  allocaetdJobs() {
-    this.spinnerService.requestStarted();
-    this.http
-      .get<any>(
-        environment.apiURL +
-        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-          this.loginservice.getUsername()
-        )}/${parseInt(this.loginservice.getProcessId())}/4/0`
-      )
-      .subscribe({
-        next: (allocaetdJobs) => {
-          this.spinnerService.requestEnded();
-          this.dataSource = new MatTableDataSource(
-            allocaetdJobs.allocationJobs
-          );
-          this.dataSource.paginator = this.paginator1;
-          // this.dataSource.sort = this.sort;
-          this.displayedColumnsVisibility.employee = true;
-          this.displayedColumnsVisibility.allocatedJobId = true;
-          this.displayedColumnsVisibility.quatationJobId = false;
-          this.displayedColumnsVisibility.jobId = false;
-          this.displayedEmployeeColumnsVisibility.allocatedEmployee = true;
-          this.displayedEmployeeColumnsVisibility.employees = false;
-          this.dataEmployeeSource = new MatTableDataSource(
-            allocaetdJobs.employees
-          );
-          this.dataEmployeeSource.paginator = this.paginator2;
-          // this.dataEmployeeSource.sort = this.sort;
-        },
-        error: (err) => {
-          this.spinnerService.resetSpinner();
-          console.log(err);
-        },
-      });
-  }
-  queries() {
-    this.spinnerService.requestStarted();
-    this.http
-      .get<any>(
-        environment.apiURL +
-        `Allocation/getQueryPendingJobs/${parseInt(
-          this.loginservice.getUsername()
-        )}/${parseInt(this.loginservice.getProcessId())}/0`
-      )
-      .subscribe({
-        next: (queries) => {
-          this.spinnerService.requestEnded();
-          this.dataSource = new MatTableDataSource(queries.queryPendingJobs);
-          this.dataSource.paginator = this.paginator1;
-          // this.dataSource.sort = this.sort;
-          this.http
-            .get<any>(
-              environment.apiURL +
-              `Allocation/getQueryResponseJobsAndEmployees/${parseInt(
-                this.loginservice.getUsername()
-              )}/${parseInt(this.loginservice.getProcessId())}/0`
-            ).subscribe({
-              next: (queries) => {
-                this.displayedColumnsVisibility.employee = false;
-                this.displayedColumnsVisibility.quatationJobId = false;
-                this.dataEmployeeSource = new MatTableDataSource(queries.employees);
-                this.dataEmployeeSource.paginator = this.paginator2;
-              }
-            })
-        },
-        error: (err) => {
-          this.spinnerService.resetSpinner();
-          console.log(err);
-        },
-      });
-  }
-  queryResposne() {
-    this.spinnerService.requestStarted();
-    this.http
-      .get<any>(
-        environment.apiURL +
-        `Allocation/getQueryResponseJobsAndEmployees/${parseInt(
-          this.loginservice.getUsername()
-        )}/${parseInt(this.loginservice.getProcessId())}/0`
-      )
-      .subscribe({
-        next: (queryResposne) => {
-          this.spinnerService.requestEnded();
-          this.dataSource = new MatTableDataSource(
-            queryResposne.queryResponseJobs
-          );
-          this.dataSource.paginator = this.paginator1;
-          // this.dataSource.sort = this.sort;
-          this.displayedColumnsVisibility.employee = false;
-          this.displayedColumnsVisibility.quatationJobId = false;
-          this.dataEmployeeSource = new MatTableDataSource(
-            queryResposne.employees
-          );
-          this.dataEmployeeSource.paginator = this.paginator2;
-          // this.dataEmployeeSource.sort = this.sort;
-        },
-        error: (err) => {
-          this.spinnerService.resetSpinner();
-          console.log(err);
-        },
-      });
-  }
-  errorJobs() {
-    this.spinnerService.requestStarted();
-    this.http
-      .get<any>(
-        environment.apiURL +
-        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-          this.loginservice.getUsername()
-        )}/${parseInt(this.loginservice.getProcessId())}/5/0`
-      )
-      .subscribe({
-        next: (errorJobs) => {
-          this.spinnerService.requestEnded();
-          this.dataSource = new MatTableDataSource(errorJobs.allocationJobs);
-          this.dataSource.paginator = this.paginator1;
-          // this.dataSource.sort = this.sort;
-          this.dataEmployeeSource = new MatTableDataSource(errorJobs.employees);
-          this.dataEmployeeSource.paginator = this.paginator2;
-          // this.dataEmployeeSource.sort = this.sort;
-          this.displayedColumnsVisibility.employee = false;
-          this.displayedColumnsVisibility.quatationJobId = false;
-        },
-        error: (err) => {
-          this.spinnerService.resetSpinner();
-          console.log(err);
-        },
-      });
-  }
-  quotationJobs() {
-    this.spinnerService.requestStarted();
-    this.http
-      .get<any>(
-        environment.apiURL +
-        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-          this.loginservice.getUsername()
-        )}/${parseInt(this.loginservice.getProcessId())}/7/0`
-      )
-      .subscribe({
-        next: (quotationJobs) => {
-          this.spinnerService.requestEnded();
-          this.dataSource = new MatTableDataSource(quotationJobs.allocationJobs);
-          this.dataSource.paginator = this.paginator1;
-          // this.dataSource.sort = this.sort;
-          this.displayedColumnsVisibility.employee = false;
-          this.displayedColumnsVisibility.quatationJobId = true;
-          this.displayedColumnsVisibility.allocatedJobId = false;
-          this.displayedColumnsVisibility.jobId = false;
-          this.dataEmployeeSource = new MatTableDataSource(quotationJobs.employees);
-          this.dataEmployeeSource.paginator = this.paginator2;
-          // this.dataEmployeeSource.sort = this.sort;
-        },
-        error: (err) => {
-          this.spinnerService.resetSpinner();
-
-          console.log(err);
-        },
-      });
-  }
-
   tab(action) {
     if (action == '1') {
       this.freshJobs();
+      this.gridApi.setColumnVisible('jobIdColumn', true);
+      this.gridApi.setColumnVisible('quotationIdColumn', false);
+      this.gridApi.setColumnVisible('allocatedIdColumn', false);
     } else if (action == '2') {
+      this.gridApi.setColumnVisible('jobIdColumn', true);
+        this.gridApi.setColumnVisible('quotationIdColumn', false);
+        this.gridApi.setColumnVisible('allocatedIdColumn', false);
       this.revisionJobs();
     } else if (action == '3') {
       this.reworkJobs();
     } else if (action == '4') {
       this.allocaetdJobs();
+      this.gridApi.setColumnVisible('jobIdColumn', false);
+        this.gridApi.setColumnVisible('quotationIdColumn', false);
+        this.gridApi.setColumnVisible('allocatedIdColumn', true);
     } else if (action == '5') {
       this.queries();
     } else if (action == '6') {
       this.queryResposne();
     } else if (action == '7') {
+      this.gridApi.setColumnVisible('jobIdColumn', true);
+        this.gridApi.setColumnVisible('quotationIdColumn', false);
+        this.gridApi.setColumnVisible('allocatedIdColumn', false);
       this.errorJobs();
     } else if (action == '8') {
+      this.gridApi.setColumnVisible('jobIdColumn', false);
+        this.gridApi.setColumnVisible('quotationIdColumn', true);
+        this.gridApi.setColumnVisible('allocatedIdColumn', false);
       this.quotationJobs();
     }
   }
+  freshJobs() {
+    this.http
+      .get<any>(
+        environment.apiURL +
+          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+            this.loginservice.getUsername()
+          )}/${parseInt(this.loginservice.getProcessId())}/1/0`
+      )
+      .subscribe({
+        next: (freshJobs) => {
+          if (this.gridApi) {
+            // this.gridApi.setColumnVisible('jobId', true); // Show 'jobId' column // this.gridApi.setColumnVisible('AllocatedjobId', false); // Hide 'AllocatedjobId' column
+          } else {
+            console.error('gridApi is not initialized.');
+          }
+          this.rowData = freshJobs.allocationJobs;
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      });
+  }
+  revisionJobs() {
+    // this.spinnerService.requestStarted();
+    this.http
+      .get<any>(
+        environment.apiURL +
+          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+            this.loginservice.getUsername()
+          )}/${parseInt(this.loginservice.getProcessId())}/2/0`
+      )
+      .subscribe({
+        next: (revisionJobs) => {
+          this.gridApi.setColumnVisible('jobId', true);
+          this.gridApi.setColumnVisible('AllocatedjobId', false);
+          this.rowData = revisionJobs.allocationJobs;
+        },
+        error: (err) => {
+          // this.spinnerService.resetSpinner();
+          console.log(err);
+        },
+      });
+  }
+  reworkJobs() {
+    // this.spinnerService.requestStarted();
+    this.http
+      .get<any>(
+        environment.apiURL +
+          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+            this.loginservice.getUsername()
+          )}/${parseInt(this.loginservice.getProcessId())}/3/0`
+      )
+      .subscribe({
+        next: (revisionJobs) => {
+          this.gridApi.setColumnVisible('jobId', true);
+          this.gridApi.setColumnVisible('AllocatedjobId', false);
+          this.rowData = revisionJobs.allocationJobs;
+        },
+        error: (err) => {
+          // this.spinnerService.resetSpinner();
+          console.log(err);
+        },
+      });
+  }
+  allocaetdJobs() {
+    // this.spinnerService.requestStarted();
+    this.http
+      .get<any>(
+        environment.apiURL +
+          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+            this.loginservice.getUsername()
+          )}/${parseInt(this.loginservice.getProcessId())}/4/0`
+      )
+      .subscribe({
+        next: (revisionJobs) => {
+          this.gridApi.setColumnVisible('jobId', false);
+          this.gridApi.setColumnVisible('AllocatedjobId', true);
+          this.rowData = revisionJobs.allocationJobs;
+        },
+        error: (err) => {
+          // this.spinnerService.resetSpinner();
+          console.log(err);
+        },
+      });
+  }
+  queries() {
+    // this.spinnerService.requestStarted();
+    this.http
+      .get<any>(
+        environment.apiURL +
+          `Allocation/getQueryPendingJobs/${parseInt(
+            this.loginservice.getUsername()
+          )}/${parseInt(this.loginservice.getProcessId())}/0`
+      )
+      .subscribe({
+        next: (revisionJobs) => {
+          this.gridApi.setColumnVisible('jobId', true);
+          this.gridApi.setColumnVisible('AllocatedjobId', false);
+          this.rowData = revisionJobs.queryPendingJobs;
+        },
+        error: (err) => {
+          // this.spinnerService.resetSpinner();
+          console.log(err);
+        },
+      });
+  }
+  queryResposne() {
+    this.http
+      .get<any>(
+        environment.apiURL +
+          `Allocation/getQueryResponseJobsAndEmployees/${parseInt(
+            this.loginservice.getUsername()
+          )}/${parseInt(this.loginservice.getProcessId())}/0`
+      )
+      .subscribe({
+        next: (freshJobs) => {
+          if (this.gridApi) {
+            // this.gridApi.setColumnVisible('jobId', true); // Show 'jobId' column // this.gridApi.setColumnVisible('AllocatedjobId', false); // Hide 'AllocatedjobId' column
+          } else {
+            console.error('gridApi is not initialized.');
+          }
+          this.rowData = freshJobs.queryResponseJobs;
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      });
+  }
+  errorJobs() {
+    this.http
+      .get<any>(
+        environment.apiURL +
+          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+            this.loginservice.getUsername()
+          )}/${parseInt(this.loginservice.getProcessId())}/5/0`
+      )
+      .subscribe({
+        next: (freshJobs) => {
+          if (this.gridApi) {
+            // this.gridApi.setColumnVisible('jobId', true); // Show 'jobId' column // this.gridApi.setColumnVisible('AllocatedjobId', false); // Hide 'AllocatedjobId' column
+          } else {
+            console.error('gridApi is not initialized.');
+          }
+          this.rowData = freshJobs.allocationJobs;
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      });
+  }
+  quotationJobs() {
+    this.http
+      .get<any>(
+        environment.apiURL +
+          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+            this.loginservice.getUsername()
+          )}/${parseInt(this.loginservice.getProcessId())}/7/0`
+      )
+      .subscribe({
+        next: (freshJobs) => {
+          if (this.gridApi) {
+            // this.gridApi.setColumnVisible('jobId', true); // Show 'jobId' column // this.gridApi.setColumnVisible('AllocatedjobId', false); // Hide 'AllocatedjobId' column
+          } else {
+            console.error('gridApi is not initialized.');
+          }
+          this.rowData = freshJobs.allocationJobs;
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      });
+  }
 
   estTimeinput: any[] = [];
-
   getJobCategoryStatus() {
     this.productionallocation
       .getJobCategoryStatusMessage()
@@ -569,60 +778,60 @@ export class ProductionallocationtableComponent implements OnInit {
         this.estTimeinput = data;
       });
   }
-  onKeyPress(job: any) {
-    this.afterCellEdit(job);
-  }
-  afterCellEdit(rowEntity: any) {
-
-    if (parseInt(this.loginservice.getProcessId()) == 2) {
-      var colls = this.estTimeinput;
-      var Esttime1 = colls[0].estimatedTime;
-      var Esttime2 = colls[1].estimatedTime;
-      var Esttime3 = colls[2].estimatedTime;
-      var Esttime4 = colls[3].estimatedTime;
-      var desc1 = colls[0].description;
-      var desc2 = colls[1].description;
-      var desc3 = colls[2].description;
-      var desc4 = colls[3].description;
-      var desc5 = colls[4].description;
-      if (rowEntity.estimatedTime <= Esttime1 && rowEntity.estimatedTime > 0) {
-        rowEntity.status = desc1;
-      } else if (
-        rowEntity.estimatedTime <= Esttime2 &&
-        rowEntity.estimatedTime > Esttime1
-      ) {
-        rowEntity.status = desc2;
-      } else if (
-        rowEntity.estimatedTime <= Esttime3 &&
-        rowEntity.estimatedTime > Esttime2
-      ) {
-        rowEntity.status = desc3;
-      } else if (
-        rowEntity.estimatedTime <= Esttime4 &&
-        rowEntity.estimatedTime > Esttime3
-      ) {
-        rowEntity.status = desc4;
-      } else if (rowEntity.estimatedTime > Esttime4) {
-        rowEntity.status = desc5;
-      }
-
-      console.log(this.selectedEmployee, "ujjh")
-      this.emplselection.selected.map((x) => {
-        if (x.employeeId == rowEntity.employeeId) {
-          //this.updateTotalEstimateTime();
-          return { ...x, estimatedTime: rowEntity.estimatedTime, status: rowEntity.status };
-        } else return x;
-      });
-      console.table(this.selectedEmployee)
-    }
-  }
-
+  // onKeyPress(job: any) {
+  //   this.afterCellEdit(job);
+  // }
+  // afterCellEdit(rowEntity: any) {
+  //   if (parseInt(this.loginservice.getProcessId()) == 2) {
+  //     var colls = this.estTimeinput;
+  //     var Esttime1 = colls[0].estimatedTime;
+  //     var Esttime2 = colls[1].estimatedTime;
+  //     var Esttime3 = colls[2].estimatedTime;
+  //     var Esttime4 = colls[3].estimatedTime;
+  //     var desc1 = colls[0].description;
+  //     var desc2 = colls[1].description;
+  //     var desc3 = colls[2].description;
+  //     var desc4 = colls[3].description;
+  //     var desc5 = colls[4].description;
+  //     if (rowEntity.estimatedTime <= Esttime1 && rowEntity.estimatedTime > 0) {
+  //       rowEntity.status = desc1;
+  //     } else if (
+  //       rowEntity.estimatedTime <= Esttime2 &&
+  //       rowEntity.estimatedTime > Esttime1
+  //     ) {
+  //       rowEntity.status = desc2;
+  //     } else if (
+  //       rowEntity.estimatedTime <= Esttime3 &&
+  //       rowEntity.estimatedTime > Esttime2
+  //     ) {
+  //       rowEntity.status = desc3;
+  //     } else if (
+  //       rowEntity.estimatedTime <= Esttime4 &&
+  //       rowEntity.estimatedTime > Esttime3
+  //     ) {
+  //       rowEntity.status = desc4;
+  //     } else if (rowEntity.estimatedTime > Esttime4) {
+  //       rowEntity.status = desc5;
+  //     }
+  //     console.log(this.selectedEmployee, 'ujjh');
+  //     this.emplselection.selected.map((x) => {
+  //       if (x.employeeId == rowEntity.employeeId) {
+  //         //this.updateTotalEstimateTime();
+  //         return {
+  //           ...x,
+  //           estimatedTime: rowEntity.estimatedTime,
+  //           status: rowEntity.status,
+  //         };
+  //       } else return x;
+  //     });
+  //     console.table(this.selectedEmployee);
+  //   }
+  // }
   getProductionJob(data: any) {
     const dialogRef = this._dialog.open(JobAssignedDetailsPopupComponent, {
       width: '100%',
       height: '450px',
       data: data,
-
     });
     dialogRef.afterClosed().subscribe({
       next: (val) => {
@@ -647,8 +856,7 @@ export class ProductionallocationtableComponent implements OnInit {
     });
   }
   getAllocatedJobId(data: any) {
-    console.log(data, "EditedData");
-
+    console.log(data, 'EditedData');
     const dialogRef = this._dialog.open(ProductionAllocatedPopupComponent, {
       width: '100%',
       height: '850px',
@@ -690,48 +898,54 @@ export class ProductionallocationtableComponent implements OnInit {
       },
     });
   }
-
   selectedJobs: any[] = [];
-  onSubmit() {
-    this.selection.selected.forEach(x => this.setAll(x));
-    console.log(this.selection.selected,"FirstTable");
-    console.log(this.selectedQuery,"SelectedQuery");
-    
-    this.emplselection.selected.forEach(x => this.setEmployeeAll(true, x));
-    if (this.selectedQuery.length > 0) {
-      this.selectedJobs = this.selectedQuery;
+  selectedEmployees:any[]=[];
+  sampleData() {
+    const firstTable = this.gridApi.getSelectedRows();
+    console.log(firstTable, 'FirstTable');
+    const secondtable = this.gridEmplApi.getSelectedRows();
+
+    console.log(secondtable, 'secondtable');
+  }
+  setExchangeHeader() {
+    if (this.gridApi) {
+      const selectedNodes = this.gridApi.getSelectedNodes();
+      selectedNodes.forEach((node) => {
+        if (node.data.jobId) {
+          node.setDataValue('estimatedTime', this.exchangeHeader);
+          console.log(this.exchangeHeader,"exgheader");
+          
+        }
+      }); // Manually trigger change detection // this.exchangeHeader = null;
+    } else {
+      console.error('AG Grid API not available');
     }
+  }
+ 
+  ScopeId: any;
+  scopeChange(scope) {
+    this.ScopeId = scope;
+  }
+ 
+  onSubmits() {
+    this. selectedJobs= this.gridApi.getSelectedRows();
+    this. selectedEmployees= this.gridEmplApi.getSelectedRows();
+    // if (this.selectedQuery.length > 0) {
+    //   this.selectedJobs = this.selectedQuery;
+    // }
     this.spinnerService.requestStarted();
     var selectedJobCount = this.selectedJobs.length;
-    var selectedEmployeeCount = this.selectedEmployee.length;
-
-
-    console.log(this.selectedJobs,"SelectedJobs");
-    console.log(this.selectedEmployee,"selectedEmployee");
-    console.log(selectedJobCount,"selectedJobCountInitial")
-    console.log(selectedEmployeeCount,"selectedEmployeeCountInitial")
-
+    var selectedEmployeeCount = this.selectedEmployees.length;
     if (this.loginservice.getProcessName() == 'Production Allocation') {
       if (selectedJobCount != 0 && selectedEmployeeCount != 0) {
         if (selectedJobCount > 1) {
           if (selectedEmployeeCount > 1) {
             Swal.fire('Info!', 'Please select one Employee!', 'info');
-            this.selectedJobs = [];
-            this.selectedQuery=[];
-            this.selectedEmployee = [];
-            console.log(this.selectedJobs, "SelcetdeJobsConsirm");
-            console.log(this.selectedEmployee, "SelcetdeJobsConsirm");
-
           }
           else {
             for (var i = 0; i < selectedJobCount; i++) {
-              if (this.selectedJobs[i].allocatedEstimatedTime == undefined || this.selectedJobs[i].allocatedEstimatedTime == "" || this.selectedJobs[i].allocatedEstimatedTime == 0) {
+              if (this.selectedJobs[i].estimatedTime == undefined || this.selectedJobs[i].estimatedTime == "" || this.selectedJobs[i].estimatedTime == 0) {
                 Swal.fire('Info!', 'Please enter Estimated Time for Selected Job!', 'info');
-                this.selectedJobs = [];
-                this.selectedQuery=[];
-                this.selectedEmployee = [];
-                console.log(this.selectedJobs, "SelcetdeJobsConsirm");
-                console.log(this.selectedEmployee, "SelcetdeJobsConsirm");
                 this.spinnerService.requestEnded();
                 return;
               }
@@ -741,16 +955,11 @@ export class ProductionallocationtableComponent implements OnInit {
         } else {
           for (var i = 0; i < selectedEmployeeCount; i++) {
             if (
-              this.selectedEmployee[i].estimatedTime == undefined ||
-              this.selectedEmployee[i].estimatedTime == '' ||
-              this.selectedEmployee[i].estimatedTime == 0
+              this.selectedEmployees[i].estimatedTime == undefined ||
+              this.selectedEmployees[i].estimatedTime == '' ||
+              this.selectedEmployees[i].estimatedTime == 0
             ) {
               Swal.fire('Info!', 'Please enter Estimated Time for Selected Employee!', 'info');
-              this.selectedJobs = [];
-              this.selectedQuery=[];
-              this.selectedEmployee = [];
-              console.log(this.selectedJobs, "SelcetdeJobsConsirm");
-              console.log(this.selectedEmployee, "SelcetdeJobsConsirm");
               this.spinnerService.requestEnded();
               return;
             }
@@ -759,11 +968,6 @@ export class ProductionallocationtableComponent implements OnInit {
         }
       } else {
         Swal.fire('Info!', 'Please select Job and Employees!', 'info');
-        this.selectedJobs = [];
-        this.selectedQuery=[];
-        this.selectedEmployee = [];
-        console.log(this.selectedJobs, "SelcetdeJobsConsirm");
-        console.log(this.selectedEmployee, "SelcetdeJobsConsirm");
         this.spinnerService.requestEnded();
       }
     } else {
@@ -772,35 +976,105 @@ export class ProductionallocationtableComponent implements OnInit {
           console.log(selectedEmployeeCount, 'employeecount');
 
           Swal.fire('Info!', 'Please select one Employee!', 'info');
-          this.selectedJobs = [];
-          this.selectedQuery=[];
-          this.selectedEmployee = [];
-          console.log(this.selectedJobs, "SelcetdeJobsConsirm");
-          console.log(this.selectedEmployee, "SelcetdeJobsConsirm");
           this.spinnerService.requestEnded();
           return;
         }
         this.postJobs();
       } else {
         Swal.fire('Info!', 'Please select Job and Employee!', 'info');
-        this.selectedJobs = [];
-        this.selectedQuery=[];
-        this.selectedEmployee = [];
-        console.log(this.selectedJobs, "SelcetdeJobsConsirm");
-        console.log(this.selectedEmployee, "SelcetdeJobsConsirm");
         this.spinnerService.requestEnded();
       }
     }
 
 
   }
+  onSubmit() {
+    console.log(this.gridApi.getSelectedRows(), 'rowselection');
 
-  ScopeId: any;
-  scopeChange(scope) {
-    this.ScopeId = scope;
+    this. selectedJobs= this.gridApi.getSelectedRows(); // let selectedJobs = this.gridApi.getSelectedRows().forEach(x => this.setAll(x)); // let seleectedJobsData = selectedJobs.push([{...selectedJobs,employeeId:'',allocatedEstimatedTime:'',jId:''}])
+    this. selectedEmployees= this.gridEmplApi.getSelectedRows(); // let selectedEmployees =   this.gridEmplApi.getSelectedRows().forEach(x => this.setEmployeeAll(true, x)); // let seleectedEmployeeData = selectedEmployees.push([{...selectedEmployees,employeeId:'',allocatedEstimatedTime:'',jId:''}]) // console.log(seleectedEmployeeData,"seleectedEmployeeData"); // console.log(seleectedJobsData,"seleectedJobsData"); // Reset variables
+    // this.selectedJobs = [];
+    // this.selectedQuery = [];
+    // this.selectedEmployee = []; // Display selected rows in the console for debugging
+    console.log(this.selectedJobs, 'SelectedJobs');
+    console.log(this.selectedEmployees, 'selectedEmployees'); // Handle the case where no jobs or employees are selected
+    if (this.selectedJobs.length === 0 || this.selectedEmployees.length === 0) {
+      Swal.fire('Info!', 'Please select Job and Employee!', 'info');
+      this.spinnerService.requestEnded();
+      return;
+    } // Handle the case where multiple employees are selected
+    if (this.selectedEmployees.length > 1) {
+      Swal.fire('Info!', 'Please select one Employee!', 'info');
+      this.spinnerService.requestEnded();
+      this.postJobs();
+      return;
+    } 
+    if (this.gridApi) {
+      const selectedNodes = this.gridApi.getSelectedNodes();
+      selectedNodes.forEach((node) => {
+        if (node.data.jobId) {
+          // Update the data directly, which will trigger Angular's change detection
+          node.setDataValue('estimatedTime', this.exchangeHeader);
+        }
+      }); // Reset exchangeHeader after updating the selected rows
+      // this.exchangeHeader = null;
+    } // Handle the case where multiple jobs are selected
+    if (this.selectedJobs.length > 1) {
+      for (let i = 0; i < this.selectedJobs.length; i++) {
+        // if (this.selectedJobs[i].this.exchangeHeader) {
+          if (
+            this.selectedJobs[i].estimatedTime == undefined ||
+            this.selectedJobs[i].estimatedTime == '' ||
+            this.selectedJobs[i].estimatedTime == 0
+          ){
+          Swal.fire(
+            'Info!',
+            'Please enter Estimated Time for Selected Job!',
+            'info'
+          );
+          this.spinnerService.requestEnded();
+          // this.postJobs();
+          return;
+        }
+      }
+    } else {
+      for (var i = 0; i < this.selectedEmployees.length; i++) {
+        console.table(this.selectedEmployee)
+        console.table(this.selectedEmployees,)
+        if (
+          this.selectedEmployees[i].estTime == undefined ||
+          this.selectedEmployees[i].estTime == '' ||
+          this.selectedEmployees[i].estTime == 0
+        ) {
+          Swal.fire('Info!', 'Please enter Estimated Time for Selected Employee!', 'info');
+          this.spinnerService.requestEnded();
+          return;
+        }
+      }
+      this.postJobs();
+    }
+    
+    // Update estimatedTime for selected jobs
+    this.selectedJobs.forEach((job) => (job.estimatedTime = this.exchangeHeader)); // Update estimatedTime for selected employees
+    // this.selectedEmployees.forEach((employee) => {
+      
+      // if (!employee.estimatedTime) {
+      //   Swal.fire(
+      //     'Info!',
+      //     'Please enter Estimated Time for Selected Employee!',
+      //     'info'
+      //   );
+      //   this.spinnerService.requestEnded();
+      //   this.postJobs();
+      //   return;
+      // }
+    // }); // Reset exchangeHeader after updating the selected rows // this.exchangeHeader = null; // Continue with your logic to post jobs
+    this.postJobs();
   }
-
   postJobs() {
+    console.log(this.selectedJobs,"selectedjobs");
+    console.log(this.selectedJobs, "selectedemployee");
+    
     let processMovement = {
       id: 0,
       processId: this.loginservice.getProcessId(),
@@ -814,21 +1088,30 @@ export class ProductionallocationtableComponent implements OnInit {
       value: 0,
       amount: 0,
       stitchCount: 0,
-      estimationTime: this.totalEstimateTime,
+      estimationTime: this.selectedEmployees.reduce(
+        (total, employee) => total + employee.estTime,
+        0
+      ),
       dateofDelivery: '2023-06-22T11:47:25.193Z',
       comments: 'string',
       validity: 0,
       copyFiles: true,
       updatedBy: 0,
       jId: 0,
-      estimatedTime: this.totalEstimateTime,
+      estimatedTime:this.selectedEmployees.reduce(
+        (total, employee) => total + employee.estTime,
+        0
+      ),
       tranMasterId: 0,
-      selectedRows: this.selectedJobs,
-      selectedEmployees: this.selectedEmployee,
+      selectedRows: this.selectedJobs.map(x=>this.setAll(x)),
+      selectedEmployees: this.selectedEmployees.map(x=>this.setEmployeeAll(x)),
       departmentId: 0,
       updatedUTC: new Date().toISOString,
       categoryDesc: 'string',
-      allocatedEstimatedTime: this.exchangeHeader,
+      allocatedEstimatedTime: this.exchangeHeader??this.selectedEmployees.reduce(
+        (total, employee) => total + employee.estTime,
+        0
+      ),
       tranId: 0,
       fileInwardType: 'string',
       timeStamp: '',
@@ -841,27 +1124,23 @@ export class ProductionallocationtableComponent implements OnInit {
       commentsToClient: 'string',
       isJobFilesNotTransfer: true,
     };
-
     if (this.loginservice.getProcessName() == 'Quality Allocation') {
       this.ProcessMovementData('QARestriction', processMovement).subscribe(
         (result) => {
-          var SameQAEmployeeJobList = processMovement.selectedRows.filter(
-            function (item) {
-              var exists = result.jids.some((x) => x == item.jId);
+          var SameQAEmployeeJobList:any[] = processMovement.selectedRows.filter(
+            function (item:any) {
+              var exists = result.jids.some((x) => x == item?.jId);
               return exists;
             }
           );
-
           var processedRows = processMovement.selectedRows.filter(function (
-            item
+            item:any
           ) {
-            var exists = result.jids.some((x) => x == item.jId);
+            var exists = result.jids.some((x) => x == item?.jId);
             return !exists;
           });
-
           if (processedRows.length > 0) {
             processMovement.selectedRows = processedRows;
-
             this.jobMovement(processMovement);
           }
           if (SameQAEmployeeJobList.length > 0) {
@@ -873,9 +1152,11 @@ export class ProductionallocationtableComponent implements OnInit {
                 strJobId += ',' + SameQAEmployeeJobList[i].JobId;
               }
             }
-            Swal.fire('Info!', 'Following Job Ids are assigne to same Employee!', 'info');
-
-            // alert('Following Job Ids are assigne to same employee ' + strJobId);
+            Swal.fire(
+              'Info!',
+              'Following Job Ids are assigne to same Employee!',
+              'info'
+            ); // alert('Following Job Ids are assigne to same employee ' + strJobId);
           }
         }
       );
@@ -885,9 +1166,10 @@ export class ProductionallocationtableComponent implements OnInit {
   }
   jobMovement(processMovement) {
     var confirmationMessage: any;
-    let AttachedFiles = [];
-    this.selectedJobs = processMovement.SelectedRows;
-    this.selectedEmployee = processMovement.SelectedEmployees;
+    let AttachedFiles = []; // this.selectedJobs = processMovement.SelectedRows; // this.selectedEmployee = processMovement.SelectedEmployees;
+    this.selectedJobs = this.gridApi.getSelectedRows();
+    this.selectedEmployee = this.gridEmplApi.getSelectedRows();
+    const sendingSelectedJobs = [{ ...this.selectedJobs, employeeId: '' }];
     this.spinnerService.requestStarted();
     this.http
       .post(environment.apiURL + 'Allocation/processMovement', processMovement)
@@ -895,24 +1177,17 @@ export class ProductionallocationtableComponent implements OnInit {
         this.spinnerService.requestEnded();
         confirmationMessage = response;
         if (response.success === false) {
-          Swal.fire('Info!', 'Error the job assign!', 'info');
-          // window.location.reload()
+          Swal.fire('Info!', 'Error the job assign!', 'info'); // window.location.reload()
           this.spinnerService.resetSpinner();
         } else if (response.success === true) {
-          Swal.fire(
-            'Done!',
-            'Job assigned successfully!',
-            'success'
-          ).then((response) => {
-            if (response.isConfirmed) {
-              this.refreshPage();
+          Swal.fire('Done!', 'Job assigned successfully!', 'success').then(
+            (response) => {
+              if (response.isConfirmed) {
+                this.refreshPage();
+              }
             }
-          })
-          this.spinnerService.resetSpinner();
-          // this.http
-          // .post(environment.apiURL + 'Allocation/processMovement', processMovement)
-          // .subscribe((result) => {
-          // confirmationMessage = result;
+          );
+          this.spinnerService.resetSpinner(); // this.http // .post(environment.apiURL + 'Allocation/processMovement', processMovement) // .subscribe((result) => { // confirmationMessage = result;
           if (AttachedFiles.length > 0) {
             var fd = new FormData();
             for (let i = 0; i < AttachedFiles.length; i++) {
@@ -953,34 +1228,25 @@ export class ProductionallocationtableComponent implements OnInit {
                 next: (data) => {
                   this.spinnerService.requestEnded();
                   AttachedFiles = [];
-
                 },
                 error: (err) => {
                   this.spinnerService.resetSpinner();
                   console.log(err);
-                }
-              })
-          }
-          // });
-          this.router.navigate(["topnavbar/production"]);
-
+                },
+              });
+          } // });
+          this.router.navigate(['topnavbar/production']);
         }
         (error) => {
           console.error('Error occurred during API call:', error);
           this.spinnerService.resetSpinner();
-          Swal.fire(
-            'Done!',
-            'Job assigned Failed!',
-            'error'
-          )
-        }
+          Swal.fire('Done!', 'Job assigned Failed!', 'error');
+        };
       });
-
-
   }
   refreshPage() {
     this.freshJobs();
-    window.location.reload()
+    window.location.reload();
   }
   ProcessMovementData(url: string, data: any): Observable<any> {
     return this.http.post(
@@ -989,49 +1255,16 @@ export class ProductionallocationtableComponent implements OnInit {
     );
   }
   updateTotalEstimateTime(): void {
-    this.totalEstimateTime = this.dataEmployeeSource.data.reduce((total, employee) => total + employee.estTime, 0);
-  }
-
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
-  masterToggle() {
-    if (this.isAllSelected()) {
-      this.selection.clear();
-    }
-    else if (this.filterValue) {
-      this.selection.clear();
-      this.dataSource.filteredData.forEach(x => this.selection.select(x));
-    } else {
-      this.dataSource.data.forEach(row => this.selection.select(row));
-    }
-
-  }
-  isAllEmplSelected() {
-    const numSelected = this.emplselection.selected.length;
-    const numRows = this.dataEmployeeSource.data.length;
-    return numSelected === numRows;
-  }
-  EmplmasterToggle() {
-    if (this.isAllEmplSelected()) {
-      this.emplselection.clear();
-    }
-    else if (this.filterValue) {
-      this.emplselection.clear();
-      this.dataEmployeeSource.filteredData.forEach(x => this.emplselection.select(x));
-    } else {
-      this.dataEmployeeSource.data.forEach(row => this.emplselection.select(row));
-    }
-
+    this.totalEstimateTime = this.dataEmployeeSource.data.reduce(
+      (total, employee) => total + employee.estTime,
+      0
+    );
   }
   setAll(item: any) {
-
     if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
     if (item.employeeId == null) item.employeeId = 0;
     if (item.estimatedTime == null) item.estimatedTime = 0;
-    this.selectedQuery.push({
+    return {
       ...item,
       CategoryDesc: '',
       Comments: '',
@@ -1039,13 +1272,10 @@ export class ProductionallocationtableComponent implements OnInit {
       Remarks: '',
       SelectedEmployees: [],
       SelectedRows: [],
-    });
-  }
+    };
+  } //textcolor
 
-
-  //textcolor
   getCellClass(data) {
-
     return {
       'text-color-green': data.employeeCount === 1,
       'text-color-brown': data.queryJobDate !== null,
@@ -1053,8 +1283,34 @@ export class ProductionallocationtableComponent implements OnInit {
       'text-color-DeepSkyBlue': data.customerJobType === 'Trial',
       'text-color-yellow': data.statusId === 10,
       'text-color-red': data.statusId === 11,
-      'SuperRush': data.jobStatusId === 1 || data.jobStatusId === 3 || data.jobStatusId === 7,
-      'Rush': data.jobStatusId === 2 || data.jobStatusId === 4 || data.jobStatusId === 8
+      SuperRush:
+        data.jobStatusId === 1 ||
+        data.jobStatusId === 3 ||
+        data.jobStatusId === 7,
+      Rush:
+        data.jobStatusId === 2 ||
+        data.jobStatusId === 4 ||
+        data.jobStatusId === 8,
     };
   }
+
+
+}
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
+}
+function isEmpColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsisEmpColumn = displayedColumns[0] === params.column;
+  return thisIsisEmpColumn;
 }
