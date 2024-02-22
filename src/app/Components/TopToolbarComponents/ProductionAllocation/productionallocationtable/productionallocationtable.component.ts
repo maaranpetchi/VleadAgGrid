@@ -781,52 +781,52 @@ export class ProductionallocationtableComponent implements OnInit {
   // onKeyPress(job: any) {
   //   this.afterCellEdit(job);
   // }
-  afterCellEdit(rowEntity: any) {
-    if (parseInt(this.loginservice.getProcessId()) == 2) {
-      var colls = this.estTimeinput;
-      var Esttime1 = colls[0].estimatedTime;
-      var Esttime2 = colls[1].estimatedTime;
-      var Esttime3 = colls[2].estimatedTime;
-      var Esttime4 = colls[3].estimatedTime;
-      var desc1 = colls[0].description;
-      var desc2 = colls[1].description;
-      var desc3 = colls[2].description;
-      var desc4 = colls[3].description;
-      var desc5 = colls[4].description;
-      if (rowEntity.estimatedTime <= Esttime1 && rowEntity.estimatedTime > 0) {
-        rowEntity.status = desc1;
-      } else if (
-        rowEntity.estimatedTime <= Esttime2 &&
-        rowEntity.estimatedTime > Esttime1
-      ) {
-        rowEntity.status = desc2;
-      } else if (
-        rowEntity.estimatedTime <= Esttime3 &&
-        rowEntity.estimatedTime > Esttime2
-      ) {
-        rowEntity.status = desc3;
-      } else if (
-        rowEntity.estimatedTime <= Esttime4 &&
-        rowEntity.estimatedTime > Esttime3
-      ) {
-        rowEntity.status = desc4;
-      } else if (rowEntity.estimatedTime > Esttime4) {
-        rowEntity.status = desc5;
-      }
-      console.log(this.selectedEmployee, 'ujjh');
-      this.emplselection.selected.map((x) => {
-        if (x.employeeId == rowEntity.employeeId) {
-          //this.updateTotalEstimateTime();
-          return {
-            ...x,
-            estimatedTime: rowEntity.estimatedTime,
-            status: rowEntity.status,
-          };
-        } else return x;
-      });
-      console.table(this.selectedEmployee);
-    }
-  }
+  // afterCellEdit(rowEntity: any) {
+  //   if (parseInt(this.loginservice.getProcessId()) == 2) {
+  //     var colls = this.estTimeinput;
+  //     var Esttime1 = colls[0].estimatedTime;
+  //     var Esttime2 = colls[1].estimatedTime;
+  //     var Esttime3 = colls[2].estimatedTime;
+  //     var Esttime4 = colls[3].estimatedTime;
+  //     var desc1 = colls[0].description;
+  //     var desc2 = colls[1].description;
+  //     var desc3 = colls[2].description;
+  //     var desc4 = colls[3].description;
+  //     var desc5 = colls[4].description;
+  //     if (rowEntity.estimatedTime <= Esttime1 && rowEntity.estimatedTime > 0) {
+  //       rowEntity.status = desc1;
+  //     } else if (
+  //       rowEntity.estimatedTime <= Esttime2 &&
+  //       rowEntity.estimatedTime > Esttime1
+  //     ) {
+  //       rowEntity.status = desc2;
+  //     } else if (
+  //       rowEntity.estimatedTime <= Esttime3 &&
+  //       rowEntity.estimatedTime > Esttime2
+  //     ) {
+  //       rowEntity.status = desc3;
+  //     } else if (
+  //       rowEntity.estimatedTime <= Esttime4 &&
+  //       rowEntity.estimatedTime > Esttime3
+  //     ) {
+  //       rowEntity.status = desc4;
+  //     } else if (rowEntity.estimatedTime > Esttime4) {
+  //       rowEntity.status = desc5;
+  //     }
+  //     console.log(this.selectedEmployee, 'ujjh');
+  //     this.emplselection.selected.map((x) => {
+  //       if (x.employeeId == rowEntity.employeeId) {
+  //         //this.updateTotalEstimateTime();
+  //         return {
+  //           ...x,
+  //           estimatedTime: rowEntity.estimatedTime,
+  //           status: rowEntity.status,
+  //         };
+  //       } else return x;
+  //     });
+  //     console.table(this.selectedEmployee);
+  //   }
+  // }
   getProductionJob(data: any) {
     const dialogRef = this._dialog.open(JobAssignedDetailsPopupComponent, {
       width: '100%',
@@ -921,85 +921,45 @@ export class ProductionallocationtableComponent implements OnInit {
       console.error('AG Grid API not available');
     }
   }
-  onSubmitss() {
-    // let selectedRow = this.selection.selected.forEach((x) => this.setAll(x));
-    // let selectedRows = this.gridApi
-    //   .getSelectedRows()
-    //   .forEach((x) => this.setAll(x));
-    // console.log(selectedRow, 'SelectedRowws');
-    // this.gridApi.getSelectedRows().forEach((x) => this.setAll(x));
-    // this.gridEmplApi
-    //   .getSelectedRows()
-    //   .forEach((x) => this.setEmployeeAll(true, x));
-    if (this.selectedQuery.length > 0) {
-      this.selectedJobs = this.selectedQuery;
-    }
-    // this.spinnerService.requestStarted();
-    var selectedJobCount: any = this.selectedQuery;
-    // var selectedJobCount = this.gridApi.getSelectedRows().length;
-    var selectedEmployeeCount:any =this.selectedEmployee;
-    console.log(selectedJobCount, 'selectedJobCountInitial');
-    console.log(selectedEmployeeCount, 'selectedEmployeeCountInitial');
+ 
+  ScopeId: any;
+  scopeChange(scope) {
+    this.ScopeId = scope;
+  }
+ 
+  onSubmits() {
+    this. selectedJobs= this.gridApi.getSelectedRows();
+    this. selectedEmployees= this.gridEmplApi.getSelectedRows();
+    // if (this.selectedQuery.length > 0) {
+    //   this.selectedJobs = this.selectedQuery;
+    // }
+    this.spinnerService.requestStarted();
+    var selectedJobCount = this.selectedJobs.length;
+    var selectedEmployeeCount = this.selectedEmployees.length;
     if (this.loginservice.getProcessName() == 'Production Allocation') {
       if (selectedJobCount != 0 && selectedEmployeeCount != 0) {
         if (selectedJobCount > 1) {
           if (selectedEmployeeCount > 1) {
             Swal.fire('Info!', 'Please select one Employee!', 'info');
-            // this.selectedJobs = [];
-            // this.selectedQuery = [];
-            // this.selectedEmployee = [];
-            console.log(this.selectedJobs, 'SelcetdeJobsConsirm');
-            console.log(this.selectedEmployee, 'SelcetdeJobsConsirm');
-          } else {
-            for (var i = 0; i < selectedEmployeeCount; i++) {
-              if (
-                this.selectedEmployee[i].estimatedTime == undefined ||
-                this.selectedEmployee[i].estimatedTime == '' ||
-                this.selectedEmployee[i].estimatedTime == 0
-              ) {
-                Swal.fire(
-                  'Info!',
-                  'Please enter Estimated Time for Selected Job!',
-                  'info'
-                );
-                this.selectedJobs = [];
-                this.selectedQuery = [];
-                this.selectedEmployee = [];
-                console.log(this.selectedJobs, 'SelcetdeJobsConsirm');
-                console.log(this.selectedEmployee, 'SelcetdeJobsConsirm');
+          }
+          else {
+            for (var i = 0; i < selectedJobCount; i++) {
+              if (this.selectedJobs[i].estimatedTime == undefined || this.selectedJobs[i].estimatedTime == "" || this.selectedJobs[i].estimatedTime == 0) {
+                Swal.fire('Info!', 'Please enter Estimated Time for Selected Job!', 'info');
                 this.spinnerService.requestEnded();
                 return;
               }
             }
             this.postJobs();
           }
-        }
-        if (this.gridApi) {
-          const selectedNodes = this.gridApi.getSelectedNodes();
-          selectedNodes.forEach((node) => {
-            if (node.data.jobId) {
-              // Update the data directly, which will trigger Angular's change detection
-              node.setDataValue('estimatedTime', this.exchangeHeader);
-            }
-          }); // Reset exchangeHeader after updating the selected rows
-          // this.exchangeHeader = null;
         } else {
           for (var i = 0; i < selectedEmployeeCount; i++) {
             if (
-              this.selectedEmployee[i].estimatedTime == undefined ||
-              this.selectedEmployee[i].estimatedTime == '' ||
-              this.selectedEmployee[i].estimatedTime == 0
+              this.selectedEmployees[i].estimatedTime == undefined ||
+              this.selectedEmployees[i].estimatedTime == '' ||
+              this.selectedEmployees[i].estimatedTime == 0
             ) {
-              Swal.fire(
-                'Info!',
-                'Please enter Estimated Time for Selected Employee!',
-                'info'
-              );
-              this.selectedJobs = [];
-              this.selectedQuery = [];
-              this.selectedEmployee = [];
-              console.log(this.selectedJobs, 'SelcetdeJobsConsirm');
-              console.log(this.selectedEmployee, 'SelcetdeJobsConsirm');
+              Swal.fire('Info!', 'Please enter Estimated Time for Selected Employee!', 'info');
               this.spinnerService.requestEnded();
               return;
             }
@@ -1008,41 +968,25 @@ export class ProductionallocationtableComponent implements OnInit {
         }
       } else {
         Swal.fire('Info!', 'Please select Job and Employees!', 'info');
-        this.selectedJobs = [];
-        this.selectedQuery = [];
-        this.selectedEmployee = [];
-        console.log(this.selectedJobs, 'SelcetdeJobsConsirm');
-        console.log(this.selectedEmployee, 'SelcetdeJobsConsirm');
         this.spinnerService.requestEnded();
       }
     } else {
       if (selectedJobCount != 0 && selectedEmployeeCount != 0) {
         if (selectedEmployeeCount > 1) {
           console.log(selectedEmployeeCount, 'employeecount');
+
           Swal.fire('Info!', 'Please select one Employee!', 'info');
-          this.selectedJobs = [];
-          this.selectedQuery = [];
-          this.selectedEmployee = [];
-          console.log(this.selectedJobs, 'SelcetdeJobsConsirm');
-          console.log(this.selectedEmployee, 'SelcetdeJobsConsirm');
           this.spinnerService.requestEnded();
           return;
         }
         this.postJobs();
       } else {
         Swal.fire('Info!', 'Please select Job and Employee!', 'info');
-        this.selectedJobs = [];
-        this.selectedQuery = [];
-        this.selectedEmployee = [];
-        console.log(this.selectedJobs, 'SelcetdeJobsConsirm');
-        console.log(this.selectedEmployee, 'SelcetdeJobsConsirm');
         this.spinnerService.requestEnded();
       }
     }
-  }
-  ScopeId: any;
-  scopeChange(scope) {
-    this.ScopeId = scope;
+
+
   }
   onSubmit() {
     console.log(this.gridApi.getSelectedRows(), 'rowselection');
@@ -1077,31 +1021,54 @@ export class ProductionallocationtableComponent implements OnInit {
     } // Handle the case where multiple jobs are selected
     if (this.selectedJobs.length > 1) {
       for (let i = 0; i < this.selectedJobs.length; i++) {
-        if (!this.selectedJobs[i].this.exchangeHeader) {
+        // if (this.selectedJobs[i].this.exchangeHeader) {
+          if (
+            this.selectedJobs[i].estimatedTime == undefined ||
+            this.selectedJobs[i].estimatedTime == '' ||
+            this.selectedJobs[i].estimatedTime == 0
+          ){
           Swal.fire(
             'Info!',
             'Please enter Estimated Time for Selected Job!',
             'info'
           );
           this.spinnerService.requestEnded();
-          this.postJobs();
+          // this.postJobs();
           return;
         }
       }
-    } // Update estimatedTime for selected jobs
-    this.selectedJobs.forEach((job) => (job.estimatedTime = this.exchangeHeader)); // Update estimatedTime for selected employees
-    this.selectedEmployees.forEach((employee) => {
-      if (!employee.estTime) {
-        Swal.fire(
-          'Info!',
-          'Please enter Estimated Time for Selected Employee!',
-          'info'
-        );
-        this.spinnerService.requestEnded();
-        this.postJobs();
-        return;
+    } else {
+      for (var i = 0; i < this.selectedEmployees.length; i++) {
+        console.table(this.selectedEmployee)
+        console.table(this.selectedEmployees,)
+        if (
+          this.selectedEmployees[i].estTime == undefined ||
+          this.selectedEmployees[i].estTime == '' ||
+          this.selectedEmployees[i].estTime == 0
+        ) {
+          Swal.fire('Info!', 'Please enter Estimated Time for Selected Employee!', 'info');
+          this.spinnerService.requestEnded();
+          return;
+        }
       }
-    }); // Reset exchangeHeader after updating the selected rows // this.exchangeHeader = null; // Continue with your logic to post jobs
+      this.postJobs();
+    }
+    
+    // Update estimatedTime for selected jobs
+    this.selectedJobs.forEach((job) => (job.estimatedTime = this.exchangeHeader)); // Update estimatedTime for selected employees
+    // this.selectedEmployees.forEach((employee) => {
+      
+      // if (!employee.estimatedTime) {
+      //   Swal.fire(
+      //     'Info!',
+      //     'Please enter Estimated Time for Selected Employee!',
+      //     'info'
+      //   );
+      //   this.spinnerService.requestEnded();
+      //   this.postJobs();
+      //   return;
+      // }
+    // }); // Reset exchangeHeader after updating the selected rows // this.exchangeHeader = null; // Continue with your logic to post jobs
     this.postJobs();
   }
   postJobs() {
