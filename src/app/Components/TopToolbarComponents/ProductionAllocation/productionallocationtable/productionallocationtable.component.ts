@@ -228,7 +228,7 @@ export class ProductionallocationtableComponent implements OnInit {
     },
     {
       headerName: 'Estimated Time',
-      field: 'estimatedTime',
+      field: 'allocatedEstimatedTime',
       width: 100,
       suppressSizeToFit: true,
       sortable: true,
@@ -926,9 +926,11 @@ export class ProductionallocationtableComponent implements OnInit {
   setExchangeHeader() {
     if (this.gridApi) {
       const selectedNodes = this.gridApi.getSelectedNodes();
+  
       selectedNodes.forEach((node) => {
+        console.log(node,"node")
         if (node.data.jobId) {
-          node.setDataValue('estimatedTime', this.exchangeHeader);
+          node.setDataValue('allocatedEstimatedTime', this.exchangeHeader);
           console.log(this.exchangeHeader,"exgheader");
           
         }
@@ -1030,7 +1032,7 @@ export class ProductionallocationtableComponent implements OnInit {
       selectedNodes.forEach((node) => {
         if (node.data.jobId) {
           // Update the data directly, which will trigger Angular's change detection
-          node.setDataValue('estimatedTime', this.exchangeHeader);
+          node.setDataValue('allocatedEstimatedTime', this.exchangeHeader);
         }
       }); // Reset exchangeHeader after updating the selected rows
       // this.exchangeHeader = null;
@@ -1039,9 +1041,9 @@ export class ProductionallocationtableComponent implements OnInit {
       for (let i = 0; i < this.selectedJobs.length; i++) {
         // if (this.selectedJobs[i].this.exchangeHeader) {
           if (
-            this.selectedJobs[i].estimatedTime == undefined ||
-            this.selectedJobs[i].estimatedTime == '' ||
-            this.selectedJobs[i].estimatedTime == 0
+            this.selectedJobs[i].allocatedEstimatedTime == undefined ||
+            this.selectedJobs[i].allocatedEstimatedTime == '' ||
+            this.selectedJobs[i].allocatedEstimatedTime == 0
           ){
           Swal.fire(
             'Info!',
@@ -1104,7 +1106,7 @@ export class ProductionallocationtableComponent implements OnInit {
       value: 0,
       amount: 0,
       stitchCount: 0,
-      estimationTime: this.selectedEmployees.reduce(
+      estimationTime:this.exchangeHeader?? this.selectedEmployees.reduce(
         (total, employee) => total + employee.estTime,
         0
       ),
@@ -1114,7 +1116,7 @@ export class ProductionallocationtableComponent implements OnInit {
       copyFiles: true,
       updatedBy: 0,
       jId: 0,
-      estimatedTime:this.selectedEmployees.reduce(
+      estimatedTime:this.exchangeHeader??this.selectedEmployees.reduce(
         (total, employee) => total + employee.estTime,
         0
       ),
@@ -1288,6 +1290,7 @@ export class ProductionallocationtableComponent implements OnInit {
       Remarks: '',
       SelectedEmployees: [],
       SelectedRows: [],
+      
     };
   } //textcolor
 
