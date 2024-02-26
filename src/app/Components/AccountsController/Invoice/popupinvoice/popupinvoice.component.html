@@ -6,7 +6,17 @@
     <title>Document</title>
 </head>
 <body>
-    <iframe [src]="pdfurl" width="1000" height="1000"></iframe>
-
+    <div class="container">
+        <ssrs-reportviewer
+            [reportserver]="reportServer"
+            [reporturl]="reportUrl"
+            [showparameters]="showParameters" 
+            [parameters]="parameters" 
+            [language]="language" 
+            [width] ="width" 
+            [height]="height" 
+            [toolbar]="toolbar" >
+        </ssrs-reportviewer>
+    </div>
 </body>
 </html>

@@ -99,6 +99,7 @@ export class ProductionallocationtableComponent implements OnInit {
   private gridEmplApi!: GridApi<any>;
   colDefs: ColDef[] = [
     {
+      headerName: 'Job Id',
       field: 'jobId',
       checkboxSelection: true,
       width: 100,
@@ -118,6 +119,7 @@ export class ProductionallocationtableComponent implements OnInit {
       },
     },
     {
+      headerName: 'Job Id',
       field: 'jobId',
       checkboxSelection: true,
       width: 100,
@@ -137,6 +139,7 @@ export class ProductionallocationtableComponent implements OnInit {
       },
     },
     {
+      headerName: 'Job Id',
       field: 'jobId',
       checkboxSelection: true,
       width: 100,
@@ -156,6 +159,7 @@ export class ProductionallocationtableComponent implements OnInit {
       },
     },
     {
+      headerName: 'Est Job/ Qurey Date',
       field: 'jobDate_QueryDate',
       headerClass: 'text-wrap',
       width: 100,
@@ -163,13 +167,7 @@ export class ProductionallocationtableComponent implements OnInit {
       filter: true,
     },
     {
-      field: 'name',
-      width: 100,
-      headerClass: 'text-wrap',
-      sortable: true,
-      filter: true,
-    },
-    {
+      headerName: 'Customer Job',
       field: 'customerJobType',
       headerClass: 'text-wrap',
       width: 100,
@@ -177,6 +175,7 @@ export class ProductionallocationtableComponent implements OnInit {
       filter: true,
     },
     {
+      headerName: 'Job Status ',
       field: 'jobStatusDescription',
       headerClass: 'text-wrap',
       width: 100,
@@ -184,6 +183,7 @@ export class ProductionallocationtableComponent implements OnInit {
       filter: true,
     },
     {
+      headerName: 'Project Code',
       field: 'projectCode',
       width: 100,
       headerClass: 'text-wrap',
@@ -192,22 +192,25 @@ export class ProductionallocationtableComponent implements OnInit {
       filter: true,
     },
     {
+      headerName: 'File Name',
       field: 'fileName',
-      width: 100,
+      width: 50,
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
       filter: true,
     },
     {
+      headerName: 'File Inward Type',
       field: 'fileInwardType',
-      width: 100,
+      width: 50,
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
       filter: true,
     },
     {
+      headerName: 'Process Name',
       field: 'processName',
       width: 100,
       headerClass: 'text-wrap',
@@ -216,6 +219,7 @@ export class ProductionallocationtableComponent implements OnInit {
       filter: true,
     },
     {
+      headerName: 'Status',
       field: 'status',
       width: 100,
       suppressSizeToFit: true,
@@ -223,23 +227,18 @@ export class ProductionallocationtableComponent implements OnInit {
       filter: true,
     },
     {
-      field: 'estimatedTime',
+      headerName: 'Estimated Time',
+      field: 'allocatedEstimatedTime',
       width: 100,
       suppressSizeToFit: true,
       sortable: true,
       filter: true,
       editable: true,
     },
-    {
-      field: 'deliverydate',
-      width: 100,
-      suppressSizeToFit: true,
-      sortable: true,
-      filter: true,
-    },
   ];
   colEmpDefs: ColDef[] = [
     {
+      headerName:'Employee',
       field: 'employeenameWithCode',
       checkboxSelection: true,
       width: 100,
@@ -257,6 +256,7 @@ export class ProductionallocationtableComponent implements OnInit {
       },
     },
     {
+      headerName:'Est Time (In Mins)',
       field: 'estTime',
       headerClass: 'text-wrap',
       width: 100,
@@ -266,6 +266,7 @@ export class ProductionallocationtableComponent implements OnInit {
       editable: true,
     },
     {
+      headerName:'Job Cat.',
       field: 'status',
       headerClass: 'text-wrap',
       width: 100,
@@ -275,6 +276,7 @@ export class ProductionallocationtableComponent implements OnInit {
       editable: true,
     },
     {
+      headerName:'Shift',
       field: 'shift',
       headerClass: 'text-wrap',
       width: 100,
@@ -620,7 +622,7 @@ export class ProductionallocationtableComponent implements OnInit {
       });
   }
   revisionJobs() {
-    // this.spinnerService.requestStarted();
+    this.spinnerService.requestStarted();
     this.http
       .get<any>(
         environment.apiURL +
@@ -629,19 +631,21 @@ export class ProductionallocationtableComponent implements OnInit {
           )}/${parseInt(this.loginservice.getProcessId())}/2/0`
       )
       .subscribe({
-        next: (revisionJobs) => {
+       next: (revisionJobs) => {
+          this.spinnerService.requestEnded();
+          this.spinnerService.requestEnded();
           this.gridApi.setColumnVisible('jobId', true);
           this.gridApi.setColumnVisible('AllocatedjobId', false);
           this.rowData = revisionJobs.allocationJobs;
         },
         error: (err) => {
-          // this.spinnerService.resetSpinner();
+          this.spinnerService.resetSpinner();
           console.log(err);
         },
       });
   }
   reworkJobs() {
-    // this.spinnerService.requestStarted();
+    this.spinnerService.requestStarted();
     this.http
       .get<any>(
         environment.apiURL +
@@ -650,19 +654,20 @@ export class ProductionallocationtableComponent implements OnInit {
           )}/${parseInt(this.loginservice.getProcessId())}/3/0`
       )
       .subscribe({
-        next: (revisionJobs) => {
+       next: (revisionJobs) => {
+          this.spinnerService.requestEnded();
           this.gridApi.setColumnVisible('jobId', true);
           this.gridApi.setColumnVisible('AllocatedjobId', false);
           this.rowData = revisionJobs.allocationJobs;
         },
         error: (err) => {
-          // this.spinnerService.resetSpinner();
+          this.spinnerService.resetSpinner();
           console.log(err);
         },
       });
   }
   allocaetdJobs() {
-    // this.spinnerService.requestStarted();
+    this.spinnerService.requestStarted();
     this.http
       .get<any>(
         environment.apiURL +
@@ -671,19 +676,20 @@ export class ProductionallocationtableComponent implements OnInit {
           )}/${parseInt(this.loginservice.getProcessId())}/4/0`
       )
       .subscribe({
-        next: (revisionJobs) => {
+       next: (revisionJobs) => {
+          this.spinnerService.requestEnded();
           this.gridApi.setColumnVisible('jobId', false);
           this.gridApi.setColumnVisible('AllocatedjobId', true);
           this.rowData = revisionJobs.allocationJobs;
         },
         error: (err) => {
-          // this.spinnerService.resetSpinner();
+          this.spinnerService.resetSpinner();
           console.log(err);
         },
       });
   }
   queries() {
-    // this.spinnerService.requestStarted();
+    this.spinnerService.requestStarted();
     this.http
       .get<any>(
         environment.apiURL +
@@ -692,18 +698,20 @@ export class ProductionallocationtableComponent implements OnInit {
           )}/${parseInt(this.loginservice.getProcessId())}/0`
       )
       .subscribe({
-        next: (revisionJobs) => {
+       next: (revisionJobs) => {
+          this.spinnerService.requestEnded();
           this.gridApi.setColumnVisible('jobId', true);
           this.gridApi.setColumnVisible('AllocatedjobId', false);
           this.rowData = revisionJobs.queryPendingJobs;
         },
         error: (err) => {
-          // this.spinnerService.resetSpinner();
+          this.spinnerService.resetSpinner();
           console.log(err);
         },
       });
   }
   queryResposne() {
+    this.spinnerService.requestStarted();
     this.http
       .get<any>(
         environment.apiURL +
@@ -713,6 +721,7 @@ export class ProductionallocationtableComponent implements OnInit {
       )
       .subscribe({
         next: (freshJobs) => {
+          this.spinnerService.requestEnded();
           if (this.gridApi) {
             // this.gridApi.setColumnVisible('jobId', true); // Show 'jobId' column // this.gridApi.setColumnVisible('AllocatedjobId', false); // Hide 'AllocatedjobId' column
           } else {
@@ -721,11 +730,13 @@ export class ProductionallocationtableComponent implements OnInit {
           this.rowData = freshJobs.queryResponseJobs;
         },
         error: (err) => {
+          this.spinnerService.resetSpinner();
           console.error(err);
         },
       });
   }
   errorJobs() {
+    this.spinnerService.requestStarted();
     this.http
       .get<any>(
         environment.apiURL +
@@ -735,6 +746,7 @@ export class ProductionallocationtableComponent implements OnInit {
       )
       .subscribe({
         next: (freshJobs) => {
+          this.spinnerService.requestEnded();
           if (this.gridApi) {
             // this.gridApi.setColumnVisible('jobId', true); // Show 'jobId' column // this.gridApi.setColumnVisible('AllocatedjobId', false); // Hide 'AllocatedjobId' column
           } else {
@@ -743,11 +755,13 @@ export class ProductionallocationtableComponent implements OnInit {
           this.rowData = freshJobs.allocationJobs;
         },
         error: (err) => {
+          this.spinnerService.resetSpinner();
           console.error(err);
         },
       });
   }
   quotationJobs() {
+    this.spinnerService.requestStarted();
     this.http
       .get<any>(
         environment.apiURL +
@@ -757,6 +771,7 @@ export class ProductionallocationtableComponent implements OnInit {
       )
       .subscribe({
         next: (freshJobs) => {
+          this.spinnerService.requestEnded();
           if (this.gridApi) {
             // this.gridApi.setColumnVisible('jobId', true); // Show 'jobId' column // this.gridApi.setColumnVisible('AllocatedjobId', false); // Hide 'AllocatedjobId' column
           } else {
@@ -765,6 +780,7 @@ export class ProductionallocationtableComponent implements OnInit {
           this.rowData = freshJobs.allocationJobs;
         },
         error: (err) => {
+          this.spinnerService.resetSpinner();
           console.error(err);
         },
       });
@@ -910,9 +926,11 @@ export class ProductionallocationtableComponent implements OnInit {
   setExchangeHeader() {
     if (this.gridApi) {
       const selectedNodes = this.gridApi.getSelectedNodes();
+  
       selectedNodes.forEach((node) => {
+        console.log(node,"node")
         if (node.data.jobId) {
-          node.setDataValue('estimatedTime', this.exchangeHeader);
+          node.setDataValue('allocatedEstimatedTime', this.exchangeHeader);
           console.log(this.exchangeHeader,"exgheader");
           
         }
@@ -1014,7 +1032,7 @@ export class ProductionallocationtableComponent implements OnInit {
       selectedNodes.forEach((node) => {
         if (node.data.jobId) {
           // Update the data directly, which will trigger Angular's change detection
-          node.setDataValue('estimatedTime', this.exchangeHeader);
+          node.setDataValue('allocatedEstimatedTime', this.exchangeHeader);
         }
       }); // Reset exchangeHeader after updating the selected rows
       // this.exchangeHeader = null;
@@ -1023,9 +1041,9 @@ export class ProductionallocationtableComponent implements OnInit {
       for (let i = 0; i < this.selectedJobs.length; i++) {
         // if (this.selectedJobs[i].this.exchangeHeader) {
           if (
-            this.selectedJobs[i].estimatedTime == undefined ||
-            this.selectedJobs[i].estimatedTime == '' ||
-            this.selectedJobs[i].estimatedTime == 0
+            this.selectedJobs[i].allocatedEstimatedTime == undefined ||
+            this.selectedJobs[i].allocatedEstimatedTime == '' ||
+            this.selectedJobs[i].allocatedEstimatedTime == 0
           ){
           Swal.fire(
             'Info!',
@@ -1088,7 +1106,7 @@ export class ProductionallocationtableComponent implements OnInit {
       value: 0,
       amount: 0,
       stitchCount: 0,
-      estimationTime: this.selectedEmployees.reduce(
+      estimationTime:this.exchangeHeader?? this.selectedEmployees.reduce(
         (total, employee) => total + employee.estTime,
         0
       ),
@@ -1098,7 +1116,7 @@ export class ProductionallocationtableComponent implements OnInit {
       copyFiles: true,
       updatedBy: 0,
       jId: 0,
-      estimatedTime:this.selectedEmployees.reduce(
+      estimatedTime:this.exchangeHeader??this.selectedEmployees.reduce(
         (total, employee) => total + employee.estTime,
         0
       ),
@@ -1272,6 +1290,7 @@ export class ProductionallocationtableComponent implements OnInit {
       Remarks: '',
       SelectedEmployees: [],
       SelectedRows: [],
+      
     };
   } //textcolor
 
