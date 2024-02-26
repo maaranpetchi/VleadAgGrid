@@ -31,114 +31,11 @@
             </div>
 
             <div class="table-container">
-
-              <table mat-table [dataSource]="dataSource" class="table table-sm table-responsive" id="custom-table"
-                matSort>
-
-                <!-- ID Column -->
-                <ng-container matColumnDef="employeeCode">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">Voucher Number </div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.voucherNo}} </td>
-                </ng-container>
-
-                <!-- Progress Column -->
-                <ng-container matColumnDef="employeeName">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">Voucher Date </div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.collectionDate}}</td>
-                </ng-container>
-
-                <ng-container matColumnDef="departmentId">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">Customer </div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.customerShortName}}</td>
-                </ng-container>
-
-                <ng-container matColumnDef="designationId">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">Credit Note Amount </div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.collectionAmount}}</td>
-                </ng-container>
-
-                <ng-container matColumnDef="profiencyId">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">Reference Number </div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.referenceNo}}</td>
-                </ng-container>
-
-                <ng-container matColumnDef="reportingManager1">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">Reference Date </div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.referenceDate}}</td>
-                </ng-container>
-
-                <ng-container matColumnDef="reportLeader1">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">Description </div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.description}}</td>
-                </ng-container>
-                <ng-container matColumnDef="invoicenumber">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    <div class="header-wrapper">
-                      <div class="department-name text-start">InvoiceNo </div>
-                      <div class="filter-input">
-                        <input matInput (keyup)="employeeFilter($event)" placeholder="Filter" #input>
-                      </div>
-                    </div>
-                  </th>
-                  <td mat-cell *matCellDef="let row"> {{row.invoiceNo}}</td>
-                </ng-container>
-
-
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-              </table>
+              <ag-grid-angular style="width: 100%; height: 100%;" [context]="context" [columnDefs]="columnDefs"
+              [pagination]="true" [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true"
+              [rowSelection]="rowSelection" [rowData]="rowData" [class]="themeClass"
+              (cellClicked)="onCellClicked($event)" (gridReady)="onGridReady($event)"></ag-grid-angular>
             </div>
-            <mat-paginator [pageSizeOptions]="[25, 50]" showFirstLastButtons></mat-paginator>
           </div>
         </div>
       </div>

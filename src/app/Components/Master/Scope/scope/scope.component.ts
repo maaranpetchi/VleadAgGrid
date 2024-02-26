@@ -5,11 +5,14 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router, RouterLink } from '@angular/router';
+import { GridApi, ColDef, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
 import { catchError } from 'rxjs';
 import { environment } from 'src/Environments/environment';
+import { EmpskillactionrenderingComponent } from 'src/app/Components/EmployeeVSSkillset/empskillactionrendering/empskillactionrendering.component';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { ScopeService } from 'src/app/Services/Scope/scope.service';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 
 @Component({
@@ -29,6 +32,7 @@ export class ScopeComponent {
   dataSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+context: any="scope";
 
   constructor(
     private _scopeService: ScopeService,
@@ -36,8 +40,14 @@ export class ScopeComponent {
     private router: Router,
     private _coreService: CoreService,
     private http: HttpClient,
-    private spinnerService: SpinnerService
-  ) { }
+    private spinnerService: SpinnerService,
+    private sharedDataService:SharedService
+  ) { 
+    this.sharedDataService.refreshData$.subscribe(() => {
+      // Update your data or call the necessary methods to refresh the data
+      this.listScope();
+    });
+  }
   scopeRegistrationForm = this.builder.group({
 
   });
@@ -54,9 +64,8 @@ export class ScopeComponent {
     })).subscribe({
       next: (data) => {
         this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(data);
-        // this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+        this.rowData = data;
+
       },
       error: (err) => {
         console.log(err);
@@ -68,61 +77,70 @@ export class ScopeComponent {
     this.router.navigate(['/topnavbar/master-scopeAdd']);
   }
 
-  openViewForm(data: any) {
-    this.spinnerService.requestStarted();
-    this.http.get(environment.apiURL + `Scope/GetScopeDetails?Id=${data.id}`).pipe(catchError((error) => {
-      this.spinnerService.requestEnded();
-      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-    })).subscribe((response: any) => {
-      this.spinnerService.requestEnded();
-      this.router.navigate(['/topnavbar/master-scope/view'], { state: { data: response } });
-    })
+
+
+
+
+
+  /////////////////////////Ag-grid module///////////////////////////////
+  @ViewChild('agGrid') agGrid: any;
+
+  private gridApi!: GridApi<any>;
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+
+  columnDefs: ColDef[] = [
+    { headerName: 'Department Name ', field: 'departmentDescription', filter: true, },
+    { headerName: 'Description ', field: 'description', filter: true, },
+
+    {
+      headerName: 'Actions',
+      cellStyle: { innerWidth: 20 },
+
+      field: 'action',
+      cellRenderer: EmpskillactionrenderingComponent, // JS comp by Direct Reference
+      autoHeight: true,
+    }
+  ];
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData: any[]=[];
+  public themeClass: string =
+    "ag-theme-quartz";
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
   }
 
-  openEditForm(id: any) {
-    this.spinnerService.requestStarted();
-    this.http.get(environment.apiURL + `Scope/GetScopeDetails?Id=${id}`).pipe(catchError((error) => {
-      this.spinnerService.requestEnded();
-      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-    })).subscribe((response: any) => {
-      this.spinnerService.requestEnded();
-      this.router.navigate(["topnavbar/master-scope/edit"], { state: { data: response } });
-    })
-    //  Below method is used to get data from serice using behaviour subject
-    // this.dataSource.filteredData.forEach((data:any)=>{
-    //   if(data.id === id){
-    //     this._scopeService.setScopeData(data);
-    //   }
-    // })
-  }
+  handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {
+    console.log(params, "Parameter");
+    console.log(params.data, "ParameterData");
+    let parameterData = params.data
+    if (params.colDef.field === 'filecount') { // Check if the changed column is 'price'
 
-
-  deleteScopeUser(id: number) {
-    this.spinnerService.requestStarted();
-    this._scopeService.deleteScope(id).pipe(catchError((error) => {
-      this.spinnerService.requestEnded();
-      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-    })).subscribe({
-      next: (res) => {
-        this.spinnerService.requestEnded();
-        Swal.fire('Done!', 'Employee Deleted', 'success').then((response) => {
-          if (response.isConfirmed) {
-            this.listScope();
-          }
-        });
-      },
-      error: console.log,
-    })
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
     }
   }
 
 
+  handlePress(newvalue, parameterData) {
+    console.log(newvalue, "HandlepressNewValue");
+    console.log(parameterData, "ParameterValue");
 
+  }
+
+
+}
+
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
 }

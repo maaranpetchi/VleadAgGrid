@@ -7,6 +7,8 @@ import { HttpClient } from '@angular/common/http';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import { environment } from 'src/Environments/environment';
 import { Router } from '@angular/router';
+import { GridApi, ColDef, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { ViewActionRenderingComponent } from '../../AccountsController/CustomerReceipts/view-action-rendering/view-action-rendering.component';
 
 @Component({
   selector: 'app-un-approvaljobs',
@@ -14,51 +16,31 @@ import { Router } from '@angular/router';
   styleUrls: ['./un-approvaljobs.component.scss']
 })
 export class UnApprovaljobsComponent implements OnInit {
+context: any="customerunapprovaljobs";
   constructor(
-    private spinner:SpinnerService,
-    private http:HttpClient,
-    private loginService:LoginService,
-    private router:Router
-  ){}
-  
+    private spinner: SpinnerService,
+    private http: HttpClient,
+    private loginService: LoginService,
+    private router: Router
+  ) { }
+
   ngOnInit(): void {
     this.getPendingJobApproval()
   }
 
-  displayedColumns:string[] = [
-    'fileName',
-    'po',
-    'CustomerName',
-    'Instruction',
-    'Salespersonname',
-    'Jobstatus',
-    'action'
-  ]
 
-  dataSource!:MatTableDataSource<any>;
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-  openViewForm(data:any){
+  openViewForm(data: any) {
     // this.http.get(environment.apiURL+`Customer/getpendingapprovaljobs?EmpId=${this.loginService.getUsername()}`).subscribe((response:any) =>{
-      this.router.navigate(["topnavbar/view-unapprovalJobs"], {state:{data:data}});
-  // })
+    this.router.navigate(["topnavbar/view-unapprovalJobs"], { state: { data: data } });
+    // })
   }
-  getPendingJobApproval(){
+  getPendingJobApproval() {
     this.spinner.requestStarted();
-    this.http.get(environment.apiURL+`Customer/getpendingapprovaljobs?EmpId=${this.loginService.getUsername()}`).subscribe({
+    this.http.get(environment.apiURL + `Customer/getpendingapprovaljobs?EmpId=${this.loginService.getUsername()}`).subscribe({
       next: (response: any) => {
         this.spinner.requestEnded();
-        this.dataSource = new MatTableDataSource(response);
-        // this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+        this.rowData = response;
+  
       },
       error: (err) => {
         this.spinner.resetSpinner();
@@ -67,5 +49,66 @@ export class UnApprovaljobsComponent implements OnInit {
       },
     })
   }
+  /////////////////////////Ag-grid module///////////////////////////////
+  @ViewChild('agGrid') agGrid: any;
+
+  private gridApi!: GridApi<any>;
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+
+  columnDefs: ColDef[] = [
+    { headerName: 'File Name', field: 'fileName', filter: true, },
+    { headerName: 'PO# ', field: 'pono', filter: true, },
+    { headerName: 'Customer Name', field: 'companyName', filter: true, },
+    { headerName: 'Instructions', field: 'jobStatusDescription', filter: true, },
+    { headerName: 'Sales Person Name', field: 'salesPersonName', filter: true, },
+    { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
+    {
+      headerName: 'Actions',
+      field: 'action',
+      cellRenderer: ViewActionRenderingComponent, // JS comp by Direct Reference
+      autoHeight: true,
+    }
+  ];
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData: any[]=[];
+  public themeClass: string =
+    "ag-theme-quartz";
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+  }
+
+  handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {
+    console.log(params, "Parameter");
+    console.log(params.data, "ParameterData");
+    let parameterData = params.data
+    if (params.colDef.field === 'filecount') { // Check if the changed column is 'price'
+
+    }
+  }
+
+
+  handlePress(newvalue, parameterData) {
+    console.log(newvalue, "HandlepressNewValue");
+    console.log(parameterData, "ParameterValue");
+
+  }
+
+
 }
-// Process/Delete-Process?id=${id}`)
+
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
+}

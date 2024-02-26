@@ -7,6 +7,9 @@ import { OnInit, ViewChild } from '@angular/core';
 import { PopupinvoicecancellistComponent } from '../popupinvoicecancellist/popupinvoicecancellist.component';
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'src/Environments/environment';
+import { GridApi, ColDef, CellClickedEvent, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { ClientordinationindexComponent } from 'src/app/Components/TopToolbarComponents/ClientCordination/clientordinationindex/clientordinationindex.component';
+import { JobDetailsClientIndexComponent } from 'src/app/Components/TopToolbarComponents/ClientCordination/query-to-client/job-details-client-index/job-details-client-index.component';
 @Component({
   selector: 'app-viewinvoicecancel',
   templateUrl: './viewinvoicecancel.component.html',
@@ -18,6 +21,7 @@ export class ViewinvoicecancelComponent  implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @Output() invoiceNumberSelected = new EventEmitter<string>();
+  columnApi: any;
 
 
   constructor(private http: HttpClient,private dialog:MatDialog) {}
@@ -35,17 +39,19 @@ export class ViewinvoicecancelComponent  implements OnInit {
   // }
 
 
-  openPopupForm(invoiceNo: string): void {
+  openPopupForm(data): void {
+    console.log(data,"InvoiceNumber");
+    
     const dialogRef = this.dialog.open(PopupinvoicecancellistComponent, {
       width: '1000px',
       height:'70vh',
-      data: { invoiceNo: invoiceNo}
+      data: { invoiceNo: data.InvoiceNo}
     });
   
     dialogRef.afterClosed().subscribe(result => {
       console.log('The popup form was closed');
     });
-    this.invoiceNumberSelected.emit(invoiceNo);
+    this.invoiceNumberSelected.emit(data.InvoiceNo);
   }
   
 
@@ -69,22 +75,70 @@ export class ViewinvoicecancelComponent  implements OnInit {
           };
         });
         // assign the transformed data to the MatTableDataSource
-        this.dataSource = new MatTableDataSource(data);
-        // set the paginator and sort to the MatTableDataSource
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.rowData = data;
+ 
       }
     });
   }
   
 
+////////////////////Aggrid Module///////////////////
 
+  context: any;
 
-  employeeFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-}
+  @ViewChild('agGrid') agGrid: any;
+ 
+  private gridApi!: GridApi<any>;
+ 
+  
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+  columnDefs: ColDef[] = [
+    { headerName: 'CancellationNo', field: 'CancellationNo', filter: true, },
+ 
+    { headerName: 'InvoiceNumber', field: 'InvoiceNo', filter: true,cellStyle: {color: 'skyblue', 'cursor':'pointer'}  },
+    { headerName: 'Cancelled Date', field: 'CancelledDate', filter: true, },
+    { headerName: 'Cancelled By', field: 'CancelledBy', filter: true, },
+ 
+    { headerName: 'Product Value', field: 'ProductValue', filter: true, },
+    { headerName: 'Wavier', field: 'Wavier', filter: true, },
+    { headerName: 'RoundOff', field: 'RoundOff', filter: true, },
+    { headerName: 'Discount', field: 'Discount', filter: true, },
+  ];
+ 
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData!: any[];
+  public themeClass: string =
+    "ag-theme-quartz";
+  
+   onCellClicked(event: CellClickedEvent) {
+     const { colDef, data } = event;
+     if (colDef.field === 'InvoiceNo') {
+       console.log(data,"PopupData");
+       
+       this.openPopupForm(data);
+     }
+   }
+   
+
+ 
+   onGridReady(params: GridReadyEvent<any>) {
+     this.gridApi = params.api;
+     this.columnApi = params.columnApi;
+   
+     }
+ }
+ 
+ function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+ ) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
+ }

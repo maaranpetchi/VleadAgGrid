@@ -34,8 +34,8 @@ export class DeleteActionRenderingComponent implements ICellRendererAngularComp 
 
   constructor(private sharedService: SharedService, private injector: Injector, private spinnerService: SpinnerService, private http: HttpClient, private loginservice: LoginService, private empvsdivservice: EmpvsdivService, private router: Router, private sharedDataService: SharedService, private _dialog: MatDialog, private checklistservice: CustomervschecklistService, private employeeservice: EmployeeService,
     private empvsprocesssservice: EmployeevsprocessService,
- 
-    ) { }
+
+  ) { }
   iconClicked: boolean = false;
 
   // gets called once before the renderer is used
@@ -75,10 +75,18 @@ export class DeleteActionRenderingComponent implements ICellRendererAngularComp 
     if (this.Context == 'customervsprocess') {
       this.customervsprocessDelete(params)
     }
-    
+    ///customersalesapproval
+    if (this.Context == 'customersalesapproval') {
+      this.customersalesapprovalDelete(params)
+    }
+    ///customervsdivision
+    if (this.Context == 'customervsdivision') {
+      this.customervsdivisionDelete(params)
+    }
+
   }
-/////////EmployeeVSDivision Delete//////////////
-  empvsdivdelete(params){
+  /////////EmployeeVSDivision Delete//////////////
+  empvsdivdelete(params) {
     this.spinnerService.requestStarted();
     this.empvsdivservice.deleteEmployee(params.data.id).pipe(
       catchError((error) => {
@@ -103,16 +111,16 @@ export class DeleteActionRenderingComponent implements ICellRendererAngularComp 
 
 
   //////////////////////customervsproces//////////////////////
-  customervsprocessDelete(params){
-    console.log(params,"Parameter");
-    
+  customervsprocessDelete(params) {
+    console.log(params, "Parameter");
+
     this.spinnerService.requestStarted();
     this.empvsprocesssservice.deleteEmployee(params.data.id).subscribe({
       next: (res) => {
         this.spinnerService.requestEnded();
         this.empvsprocesssservice.changeapi({
-          "customerId": this.gettingData.customerId ? this.gettingData.customerId: 0,
-           "deptId": this.gettingData.departmentId ? this.gettingData.departmentId:0,
+          "customerId": this.gettingData.customerId ? this.gettingData.customerId : 0,
+          "deptId": this.gettingData.departmentId ? this.gettingData.departmentId : 0,
           "customerJobType": this.gettingData.customJobType,
         }).subscribe(data => {
           this.sharedDataService.triggerRefresh();
@@ -121,5 +129,48 @@ export class DeleteActionRenderingComponent implements ICellRendererAngularComp 
       },
       error: console.log,
     });
+  }
+
+  /////////////customersalesapproval////////////
+  customersalesapprovalDelete(params) {
+    this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL + `CustomerMapping/RemoveCustomerScope?custScopeId=${params.data.id}`).subscribe({
+      next: (res) => {
+        this.spinnerService.requestEnded();
+
+        Swal.fire('Done', 'Employee Deleted Successfully', 'success').then((res) => {
+          if (res.isConfirmed) {
+            this.sharedDataService.triggerRefresh();
+          }
+        })
+      }
+    });
+  }
+
+  //////////////////customervsdivision////////
+  customervsdivisionDelete(params){
+    this.spinnerService.requestStarted();
+    this.http.get<any>(environment.apiURL + `CustomerVsDivision/RemoveCvsD?id=${params.data.id}`).subscribe(results => {
+      this.spinnerService.requestEnded();
+      if (results == true) {
+        Swal.fire(
+          'Done!',
+          'Employee Deleted Successfully',
+          'success'
+        ).then((res)=>{
+          if(res.isConfirmed){
+            this.sharedDataService.triggerRefresh();
+
+          }
+        })
+      }
+      else {
+        Swal.fire(
+          'Error!',
+          'Employee Not Deleted ',
+          'error'
+        )
+      }
+    })
   }
 }

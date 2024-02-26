@@ -4,10 +4,13 @@ import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { GridApi, ColDef, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
 import { Observable, map, startWith } from 'rxjs';
 import { environment } from 'src/Environments/environment';
+import { DeleteActionRenderingComponent } from 'src/app/Components/EmployeeVSDivision/delete-action-rendering/delete-action-rendering.component';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { LoginService } from 'src/app/Services/Login/login.service';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 @Component({
   selector: 'app-customervsdivisionindex',
@@ -15,6 +18,7 @@ import Swal from 'sweetalert2/src/sweetalert2.js'
   styleUrls: ['./customervsdivisionindex.component.scss']
 })
 export class CustomervsdivisionindexComponent implements OnInit {
+context: any="customervsdivision";
   ngOnInit(): void {
     this.fetchShortName();
     this.fetchtableData();
@@ -23,7 +27,11 @@ export class CustomervsdivisionindexComponent implements OnInit {
       map(value => this._filter(value || '')),
     );
   }
-  constructor(private http: HttpClient, private spinnerService: SpinnerService, private loginservice: LoginService) { }
+  constructor(private http: HttpClient, private spinnerService: SpinnerService, private loginservice: LoginService,private sharedDataService:SharedService) { 
+    this.sharedDataService.refreshData$.subscribe(() => {
+      this.fetchtableData();
+    });
+  }
  
   //ngmodel
   selectedShortname: any;
@@ -73,31 +81,11 @@ export class CustomervsdivisionindexComponent implements OnInit {
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `CustomerVsDivision/GetCustomerVsDivision`).subscribe(res => {
       this.spinnerService.requestEnded();
-      this.dataSource = new MatTableDataSource(res.gCvDList);
-      this.dataSource.paginator = this.paginator;
+      this.rowData = res.gCvDList;
+   
     })
   }
-  deleteEmployee(id: number) {
-    this.spinnerService.requestStarted();
-    this.http.get<any>(environment.apiURL + `CustomerVsDivision/RemoveCvsD?id=${id}`).subscribe(results => {
-      this.spinnerService.requestEnded();
-      if (results == true) {
-        Swal.fire(
-          'Done!',
-          'Employee Deleted Successfully',
-          'success'
-        )
-      }
-      else {
-        Swal.fire(
-          'Error!',
-          'Employee Not Deleted ',
-          'error'
-        )
-      }
-    })
 
-  }
   submit() {
     let payload = {
       "customerId": this.selectedShortname,
@@ -128,5 +116,65 @@ export class CustomervsdivisionindexComponent implements OnInit {
     });
 
   }
+  @ViewChild('agGrid') agGrid: any;
+
+  private gridApi!: GridApi<any>;
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+
+  columnDefs: ColDef[] = [
+    { headerName: 'Customer Short Name ', field: 'customerShortName', filter: true, },
+    { headerName: 'Department ', field: 'department', filter: true, },
+    { headerName: 'Division', field: 'division', filter: true, },
+
+    {
+      headerName: 'Actions',
+      cellStyle: { innerWidth: 20 },
+
+      field: 'action',
+      cellRenderer: DeleteActionRenderingComponent, // JS comp by Direct Reference
+      autoHeight: true,
+    }
+  ];
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData: any[]=[];
+  public themeClass: string =
+    "ag-theme-quartz";
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+  }
+
+  handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {
+    console.log(params, "Parameter");
+    console.log(params.data, "ParameterData");
+    let parameterData = params.data
+    if (params.colDef.field === 'filecount') { // Check if the changed column is 'price'
+
+    }
+  }
+
+
+  handlePress(newvalue, parameterData) {
+    console.log(newvalue, "HandlepressNewValue");
+    console.log(parameterData, "ParameterValue");
+
+  }
+
+
 }
 
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
+}

@@ -609,17 +609,24 @@ export class InvoiceComponent implements OnInit {
       return;
     }
   
-    selectedRows.forEach(row => {
-      const invoiceNumber = row.invoiceNo;
-      const shortName = row.shortName;
+    this.gridApi3.getSelectedRows().forEach(x => this.setConfirmAll(x));
+    if (this.selectedConfirmInvoice.length > 0) {
+      this.selectedConfirmInvoiceJobs = this.selectedConfirmInvoice;
 
-      const queryParams = { InvoiceNo: invoiceNumber ,ShortName:shortName};
+      const params = new HttpParams().set('InvoiceNo', this.selectedConfirmInvoice[0].invoiceNo);
+
+      this.sendinginvoiceNumber = this.selectedConfirmInvoice[0].invoiceNo
+
+      const invoiceNumber = this.selectedConfirmInvoice[0].invoiceNo;
+      console.log(invoiceNumber, "invoiceNumber");
+
       const url = this.router.serializeUrl(
-        this.router.createUrlTree(['/topnavbar/acc-SSRS'], { queryParams })
+        this.router.createUrlTree(['/topnavbar/acc-SSRS'], { queryParams: { InvoiceNo: invoiceNumber } })
       );
       const redirectURL = document.location.origin + '/#' + url;
       window.open(redirectURL, '_blank');
-    });
+
+    }
   }
 
   DigiArtInvoice() {
@@ -637,17 +644,24 @@ export class InvoiceComponent implements OnInit {
     else {
       // this.spinnerService.requestStarted();
 
-      selectedRows.forEach(row => {
-        const invoiceNumber = row.invoiceNo;
-        const shortName = row.shortName;
+      selectedRows.forEach(x => this.setConfirmAll(x));
+      if (this.selectedConfirmInvoice.length > 0) {
+        this.selectedConfirmInvoiceJobs = this.selectedConfirmInvoice;
 
-        const queryParams = { InvoiceNo: invoiceNumber ,ShortName:shortName};
+        const params = new HttpParams().set('InvoiceNo', this.selectedConfirmInvoice[0].invoiceNo);
+
+        this.sendinginvoiceNumber = this.selectedConfirmInvoice[0].invoiceNo
+
+        const invoiceNumber = this.selectedConfirmInvoice[0].invoiceNo;
+        console.log(invoiceNumber, "invoiceNumber");
+
         const url = this.router.serializeUrl(
-          this.router.createUrlTree(['/topnavbar/acc-generatedinvoice'], { queryParams })
+          this.router.createUrlTree(['/topnavbar/acc-generatedinvoice'], { queryParams: { InvoiceNo: invoiceNumber } })
         );
         const redirectURL = document.location.origin + '/#' + url;
         window.open(redirectURL, '_blank');
-      });
+
+      }
     }
   }
   Invoice() {
@@ -666,18 +680,24 @@ export class InvoiceComponent implements OnInit {
       // this.spinnerService.requestStarted();
 
 
-      selectedRows.forEach(row => {
-        console.log(row,"RowData");
-        
-        const invoiceNumber = row.invoiceNo;
-        const shortName = row.shortName;
-        const queryParams = { InvoiceNo: invoiceNumber ,ShortName:shortName};
+      selectedRows.forEach(x => this.setConfirmAll(x));
+      if (this.selectedConfirmInvoice.length > 0) {
+        this.selectedConfirmInvoiceJobs = this.selectedConfirmInvoice;
+
+        const params = new HttpParams().set('InvoiceNo', this.selectedConfirmInvoice[0].invoiceNo);
+
+        this.sendinginvoiceNumber = this.selectedConfirmInvoice[0].invoiceNo
+
+        const invoiceNumber = this.selectedConfirmInvoice[0].invoiceNo;
+        console.log(invoiceNumber, "invoiceNumber");
+
         const url = this.router.serializeUrl(
-          this.router.createUrlTree(['/topnavbar/acc-popupinvoice'], { queryParams })
+          this.router.createUrlTree(['/topnavbar/acc-popupinvoice'], { queryParams: { InvoiceNo: invoiceNumber } })
         );
         const redirectURL = document.location.origin + '/#' + url;
         window.open(redirectURL, '_blank');
-      });
+
+      }
     }
   }
 

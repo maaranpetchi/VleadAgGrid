@@ -9,6 +9,7 @@ import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.servi
 import { environment } from 'src/Environments/environment';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js'
+import { catchError } from 'rxjs';
 
 @Component({
   selector: 'app-editadvanceadjustment',
@@ -182,7 +183,10 @@ export class EditadvanceadjustmentComponent {
       "receivableAdjustments": temparray,
       "advanceId": this.data.id
     }
-    this.http.post<any>(environment.apiURL + 'AdvanceAdjustment/CreateAdvanceAdjustment', receivableAdjustments).subscribe(results => {
+    this.http.post<any>(environment.apiURL + 'AdvanceAdjustment/CreateAdvanceAdjustment', receivableAdjustments).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe(results => {
       this.spinnerService.requestEnded();
       if (results == true) {
         Swal.fire(

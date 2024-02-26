@@ -130,6 +130,7 @@ import { ActionsCellRendererComponent } from 'src/app/Components/TopToolbarCompo
 import { EmpskillactionrenderingComponent } from 'src/app/Components/EmployeeVSSkillset/empskillactionrendering/empskillactionrendering.component';
 import { customernormsrenderingcomponent } from 'src/app/Components/CustomerNorms/customernormsindex/customerNormsRendering.component';
 import { ViewActionRenderingComponent } from 'src/app/Components/AccountsController/CustomerReceipts/view-action-rendering/view-action-rendering.component';
+import { CustomersalesRenderingComponent } from 'src/app/Components/Sales/CustomerSalesApproval/customersales-rendering/customersales-rendering.component';
 
 //Routing to another components 
 const routes: Routes = [
@@ -328,6 +329,7 @@ const routes: Routes = [
       { path: 'customerSalesApproval', component: IndexCustomerSalesApprovalComponent, canActivate: [authGuard] },
       { path: 'customerSalesTable', component: TabcustomertableComponent, canActivate: [authGuard] },
       { path: 'multistepform', component: SalesMultiStepFormComponent, canActivate: [authGuard] },
+      { path: 'customersalesrendering', component: CustomersalesRenderingComponent, canActivate: [authGuard] },
 
 
       //Bank

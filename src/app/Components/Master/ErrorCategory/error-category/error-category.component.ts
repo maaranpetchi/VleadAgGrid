@@ -5,9 +5,12 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { GridApi, ColDef, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
 import { environment } from 'src/Environments/environment';
+import { EmpskillactionrenderingComponent } from 'src/app/Components/EmployeeVSSkillset/empskillactionrendering/empskillactionrendering.component';
 import { CoreService } from 'src/app/Services/CustomerVSEmployee/Core/core.service';
 import { ErrorCategoryService } from 'src/app/Services/Errorcategory/error-category.service';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 
 @Component({
   selector: 'app-error-category',
@@ -17,23 +20,25 @@ import { ErrorCategoryService } from 'src/app/Services/Errorcategory/error-categ
 export class ErrorCategoryComponent implements OnInit{
 
   //  Table view heading
-  displayedColumns:string[] = [
-    'DepartmentName',
-    'Description',
-    'action',
-  ]
 
   dataSource!:MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+context: any="errorcategory";
 
   constructor(
     private router:Router,
     private builder: FormBuilder,
     private _service:ErrorCategoryService,
     private http :HttpClient,
-    private _coreService: CoreService
-  ){}
+    private _coreService: CoreService,
+    private sharedDataService:SharedService
+  ){
+    this.sharedDataService.refreshData$.subscribe(() => {
+      // Update your data or call the necessary methods to refresh the data
+      this.getErrorCategory();
+    });
+  }
   
   ngOnInit(): void {
     this.getErrorCategory();
@@ -44,9 +49,8 @@ export class ErrorCategoryComponent implements OnInit{
   getErrorCategory(){
     this._service.getErrorCategoryList().subscribe({
       next:(data)=>{
-        this.dataSource = new MatTableDataSource(data);
-        // this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+        this.rowData = data;
+ 
       },
       error:(err:any) => {
         console.log(err);
@@ -85,12 +89,68 @@ export class ErrorCategoryComponent implements OnInit{
   }
 
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+
+
+
+  /////////////////////////Ag-grid module///////////////////////////////
+  @ViewChild('agGrid') agGrid: any;
+
+  private gridApi!: GridApi<any>;
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+
+  columnDefs: ColDef[] = [
+    { headerName: 'Department Name ', field: 'department.description', filter: true, },
+    { headerName: 'Description ', field: 'description', filter: true, },
+
+    {
+      headerName: 'Actions',
+      cellStyle: { innerWidth: 20 },
+
+      field: 'action',
+      cellRenderer: EmpskillactionrenderingComponent, // JS comp by Direct Reference
+      autoHeight: true,
+    }
+  ];
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData: any[]=[];
+  public themeClass: string =
+    "ag-theme-quartz";
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+  }
+
+  handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {
+    console.log(params, "Parameter");
+    console.log(params.data, "ParameterData");
+    let parameterData = params.data
+    if (params.colDef.field === 'filecount') { // Check if the changed column is 'price'
+
     }
   }
 
+
+  handlePress(newvalue, parameterData) {
+    console.log(newvalue, "HandlepressNewValue");
+    console.log(parameterData, "ParameterValue");
+
+  }
+
+
+}
+
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
 }

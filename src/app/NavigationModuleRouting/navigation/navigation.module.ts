@@ -154,6 +154,7 @@ import { EmpskillactionrenderingComponent } from 'src/app/Components/EmployeeVSS
 import { VendoractionrenderingComponent } from 'src/app/Components/Vendor/vendor/Vendoractionrendering.component';
 import { customernormsrenderingcomponent } from 'src/app/Components/CustomerNorms/customernormsindex/customerNormsRendering.component';
 import { ViewActionRenderingComponent } from 'src/app/Components/AccountsController/CustomerReceipts/view-action-rendering/view-action-rendering.component';
+import { CustomersalesRenderingComponent } from 'src/app/Components/Sales/CustomerSalesApproval/customersales-rendering/customersales-rendering.component';
 
 @NgModule({
   declarations: [
@@ -162,7 +163,7 @@ import { ViewActionRenderingComponent } from 'src/app/Components/AccountsControl
     ViewActionRenderingComponent,
 
 
-
+    CustomersalesRenderingComponent,
 
     DashboardComponent,
     //Login

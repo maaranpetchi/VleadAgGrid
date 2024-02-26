@@ -10,7 +10,9 @@
  }
  
  .advance { grid-area: advance; }
-
+ form {
+  height: 479px;
+}
  .body{
    min-height: 75vh ;
    height: auto ;

@@ -62,6 +62,10 @@ export class ViewActionRenderingComponent implements ICellRendererAngularComp {
     if (this.Context == 'customerreceipts') {
       this.customerreceiptsview(params)
     }
+    ///customerreceipts
+    if (this.Context == 'customerunapprovaljobs') {
+      this.customerunapprovaljobsview(params)
+    }
 
   }
   customerreceiptsview(params){
@@ -71,5 +75,10 @@ export class ViewActionRenderingComponent implements ICellRendererAngularComp {
       this.router.navigate(['/topnavbar/acc-viewcustomer']);
 
     })
+  }
+
+  customerunapprovaljobsview(params){
+    this.router.navigate(["topnavbar/view-unapprovalJobs"], { state: { data: params.data } });
+
   }
 }

@@ -9,6 +9,8 @@ import { LoginService } from 'src/app/Services/Login/login.service';
 import { environment } from 'src/Environments/environment';
 import { SelectionModel } from '@angular/cdk/collections';
 import Swal from 'sweetalert2/src/sweetalert2.js';
+import { AgGridAngular } from 'ag-grid-angular';
+import { GridApi, ColDef, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
 
 @Component({
   selector: 'app-customer-salesmapping',
@@ -20,6 +22,7 @@ export class CustomerSalesmappingComponent implements OnInit {
   selectedValue: string = '';
   selectedJobs: any;
   selectedCustomers: any;
+  context: any = 'customersalesmapping';
   constructor(
     private http: HttpClient,
     private spinner: SpinnerService,
@@ -45,33 +48,12 @@ export class CustomerSalesmappingComponent implements OnInit {
     'salesemployee',
   ];
 
-  dataSource: MatTableDataSource<any>;
-  @ViewChild('paginator1') paginator1: MatPaginator;
-  @ViewChild('paginator2') paginator2: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+
   // employee
-  employeeDaSource: MatTableDataSource<any> = new MatTableDataSource<any>();
 
   filterValue: any
   filterValue1: any
-  applyFilter(event: Event): void {
-    this.filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = this.filterValue.trim().toLowerCase();
-    // this.selection.clear();
-    // this.dataSource.filteredData.forEach(x=>this.selection.select(x));
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-  applyEmployeeFilter(event: Event) {
-    this.filterValue1 = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = this.filterValue1.trim().toLowerCase();
-    // this.selection.clear();
-    // this.dataSource.filteredData.forEach(x=>this.selection.select(x));
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
+
   checkAdmin(): Observable<any> {
     return this.http.get(
       environment.apiURL +
@@ -120,10 +102,10 @@ export class CustomerSalesmappingComponent implements OnInit {
       SelectedEmployees: [],
       SelectedRows: [],
       CustomerId: [0],
-      CustomerName: item.employeeName ? item.employeeName:'',
-      Description: item.employeeName ? item.employeeName:'',
-      Name: item.employeeName ? item.employeeName:'',
-      ShortName: item.employeeCode ? item.employeeCode:'',
+      CustomerName: item.employeeName ? item.employeeName : '',
+      Description: item.employeeName ? item.employeeName : '',
+      Name: item.employeeName ? item.employeeName : '',
+      ShortName: item.employeeCode ? item.employeeCode : '',
       TimeStamp: '',
     });
   }
@@ -140,12 +122,8 @@ export class CustomerSalesmappingComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           this.spinner.requestEnded();
-          this.dataSource = new MatTableDataSource(response);
-          // this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator1;
-          // this.employeeDaSource = new MatTableDataSource(response);
-          // this.employeeDaSource.sort = this.sort;
-          // this.employeeDaSource.paginator = this.paginator1;
+          this.rowData = response;
+
           this.GetAllddlList();
         },
         error: (err) => {
@@ -165,9 +143,8 @@ export class CustomerSalesmappingComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           this.spinner.requestEnded();
-          this.employeeDaSource = new MatTableDataSource(response.employeeList);
-          this.employeeDaSource.sort = this.sort;
-          this.employeeDaSource.paginator = this.paginator2;
+          this.table2rowData = response.employeeList;
+
         },
         error(err) {
           console.log(err);
@@ -176,8 +153,8 @@ export class CustomerSalesmappingComponent implements OnInit {
   }
   onSubmit() {
     this.spinner.requestStarted();
-    this.selection.selected.forEach(x => this.setAll(x));
-    this.selection1.selected.forEach(x => this.setEmployeeAll(x));
+    this.gridApi1.getSelectedRows().forEach(x => this.setAll(x));
+    this.gridApi2.getSelectedRows().forEach(x => this.setEmployeeAll(x));
     if (this.selectedQuery.length > 0) {
       this.selectedJobs = this.selectedQuery;
     }
@@ -217,7 +194,9 @@ export class CustomerSalesmappingComponent implements OnInit {
                 'success'
               ).then((response) => {
                 if (response.isConfirmed) {
-                  window.location.reload();
+                  this.rowData = [];
+                  this.GetAllddlList();
+
                 }
               })
             } else {
@@ -235,77 +214,97 @@ export class CustomerSalesmappingComponent implements OnInit {
       alert('Please select Customer and Employee');
     }
   }
-  //  CreateCustomerVsSalesEmployee = function () {
-  //     var selectedCustomerCount = JSON.stringify(selectedCustomers.length);
-  //     var selectedEmployeeCount = JSON.stringify(gridallocateApi.selection.getSelectedRows().length);
-  //     if (selectedCustomerCount != 0 && this.selectedEmployeeCount != 0) {
-  //         if (selectedEmployeeCount > 1) {
-  //           //  alertMessage = 'Please select one Employee!';
-  //           //   $('#alertPopup').modal('show');
-  //           alert('Please select one Employee!')
-  //         }
-  //         else {
-  //             var savecustomervsSalesemp = {
-  //                 selectedCustomers:selectedCustomers,
-  //                 SelectedEmployee:selectedEmployee,
-  //                 customerId:selectedCustomers.CustomerId,
-  //                 createdBy:EmployeeId,
-  //             }
-
-  // CustomerMappingFactory.CreateCustomerVsSalesEmployee('CreateCustomerVsSalesEmployee', savecustomervsSalesemp).$promise.then(function (result) {
-  //     if (result.Success == true) {
-  //        confirmationMessage = result.Message;
-  //         $('#confirmedPopup').modal('show');
-  //     }
-  //     else {
-  //        confirmationMessage = result.Message;
-  //         $('#confirmedPopup').modal('show');
-  //     }
-  // });
-  //         }
-  //     }
-  //     else {
-  //        alertMessage = 'Please select Customer and Employee';
-  //         $('#alertPopup').modal('show');
-  //     }
-  // }
   selection = new SelectionModel<Element>(true, []);
   selection1 = new SelectionModel<Element>(true, []);
 
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
+
+  /////////////////////////Ag-grid module///////////////////////////////
+  @ViewChild('agGrid1') agGrid1: AgGridAngular;
+  @ViewChild('agGrid2') agGrid2: AgGridAngular;
+
+  private gridApi1!: GridApi;
+  private gridApi2!: GridApi;
+
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+  public table2defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isSecondColumn,
+    checkboxSelection: isSecondColumn,
+  };
+
+  table1def: ColDef[] = [
+    { headerName: 'Customer Name ', field: 'name', filter: true, },
+    { headerName: 'Short Name ', field: 'shortName', filter: true, },
+    { headerName: 'Classification ', field: 'description', filter: true, },
+    { headerName: 'Employee Code ', field: 'employeeNameCode', filter: true, },
+
+  ];
+  table2def: ColDef[] = [
+
+    { headerName: 'Employee code', field: 'employeeCode', filter: true, },
+    { headerName: 'Sales Employee', field: 'employeeName', filter: true, },
+  ];
+
+
+
+
+
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public table2rowSelection: 'single' | 'multiple' = 'multiple';
+
+  public rowData: any[] = [];
+  public table2rowData: any[] = [];
+
+  public themeClass: string =
+    "ag-theme-quartz";
+
+  onGridReady1(params: GridReadyEvent) {
+    this.gridApi1 = params.api;
   }
 
-  masterToggle() {
-    if (this.isAllSelected()) {
-      this.selection.clear();
-    }
-    else if (this.filterValue) {
-      this.selection.clear();
-      this.dataSource.filteredData.forEach(x => this.selection.select(x));
-    } else {
-      this.dataSource.data.forEach(row => this.selection.select(row));
-    }
-
-  }
-  isEmplSelected() {
-    const numSelected = this.selection1.selected.length;
-    const numRows = this.employeeDaSource.data.length;
-    return numSelected === numRows;
+  onGridReady2(params: GridReadyEvent) {
+    this.gridApi2 = params.api;
   }
 
-  emplMasterToggle() {
-    if (this.isEmplSelected()) {
-      this.selection1.clear();
+  handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {
+    console.log(params, "Parameter");
+    console.log(params.data, "ParameterData");
+    let parameterData = params.data
+    if (params.colDef.field === 'filecount') { // Check if the changed column is 'price'
+
     }
-    else if (this.filterValue1) {
-      this.selection1.clear();
-      this.employeeDaSource.filteredData.forEach(x => this.selection1.select(x));
-    } else {
-      this.employeeDaSource.data.forEach(row => this.selection1.select(row));
-    }
+  }
+
+
+  handlePress(newvalue, parameterData) {
+    console.log(newvalue, "HandlepressNewValue");
+    console.log(parameterData, "ParameterValue");
 
   }
+  selectedRows1: any;
+  selectedRows2: any;
+
+
+}
+function isFirstColumn(
+  params: CheckboxSelectionCallbackParams | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
+}
+
+function isSecondColumn(
+  params: CheckboxSelectionCallbackParams | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsSecondColumn = displayedColumns[0] === params.column;
+  return thisIsSecondColumn;
 }

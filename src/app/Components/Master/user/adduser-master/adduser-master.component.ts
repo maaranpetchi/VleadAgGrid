@@ -211,11 +211,11 @@ export class AdduserMasterComponent implements OnInit {
       return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
     })).subscribe({
       next: (response: any) => {
-        // Swal.fire('Done!', 'User Detail Added', 'success').then((result)=>{
+         Swal.fire('Done!', 'User Detail Added', 'success').then((result)=>{
           if(response === true){
-            this.dialogRef.close();
+             this.dialogRef.close(true);
           }
-        // });
+        });
       },
       error: (err: any) => {
         throw new Error('API Error', err);

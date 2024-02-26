@@ -62,7 +62,6 @@ export class PricingComponent implements OnInit {
   ViewFileCountTable: any[]=[];
   AddedRecord: any = [];
   newItem: any = {};
-
   pricingtype: any;
   submitted: boolean;
   jobStatusFormControl: any;
@@ -297,7 +296,6 @@ export class PricingComponent implements OnInit {
   }
   onCancel() {
     window.location.reload();
-    // this.router.navigate(['topnavbar/pricing'])
   }
   back() {
     window.location.reload();
@@ -573,7 +571,7 @@ export class PricingComponent implements OnInit {
         createdBy: this.loginservice.getUsername(),
         customerId: this.selectedCustomers,
         departmentId: this.selectedValue,
-        scopeId: 0,
+        scopeId: this.selectedScope,
         jobStatusId: this.selectedValueEfect,
         pricingTypeId: this.selectedPricing,
         fromDate: '2023-08-03T06:48:55.900Z',
