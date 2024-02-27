@@ -22,6 +22,7 @@ import { AddEditUsermasterComponent } from '../../Master/user/add-edit-usermaste
 import { UserMasterService } from 'src/app/Services/Master/user-master.service';
 import { BenchStatusService } from 'src/app/Services/Benchstatus/bench-status.service';
 import { WorkflowService } from 'src/app/Services/CoreStructure/WorkFlow/workflow.service';
+import { UpdateBillingComponent } from '../../BillingCycleMonthly/update-billing/update-billing.component';
 
 @Component({
   selector: 'app-customernormsrendering',
@@ -123,6 +124,10 @@ export class customernormsrenderingcomponent implements ICellRendererAngularComp
     if (this.Context == 'benchstatus') {
       this.benchstatusEdit(params)
     }
+    //billingCycleMonthly
+    if (this.Context == 'billingCycleMonthly') {
+      this.billingCycleMonthlyEdit(params)
+    }
 
   }
   DeleteButton(params) {
@@ -155,6 +160,10 @@ export class customernormsrenderingcomponent implements ICellRendererAngularComp
     //Master-benchstatus
     if (this.Context == "benchstatus") {
       this.benchstatusDelete(params)
+    }
+    //billingCycleMonthly
+    if (this.Context == "billingCycleMonthly") {
+      this.billingCycleMonthlyDelete(params)
     }
   }
 
@@ -425,4 +434,61 @@ export class customernormsrenderingcomponent implements ICellRendererAngularComp
     });
   }
   /////////////Master-BenchStatus Ended///////
+
+
+
+  ////////////////////billingCycleMonthly//////////////////////////
+  billingCycleMonthlyEdit(params){
+    const dialogRef = this.dialog.open(UpdateBillingComponent, {
+      height: '50vh',
+      width: '50vw',
+      data: {
+        type: "edit",
+        data: params.data,
+      },
+    });
+    dialogRef.afterClosed().subscribe({
+      next: (val) => {
+        console.log(val, "AfterClose");
+          this.sharedDataService.triggerRefresh();
+      },
+    });
+  }
+  billingCycleMonthlyDelete(params){
+    this.spinnerService.requestStarted();
+    let payload = {
+      "customerId": 0,
+      "departmentId": 0,
+      "billingDate": "2023-12-26T09:08:42.047Z",
+      "createdBy": 0,
+      "updateBy": 0
+    }
+    this.http.put(environment.apiURL + `BillingCycleMonthly/Delete?id=${params.data.id}`, payload).pipe(catchError((error) => {
+      this.spinnerService.requestEnded();
+      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+    })).subscribe({
+      next: (res) => {
+        this.spinnerService.requestEnded();
+        Swal.fire(
+          'Deleted!',
+          'Data deleted successfully!',
+          'success'
+        ).then((response) => {
+          if (response.isConfirmed) {
+          this.sharedDataService.triggerRefresh();
+          }
+        })
+      },
+      error: (err) => {
+        this.spinnerService.resetSpinner(); // Reset spinner on error
+        console.error(err);
+        Swal.fire(
+          'Error!',
+          'An error occurred !.',
+          'error'
+        );
+      }
+    });
+  }
+  ////////////////////billingCycleMonthly//////////////////////////
 }

@@ -1,5 +1,5 @@
 .container { 
-    display: grid;
+    // display: grid;
    grid-template-columns: 0.6fr 1.8fr 0.6fr;
    grid-template-rows: -0.5fr 0.5fr 1fr;
    gap: 0px 0px;
@@ -59,7 +59,7 @@
 }
 
 .table-container {
-   max-height: 300px; /* Set the maximum height for the table container */
+   height: 439px; 
    overflow-y: auto; /* Enable vertical scrolling */
  }
  

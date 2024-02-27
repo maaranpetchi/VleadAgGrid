@@ -11,6 +11,9 @@ import { EmployeevsskillsetService } from 'src/app/Services/EmployeeVsSkillset/e
 import { catchError } from 'rxjs';
 import { UpdateBillingComponent } from '../update-billing/update-billing.component';
 import { MatDialog } from '@angular/material/dialog';
+import { GridApi, ColDef, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { customernormsrenderingcomponent } from '../../CustomerNorms/customernormsindex/customerNormsRendering.component';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 @Component({
   selector: 'app-index-billing-cycle',
   templateUrl: './index-billing-cycle.component.html',
@@ -18,12 +21,19 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class IndexBillingCycleComponent implements OnInit {
   dataSource: MatTableDataSource<any>;
-  displayedColumns: string[] = ['customer', 'department', 'billingdate','Action'];
+  displayedColumns: string[] = ['customer', 'department', 'billingdate', 'Action'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+context: any='billingCycleMonthly';
 
-  constructor(private http: HttpClient, private router: Router, private spinnerService: SpinnerService, private _dialog: MatDialog,private _empService: EmployeevsskillsetService) { }
+  constructor(private http: HttpClient, private router: Router, private spinnerService: SpinnerService, private _dialog: MatDialog, private _empService: EmployeevsskillsetService,private sharedDataService:SharedService) {
+
+    this.sharedDataService.refreshData$.subscribe(() => {
+      // Update your data or call the necessary methods to refresh the data
+      this.getFetchTables();
+    });
+   }
 
   ngOnInit(): void {
     this.getFetchTables();
@@ -33,9 +43,8 @@ export class IndexBillingCycleComponent implements OnInit {
     this.http.get<any>(environment.apiURL + `BillingCycleMonthly/getdata`).subscribe({
       next: (employees) => {
         this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(employees);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.rowData = employees;
+    
       },
       error: (err) => {
         this.spinnerService.resetSpinner(); // Reset spinner on error
@@ -68,8 +77,8 @@ export class IndexBillingCycleComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe({
       next: (val) => {
-        console.log(val,"AfterClose");
-        
+        console.log(val, "AfterClose");
+
         if (val == undefined) {
           this.getFetchTables();
         }
@@ -77,43 +86,17 @@ export class IndexBillingCycleComponent implements OnInit {
     });
   }
 
-  // openEditForm(id: number) {
-  //   this.spinnerService.requestStarted();
-  //   this.http.get<any>(environment.apiURL + `BillingCycleMonthly/getdata?clientId=${id}`).pipe(catchError((error) => {
-  //     this.spinnerService.requestEnded();
-  //     return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-  //   })).subscribe({
-  //     next: (results) => {
-  //       this.spinnerService.requestEnded();
-  //       this._empService.setData({ type: 'EDIT', data: results });
-  //       this._empService.shouldFetchData = true;
-  //       this.router.navigate(['/topnavbar/updateskillset']);
-  //     },
-  //     error: (err) => {
-  //       this.spinnerService.resetSpinner(); // Reset spinner on error
-  //       console.error(err);
-  //       Swal.fire(
-  //         'Error!',
-  //         'An error occurred !.',
-  //         'error'
-  //       );
-  //     }
-  //   });
-
-  // }
-
-
 
   deleteEmployee(id: number) {
     this.spinnerService.requestStarted();
-    let payload={
+    let payload = {
       "customerId": 0,
       "departmentId": 0,
       "billingDate": "2023-12-26T09:08:42.047Z",
       "createdBy": 0,
       "updateBy": 0
     }
-    this.http.put(environment.apiURL + `BillingCycleMonthly/Delete?id=${id}`,payload).pipe(catchError((error) => {
+    this.http.put(environment.apiURL + `BillingCycleMonthly/Delete?id=${id}`, payload).pipe(catchError((error) => {
       this.spinnerService.requestEnded();
       return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
     })).subscribe({
@@ -144,4 +127,64 @@ export class IndexBillingCycleComponent implements OnInit {
   OpenNewForm() {
     this.router.navigate(['/topnavbar/addeditBilling']);
   }
+  /////////////////////////Ag-grid module///////////////////////////////
+  @ViewChild('agGrid') agGrid: any;
+
+  private gridApi!: GridApi<any>;
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
+
+  columnDefs: ColDef[] = [
+    { headerName: 'Customer', field: 'customerName', filter: true, },
+    { headerName: 'Department', field: 'departmentName', filter: true, },
+    { headerName: 'Billing Date', field: 'billingDate', filter: true, },
+
+    {
+      headerName: 'Actions',
+      field: 'action',
+      cellRenderer: customernormsrenderingcomponent, // JS comp by Direct Reference
+      autoHeight: true,
+    }
+  ];
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData!: any[];
+  public themeClass: string =
+    "ag-theme-quartz";
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+  }
+
+  handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {
+    console.log(params, "Parameter");
+    console.log(params.data, "ParameterData");
+    let parameterData = params.data
+    if (params.colDef.field === 'filecount') { // Check if the changed column is 'price'
+
+    }
+  }
+
+
+  handlePress(newvalue, parameterData) {
+    console.log(newvalue, "HandlepressNewValue");
+    console.log(parameterData, "ParameterValue");
+
+  }
+
+
+}
+
+function isFirstColumn(
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
+) {
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
 }

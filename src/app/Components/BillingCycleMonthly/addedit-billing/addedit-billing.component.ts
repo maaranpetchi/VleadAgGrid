@@ -76,6 +76,7 @@ export class AddeditBillingComponent implements OnInit {
       Swal.fire('Done', 'Billing Added Sucessfully', 'success').then((result) => {
         if (result.isConfirmed) {
           this.form.reset();
+          this.router.navigate(['/topnavbar/indexBiling']);
         }
       })
     }
