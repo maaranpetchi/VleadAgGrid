@@ -73,4 +73,6 @@ import { DeleteActionRenderingComponent } from './Components/EmployeeVSDivision/
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  
+ }

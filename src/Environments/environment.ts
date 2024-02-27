@@ -4,7 +4,7 @@ export const environment = {
    // apiURL: 'http://servicedesk.vleadservices.com:84/api/'
 
     ///Alpha///
-    //apiURL: 'https://vislocaluat.vleadservices.com/'
+    //apiURL: 'http://vislocaluat.vleadservices.com:81/api/'
 
     ////Local///
     apiURL: 'https://localhost:7208/api/'
