@@ -37,6 +37,13 @@ export class PricingComponent implements OnInit {
   StaffingCountTable: boolean = false;
   showtodate: boolean = false;
 
+  // booleans
+  priceBasedOnFileCount:boolean=false;
+  priceBasedOnHour:boolean=false;
+  priceBasedOnScope:boolean=false;
+  rateBasedFileCount:boolean=false;
+  specialPricing:boolean=false;
+  staffing:boolean=false;
   Customer: any[] = [];
   customers: any;
   departments: any;
@@ -131,7 +138,7 @@ export class PricingComponent implements OnInit {
         this.type22 = false;
         this.type6 = false;
         this.showeffective = true;
-        this.notshowntodigi = true;
+        this.priceBasedOnFileCount = true;
         //$scope.showstaffing = false;
         this.showcounttable = false;
         this.showcounttabletime = false;
@@ -141,25 +148,21 @@ export class PricingComponent implements OnInit {
         this.EstimatedTimeTable = false;
         this.showtodate = false;
       } else if (pricingType == 2) {
-        this.type2 = true;
-        this.type22 = true;
         this.type6 = false;
-        this.showeffective = true;
-        this.notshowntodigi = true;
+        this.specialPricing = true;
         //$scope.showstaffing = false;
         this.showcounttable = false;
         this.showcounttabletime = false;
         this.showstaffingcounttable = false;
-        this.notshowntocount = true;
         this.ScopeBasedRateBasedFileCountTable = false;
         this.EstimatedTimeTable = false;
         this.showtodate = false;
       } else if (pricingType == 13 || pricingType == 14) {
-        this.type2 = true;
+        this.type2 = false;
         this.type22 = false;
         this.type6 = false;
-        this.showeffective = true;
-        this.notshowntodigi = true;
+        this.showeffective = false;
+        this.priceBasedOnHour = true;
         //$scope.showstaffing = false;
         this.showcounttable = false;
         this.showcounttabletime = false;
@@ -172,11 +175,11 @@ export class PricingComponent implements OnInit {
         this.type2 = false;
         this.type22 = false;
         this.type6 = false;
-        this.showeffective = true;
-        this.notshowntodigi = false;
+        this.showeffective = false;
+        this.priceBasedOnFileCount = true;
         //$scope.showstaffing = false;
         this.showcounttable = false;
-        this.showcounttabletime = true;
+        this.showcounttabletime = false;
         this.showstaffingcounttable = false;
         this.showstaffingcount = false;
         this.notshowntocount = false;
@@ -187,10 +190,8 @@ export class PricingComponent implements OnInit {
         this.type2 = false;
         this.type22 = false;
         this.type6 = false;
-        this.showeffective = true;
-        this.notshowntodigi = false;
-        //$scope.showstaffing = false;
-        this.showcounttable = true;
+        this.rateBasedFileCount = true;
+        this.priceBasedOnFileCount = false;
         this.showcounttabletime = false;
         this.showstaffingcounttable = false;
         this.notshowntocount = false;
@@ -202,13 +203,13 @@ export class PricingComponent implements OnInit {
         this.type22 = false;
         this.type6 = false;
         this.showeffective = false;
-        this.notshowntodigi = false;
+        this.priceBasedOnFileCount = false;
         //$scope.showstaffing = false;
-        this.showcounttable = true;
+        this.staffing = true;
         this.showcounttabletime = false;
-        this.showstaffingcounttable = true;
+        this.showstaffingcounttable = false;
         this.StaffingdataCountTable= false
-        this.showstaffingcount = true;
+        this.showstaffingcount = false;
         this.notshowntocount = false;
         this.ScopeBasedRateBasedFileCountTable = false;
         this.EstimatedTimeTable = false;
@@ -218,7 +219,7 @@ export class PricingComponent implements OnInit {
         this.type22 = false;
         this.type6 = true;
         this.showeffective = true;
-        this.notshowntodigi = false;
+        this.priceBasedOnFileCount = false;
         //$scope.showstaffing = false;
         this.showcounttable = false;
         this.showcounttabletime = false;
@@ -302,7 +303,7 @@ export class PricingComponent implements OnInit {
   }
   CreateRateBasedFileCountAndConcession() {
     this.submitted = true;
-    if (this.newItem.selectedCountPrice) {
+    if (this.newItem.selectedCountPrice,this.newItem.selectedTo) {
       this.ViewFileCountTable.push(this.newItem);
       this.newItem = {};
       this.ScopeBasedRateBasedFileCountTable = true;

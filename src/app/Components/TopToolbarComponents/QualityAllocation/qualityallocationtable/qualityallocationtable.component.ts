@@ -6,7 +6,6 @@ import { MatSort } from '@angular/material/sort';
 import { environment } from 'src/Environments/environment';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import { Observable, catchError } from 'rxjs';
-import { Observable, catchError } from 'rxjs';
 import { QualitypopupjobassignComponent } from '../qualitypopupjobassign/qualitypopupjobassign.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EmployeePopupTableComponent } from '../employee-popup-table/employee-popup-table.component';
@@ -425,19 +424,6 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
       this.rowData= response.allocationJobs;
       this.rowEmpData =response.employees;
     })
-    .get<any>(
-      environment.apiURL +
-      `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-        this.loginservice.getUsername()
-      )}/${parseInt(this.loginservice.getProcessId())}/1/0`
-    ).pipe(catchError((error) => {
-      this.spinner.requestEnded();
-      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-    })).subscribe(response => {
-      this.spinner.requestEnded();
-      this.rowData= response.allocationJobs;
-      this.rowEmpData =response.employees;
-    })
   }
   revisionJobs() {
     this.spinner.requestStarted();
@@ -516,8 +502,6 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
       .subscribe({
         next: (allocaetdJobs) => {
           this.spinner.requestEnded();
-          this.rowData= allocaetdJobs.allocationJobs;
-          this.rowEmpData =allocaetdJobs.employees;
           this.rowData= allocaetdJobs.allocationJobs;
           this.rowEmpData =allocaetdJobs.employees;
         },
@@ -724,14 +708,6 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
   }
   data: any;
   onSubmit(data: any) {
-    // let selectedRow = this.gridApi.setAllJobs();
-    // console.log(selectedRow, "SelectedRowws");
-    // this.selection.selected.forEach((x) => this.setAllJobs(x));
-    // if (this.selectedQuery.length > 0) {
-    //   this.selectedJobs = this.selectedQuery;
-    // }
-    var selectedJobCount = this.gridApi.getSelectedRows();
-    var selectedEmployeeCount:any = this.gridEmplApi.getSelectedRows();
     // let selectedRow = this.gridApi.setAllJobs();
     // console.log(selectedRow, "SelectedRowws");
     // this.selection.selected.forEach((x) => this.setAllJobs(x));
@@ -1029,15 +1005,6 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
     };
   }
   
-}
-function isFirstColumn(
-  params:
-    | CheckboxSelectionCallbackParams
-    | HeaderCheckboxSelectionCallbackParams
-) {
-  var displayedColumns = params.api.getAllDisplayedColumns();
-  var thisIsFirstColumn = displayedColumns[0] === params.column;
-  return thisIsFirstColumn;
 }
 function isFirstColumn(
   params:
