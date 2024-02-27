@@ -537,10 +537,7 @@ export class SalesMultiStepFormComponent implements OnInit, OnDestroy {
       const missingFields = requiredFields.join(', ');
       Swal.fire('Required Fields', `Please fill in the following required fields: ${missingFields}.`, 'error');
       return; // Stop execution if there are missing fields
-
     }
-
-
   }
   onScopeChange() {
     // Access the ID and Description of the selected department
