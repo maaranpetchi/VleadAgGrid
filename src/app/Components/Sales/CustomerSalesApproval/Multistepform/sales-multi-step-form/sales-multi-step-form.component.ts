@@ -527,11 +527,9 @@ export class SalesMultiStepFormComponent implements OnInit, OnDestroy {
             this.SelectedCustType = "";
             this.estimatedTime = 0;
             this.getTableData();
-
           }
         })
       });
-
     } else {
       // Show validation error message with missing field names
       const missingFields = requiredFields.join(', ');
