@@ -12,7 +12,16 @@ import { EmployeePopupComponent } from '../employee-popup/employee-popup.compone
 import { JobCategorypopupComponent } from '../job-categorypopup/job-categorypopup.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import Swal from 'sweetalert2';
-import { CellValueChangedEvent, CheckboxSelectionCallbackParams, ColDef, GridApi, GridReadyEvent, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import {
+  CellClickedEvent,
+  CellValueChangedEvent,
+  CheckboxSelectionCallbackParams,
+  ColDef,
+  GridApi,
+  GridReadyEvent,
+  HeaderCheckboxSelectionCallbackParams,
+  SelectionChangedEvent,
+} from 'ag-grid-community';
 interface Employee {
   id: number;
   name: string;
@@ -49,7 +58,7 @@ export class ProofreadingAlocationtableComponent implements OnInit {
     'deliverydate',
   ];
   dataSource: MatTableDataSource<any>;
-  // 
+  //
 
   rowData!: any;
   rowEmpData!: any;
@@ -58,6 +67,7 @@ export class ProofreadingAlocationtableComponent implements OnInit {
   private gridEmplApi!: GridApi<any>;
   colDefs: ColDef[] = [
     {
+      headerName: 'Job Id',
       field: 'jobId',
       checkboxSelection: true,
       width: 100,
@@ -65,7 +75,9 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       suppressSizeToFit: true,
       sortable: true,
       filter: true,
+      colId: 'jobIdColumn',
       cellStyle: { color: 'blue' },
+
       cellRenderer: function (params) {
         return (
           '<button class="btn btn-sm btn-link p-0">' +
@@ -75,6 +87,36 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       },
     },
     {
+      headerName: 'Artist',
+      field: 'artistName',
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      colId: 'artistNameColumn',
+    },
+    {
+      headerName: 'Employee(s)',
+      field: 'employeeName',
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      colId: 'employeeNameColumn',
+      cellStyle: { color: 'blue' },
+
+      cellRenderer: function (params) {
+        return (
+          '<button class="btn btn-sm btn-link p-0">' +
+          params.value +
+          '</button>'
+        );
+      },
+    },
+    {
+      headerName: 'Est Job/ Query Date',
       field: 'jobDate_QueryDate',
       headerClass: 'text-wrap',
       width: 100,
@@ -82,20 +124,43 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       filter: true,
     },
     {
-      field: 'name',
-      width: 100,
-      headerClass: 'text-wrap',
-      sortable: true,
-      filter: true,
-    },
-    {
-      field: 'customerJobType',
+      headerName: 'Client',
+      field: 'shortName',
       headerClass: 'text-wrap',
       width: 100,
       sortable: true,
       filter: true,
     },
     {
+      headerName: 'Customer Classification',
+      field: 'customerClassification',
+      headerClass: 'text-wrap',
+      width: 100,
+      sortable: true,
+      filter: true,
+    },
+
+    {
+      headerName: 'File Name',
+      field: 'fileName',
+      width: 50,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+    },
+    {
+      headerName: 'File Inward Mode',
+      field: 'fileInwardType',
+      width: 50,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+    },
+
+    {
+      headerName: 'Job Status ',
       field: 'jobStatusDescription',
       headerClass: 'text-wrap',
       width: 100,
@@ -103,6 +168,7 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       filter: true,
     },
     {
+      headerName: 'Project Code',
       field: 'projectCode',
       width: 100,
       headerClass: 'text-wrap',
@@ -111,30 +177,7 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       filter: true,
     },
     {
-      field: 'fileName',
-      width: 100,
-      headerClass: 'text-wrap',
-      suppressSizeToFit: true,
-      sortable: true,
-      filter: true,
-    },
-    {
-      field: 'fileInwardType',
-      width: 100,
-      headerClass: 'text-wrap',
-      suppressSizeToFit: true,
-      sortable: true,
-      filter: true,
-    },
-    {
-      field: 'processName',
-      width: 100,
-      headerClass: 'text-wrap',
-      suppressSizeToFit: true,
-      sortable: true,
-      filter: true,
-    },
-    {
+      headerName: 'Status',
       field: 'status',
       width: 100,
       suppressSizeToFit: true,
@@ -142,16 +185,28 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       filter: true,
     },
     {
-      field: 'estimatedTime',
+      headerName: 'Scope',
+      field: 'status',
+      width: 100,
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+    },
+    {
+      headerName: 'Est Time',
+      field: 'allocatedEstimatedTime',
       width: 100,
       suppressSizeToFit: true,
       sortable: true,
       filter: true,
       editable: true,
     },
+
     {
-      field: 'deliverydate',
+      headerName: 'Delivery Date',
+      field: 'dateofDelivery',
       width: 100,
+      headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
       filter: true,
@@ -159,13 +214,15 @@ export class ProofreadingAlocationtableComponent implements OnInit {
   ];
   colEmpDefs: ColDef[] = [
     {
-      field: 'employeeCode',
+      headerName: 'Employee',
+      field: 'employeenameWithCode',
       checkboxSelection: true,
       width: 100,
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
       filter: true,
+      colId: 'employeeIdColumn',
       cellStyle: { color: 'blue' },
       cellRenderer: function (params) {
         return (
@@ -176,31 +233,13 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       },
     },
     {
-      field: 'estTime',
+      headerName: 'Shift',
+      field: 'shiftName',
       headerClass: 'text-wrap',
       width: 100,
       suppressSizeToFit: true,
       sortable: true,
       filter: true,
-      editable: true,
-    },
-    {
-      field: 'status',
-      headerClass: 'text-wrap',
-      width: 100,
-      suppressSizeToFit: true,
-      sortable: true,
-      filter: true,
-      editable: true,
-    },
-    {
-      field: 'shift',
-      headerClass: 'text-wrap',
-      width: 100,
-      suppressSizeToFit: true,
-      sortable: true,
-      filter: true,
-      editable: true,
     },
   ];
   gridOptions1 = {
@@ -248,6 +287,9 @@ export class ProofreadingAlocationtableComponent implements OnInit {
   }
   onGridReady(params: GridReadyEvent<any>) {
     this.gridApi = params.api;
+    this.gridApi.setColumnVisible('jobIdColumn', true);
+    this.gridApi.setColumnVisible('artistNameColumn', true);
+    this.gridApi.setColumnVisible('employeeNameColumn', false);
   }
   onGridEmpReady(params: GridReadyEvent<any>) {
     // this.gridApi = params.api;
@@ -264,23 +306,56 @@ export class ProofreadingAlocationtableComponent implements OnInit {
   onCellValueChanged = (event: CellValueChangedEvent) => {
     console.log(`New Cell Valuejob: ${event.value}`);
   };
-  filterValue: any = null;
-  applyFilter(event: Event): void {
-    this.filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = this.filterValue.trim().toLowerCase();
-    // this.selection.clear();
-    // this.dataSource.filteredData.forEach(x=>this.selection.select(x));
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+  onSelectionEmpChanged(event: SelectionChangedEvent) {
+    const selectedEmpNodes = this.gridEmplApi.getSelectedNodes();
+    console.log('Selected Rows:', selectedEmpNodes); // Update exchangeHeader with the estimated time of the first selected row
+    selectedEmpNodes.forEach((item: any) => {
+      if (item.data.jId != null)
+        this.selectedEmployee.push({
+          ...item.data,
+          CategoryDesc: '',
+          Comments: '',
+          CommentsToClient: '',
+          FileInwardType: '',
+          JobId: 0,
+          Remarks: '',
+          SelectedEmployees: [],
+          SelectedRows: [],
+          TimeStamp: '',
+          jId: 0,
+          // estimatedTime: this.totalEstimateTime
+        });
+      else {
+        this.selectedEmployee.push({
+          ...item.data,
+          jId: 0,
+          CategoryDesc: '',
+          Comments: '',
+          CommentsToClient: '',
+          FileInwardType: '',
+          JobId: 0,
+          Remarks: '',
+          SelectedEmployees: [],
+          SelectedRows: [],
+          TimeStamp: '',
+        });
+      }
+    });
+  }
+  onCellJobClicked(event: CellClickedEvent) {
+    const { colDef, data } = event;
+    if (colDef.colId === 'jobIdColumn') {
+      console.log(data, 'PopupData');
+
+      this.openEmployeeDialog(data);
     }
   }
+  onCellEmpClicked(event: CellClickedEvent) {
+    const { colDef, data } = event;
+    if (colDef.colId === 'employeeIdColumn') {
+      console.log(data, 'PopupData');
 
-  applyEmployeeFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataEmployeeSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataEmployeeSource.paginator) {
-      this.dataEmployeeSource.paginator.firstPage();
+      this.openEmployeeDialog(data);
     }
   }
 
@@ -289,7 +364,6 @@ export class ProofreadingAlocationtableComponent implements OnInit {
   selectedEmployee: any[] = [];
 
   setAllJobs(completed: boolean, item: any) {
-  
     if (completed == true) {
       if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
       if (item.employeeId == null) item.employeeId = 0;
@@ -311,12 +385,10 @@ export class ProofreadingAlocationtableComponent implements OnInit {
           }
         });
       }
-
     }
   }
 
   setEmployeeAll(completed: boolean, item: any) {
-   
     if (completed == true) {
       if (item.jId != null)
         this.selectedEmployee.push({
@@ -369,19 +441,35 @@ export class ProofreadingAlocationtableComponent implements OnInit {
   tab(action) {
     if (action == '1') {
       this.freshJobs();
+      this.gridApi.setColumnVisible('artistNameColumn', true);
+      this.gridApi.setColumnVisible('employeeNameColumn', false);
     } else if (action == '2') {
+      this.gridApi.setColumnVisible('artistNameColumn', true);
+      this.gridApi.setColumnVisible('employeeNameColumn', false);
       this.revisionJobs();
     } else if (action == '3') {
+      this.gridApi.setColumnVisible('artistNameColumn', true);
+      this.gridApi.setColumnVisible('employeeNameColumn', false);
       this.reworkJobs();
     } else if (action == '4') {
+      this.gridApi.setColumnVisible('artistNameColumn', false);
+      this.gridApi.setColumnVisible('employeeNameColumn', true);
       this.allocaetdJobs();
     } else if (action == '5') {
+      this.gridApi.setColumnVisible('artistNameColumn', false);
+      this.gridApi.setColumnVisible('employeeNameColumn', false);
       this.queries();
     } else if (action == '6') {
+      this.gridApi.setColumnVisible('artistNameColumn', false);
+      this.gridApi.setColumnVisible('employeeNameColumn', false);
       this.queryResposne();
     } else if (action == '7') {
+      this.gridApi.setColumnVisible('artistNameColumn', false);
+      this.gridApi.setColumnVisible('employeeNameColumn', false);
       this.errorJobs();
     } else if (action == '8') {
+      this.gridApi.setColumnVisible('artistNameColumn', false);
+      this.gridApi.setColumnVisible('employeeNameColumn', false);
       this.quotationJobs();
     }
   }
@@ -394,25 +482,31 @@ export class ProofreadingAlocationtableComponent implements OnInit {
           `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
             this.loginservice.getUsername()
           )}/${parseInt(this.loginservice.getProcessId())}/1/0`
-      ).pipe(
+      )
+      .pipe(
         catchError((error) => {
           this.spinnerService.requestEnded();
           console.error('API Error:', error);
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+          return Swal.fire(
+            'Alert!',
+            'An error occurred while processing your request',
+            'error'
+          );
         })
       )
       .subscribe({
         next: (freshJobs) => {
           this.spinnerService.requestEnded();
-          this.dataSource = new MatTableDataSource(freshJobs.allocationJobs);
-          this.dataSource.paginator = this.paginator1;
-          // this.dataSource.sort = this.sort;
-          // employee table details
-          this.dataEmployeeSource = new MatTableDataSource(freshJobs.employees);
+          this.rowData = freshJobs.allocationJobs;
+          this.rowEmpData = freshJobs.employees;
         },
         error: (err) => {
           this.spinnerService.resetSpinner();
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+          return Swal.fire(
+            'Alert!',
+            'An error occurred while processing your request',
+            'error'
+          );
         },
       });
   }
@@ -424,23 +518,31 @@ export class ProofreadingAlocationtableComponent implements OnInit {
           `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
             this.loginservice.getUsername()
           )}/${parseInt(this.loginservice.getProcessId())}/2/0`
-      ).pipe(
+      )
+      .pipe(
         catchError((error) => {
           this.spinnerService.requestEnded();
           console.error('API Error:', error);
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+          return Swal.fire(
+            'Alert!',
+            'An error occurred while processing your request',
+            'error'
+          );
         })
       )
-      .subscribe( {
-        next:(revisionJobs) =>{
+      .subscribe({
+        next: (revisionJobs) => {
           this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(revisionJobs.allocationJobs);
-        this.dataSource.paginator = this.paginator1;
-        // this.dataSource.sort = this.sort;
+          this.rowData= revisionJobs.allocationJobs;
+          this.rowEmpData =revisionJobs.employees;
         },
         error: (err) => {
           this.spinnerService.resetSpinner();
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+          return Swal.fire(
+            'Alert!',
+            'An error occurred while processing your request',
+            'error'
+          );
         },
       });
   }
@@ -452,23 +554,31 @@ export class ProofreadingAlocationtableComponent implements OnInit {
           `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
             this.loginservice.getUsername()
           )}/${parseInt(this.loginservice.getProcessId())}/3/0`
-      ).pipe(
+      )
+      .pipe(
         catchError((error) => {
           this.spinnerService.requestEnded();
           console.error('API Error:', error);
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+          return Swal.fire(
+            'Alert!',
+            'An error occurred while processing your request',
+            'error'
+          );
         })
       )
-      .subscribe( {
-        next:(reworkJobs) =>{
+      .subscribe({
+        next: (reworkJobs) => {
           this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(reworkJobs.allocationJobs);
-        this.dataSource.paginator = this.paginator1;
-        // this.dataSource.sort = this.sort;
+          this.rowData= reworkJobs.allocationJobs;
+          this.rowEmpData =reworkJobs.employees;
         },
         error: (err) => {
           this.spinnerService.resetSpinner();
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+          return Swal.fire(
+            'Alert!',
+            'An error occurred while processing your request',
+            'error'
+          );
         },
       });
   }
@@ -480,23 +590,31 @@ export class ProofreadingAlocationtableComponent implements OnInit {
           `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
             this.loginservice.getUsername()
           )}/${parseInt(this.loginservice.getProcessId())}/4/0`
-      ).pipe(
+      )
+      .pipe(
         catchError((error) => {
           this.spinnerService.requestEnded();
           console.error('API Error:', error);
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+          return Swal.fire(
+            'Alert!',
+            'An error occurred while processing your request',
+            'error'
+          );
         })
       )
-      .subscribe( {
-        next:(allocaetdJobs) =>{
+      .subscribe({
+        next: (allocaetdJobs) => {
           this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(allocaetdJobs.allocationJobs);
-        this.dataSource.paginator = this.paginator1;
-        // this.dataSource.sort = this.sort;
-      },
+          this.rowData= allocaetdJobs.allocationJobs;
+          this.rowEmpData =allocaetdJobs.employees;
+        },
         error: (err) => {
           this.spinnerService.resetSpinner();
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+          return Swal.fire(
+            'Alert!',
+            'An error occurred while processing your request',
+            'error'
+          );
         },
       });
   }
@@ -507,25 +625,33 @@ export class ProofreadingAlocationtableComponent implements OnInit {
         environment.apiURL +
           `Allocation/getQueryPendingJobs/${parseInt(
             this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/5/0`
-      ).pipe(
+          )}/${parseInt(this.loginservice.getProcessId())}/6/0`
+      )
+      .pipe(
         catchError((error) => {
           this.spinnerService.requestEnded();
           console.error('API Error:', error);
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+          return Swal.fire(
+            'Alert!',
+            'An error occurred while processing your request',
+            'error'
+          );
         })
       )
-      .subscribe( {
-        next:(queries) =>{
+      .subscribe({
+        next: (queries) => {
           this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(queries.allocationJobs);
-        this.dataSource.paginator = this.paginator1;
-        // this.dataSource.sort = this.sort;
-      },
-      error: (err) => {
-        this.spinnerService.resetSpinner();
-        return Swal.fire('Alert!','An error occurred while processing your request','error');
-      },
+          this.rowData= queries.queryPendingJobs;
+          this.rowEmpData =queries.employees;
+        },
+        error: (err) => {
+          this.spinnerService.resetSpinner();
+          return Swal.fire(
+            'Alert!',
+            'An error occurred while processing your request',
+            'error'
+          );
+        },
       });
   }
   queryResposne() {
@@ -536,22 +662,31 @@ export class ProofreadingAlocationtableComponent implements OnInit {
           `Allocation/getQueryResponseJobsAndEmployees/${parseInt(
             this.loginservice.getUsername()
           )}/${parseInt(this.loginservice.getProcessId())}/6/0`
-      ).pipe(
+      )
+      .pipe(
         catchError((error) => {
           this.spinnerService.requestEnded();
           console.error('API Error:', error);
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+          return Swal.fire(
+            'Alert!',
+            'An error occurred while processing your request',
+            'error'
+          );
         })
       )
       .subscribe({
-        next:(queryResposne) => {
+        next: (queryResposne) => {
           this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(queryResposne.allocationJobs);
-        this.dataSource.paginator = this.paginator1;
-        // this.dataSource.sort = this.sort;
-        }, error: (err) => {
+          this.rowData= queryResposne.queryResponseJobs;
+          this.rowEmpData =queryResposne.employees;
+        },
+        error: (err) => {
           this.spinnerService.resetSpinner();
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+          return Swal.fire(
+            'Alert!',
+            'An error occurred while processing your request',
+            'error'
+          );
         },
       });
   }
@@ -562,24 +697,32 @@ export class ProofreadingAlocationtableComponent implements OnInit {
         environment.apiURL +
           `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
             this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/7/0`
-      ).pipe(
+          )}/${parseInt(this.loginservice.getProcessId())}/6/0`
+      )
+      .pipe(
         catchError((error) => {
           this.spinnerService.requestEnded();
           console.error('API Error:', error);
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+          return Swal.fire(
+            'Alert!',
+            'An error occurred while processing your request',
+            'error'
+          );
         })
       )
-      .subscribe( {
-        next:(errorJobs) =>{
+      .subscribe({
+        next: (errorJobs) => {
           this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(errorJobs);
-        this.dataSource.paginator = this.paginator1;
-        // this.dataSource.sort = this.sort;
-      },
+          this.rowData= errorJobs.QueryResponseJobs;
+          this.rowEmpData =errorJobs.employees;
+        },
         error: (err) => {
           this.spinnerService.resetSpinner();
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+          return Swal.fire(
+            'Alert!',
+            'An error occurred while processing your request',
+            'error'
+          );
         },
       });
   }
@@ -590,24 +733,32 @@ export class ProofreadingAlocationtableComponent implements OnInit {
         environment.apiURL +
           `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
             this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/8/0`
-      ).pipe(
+          )}/${parseInt(this.loginservice.getProcessId())}/7/0`
+      )
+      .pipe(
         catchError((error) => {
           this.spinnerService.requestEnded();
           console.error('API Error:', error);
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+          return Swal.fire(
+            'Alert!',
+            'An error occurred while processing your request',
+            'error'
+          );
         })
       )
-      .subscribe( {
-        next:(quotationJobs) =>{
+      .subscribe({
+        next: (quotationJobs) => {
           this.spinnerService.requestEnded();
-        this.dataSource = new MatTableDataSource(quotationJobs);
-        this.dataSource.paginator = this.paginator1;
-        // this.dataSource.sort = this.sort;
+          this.rowData= quotationJobs.allocationJobs;
+          this.rowEmpData =quotationJobs.employees;
         },
         error: (err) => {
           this.spinnerService.resetSpinner();
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+          return Swal.fire(
+            'Alert!',
+            'An error occurred while processing your request',
+            'error'
+          );
         },
       });
   }
@@ -666,7 +817,6 @@ export class ProofreadingAlocationtableComponent implements OnInit {
   }
   data: any;
   onSubmit(data: any) {
-
     if (this.selectedQuery.length > 0) {
       this.selectedJobs = this.selectedQuery;
     }
@@ -765,7 +915,6 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       commentsToClient: 'string',
       isJobFilesNotTransfer: true,
     };
-
 
     if (this.loginservice.getProcessName() == 'Quality Allocation') {
       this.ProcessMovementData('QARestriction', processMovement).subscribe(
@@ -874,7 +1023,6 @@ export class ProofreadingAlocationtableComponent implements OnInit {
   }
 
   onSubmits(type: any, data: any) {
-
     var confirmationMessage: any;
 
     if (type == 'AllocationForm') {
@@ -941,28 +1089,11 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       },
     });
   }
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
 
-  masterToggle() {
-    if (this.isAllSelected()) {
-      this.selection.clear();
-    } else if (this.filterValue) {
-      this.selection.clear();
-      this.dataSource.filteredData.forEach((x) => this.selection.select(x));
-    } else {
-      this.dataSource.data.forEach((row) => this.selection.select(row));
-    }
-  }
+  //textcolor
+  getCellClass(data) {
+    console.log(data, 'Colordata');
 
-
-   //textcolor
-   getCellClass(data) {
-    console.log(data,"Colordata");
-    
     return {
       'text-color-green': data.employeeCount === 1,
       'text-color-brown': data.queryJobDate !== null,
@@ -970,8 +1101,14 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       'text-color-DeepSkyBlue': data.customerJobType === 'Trial',
       'text-color-yellow': data.statusId === 10,
       'text-color-red': data.statusId === 11,
-      'SuperRush': data.jobStatusId === 1 || data.jobStatusId === 3 || data.jobStatusId === 7,
-      'Rush': data.jobStatusId === 2 || data.jobStatusId === 4 || data.jobStatusId === 8
+      SuperRush:
+        data.jobStatusId === 1 ||
+        data.jobStatusId === 3 ||
+        data.jobStatusId === 7,
+      Rush:
+        data.jobStatusId === 2 ||
+        data.jobStatusId === 4 ||
+        data.jobStatusId === 8,
     };
   }
 }
