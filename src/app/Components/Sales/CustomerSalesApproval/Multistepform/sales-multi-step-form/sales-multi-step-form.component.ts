@@ -29,7 +29,7 @@ import { EditService } from 'src/app/Services/Displayorhideform/edit-service.ser
   styleUrls: ['./sales-multi-step-form.component.scss'],
 
 })
-export class SalesMultiStepFormComponent implements OnInit, OnDestroy {
+export class SalesMultiStepFormComponent implements OnInit ,OnDestroy {
   customerProfile: FormGroup;
   CustomerVsScope: FormGroup;
   customerVsTAT: FormGroup;
@@ -38,10 +38,14 @@ export class SalesMultiStepFormComponent implements OnInit, OnDestroy {
   timezone: any;
   AppCustomerDetails: any;
 
-  isEstimatedTime: boolean = false;
 
-  gettingIsEstimatedTime: boolean = false;
+  dataSource: MatTableDataSource<any>;
+  customertatdatasource: MatTableDataSource<any>;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
+  displayedColumns: string[] = ['customername', 'department', 'scope', 'status', 'Action'];
+  displayedTATColumns: string[] = ['customernametat', 'customershortnametat', 'jobstatustat', 'tat', 'Actiontat'];
   customertatinput: any;
   selectedScopeID: any;
   selectedDeptDescription: any;
@@ -52,15 +56,19 @@ export class SalesMultiStepFormComponent implements OnInit, OnDestroy {
   context: any = "customersalesapproval";
   private subscription: Subscription;
   thidTableGettingData: any;
-  IsApproved: boolean = false;
-
   getContext(): any {
     return {
       CustomerId: this.apiResponseData.id,
       context: "customersalesapproval"
     };
   }
-
+  employeeFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
@@ -79,7 +87,7 @@ export class SalesMultiStepFormComponent implements OnInit, OnDestroy {
     this.subscription = this.editservice.editTriggered$.subscribe(() => {
 
       this.thidTableGettingData = this.editservice.getViewData();
-      console.log(this.thidTableGettingData, "thirdTableGettingData");
+      console.log(this.thidTableGettingData,"thirdTableGettingData");
       this.jobStatusdisplay = true;
       this.jobstatusdropdown = false;
       this.addcustat = false;
@@ -94,7 +102,7 @@ export class SalesMultiStepFormComponent implements OnInit, OnDestroy {
     this.getCountry();
     this.getUserAddress();
   }
-  constructor(private activatedRoute: ActivatedRoute, private http: HttpClient, private _coreService: CoreService, private sharedDataService: CustomerSalesApprovalService, private loginservice: LoginService, private spinnerService: SpinnerService, private router: Router, private sharedService: SharedService, private editservice: EditService) {
+  constructor(private activatedRoute: ActivatedRoute, private http: HttpClient, private _coreService: CoreService, private sharedDataService: CustomerSalesApprovalService, private loginservice: LoginService, private spinnerService: SpinnerService, private router: Router, private sharedService: SharedService,private editservice:EditService) {
     this.getCustomerData();
     this.getDepartments();
 
@@ -127,8 +135,6 @@ export class SalesMultiStepFormComponent implements OnInit, OnDestroy {
     this.Checklist = this.apiResponseData.checklist;
     this.ModeofSales = this.apiResponseData.modeofSales;
     this.CurrencyMode = this.apiResponseData.currencyMode;
-    this.isEstimatedTime = this.apiResponseData.isEstimatedTime
-
   }
 
 
@@ -337,7 +343,7 @@ export class SalesMultiStepFormComponent implements OnInit, OnDestroy {
         "customerClassificationId": this.CustomerClassificationId,
         "creditDays": this.CreditDays,
         "isBlacklisted": false,
-        "isApproved": this.IsApproved,
+        "isApproved": true,
         "blacklistedReasons": "",
         "department": [],
         "creditLimit": this.CreditLimit,
@@ -382,7 +388,6 @@ export class SalesMultiStepFormComponent implements OnInit, OnDestroy {
         "isBulk": this.isBulk,
         "checklist": this.Checklist,
         "isRush": this.isRushed,
-        "isEstimatedTime": this.isEstimatedTime,
         "bunchMail": this.ScheduledMail,
         "isManualUpload": this.manualupload,
         "rptTimeZoneDifference": 0,
@@ -397,7 +402,6 @@ export class SalesMultiStepFormComponent implements OnInit, OnDestroy {
         localStorage.setItem("ShortName", results.shortName);
         localStorage.setItem("CustomerName", results.name);
         localStorage.setItem("CusRegId123", this.apiResponseData.id);
-        this.gettingIsEstimatedTime = results.isEstimatedTime
         this.editCustomerName = results.name;
         this.ShortNamePayload = results.shortName
         this.spinnerService.requestEnded();
@@ -471,7 +475,6 @@ export class SalesMultiStepFormComponent implements OnInit, OnDestroy {
   ///Customer vs scope
 
 
-  estimatedTime: number = 0;
 
   getTableData() {
     this.http.get<any>(environment.apiURL + `CustomerMapping/CustomerScopeByCusId?cusId=${this.apiResponseData.id}`).subscribe(results => {
@@ -483,9 +486,6 @@ export class SalesMultiStepFormComponent implements OnInit, OnDestroy {
     const requiredFields: string[] = [];
     if (!this.SelectedCustType) {
       requiredFields.push('Status');
-    }
-    if (this.gettingIsEstimatedTime && !this.estimatedTime) {
-      requiredFields.push('estimatedTime');
     }
 
     if (requiredFields.length === 0) {
@@ -499,8 +499,6 @@ export class SalesMultiStepFormComponent implements OnInit, OnDestroy {
         "deptId": this.selectedDept.id,
         "custName": "",
         "description": "",
-        "isEstimatedTime": true,
-        "estimatedTime": this.estimatedTime,
         "scopeName": this.SelectedScope.ScopeName,
         "scopeGroupDescription": "",
         "scopeGroupId": 0,
@@ -525,17 +523,21 @@ export class SalesMultiStepFormComponent implements OnInit, OnDestroy {
             this.selectedDept = "";
             this.ScopeBillings = [];
             this.SelectedCustType = "";
-            this.estimatedTime = 0;
             this.getTableData();
+
           }
         })
       });
+
     } else {
       // Show validation error message with missing field names
       const missingFields = requiredFields.join(', ');
       Swal.fire('Required Fields', `Please fill in the following required fields: ${missingFields}.`, 'error');
       return; // Stop execution if there are missing fields
+
     }
+
+
   }
   onScopeChange() {
     // Access the ID and Description of the selected department
@@ -631,10 +633,10 @@ export class SalesMultiStepFormComponent implements OnInit, OnDestroy {
   uptcustat: boolean = false;
   addcustat: boolean = true;
   openEditForm() {
-    console.log(this.apiResponseData.id, "APIRESPONSEID");
+console.log(this.apiResponseData.id,"APIRESPONSEID");
 
     this.http.get<any>(environment.apiURL + `CustomerMapping/GetAllCustomerTATbyCusId?custId=${this.apiResponseData.id}`).subscribe(results => {
-
+   
 
 
     });

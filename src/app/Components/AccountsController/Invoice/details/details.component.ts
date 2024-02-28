@@ -2,7 +2,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -22,7 +22,7 @@ export class DetailsComponent implements OnInit {
   formData: any = {};
 
   constructor(private http: HttpClient, private _empService: PricingcalculationService, private dialog: MatDialog, private spinnerService: SpinnerService, @Inject(MAT_DIALOG_DATA)
-  public data1: any,) {  }
+  public data1: any,public dialogRef: MatDialogRef<DetailsComponent>) {  }
   ngOnInit(): void {
 
     this.formData.clientName = this.data1.clientName;
@@ -52,12 +52,19 @@ export class DetailsComponent implements OnInit {
       "discount": this.discountamount,
       "totalInvoiceValue": this.amount
     }
+    this.spinnerService.requestStarted();
 this.http.post<any>(environment.apiURL +`Invoice/Getselectedinvoicediscount`,payload).subscribe(results =>{
+  this.spinnerService.requestEnded();
+
   Swal.fire(
     'Done!',
-    'Discount Applied For Invoice Number' ,
+    `Discount Applied For ${this.data1.invoiceNumber}` ,
     'success'
-  )
+  ).then((res)=>{
+    if(res.isConfirmed){
+      this.dialogRef.close(true);
+    }
+  })
 })
   }
 

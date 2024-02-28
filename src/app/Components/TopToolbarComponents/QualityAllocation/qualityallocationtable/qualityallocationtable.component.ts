@@ -13,6 +13,7 @@ import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import Swal from 'sweetalert2/src/sweetalert2.js';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CellClickedEvent, CellValueChangedEvent, CheckboxSelectionCallbackParams, ColDef, GridApi, GridReadyEvent, HeaderCheckboxSelectionCallbackParams, SelectionChangedEvent } from 'ag-grid-community';
+import { JoballocatedEmplpopupComponent } from '../../ProductionAllocation/joballocated-emplpopup/joballocated-emplpopup.component';
 interface Employee {
   id: number;
   name: string;
@@ -41,25 +42,158 @@ export class QualityallocationtableComponent implements OnInit {
   private gridApi;
   private gridEmplApi!: GridApi<any>;
   private gridColumnApi;
-  colDefs:ColDef[]=[
-    { field: 'jobId',checkboxSelection: true, width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true ,colId: 'jobIdColumn' ,cellStyle: { color: 'blue' },cellRenderer:function(params){
-      return '<button class="btn btn-sm btn-link p-0">'+ params.value +'</button>';
-    } },
-    { field: 'jobDate_QueryDate',headerClass:"text-wrap", width: 100, suppressSizeToFit: true,sortable:true, filter:true },
-    { field: 'name', width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true },
-    { field: 'customerJobType', headerClass:"text-wrap",width: 100, suppressSizeToFit: true,sortable:true, filter:true },
-    { field: 'jobStatusDescription', headerClass:"text-wrap",width: 100, suppressSizeToFit: true,sortable:true, filter:true },
-    { field: 'projectCode', width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true },
-    { field: 'fileName', width: 100, headerClass:"text-wrap",suppressSizeToFit: true,sortable:true, filter:true },
-    { field: 'fileInwardType', width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true },
-    { field: 'processName', width: 100, headerClass:"text-wrap",suppressSizeToFit: true,sortable:true, filter:true },
-    { field: 'status', width: 100, suppressSizeToFit: true,sortable:true, filter:true },
-  ]
+  colDefs: ColDef[] = [
+    {
+      headerName: 'Job Id',
+      field: 'jobId',
+      checkboxSelection: true,
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      colId: 'jobIdColumn' ,
+      cellStyle: { color: 'blue' },
+     
+      cellRenderer: function (params) {
+        return (
+          '<button class="btn btn-sm btn-link p-0">' +
+          params.value +
+          '</button>'
+        );
+      },
+    },
+    {
+      headerName: 'Artist',
+      field: 'artistName',
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      colId: 'artistNameColumn' ,
+    },
+    {
+      headerName: 'Employee(s)',
+      field: 'employeeName',
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      colId: 'employeeNameColumn' ,
+      cellStyle: { color: 'blue' },
+     
+      cellRenderer: function (params) {
+        return (
+          '<button class="btn btn-sm btn-link p-0">' +
+          params.value +
+          '</button>'
+        );
+      },
+    },
+    {
+      headerName: 'Est Job/ Query Date',
+      field: 'jobDate_QueryDate',
+      headerClass: 'text-wrap',
+      width: 100,
+      sortable: true,
+      filter: true,
+    },
+    {
+      headerName: 'Client',
+      field: 'shortName',
+      headerClass: 'text-wrap',
+      width: 100,
+      sortable: true,
+      filter: true,
+    },
+    {
+      headerName: 'Customer Classification',
+      field: 'customerClassification',
+      headerClass: 'text-wrap',
+      width: 100,
+      sortable: true,
+      filter: true,
+    },
+    
+    {
+      headerName: 'File Name',
+      field: 'fileName',
+      width: 50,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+    },
+    {
+      headerName: 'File Inward Mode',
+      field: 'fileInwardType',
+      width: 50,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+    },
+    
+    {
+      headerName: 'Job Status ',
+      field: 'jobStatusDescription',
+      headerClass: 'text-wrap',
+      width: 100,
+      sortable: true,
+      filter: true,
+    },
+    {
+      headerName: 'Project Code',
+      field: 'projectCode',
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+    },
+    {
+      headerName: 'Status',
+      field: 'status',
+      width: 100,
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+    },
+    {
+      headerName: 'Scope',
+      field: 'status',
+      width: 100,
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+    },
+    {
+      headerName: 'Est Time',
+      field: 'allocatedEstimatedTime',
+      width: 100,
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+      editable: true,
+    },
+    
+    {
+      headerName: 'Delivery Date',
+      field: 'dateofDelivery',
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: true,
+    }
+  ];
   colEmpDefs:ColDef[]=[
-    { field: 'employeenameWithCode',checkboxSelection: true, width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true ,colId: 'jobIdColumn' ,cellStyle: { color: 'blue' },cellRenderer:function(params){
+    {  headerName:'Employee', field: 'employeenameWithCode',checkboxSelection: true, width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true ,cellStyle: { color: 'blue' },cellRenderer:function(params){
       return '<button class="btn btn-sm btn-link p-0">'+ params.value +'</button>';
     } },
-    { field: 'shiftName',headerClass:"text-wrap", width: 100, suppressSizeToFit: true,sortable:true, filter:true },
+    { headerName:'Shift', field: 'shiftName',headerClass:"text-wrap", width: 100, suppressSizeToFit: true,sortable:true, filter:true },
   
   ]
   public defaultEmpColDef: ColDef = {
@@ -78,6 +212,8 @@ export class QualityallocationtableComponent implements OnInit {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
     this.gridApi.setColumnVisible('jobIdColumn', true);
+    this.gridApi.setColumnVisible('artistNameColumn', true);
+    this.gridApi.setColumnVisible('employeeNameColumn', false);
     // this.http
     // .get<any>(
     //   environment.apiURL +
@@ -105,7 +241,25 @@ export class QualityallocationtableComponent implements OnInit {
       console.log(data,"PopupData");
       
      this.openjobDialog(data);
+    } else if(colDef.colId === 'employeeNameColumn') {
+      console.log(data,"PopupData");
+      
+     this.getemployeeName(data);
     }
+}
+getemployeeName(data: any) {
+  const dialogRef = this._dialog.open(JoballocatedEmplpopupComponent, {
+    width: '100%',
+    height: '450px',
+    data: data,
+  });
+  dialogRef.afterClosed().subscribe({
+    next: (val) => {
+      if (val) {
+        this.freshJobs();
+      }
+    },
+  });
 }
 onCellEmpClicked(event: CellClickedEvent) {
   const { colDef, data } = event;
@@ -388,19 +542,35 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
   tab(action) {
     if (action == '1') {
       this.freshJobs();
+      this.gridApi.setColumnVisible('artistNameColumn', true);
+      this.gridApi.setColumnVisible('employeeNameColumn', false);
     } else if (action == '2') {
+      this.gridApi.setColumnVisible('artistNameColumn', true);
+      this.gridApi.setColumnVisible('employeeNameColumn', false);
       this.revisionJobs();
     } else if (action == '3') {
+      this.gridApi.setColumnVisible('artistNameColumn', true);
+      this.gridApi.setColumnVisible('employeeNameColumn', false);
       this.reworkJobs();
     } else if (action == '4') {
+      this.gridApi.setColumnVisible('artistNameColumn', false);
+      this.gridApi.setColumnVisible('employeeNameColumn', true);
       this.allocaetdJobs();
     } else if (action == '5') {
+      this.gridApi.setColumnVisible('artistNameColumn', false);
+      this.gridApi.setColumnVisible('employeeNameColumn', false);
       this.queries();
     } else if (action == '6') {
+      this.gridApi.setColumnVisible('artistNameColumn', false);
+      this.gridApi.setColumnVisible('employeeNameColumn', false);
       this.queryResposne();
     } else if (action == '7') {
+      this.gridApi.setColumnVisible('artistNameColumn', false);
+      this.gridApi.setColumnVisible('employeeNameColumn', false);
       this.errorJobs();
     } else if (action == '8') {
+      this.gridApi.setColumnVisible('artistNameColumn', false);
+      this.gridApi.setColumnVisible('employeeNameColumn', false);
       this.quotationJobs();
     }
   }
@@ -443,12 +613,8 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
       .subscribe({
         next: (revisionJobs) => {
           this.spinner.requestEnded();
-          this.dataSource = new MatTableDataSource(revisionJobs.allocationJobs);
-          this.dataEmployeeSource = new MatTableDataSource(
-            revisionJobs.employees
-          );
-          this.dataSource.paginator = this.paginator1;
-          // this.dataSource.sort = this.sort;
+          this.rowData= revisionJobs.allocationJobs;
+          this.rowEmpData =revisionJobs.employees;
         },
         error: (err) => {
           this.spinner.resetSpinner();
@@ -474,12 +640,8 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
       .subscribe({
         next: (reworkJobs) => {
           this.spinner.requestEnded();
-          this.dataSource = new MatTableDataSource(reworkJobs.allocationJobs);
-          this.dataEmployeeSource = new MatTableDataSource(
-            reworkJobs.employees
-          );
-          this.dataSource.paginator = this.paginator1;
-          // this.dataSource.sort = this.sort;
+          this.rowData= reworkJobs.allocationJobs;
+          this.rowEmpData =reworkJobs.employees;
         },
         error: (err) => {
           this.spinner.resetSpinner();
@@ -527,37 +689,16 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
         )}/${parseInt(this.loginservice.getProcessId())}/0`
       ).subscribe({
         next: (queries) => {
-
-          this.dataSource = new MatTableDataSource(queries.queryPendingJobs);
-          this.dataSource.paginator = this.paginator1;
-          // this.dataSource.sort = this.sort;
-        },
-        error: (err) => {
-          this.spinner.resetSpinner();
-          console.log(err);
-        },
-      });
-
-    this.http
-      .get<any>(
-        environment.apiURL +
-        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-          this.loginservice.getUsername()
-        )}/${parseInt(this.loginservice.getProcessId())}/5/0`
-      )
-      .subscribe({
-        next: (queries) => {
-
           this.spinner.requestEnded();
-          this.dataEmployeeSource = new MatTableDataSource(queries.employees);
-          this.dataEmployeeSource.paginator = this.paginator2;
-          // this.dataEmployeeSource.sort = this.sort;
+          this.rowData= queries.queryPendingJobs;
+          this.rowEmpData =queries.employees;
         },
         error: (err) => {
           this.spinner.resetSpinner();
           console.log(err);
         },
       });
+
   }
   queryResposne() {
     this.spinner.requestStarted();
@@ -571,19 +712,13 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
         environment.apiURL +
         `Allocation/getQueryResponseJobsAndEmployees/${parseInt(
           this.loginservice.getUsername()
-        )}/${parseInt(this.loginservice.getProcessId())}/6/0`
+        )}/${parseInt(this.loginservice.getProcessId())}/4/0`
       )
       .subscribe({
         next: (queryResposne) => {
           this.spinner.requestEnded();
-          this.dataSource = new MatTableDataSource(
-            queryResposne.allocationJobs
-          );
-          this.dataEmployeeSource = new MatTableDataSource(
-            queryResposne.employees
-          );
-          this.dataSource.paginator = this.paginator1;
-          // this.dataSource.sort = this.sort;
+          this.rowData= queryResposne.queryResponseJobs;
+          this.rowEmpData =queryResposne.employees;
         },
         error: (err) => {
           this.spinner.resetSpinner();
@@ -603,15 +738,13 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
         environment.apiURL +
         `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
           this.loginservice.getUsername()
-        )}/${parseInt(this.loginservice.getProcessId())}/7/0`
+        )}/${parseInt(this.loginservice.getProcessId())}/5/0`
       )
       .subscribe({
         next: (errorJobs) => {
           this.spinner.requestEnded();
-          this.dataSource = new MatTableDataSource(errorJobs.allocationJobs);
-          this.dataEmployeeSource = new MatTableDataSource(errorJobs.employees);
-          this.dataSource.paginator = this.paginator1;
-          // this.dataSource.sort = this.sort;
+          this.rowData= errorJobs.allocationJobs;
+          this.rowEmpData =errorJobs.employees;
         },
         error: (err) => {
           this.spinner.resetSpinner();
@@ -631,19 +764,13 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
         environment.apiURL +
         `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
           this.loginservice.getUsername()
-        )}/${parseInt(this.loginservice.getProcessId())}/8/0`
+        )}/${parseInt(this.loginservice.getProcessId())}/7/0`
       )
       .subscribe({
         next: (quotationJobs) => {
           this.spinner.requestEnded();
-          this.dataSource = new MatTableDataSource(
-            quotationJobs.allocationJobs
-          );
-          this.dataEmployeeSource = new MatTableDataSource(
-            quotationJobs.employees
-          );
-          this.dataSource.paginator = this.paginator1;
-          // this.dataSource.sort = this.sort;
+          this.rowData= quotationJobs.allocationJobs;
+          this.rowEmpData =quotationJobs.employees;
         },
         error: (err) => {
           this.spinner.resetSpinner();

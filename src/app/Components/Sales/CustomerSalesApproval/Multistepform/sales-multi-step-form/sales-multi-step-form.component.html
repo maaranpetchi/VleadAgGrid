@@ -318,7 +318,7 @@
 
                                 </div>
                                 <div class="col">
-                                    <mat-checkbox [(ngModel)]="IsApproved" name="Checklist">Is Approved</mat-checkbox>
+                                    <mat-checkbox [(ngModel)]="Checklist" name="Checklist">Is Approved</mat-checkbox>
                                 </div>
                                 <div class="col">
                                     <label>
@@ -354,11 +354,6 @@
                                         [(ngModel)]="CurrencyMode" placeholder="Currency Mode" required tabindex="2">
 
                                 </div>
-                                <div class="col-4">
-                                    <mat-checkbox [(ngModel)]="isEstimatedTime" name="isEstimatedTime">Is EstimatedTime
-                                    </mat-checkbox>
-                                </div>
-
                                 <div class="firstnext">
                                     <button class="btn btn-success" style="float: right;"
                                         (click)="AppCustomerupdate()">Next</button>
@@ -438,15 +433,6 @@
                                         <option value="Trial">Trial</option>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="row" *ngIf="this.gettingIsEstimatedTime == true">
-                                <div class="col-6">
-                                    <mat-form-field>
-                                        <mat-label>EstimatedTime</mat-label>
-                                        <input matInput type="number" [(ngModel)]="estimatedTime" name="estimatedTime">
-                                    </mat-form-field>
-                                </div>
-
                             </div>
                             <br>
                             <div class="row" style="display:flex;text-align: center;justify-content: center;">

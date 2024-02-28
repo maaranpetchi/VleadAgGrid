@@ -95,7 +95,7 @@ context: any="vendor";
   public rowData!: any[];
   public themeClass: string =
     "ag-theme-quartz";
-
+// 
   onGridReady(params: GridReadyEvent<any>) {
     this.gridApi = params.api;
     this.http.get<any>(environment.apiURL + 'ITAsset/nGetBankDetails').subscribe((response) => (this.rowData = response.vendorGDetailList));
