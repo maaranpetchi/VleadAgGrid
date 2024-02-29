@@ -419,14 +419,14 @@ export class ProductionallocationtableComponent implements OnInit {
   onCellValueChanged = (event: CellValueChangedEvent) => {
     console.log(`New Cell Valuejob: ${event.value}`);
   };
-  onCellValueEmpChanged= (event: CellValueChangedEvent) => {
-    console.log(event)
+  onCellValueEmpChanged = (event: CellValueChangedEvent) => {
+    console.log(event);
     if (parseInt(this.loginservice.getProcessId()) == 2) {
-      console.log(this.loginservice.getProcessId(),"ulla");
-      
+      console.log(this.loginservice.getProcessId(), "ulla");
+  
       var colls = this.estTimeinput;
       console.table(colls);
-      
+  
       var Esttime1 = colls[0].estimatedTime;
       var Esttime2 = colls[1].estimatedTime;
       var Esttime3 = colls[2].estimatedTime;
@@ -436,31 +436,29 @@ export class ProductionallocationtableComponent implements OnInit {
       var desc3 = colls[2].description;
       var desc4 = colls[3].description;
       var desc5 = colls[4].description;
-      if (event.data.estTime <= Esttime1 && event.data.estTime > 0) {
-        event.data.status= desc1;
-      } else if (
-        event.data.estTime <= Esttime2 &&
-        event.data.estTime > Esttime1
-      ) {
-        event.data.status= desc2;
-      } else if (
-        event.data.estTime <= Esttime3 &&
-        event.data.estTime > Esttime2
-      ) {
-        event.data.status= desc3;
-      } else if (
-        event.data.estTime <= Esttime4 &&
-        event.data.estTime > Esttime3
-      ) {
-        event.data.status= desc4;
-      } else if (event.data.estTime > Esttime4) {
-        event.data.status= desc5;
+  
+      // Assuming event.data contains the updated value of estTime
+      var updatedEstTime = event.data.estTime;
+  
+      if (updatedEstTime <= Esttime1 && updatedEstTime > 0) {
+        event.data.status = desc1;
+      } else if (updatedEstTime <= Esttime2 && updatedEstTime > Esttime1) {
+        event.data.status = desc2;
+      } else if (updatedEstTime <= Esttime3 && updatedEstTime > Esttime2) {
+        event.data.status = desc3;
+      } else if (updatedEstTime <= Esttime4 && updatedEstTime > Esttime3) {
+        event.data.status = desc4;
+      } else if (updatedEstTime > Esttime4) {
+        event.data.status = desc5;
       }
+      
+      // Update the row with the new data
       event.node.updateData(event.data);
     }
     console.log(`New Cell Valueemp: ${event.value}`);
-    console.log(event)
+    console.log(event);
   };
+  
   onSelectionChangeds = (event: SelectionChangedEvent) => {
     const selectedNodes = this.gridApi.getSelectedNodes();
     console.log('Row Selected!');
@@ -1065,7 +1063,7 @@ export class ProductionallocationtableComponent implements OnInit {
     if (this.selectedEmployees.length > 1) {
       Swal.fire('Info!', 'Please select one Employee!', 'info');
       this.spinnerService.requestEnded();
-      this.postJobs();
+      // this.postJobs();
       return;
     } 
     if (this.gridApi) {
@@ -1110,7 +1108,7 @@ export class ProductionallocationtableComponent implements OnInit {
           return;
         }
       }
-      this.postJobs();
+      // this.postJobs();
     }
     
     // Update estimatedTime for selected jobs
