@@ -391,7 +391,7 @@ export class ProductiontableComponent {
   ];
 
   public rowSelection: 'single' | 'multiple' = 'multiple';
-  public rowData!: any[];
+  public rowData: any[]=[];
   public themeClass: string =
     "ag-theme-quartz";
   @ViewChild(ClientordinationindexComponent) ClientordinationindexComponent: ClientordinationindexComponent;

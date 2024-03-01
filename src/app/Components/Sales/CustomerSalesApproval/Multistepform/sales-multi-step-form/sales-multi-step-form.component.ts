@@ -766,7 +766,7 @@ console.log(this.apiResponseData.id,"APIRESPONSEID");
   public rowSelection: 'single' | 'multiple' = 'multiple';
   public table2rowSelection: 'single' | 'multiple' = 'multiple';
 
-  public rowData!: any[];
+  public rowData: any[]=[];
   public table2rowData!: any[];
 
   public themeClass: string =

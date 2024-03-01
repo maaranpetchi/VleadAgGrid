@@ -298,8 +298,7 @@ settingStitchcount: number=0;
         if (val.success === true) {
           Swal.fire('Done!', val.message, 'success').then((val) => {
             if(val.isConfirmed){
-              this.dialogRef.close();
-              window.location.reload();
+              this.dialogRef.close(true);
             }
           });
         }
@@ -362,7 +361,11 @@ settingStitchcount: number=0;
         this.spinnerservice.requestEnded();
 
         if (response.success === true) {
-          Swal.fire('Done!', response.message, 'success');
+          Swal.fire('Done!', response.message, 'success').then((res)=>{
+            if(res.isConfirmed){
+              this.dialogRef.close(true);
+            }
+          });
         } else if (response.success === false) {
           Swal.fire('Error!', response.message, 'error');
         };

@@ -339,10 +339,10 @@ export class JobAssignedDetailsPopupComponent implements OnInit {
       if (response.success === true) {
         Swal.fire('Done!', response.message, 'success').then((response) => {
           if (response.isConfirmed) {
-            this.dialogRef.close();
-            this.ngOnInit();
+            this.dialogRef.close(true);
 
           }
+      
         });
       } else if (response.success === false) {
         Swal.fire('Error!', response.message, 'error');

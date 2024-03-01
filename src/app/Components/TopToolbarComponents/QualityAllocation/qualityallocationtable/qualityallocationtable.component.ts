@@ -1082,7 +1082,7 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
-          this.freshJobs();
+          this.ngOnInit();
         }
       },
     });
@@ -1096,7 +1096,7 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
-          this.freshJobs();
+          this.ngOnInit();
         }
       },
     });

@@ -10,6 +10,9 @@ import { LoginService } from 'src/app/Services/Login/login.service';
 import * as XLSX from 'xlsx';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
+import { GridApi, ColDef, CellClickedEvent, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
+import { ClientordinationindexComponent } from '../clientordinationindex/clientordinationindex.component';
+import { JobDetailsClientIndexComponent } from '../query-to-client/job-details-client-index/job-details-client-index.component';
 
 @Component({
   selector: 'app-joborderexcel',
@@ -30,10 +33,8 @@ export class JoborderexcelComponent implements OnInit {
     'Divisions',
     'uploaded'
   ];
-  dataSource: MatTableDataSource<any>;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  columnApi: any;
 
   constructor(private http: HttpClient, private loginservice: LoginService, private clientcordinationservice: ClientcordinationService, private _coreService: CoreService, private spinnerService: SpinnerService) { }
 
@@ -41,14 +42,6 @@ export class JoborderexcelComponent implements OnInit {
 
   }
 
-  applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
 
 
   onFileSelected(event: any) {
@@ -84,7 +77,7 @@ export class JoborderexcelComponent implements OnInit {
     this.clientcordinationservice.getBindFileInward().subscribe(fileinwarddata => {
       this.spinnerService.requestEnded();
       this.ViewImportExcel = fileinwarddata;
-      this.dataSource = fileinwarddata;
+      this.rowData = fileinwarddata;
       
 
     }, (error) => {
@@ -204,12 +197,70 @@ export class JoborderexcelComponent implements OnInit {
       this._coreService.openSnackBar('Inward File Cancelled Successfully.');
       this.clientcordinationservice.getBindFileInward();
       this.clientcordinationservice.getBindFileInwardOnlyTrue();
-      this.postBindFileInward();
+      // this.postBindFileInward();
     }, (error) => {
       // Handle error (optional)
       this.spinnerService.resetSpinner();
       console.error('API call failed:', error);
     });
   }
+ /////////////////////////Ag-grid module///////////////////////////////
+ context: any;
 
+ @ViewChild('agGrid') agGrid: any;
+
+ private gridApi!: GridApi<any>;
+
+ 
+ public defaultColDef: ColDef = {
+   flex: 1,
+   minWidth: 100,
+   headerCheckboxSelection: isFirstColumn,
+   checkboxSelection: isFirstColumn,
+ };
+ columnDefs: ColDef[] = [
+   { headerName: 'Department', field: 'department', filter: true },
+
+   { headerName: 'Clienr Name', field: 'clientName', filter: true, },
+   { headerName: 'Client Status', field: 'clientStatus', filter: true, },
+   { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
+
+   { headerName: 'File Name', field: 'fileName', filter: true, },
+   { headerName: 'File Received Date', field: 'dateofReceived', filter: true, },
+   { headerName: 'Divisions', field: 'division', filter: true, },
+   { headerName: 'Uploaded', field: 'statusDesc', filter: true, },
+ ];
+
+ public rowSelection: 'single' | 'multiple' = 'multiple';
+ public rowData: any[]=[];
+ public themeClass: string =
+   "ag-theme-quartz";
+
+
+
+
+  onCellClicked(event: CellClickedEvent) {
+    const { colDef, data } = event;
+    if (colDef.field === 'jobId') {
+      console.log(data,"PopupData");
+      
+    }
+  }
+
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+    this.columnApi = params.columnApi;
+  
+    }
+}
+
+function isFirstColumn(
+ params:
+   | CheckboxSelectionCallbackParams
+   | HeaderCheckboxSelectionCallbackParams
+) {
+ var displayedColumns = params.api.getAllDisplayedColumns();
+ var thisIsFirstColumn = displayedColumns[0] === params.column;
+ return thisIsFirstColumn;
 }
