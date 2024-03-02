@@ -87,6 +87,8 @@ export class DashboardComponent implements OnInit {
   }
 
   routeNav(process: any) {
+    console.log(process,"Process");
+    
     if (process.id == 1) {
       this.cookieService.set('processId', process.id);
       this.cookieService.set('processName', process.name);
@@ -104,6 +106,8 @@ export class DashboardComponent implements OnInit {
     }
     else if (process.id == 4) {
       this.cookieService.set('processId', process.id);
+      console.log(process,"ProcessName");
+      
       this.cookieService.set('processName', process.name);
       this.router.navigate(['/topnavbar/qualityallocation']);
     }
@@ -218,18 +222,24 @@ permission: any[] = []
 
   setClientProcessId(processId: number) {
     this.cookieService.set('processId', processId.toString());
+
   }
   setProductionAllocationProcessId(processId: number) {
     this.cookieService.set('processId', processId.toString());
+    this.cookieService.set('processName','Production Allocation');
   }
   setQualityAllocationProcessId(processId: number) {
     this.cookieService.set('processId', processId.toString());
+    this.cookieService.set('processName','Quality Allocation');
   }
   setQualityProcessId(processId: number) {
     this.cookieService.set('processId', processId.toString());
   }
   setProofReadingAllocationProcessId(processId: number) {
     this.cookieService.set('processId', processId.toString());
+    this.cookieService.set('processName','Proof Reading');
+
+    
   }
   setProofReadingProcessId(processId: number) {
     this.cookieService.set('processId', processId.toString());

@@ -836,54 +836,58 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
   }
   data: any;
   onSubmit(data: any) {
-    // let selectedRow = this.gridApi.setAllJobs();
-    // console.log(selectedRow, "SelectedRowws");
-    // this.selection.selected.forEach((x) => this.setAllJobs(x));
-    // if (this.selectedQuery.length > 0) {
-    //   this.selectedJobs = this.selectedQuery;
-    // }
-    var selectedJobCount = this.gridApi.getSelectedRows();
-    var selectedEmployeeCount:any = this.gridEmplApi.getSelectedRows();
-    if (this.loginservice.getProcessName() == 'Production Allocation') {
+
+    
+    var selectedJobCount = this.gridApi.getSelectedRows().length;
+    var selectedEmployeeCount:any = this.gridEmplApi.getSelectedRows().length;
+
+
+    console.log(selectedJobCount,'selectedjobCount');
+    console.log(selectedEmployeeCount,'selectedEmployeeCount');
+    
+    var processName =this.loginservice.getProcessName();
+console.log(processName,"ProcessName");
+
+    if (this.loginservice.getProcessName() == 'Quality Allocation') {
       if (selectedJobCount != 0 && selectedEmployeeCount != 0) {
         if (selectedJobCount > 1) {
           if (selectedEmployeeCount > 1) {
             Swal.fire('Info!', 'Please select one Employee', 'info');
             // $('#alertPopup').modal('show');
           } else {
-            for (var i = 0; i < selectedJobCount; i++) {
-              if (
-                this.selectedJobs[i].allocatedEstimatedTime == undefined ||
-                this.selectedJobs[i].allocatedEstimatedTime == '' ||
-                this.selectedJobs[i].allocatedEstimatedTime == 0
-              ) {
-                Swal.fire(
-                  'Info!',
-                  'Please enter Estimated Time for Selected Job',
-                  'info'
-                );
-                // $('#alertPopup').modal('show');
-                return;
-              }
-            }
+            // for (var i = 0; i < selectedJobCount; i++) {
+            //   if (
+            //     this.selectedJobs[i].allocatedEstimatedTime == undefined ||
+            //     this.selectedJobs[i].allocatedEstimatedTime == '' ||
+            //     this.selectedJobs[i].allocatedEstimatedTime == 0
+            //   ) {
+            //     Swal.fire(
+            //       'Info!',
+            //       'Please enter Estimated Time for Selected Job',
+            //       'info'
+            //     );
+            //     // $('#alertPopup').modal('show');
+            //     return;
+            //   }
+            // }
             this.postJobs(data);
           }
         } else {
-          for (var i = 0; i < selectedEmployeeCount; i++) {
-            if (
-              this.selectedEmployee[i].estTime == undefined ||
-              this.selectedEmployee[i].estTime == '' ||
-              this.selectedEmployee[i].estTime == 0
-            ) {
-              Swal.fire(
-                'Info!',
-                'Please enter Estimated Time for Selected Employee',
-                'info'
-              );
-              // $('#alertPopup').modal('show');
-              return;
-            }
-          }
+          // for (var i = 0; i < selectedEmployeeCount; i++) {
+          //   if (
+          //     this.selectedEmployee[i].estTime == undefined ||
+          //     this.selectedEmployee[i].estTime == '' ||
+          //     this.selectedEmployee[i].estTime == 0
+          //   ) {
+          //     Swal.fire(
+          //       'Info!',
+          //       'Please enter Estimated Time for Selected Employee',
+          //       'info'
+          //     );
+          //     // $('#alertPopup').modal('show');
+          //     return;
+          //   }
+          // }
           this.postJobs(data);
         }
       } else {
@@ -997,6 +1001,7 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
     let AttachedFiles = [];
     this.selectedJobs = processMovement.selectedRows;
     this.selectedEmployee = processMovement.selectedEmployees;
+    this.spinner.requestStarted();
     this.http
       .post<any>(
         environment.apiURL + 'Allocation/processMovement',
@@ -1004,8 +1009,16 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
       )
       .subscribe((result: any) => {
         this.confirmationMessage = result.message;
-        Swal.fire('Done!', result.message, 'success');
+        this.spinner.requestEnded();
+
+        Swal.fire('Done!', result.message, 'success').then((res)=>{
+          if(res.isConfirmed){
+            window.location.reload();
+          }
+        });
       });
+
+
     if (AttachedFiles.length > 0) {
       var fd = new FormData();
       for (let i = 0; i < AttachedFiles.length; i++) {
