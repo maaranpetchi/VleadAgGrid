@@ -317,7 +317,7 @@
                                         }}</span>
 
                                 </div>
-                                <div class="col">
+                                <div class="col" *ngIf="this.AppCustomerDetails.empName != null">
                                     <mat-checkbox [(ngModel)]="Checklist" name="Checklist">Is Approved</mat-checkbox>
                                 </div>
                                 <div class="col">
@@ -355,7 +355,11 @@
 
                                 </div>
 
+                                <div class="col-4">
+                                    <mat-checkbox [(ngModel)]="LastChecklist"
+                                        name="LastChecklist">CheckList</mat-checkbox>
 
+                                </div>
                                 <div class="firstnext">
                                     <button class="btn btn-primary" routerLink="/topnavbar/customerSalesApproval">
                                         Back

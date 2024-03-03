@@ -1,0 +1,14 @@
+<div mat-dialog-content>
+    <h1>Checklist</h1>
+    <!-- <mat-form-field>
+          <mat-checkbox>Check Process</mat-checkbox>
+      </mat-form-field> -->
+    <div *ngFor="let item of gettingData">
+      <mat-checkbox>{{ item }}</mat-checkbox>
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="ok()">0k</button>
+    <button mat-button (click)="cancel()"> Cancel </button>
+  </div>
+  

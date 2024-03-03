@@ -17,6 +17,9 @@ import Swal from 'sweetalert2/src/sweetalert2.js';
 import { WorkflowService } from 'src/app/Services/CoreStructure/WorkFlow/workflow.service';
 import { Location } from '@angular/common';
 import saveAs from 'file-saver';
+import { ChecklistpopComponent } from '../checklistpop/checklistpop.component';
+import { CustomerreceiptsService } from 'src/app/Services/AccountController/CustomerReceipts/customerreceipts.service';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 
 @Component({
   selector: 'app-quality-workflow',
@@ -71,6 +74,7 @@ export class QualityWorkflowComponent implements OnInit {
   footerDropdown: boolean = false;
   data: any;
   jobCommonDetails: any;
+  settingChecklist: any;
   ngOnInit(): void {
     this.getIsvalue();
     this.fetchData();
@@ -83,15 +87,14 @@ export class QualityWorkflowComponent implements OnInit {
 
   }
   gettingdata: any;
-  constructor(private location: Location, private http: HttpClient, private dialog: MatDialog, private loginService: LoginService, private workflowservice: WorkflowService, private spinnerService: SpinnerService,
+  constructor(private sharedDataService: SharedService, private location: Location, private http: HttpClient, private dialog: MatDialog, private loginService: LoginService, private workflowservice: WorkflowService, private spinnerService: SpinnerService, private _empService: CustomerreceiptsService
   ) {
     this.data = this.workflowservice.getData();
 
     console.log(this.data, "GettingDataFromBulkJobs");
 
     this.gettingdata = this.workflowservice.getData();
-    console.log(this.gettingdata, "Injected Data");
-
+    console.log(this.sharedDataService.refreshData$, "Injected Data");
 
   }
 
@@ -142,7 +145,7 @@ export class QualityWorkflowComponent implements OnInit {
               url
             )
             .subscribe((response: any) => {
-              
+
               saveAs(
                 new Blob([response.data], { type: 'application/octet-stream' }),
                 url
@@ -313,9 +316,30 @@ export class QualityWorkflowComponent implements OnInit {
       else {
         this.http.get<any>(environment.apiURL + `Workflow/ChecklistPopup?WFMId=${this.data.wfmid ? this.data.wfmid : this.ProcessTransaction.wfmid}`).subscribe(result => {
           this.checklist = result.check;
+          this._empService.setData({ data: this.checklist });
+
+          if (this.checklist && this.checklist.length > 0) {
+            console.log(this.checklist, "Checklist");
+            console.log(this.checklist.length, "Checklist");
+
+            const dialogRef = this.dialog.open(ChecklistpopComponent, {
+              data: this.checklist
+            });
+            dialogRef.afterClosed().subscribe(result => {
+              console.log('The dialog was closed');
+              console.log('Dialog result:', result);
+
+              if (result === true) {
+                this.ChangeWorkflow(workType);
+              } else {
+                
+              }
+            });
+          }
         });
-        if (this.checklist != "") {
-          // $('#checklistPopupup').modal('show');
+        if (this.checklist.length == 0) {
+
+
           if (this.data.processName == 'Production') {   //        the below code 154 to 193 STARTS     
             if (this.Status == 'Query' || this.Status == 'Query for Special Pricing') {
               if (this.AttachedFiles.length == 0 && this.checked == false) {
@@ -371,6 +395,8 @@ export class QualityWorkflowComponent implements OnInit {
             this.ChangeWorkflow(workType);
           }
         }
+
+
         else {
           if (this.data.processName == 'Production') {         //the below code 154 to 193 STARTS          
             if (this.Status == 'Query' || this.Status == 'Query for Special Pricing') {
@@ -436,6 +462,12 @@ export class QualityWorkflowComponent implements OnInit {
     }
 
   }
+
+
+
+
+
+
   ChangeWorkflow(workType) {
     let ProcessCheck = localStorage.getItem('processid');
 
