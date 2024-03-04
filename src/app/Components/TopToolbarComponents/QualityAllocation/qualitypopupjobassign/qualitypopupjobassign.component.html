@@ -63,12 +63,12 @@
         <table mat-table [dataSource]="dataJobSource" class="mat-elevation-z8 table-bordered">
           <ng-container matColumnDef="movedFrom">
             <th mat-header-cell *matHeaderCellDef>Moved From</th>
-            <td mat-cell *matCellDef="let element">{{ element.processName }}</td>
+            <td mat-cell *matCellDef="let element">{{ element.previousProcessName }}</td>
           </ng-container>
 
           <ng-container matColumnDef="movedTo">
             <th mat-header-cell *matHeaderCellDef>Moved To</th>
-            <td mat-cell *matCellDef="let element">{{ element.previousProcessName}}</td>
+            <td mat-cell *matCellDef="let element">{{ element.processName}}</td>
           </ng-container>
 
           <ng-container matColumnDef="movedDate">
