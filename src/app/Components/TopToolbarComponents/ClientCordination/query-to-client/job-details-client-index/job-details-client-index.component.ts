@@ -264,7 +264,7 @@ export class JobDetailsClientIndexComponent implements OnInit {
   }
 
   workFiles(id: number): void {
-    let path = this.JobCommonDetails.jobCommonDetails.tranFileUploadPath
+    let path = this.JobCommonDetails.tranFileUploadPath
     path = path.replace(/\\/g, '_');
 
     this.http

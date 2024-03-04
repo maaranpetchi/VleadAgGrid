@@ -239,15 +239,34 @@ export class QualityWorkflowComponent implements OnInit {
   };
 
 
-  AttachedFiles: File[] = [];
+  AttachedFiles: File[]=[];
   AttachedFiles1: File[] = [];
+  selectedFiles: File[] = [];
+  selectedFileNames: string[] = [];
 
+  // Function to handle file selection
   onFileSelected(event: any) {
+    const files: FileList = event.target.files;
+    
+    // Iterate through selected files
+    for (let i = 0; i < files.length; i++) {
+      const file: File = files.item(i)!;
+      this.AttachedFiles.push(file);
 
-    const file: File = event.target.files[0];
-    this.AttachedFiles = [event.target.files[0], ...this.AttachedFiles];//store the selected file in selectdfile;
-    this.AttachedFiles1 = [event.target.files[0].name, ...this.AttachedFiles1];//store the selected file in selectdfile;
+      this.selectedFileNames.push(file.name);
+    }
+
+    // Optionally, you can clear the input field after selecting files
+    event.target.value = null;
   }
+
+  // Function to remove a file by index
+  removeFile(index: number) {
+    this.selectedFiles.splice(index, 1); // Remove file from selectedFiles array
+    this.selectedFileNames.splice(index, 1); // Remove file name from selectedFileNames array
+  }
+
+
 
 
 
@@ -332,7 +351,7 @@ export class QualityWorkflowComponent implements OnInit {
               if (result === true) {
                 this.ChangeWorkflow(workType);
               } else {
-                
+
               }
             });
           }

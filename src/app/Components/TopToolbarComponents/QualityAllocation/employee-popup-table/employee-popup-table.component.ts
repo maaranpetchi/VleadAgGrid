@@ -38,35 +38,15 @@ export class EmployeePopupTableComponent implements OnInit {
     private http: HttpClient,
     private loginservice: LoginService,
     private spinnerService: SpinnerService,
-  ) {}
+  ) {
+    console.log(this.data,"InjectedData");
+    
+  }
   ngOnInit(): void {
     this.GetPendingJobsWithEmployeeId();
   }
   
-//   loadtime(){
-//     this.lnkLoadTime(this.data)
-//   }
 
-//   lnkLoadTime(data) {
-//     var empid = {
-//         EmployeeId: data,
-//     }
-//    this.http.post(environment.apiURL+'JobOrder/GetPendingJobsWithEmployeeId', empid).subscribe({
-//     next:(response:any)=>{
-//       let Pendingjobs= response.pendingJobsWithEmployeeId
-
-//       this.estimatedTime = 0;
-//       for (var i in Pendingjobs) {
-//         this.estimatedTime = Pendingjobs[i].EstimatedTime + this.estimatedTime;
-//      }
-//     },
-//     error:(err)=>{
-//       console.log(err);
-      
-//     }
-
-//    })
-// }
   GetPendingJobsWithEmployeeId() {
     let saveData = {
       tranId: 0,
@@ -100,7 +80,7 @@ export class EmployeePopupTableComponent implements OnInit {
       shortName: '',
       isBulk: true,
       categoryDesc: '',
-      employeeId:  this.loginservice.getUsername(),
+      employeeId:  this.data.employeeId,
       workStatus: '',
       scopeDesc: '',
       jobDateQueryDate: '2023-07-03T07:31:20.724Z',

@@ -327,16 +327,29 @@
             </div>
             <div class="col">
               <div class="uploadfile">
-                <div class="clearfix"
-                  *ngIf="data.processName == 'Production' || data.processName == 'Quality' || data.processName == 'Sew Out' || data.processName == 'Buddy Proof' || this.ProcessTransaction.processName">
-                  <label class="col-sm-3 control-label">Upload Files<span style="color:red;">*</span></label>
-                  <div class="col-sm-9">
-                    <div class="padding-top-5">
-                      <input id="fileUpload" type="file" multiple class="form-control"
-                        (change)="onFileSelected($event)">
-                    </div>
-                  </div>
-                </div>
+               
+                   <!-- File upload section -->
+                   <div class="clearfix"
+                   *ngIf="data.processName == 'Production' || data.processName == 'Quality' || data.processName == 'Sew Out' || data.processName == 'Buddy Proof' || this.ProcessTransaction.processName">
+                   <label class="col-sm-3 control-label">Upload Files<span style="color:red;">*</span></label>
+                   <div class="col-sm-9">
+                     <div class="padding-top-5">
+                       <input id="fileUpload" type="file" multiple class="form-control"
+                         (change)="onFileSelected($event)">
+                     </div>
+                   </div>
+                 </div>
+ 
+                 <!-- Display selected file names with delete buttons -->
+                 <div *ngIf="selectedFileNames.length > 0">
+                   <h4>Selected Files:</h4>
+                   <ul>
+                     <li *ngFor="let fileName of selectedFileNames; let i = index">
+                       {{ fileName }}
+                       <button class="btn btn-sm btn-danger" (click)="removeFile(i)">Delete</button>
+                     </li>
+                   </ul>
+                 </div>
               </div>
             </div>
           </div>

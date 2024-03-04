@@ -416,9 +416,11 @@ export class ProductionallocationtableComponent implements OnInit {
       // this.openPopup(params.newValue, parameterData);
     }
   }
-  onCellValueChanged = (event: CellValueChangedEvent) => {
-    console.log(`New Cell Valuejob: ${event.value}`);
-  };
+onCellValueChanged(event: CellValueChangedEvent) {
+  const updatedRow = event.data;
+  // You can perform any validation or additional logic here if needed
+  console.log("New Estimated Time for Job ID:", updatedRow.jobId, "is", updatedRow.allocatedEstimatedTime);
+}
   onCellValueEmpChanged = (event: CellValueChangedEvent) => {
     console.log(event);
     if (parseInt(this.loginservice.getProcessId()) == 2) {
@@ -835,55 +837,8 @@ export class ProductionallocationtableComponent implements OnInit {
         this.estTimeinput = data;
       });
   }
-  // onKeyPress(job: any) {
-  //   this.afterCellEdit(job);
-  // }
-  // afterCellEdit(rowEntity: any) {
-  //   if (parseInt(this.loginservice.getProcessId()) == 2) {
-  //     var colls = this.estTimeinput;
-  //     var Esttime1 = colls[0].estimatedTime;
-  //     var Esttime2 = colls[1].estimatedTime;
-  //     var Esttime3 = colls[2].estimatedTime;
-  //     var Esttime4 = colls[3].estimatedTime;
-  //     var desc1 = colls[0].description;
-  //     var desc2 = colls[1].description;
-  //     var desc3 = colls[2].description;
-  //     var desc4 = colls[3].description;
-  //     var desc5 = colls[4].description;
-  //     if (rowEntity.estimatedTime <= Esttime1 && rowEntity.estimatedTime > 0) {
-  //       rowEntity.status = desc1;
-  //     } else if (
-  //       rowEntity.estimatedTime <= Esttime2 &&
-  //       rowEntity.estimatedTime > Esttime1
-  //     ) {
-  //       rowEntity.status = desc2;
-  //     } else if (
-  //       rowEntity.estimatedTime <= Esttime3 &&
-  //       rowEntity.estimatedTime > Esttime2
-  //     ) {
-  //       rowEntity.status = desc3;
-  //     } else if (
-  //       rowEntity.estimatedTime <= Esttime4 &&
-  //       rowEntity.estimatedTime > Esttime3
-  //     ) {
-  //       rowEntity.status = desc4;
-  //     } else if (rowEntity.estimatedTime > Esttime4) {
-  //       rowEntity.status = desc5;
-  //     }
-  //     console.log(this.selectedEmployee, 'ujjh');
-  //     this.emplselection.selected.map((x) => {
-  //       if (x.employeeId == rowEntity.employeeId) {
-  //         //this.updateTotalEstimateTime();
-  //         return {
-  //           ...x,
-  //           estimatedTime: rowEntity.estimatedTime,
-  //           status: rowEntity.status,
-  //         };
-  //       } else return x;
-  //     });
-  //     console.table(this.selectedEmployee);
-  //   }
-  // }
+
+  
   getProductionJob(data: any) {
     const dialogRef = this._dialog.open(JobAssignedDetailsPopupComponent, {
       width: '100%',
