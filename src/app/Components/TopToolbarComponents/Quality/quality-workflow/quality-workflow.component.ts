@@ -83,8 +83,6 @@ export class QualityWorkflowComponent implements OnInit {
     this.getScope();
     this.rbnError();
 
-
-
   }
   gettingdata: any;
   constructor(private sharedDataService: SharedService, private location: Location, private http: HttpClient, private dialog: MatDialog, private loginService: LoginService, private workflowservice: WorkflowService, private spinnerService: SpinnerService, private _empService: CustomerreceiptsService
@@ -239,7 +237,7 @@ export class QualityWorkflowComponent implements OnInit {
   };
 
 
-  AttachedFiles: File[]=[];
+  AttachedFiles: File[] = [];
   AttachedFiles1: File[] = [];
   selectedFiles: File[] = [];
   selectedFileNames: string[] = [];
@@ -247,7 +245,7 @@ export class QualityWorkflowComponent implements OnInit {
   // Function to handle file selection
   onFileSelected(event: any) {
     const files: FileList = event.target.files;
-    
+
     // Iterate through selected files
     for (let i = 0; i < files.length; i++) {
       const file: File = files.item(i)!;
@@ -270,6 +268,7 @@ export class QualityWorkflowComponent implements OnInit {
 
 
 
+  selectedScope: any = {};
 
 
   //ishold ,sam
@@ -278,8 +277,13 @@ export class QualityWorkflowComponent implements OnInit {
     this.http.get<any>(environment.apiURL + `Workflow/GetProcessTransaction/${localStorage.getItem("WFTId")}/${this.loginService.getUsername()}`).subscribe(result => {
 
       this.ProcessTransaction = result.getWorkflowDetails;
-      this.revisionCheck = result.ChkRevise;
-      console.log(result, "ProcessTransaction");
+      this.revisionCheck = result.ChkRevise
+ this.data.scopeId = this.ProcessTransaction.scopeId ;
+      console.log(this.data.scopeId, "scopeId");
+
+
+      console.log("NO scope found");
+
 
       this.spinnerService.requestEnded();
 
@@ -508,7 +512,7 @@ export class QualityWorkflowComponent implements OnInit {
     var processTransaction = {
       WFTId: this.data.wftid ? this.data.wftid : this.ProcessTransaction.wftid,
       WFMId: this.data.wfmid ? this.data.wfmid : this.ProcessTransaction.wfmid,
-      ScopeId: this.data.scopeId ? this.data.scopeId : this.ProcessTransaction.scopeId,
+      ScopeId:this.ProcessTransaction.scopeId,
       ProcessId: localStorage.getItem('processid'),
       WorkType: workType,
       Status: this.Status,
@@ -538,7 +542,7 @@ export class QualityWorkflowComponent implements OnInit {
           let processTransaction = {
             WFTId: this.data.wftid ? this.data.wftid : this.ProcessTransaction.wftid,
             WFMId: this.data.wfmid ? this.data.wfmid : this.ProcessTransaction.wfmid,
-            ScopeId: this.data.scopeId ? this.data.scopeId : this.ProcessTransaction.scopeId,
+            ScopeId: this.ProcessTransaction.scopeId,
             ProcessId: localStorage.getItem('processid'),
             WorkType: workType,
             Status: this.Status,
@@ -788,6 +792,9 @@ export class QualityWorkflowComponent implements OnInit {
   ///Dropdownchaneg to show some fields
   selectIsError() {
     console.log(this.Status, "Dropdownstatys");
+    console.log(this.data.scopeId, "scopeId");
+
+this.data.scopeId = this.Scope;
 
     if (this.data.processName == 'Quality' || this.data.processName == 'Sew Out' || this.data.processName == 'Buddy Proof') {
       this.RbnError = 'No Error';
@@ -812,7 +819,7 @@ export class QualityWorkflowComponent implements OnInit {
       this.spinnerService.requestEnded();
 
       if (result.scopeDetails.length > 0) {
-        this.Scope = result.scopeDetails;
+        this.Scope = this.data.scopeId;
       }
       else {
         Swal.fire('info', 'No Scope Available for the customer!', 'info');
