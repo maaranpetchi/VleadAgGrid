@@ -74,7 +74,8 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
       colId: 'jobIdColumn',
       cellStyle: { color: 'blue' },
 
@@ -93,7 +94,8 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
       colId: 'artistNameColumn',
     },
     {
@@ -103,7 +105,8 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
       colId: 'employeeNameColumn',
       cellStyle: { color: 'blue' },
 
@@ -121,7 +124,8 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       width: 100,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     {
       headerName: 'Client',
@@ -129,7 +133,8 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       width: 100,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     {
       headerName: 'Customer Classification',
@@ -137,7 +142,8 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       width: 100,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
 
     {
@@ -147,7 +153,8 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     {
       headerName: 'File Inward Mode',
@@ -156,7 +163,8 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
 
     {
@@ -165,7 +173,8 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       width: 100,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     {
       headerName: 'Project Code',
@@ -174,7 +183,8 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     {
       headerName: 'Status',
@@ -182,7 +192,8 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       width: 100,
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     {
       headerName: 'Scope',
@@ -190,7 +201,8 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       width: 100,
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     {
       headerName: 'Est Time',
@@ -198,7 +210,8 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       width: 100,
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
       editable: true,
     },
 
@@ -209,7 +222,8 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
   ];
   colEmpDefs: ColDef[] = [
@@ -221,7 +235,8 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
       colId: 'employeeIdColumn',
       cellStyle: { color: 'blue' },
       cellRenderer: function (params) {
@@ -239,7 +254,8 @@ export class ProofreadingAlocationtableComponent implements OnInit {
       width: 100,
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
   ];
   gridOptions1 = {

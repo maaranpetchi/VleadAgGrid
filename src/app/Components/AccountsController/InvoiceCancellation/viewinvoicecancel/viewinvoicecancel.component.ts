@@ -98,16 +98,23 @@ export class ViewinvoicecancelComponent  implements OnInit {
     checkboxSelection: isFirstColumn,
   };
   columnDefs: ColDef[] = [
-    { headerName: 'CancellationNo', field: 'CancellationNo', filter: true, },
+    { headerName: 'CancellationNo', field: 'CancellationNo', filter: 'agTextColumnFilter',
+      floatingFilter: true,},
  
     { headerName: 'InvoiceNumber', field: 'InvoiceNo', filter: true,cellStyle: {color: 'skyblue', 'cursor':'pointer'}  },
-    { headerName: 'Cancelled Date', field: 'CancelledDate', filter: true, },
-    { headerName: 'Cancelled By', field: 'CancelledBy', filter: true, },
+    { headerName: 'Cancelled Date', field: 'CancelledDate', filter: 'agTextColumnFilter',
+      floatingFilter: true,},
+    { headerName: 'Cancelled By', field: 'CancelledBy', filter: 'agTextColumnFilter',
+      floatingFilter: true,},
  
-    { headerName: 'Product Value', field: 'ProductValue', filter: true, },
-    { headerName: 'Wavier', field: 'Wavier', filter: true, },
-    { headerName: 'RoundOff', field: 'RoundOff', filter: true, },
-    { headerName: 'Discount', field: 'Discount', filter: true, },
+    { headerName: 'Product Value', field: 'ProductValue', filter: 'agTextColumnFilter',
+      floatingFilter: true,},
+    { headerName: 'Wavier', field: 'Wavier', filter: 'agTextColumnFilter',
+      floatingFilter: true,},
+    { headerName: 'RoundOff', field: 'RoundOff', filter: 'agTextColumnFilter',
+      floatingFilter: true,},
+    { headerName: 'Discount', field: 'Discount', filter: 'agTextColumnFilter',
+      floatingFilter: true,},
   ];
  
   public rowSelection: 'single' | 'multiple' = 'multiple';

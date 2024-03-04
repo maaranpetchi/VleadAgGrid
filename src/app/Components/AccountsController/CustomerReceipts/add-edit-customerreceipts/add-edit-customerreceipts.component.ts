@@ -112,17 +112,25 @@ goBack(): void {
  };
 
  table1def: ColDef[] = [
-  { headerName: 'Invoice Type', field: 'Adjustment', filter: true },
-  { headerName: 'Invoice Number', field: 'invoiceNo', filter: true },
-  { headerName: 'Adjusted Amount', field: 'adjustmentAmount', filter: true },
+  { headerName: 'Invoice Type', field: 'Adjustment', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Invoice Number', field: 'invoiceNo', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Adjusted Amount', field: 'adjustmentAmount', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 ];
 
 table2def: ColDef[] = [
-  { headerName: 'Bank Name', field: 'bankName', filter: true },
-  { headerName: 'Transaction Date', field: 'transactionDate', filter: true },
-  { headerName: 'Receipt Mode', field: 'receiptMode', filter: true },
-  { headerName: 'Transaction Number', field: 'transactionNo', filter: true },
-  { headerName: 'Amount', field: 'amount', filter: true },
+  { headerName: 'Bank Name', field: 'bankName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Transaction Date', field: 'transactionDate', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Receipt Mode', field: 'receiptMode', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Transaction Number', field: 'transactionNo', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Amount', field: 'amount', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 ];
 
 

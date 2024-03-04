@@ -154,16 +154,24 @@ export class QueryToClientComponent implements OnInit {
    checkboxSelection: isFirstColumn,
  };
  columnDefs: ColDef[] = [
-   { headerName: 'JobId', field: 'jobId', filter: true,cellStyle: {color: 'skyblue', 'cursor':'pointer'}  },
+   { headerName: 'JobId', field: 'jobId', filter: 'agTextColumnFilter',
+      floatingFilter: true,cellStyle: {color: 'skyblue', 'cursor':'pointer'}  },
 
-   { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
-   { headerName: 'File Name', field: 'fileName', filter: true, },
-   { headerName: 'File Received EST Date', field: 'fileReceivedDate', filter: true, },
+   { headerName: 'Job Status', field: 'jobStatusDescription', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+   { headerName: 'File Name', field: 'fileName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+   { headerName: 'File Received EST Date', field: 'fileReceivedDate', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
-   { headerName: 'File Inward Mode', field: 'fileInwardType', filter: true, },
-   { headerName: 'Client', field: 'shortName', filter: true, },
-   { headerName: 'Customer Classification', field: 'customerClassification', filter: true, },
-   { headerName: 'Status', field: 'name', filter: true, },
+   { headerName: 'File Inward Mode', field: 'fileInwardType', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+   { headerName: 'Client', field: 'shortName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+   { headerName: 'Customer Classification', field: 'customerClassification', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+   { headerName: 'Status', field: 'name', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
  ];
 
  public rowSelection: 'single' | 'multiple' = 'multiple';

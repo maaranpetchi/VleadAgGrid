@@ -302,17 +302,27 @@ console.log(this.gridApi.getSelectedRows(),"SelectedRows");
     checkboxSelection: isFirstColumn,
   };
   columnDefs: ColDef[] = [
-    { headerName: 'Client Name', field: 'shortName', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
-    { headerName: 'Invoice Number', field: 'invoiceNo', filter: true, },
-    { headerName: 'Invoice Date', field: 'invoiceDate', filter: true, },
-    { headerName: 'Product Amount', field: 'invoiceValue', filter: true, },
+    { headerName: 'Client Name', field: 'shortName', filter: 'agTextColumnFilter',
+      floatingFilter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
+    { headerName: 'Invoice Number', field: 'invoiceNo', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Invoice Date', field: 'invoiceDate', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Product Amount', field: 'invoiceValue', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
-    { headerName: 'Round Off', field: 'roundOff', filter: true, },
-    { headerName: 'Waiver', field: 'waiver', filter: true, },
-    { headerName: 'Discount', field: 'discount', filter: true, },
-    { headerName: 'Invoice Amount', field: 'invoiceValue', filter: true, },
-    { headerName: 'Payment Mode', field: 'paymentMode', filter: true, },
-    { headerName: 'Exchange Rate', field: 'exchangeRate', filter: true, },
+    { headerName: 'Round Off', field: 'roundOff', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Waiver', field: 'waiver', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Discount', field: 'discount', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Invoice Amount', field: 'invoiceValue', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Payment Mode', field: 'paymentMode', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Exchange Rate', field: 'exchangeRate', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
   ];
 
   public rowSelection: 'single' | 'multiple' = 'multiple';

@@ -255,14 +255,20 @@ export class JobTransferComponent implements OnInit {
     checkboxSelection: isFirstColumn,
   };
   columnDefs: ColDef[] = [
-    { headerName: 'File Name', field: 'fileName', filter: true },
+    { headerName: 'File Name', field: 'fileName',filter: 'agTextColumnFilter',
+    floatingFilter: true,},
 
-    { headerName: 'File Received Date', field: 'fileReceivedDate', filter: true, },
-    { headerName: 'Department', field: 'department.description', filter: true, },
-    { headerName: 'File Received EST Date', field: 'fileReceivedDate', filter: true, },
+    { headerName: 'File Received Date', field: 'fileReceivedDate', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Department', field: 'department.description', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'File Received EST Date', field: 'fileReceivedDate', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
-    { headerName: 'Client', field: 'customer.shortName', filter: true, },
-    { headerName: 'Customer Job Type', field: 'customer.customerJobType', filter: true, },
+    { headerName: 'Client', field: 'customer.shortName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Customer Job Type', field: 'customer.customerJobType', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
   ];
 

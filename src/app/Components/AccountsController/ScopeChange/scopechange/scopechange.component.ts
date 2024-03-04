@@ -302,14 +302,21 @@ export class ScopechangeComponent implements OnInit {
     checkboxSelection: isFirstColumn,
   };
   columnDefs: ColDef[] = [
-    { headerName: 'Job Number', field: 'jobId', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
-    { headerName: 'Job Date', field: 'estJobDate', filter: true, },
-    { headerName: 'Department', field: 'departmentName', filter: true, },
-    { headerName: 'Client', field: 'shortName', filter: true, },
+    { headerName: 'Job Number', field: 'jobId', filter: 'agTextColumnFilter',
+      floatingFilter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
+    { headerName: 'Job Date', field: 'estJobDate', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Department', field: 'departmentName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Client', field: 'shortName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
-    { headerName: 'File Name', field: 'fileName', filter: true, },
-    { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
-    { headerName: 'Scope', field: 'scopeName', filter: true, },
+    { headerName: 'File Name', field: 'fileName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Job Status', field: 'jobStatusDescription', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Scope', field: 'scopeName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
   ];
 
   public rowSelection: 'single' | 'multiple' = 'multiple';

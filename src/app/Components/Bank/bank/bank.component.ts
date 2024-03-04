@@ -151,9 +151,12 @@ context: any = "Bank";
   };
 
   columnDefs: ColDef[] = [
-    { headerName: 'Bank Name ', field: 'bankName', filter: true, },
-    { headerName: 'Closing Date ', field: 'closingDate', filter: true, },
-    { headerName: 'Closing Balance', field: 'closingBalance', filter: true, },
+    { headerName: 'Bank Name ', field: 'bankName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Closing Date ', field: 'closingDate', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Closing Balance', field: 'closingBalance', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
     
   ];
 

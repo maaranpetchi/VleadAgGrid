@@ -87,10 +87,14 @@ export class IndexSkillsetComponent implements OnInit {
   };
 
   columnDefs: ColDef[] = [
-    { headerName: 'EmployeeCode ', field: 'employeeCode', filter: true, },
-    { headerName: 'EmployeeName ', field: 'employeeName', filter: true, },
-    { headerName: 'Skill', field: 'skill', filter: true, },
-    { headerName: 'ProficiencyLevel', field: 'proficiencyLevel', filter: true, },
+    { headerName: 'EmployeeCode ', field: 'employeeCode', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'EmployeeName ', field: 'employeeName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Skill', field: 'skill', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'ProficiencyLevel', field: 'proficiencyLevel', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
     {
       headerName: 'Actions',
       field: 'action',

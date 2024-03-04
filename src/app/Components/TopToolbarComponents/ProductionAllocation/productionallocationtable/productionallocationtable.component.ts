@@ -1,5 +1,5 @@
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -10,7 +10,7 @@ import { JobAssignedDetailsPopupComponent } from '../job-assigned-details-popup/
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'src/Environments/environment';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
-import { Observable, catchError, forkJoin, switchMap, throwError } from 'rxjs';
+import { Observable, catchError, filter, forkJoin, switchMap, throwError } from 'rxjs';
 import { ProductionAllocatedPopupComponent } from '../production-allocated-popup/production-allocated-popup.component';
 import { JoballocatedEmplpopupComponent } from '../joballocated-emplpopup/joballocated-emplpopup.component';
 import { EmployeePopupTableComponent } from '../../QualityAllocation/employee-popup-table/employee-popup-table.component';
@@ -106,7 +106,8 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
       colId: 'jobIdColumn' ,
       cellStyle: { color: 'blue' },
      
@@ -126,7 +127,8 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
       colId: 'quotationIdColumn' ,
       cellStyle: { color: 'blue' },
      
@@ -146,7 +148,8 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
       colId: 'allocatedIdColumn' ,
       cellStyle: { color: 'blue' },
      
@@ -165,7 +168,8 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
       colId: 'employeeNameColumn' ,
       cellStyle: { color: 'blue' },
      
@@ -183,7 +187,8 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       width: 100,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     {
       headerName: 'Client',
@@ -191,7 +196,8 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       width: 100,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     {
       headerName: 'Customer Classification',
@@ -199,7 +205,8 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       width: 100,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     
     {
@@ -209,7 +216,8 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     {
       headerName: 'File Inward Mode',
@@ -218,7 +226,8 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     
     {
@@ -227,7 +236,8 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       width: 100,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     {
       headerName: 'Project Code',
@@ -236,7 +246,8 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     {
       headerName: 'Status',
@@ -244,7 +255,8 @@ export class ProductionallocationtableComponent implements OnInit {
       width: 100,
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     {
       headerName: 'Estimated Time',
@@ -252,8 +264,9 @@ export class ProductionallocationtableComponent implements OnInit {
       width: 100,
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
       editable: true,
+      floatingFilter: true,
     },
     
     {
@@ -263,19 +276,21 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     }
   ];
   colEmpDefs: ColDef[] = [
     {
-      headerName:'Employee',
+      headerName: 'Employee',
       field: 'employeenameWithCode',
       checkboxSelection: true,
       width: 100,
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
       cellStyle: { color: 'blue' },
       cellRenderer: function (params) {
         return (
@@ -284,7 +299,10 @@ export class ProductionallocationtableComponent implements OnInit {
           '</button>'
         );
       },
+      // Custom header component with input field for filtering
+      // headerComponentFramework: CustomHeaderComponent, // Assuming CustomHeaderComponent is defined elsewhere
     },
+    
     {
       headerName:'Est Time (In Mins)',
       field: 'estTime',
@@ -292,7 +310,8 @@ export class ProductionallocationtableComponent implements OnInit {
       width: 100,
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      floatingFilter: true,
+      filter: 'agTextColumnFilter',
       editable: true,
     },
     {
@@ -302,7 +321,8 @@ export class ProductionallocationtableComponent implements OnInit {
       width: 100,
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
       editable: true,
     },
     {
@@ -312,7 +332,8 @@ export class ProductionallocationtableComponent implements OnInit {
       width: 100,
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
       editable: true,
     },
   ];
@@ -326,6 +347,10 @@ export class ProductionallocationtableComponent implements OnInit {
   };
   context: any;
   @ViewChild('agGrid') agGrid: any;
+  @Input() ColumnDefs: any;  
+  @Input() RowData: any;  
+  @Input() IsColumnsToFit: boolean;  
+  
   public defaultColDef: ColDef = {
     flex: 1,
     minWidth: 100,
@@ -367,8 +392,13 @@ export class ProductionallocationtableComponent implements OnInit {
     this.gridApi.setColumnVisible('employeeNameColumn', false);
   }
   onGridEmpReady(params: GridReadyEvent<any>) {
-    // this.gridApi = params.api;
+    
+    this.gridApi = params.api;
     this.gridEmplApi = params.api;
+    params.api.setRowData(this.RowData);  
+    if (this.IsColumnsToFit) {  
+      this.gridApi.sizeColumnsToFit();  
+    } 
     this.http
       .get<any>(
         environment.apiURL +
@@ -378,6 +408,7 @@ export class ProductionallocationtableComponent implements OnInit {
         this.rowEmpData = response.employees;
       });
   }
+  
   onCellJobClicked(event: CellClickedEvent) {
       const { colDef, data } = event;
       if (colDef.colId === 'jobIdColumn') {

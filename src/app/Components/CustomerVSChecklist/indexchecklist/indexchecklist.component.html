@@ -33,7 +33,8 @@
                                 [class]="themeClass"
                                 (gridReady)="onGridReady($event)"
                                 (cellValueChanged)="handleCellValueChanged($event)"
-                                frameworkComponents="{ }"
+                                [paginationPageSize]="10"
+                floatingFilter="true" 
                               ></ag-grid-angular>
                         </div>
                         </div>

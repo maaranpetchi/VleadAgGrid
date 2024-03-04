@@ -1,57 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
+  </head>
 
-<body style="height: 123vh;">
+  <body style="height: 123vh">
     <div class="container">
-        <div class="advance">
-            <div class="customerProfile">
-                <div class="backgroundcolor">
-                    <div class="panel-heading">
-                        <h2 class="panel-title" style="color:#fff;">
-                            Quality
-                        </h2>
-                    </div>
-
-                    <div class="table-container">
-                        <ag-grid-angular
-                        style="width: 100%; height: 100%;"
-                        [context]="context"
-                        [columnDefs]="columnDefs"
-                        [pagination]="true"
-                        [defaultColDef]="defaultColDef"
-                        [suppressRowClickSelection]="true"
-                        [rowSelection]="rowSelection"
-                        [rowData]="rowData"
-                        [class]="themeClass"
-                        (cellClicked)="onCellClicked($event)"
-                        (gridReady)="onGridReady($event)"
-                      ></ag-grid-angular>
-                    </div>
-
-                </div>
-
-
+      <div class="advance">
+        <div class="customerProfile">
+          <div class="backgroundcolor">
+            <div class="panel-heading">
+              <h2 class="panel-title" style="color: #fff">Quality</h2>
             </div>
-            <div class="scope" style="float: right;" *ngIf="scopeDisplay">
-                <mat-form-field>
-                    <mat-label>Scope</mat-label>
-                    <mat-select [(ngModel)]="scopeid" name="scopeid" (selectionChange)="onDivisionChange()">
-                        <mat-option *ngFor="let item of ScopeApiData" [value]="item.id">
-                            {{ item.name }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+
+            <div class="table-container">
+              <ag-grid-angular
+                style="width: 100%; height: 100%"
+                [context]="context"
+                [columnDefs]="columnDefs"
+                [pagination]="true"
+                [defaultColDef]="defaultColDef"
+                [suppressRowClickSelection]="true"
+                [rowSelection]="rowSelection"
+                [rowData]="rowData"
+                [class]="themeClass"
+                (cellClicked)="onCellClicked($event)"
+                (gridReady)="onGridReady($event)"
+                [paginationPageSize]="10"
+                floatingFilter="true"
+              ></ag-grid-angular>
             </div>
+          </div>
         </div>
-
+        <div class="scope" style="float: right" *ngIf="scopeDisplay">
+          <mat-form-field>
+            <mat-label>Scope</mat-label>
+            <mat-select
+              [(ngModel)]="scopeid"
+              name="scopeid"
+              (selectionChange)="onDivisionChange()"
+            >
+              <mat-option *ngFor="let item of ScopeApiData" [value]="item.id">
+                {{ item.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
     </div>
-
-</body>
-
+  </body>
 </html>

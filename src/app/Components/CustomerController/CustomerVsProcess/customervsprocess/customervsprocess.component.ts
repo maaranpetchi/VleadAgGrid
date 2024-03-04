@@ -274,14 +274,22 @@ context: any="customervsprocess";
   };
 
   columnDefs: ColDef[] = [
-    { headerName: 'Department', field: 'description', filter: true, },
-    { headerName: 'Customer', field: 'shortName', filter: true, },
-    { headerName: 'Current Process', field: 'currentProcess', filter: true, },
-    { headerName: 'Status', field: 'statusDescription', filter: true, },
-    { headerName: 'Next Process', field: 'nextProcess', filter: true, },
-    { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
-    { headerName: 'Scope', field: 'scope', filter: true, },
-    { headerName: 'Customer Scope Status', field: 'customJobType', filter: true, },
+    { headerName: 'Department', field: 'description', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Customer', field: 'shortName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Current Process', field: 'currentProcess', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Status', field: 'statusDescription', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Next Process', field: 'nextProcess', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Job Status', field: 'jobStatusDescription', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Scope', field: 'scope', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Customer Scope Status', field: 'customJobType', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
     {
       headerName: 'Actions',

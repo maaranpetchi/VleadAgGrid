@@ -239,16 +239,22 @@ export class CustomerSalesmappingComponent implements OnInit {
   };
 
   table1def: ColDef[] = [
-    { headerName: 'Customer Name ', field: 'name', filter: true, },
-    { headerName: 'Short Name ', field: 'shortName', filter: true, },
-    { headerName: 'Classification ', field: 'description', filter: true, },
-    { headerName: 'Employee Code ', field: 'employeeNameCode', filter: true, },
+    { headerName: 'Customer Name ', field: 'name', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Short Name ', field: 'shortName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Classification ', field: 'description', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Employee Code ', field: 'employeeNameCode', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
   ];
   table2def: ColDef[] = [
 
-    { headerName: 'Employee code', field: 'employeeCode', filter: true, },
-    { headerName: 'Sales Employee', field: 'employeeName', filter: true, },
+    { headerName: 'Employee code', field: 'employeeCode', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Sales Employee', field: 'employeeName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
   ];
 
 

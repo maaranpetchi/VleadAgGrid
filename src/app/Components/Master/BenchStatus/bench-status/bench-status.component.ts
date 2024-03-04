@@ -188,7 +188,8 @@ export class BenchStatusComponent implements OnInit {
   };
 
   columnDefs: ColDef[] = [
-    { headerName: 'Description', field: 'description', filter: true, },
+    { headerName: 'Description', field: 'description', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
     {
       headerName: 'Actions',
       field: 'action',

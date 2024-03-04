@@ -107,10 +107,14 @@ context: any="customervsemployee";
   };
 
   columnDefs: ColDef[] = [
-    { headerName: 'customer Classification', field: 'customerClassification', filter: true, },
-    { headerName: 'Employee', field: 'employeeName', filter: true, },
-    { headerName: 'Customer Name', field: 'name', filter: true, },
-    { headerName: 'Short Name', field: 'shortName', filter: true, },
+    { headerName: 'customer Classification', field: 'customerClassification', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Employee', field: 'employeeName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Customer Name', field: 'name', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Short Name', field: 'shortName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
     {
       headerName: 'Actions',
       field: 'action',

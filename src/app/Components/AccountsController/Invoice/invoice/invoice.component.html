@@ -1,166 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
+  <body>
+    <mat-tab-group>
+      <mat-tab label="Details">
+        <!-- Content for Details tab -->
+        <div class="container">
+          <div class="advance">
+            <div class="customerProfile">
+              <div class="backgroundcolor">
+                <div class="panel-heading">
+                  <h2 class="panel-title" style="color: #fff">Invoice</h2>
+                </div>
 
-<body>
-
-  <mat-tab-group>
-    <mat-tab label="Details">
-      <!-- Content for Details tab -->
-      <div class="container">
-        <div class="advance">
-          <div class="customerProfile">
-            <div class="backgroundcolor">
-              <div class="panel-heading">
-                <h2 class="panel-title" style="color:#fff;">
-                  Invoice
-                </h2>
-              </div>
-
-              <div class="pricingcalculation">
-                <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
-                  <div class="container1">
-                    <div class="row">
-                      <div class="col">
-                        <mat-form-field>
-                          <mat-label>Start Date</mat-label>
-                          <input matInput [matDatepicker]="startDatePicker" placeholder="Choose a date"
-                            formControlName="fromDate">
-                          <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-                          <mat-datepicker #startDatePicker></mat-datepicker>
-                        </mat-form-field>
-                      </div>
-                      <div class="col">
-                        <mat-form-field>
-                          <mat-label>End Date</mat-label>
-                          <input matInput [matDatepicker]="endDatePicker" placeholder="Choose a date"
-                            formControlName="toDate">
-                          <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-                          <mat-datepicker #endDatePicker></mat-datepicker>
-                        </mat-form-field>
-                      </div>
+                <div class="pricingcalculation">
+                  <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+                    <div class="container1">
                       <div class="row">
                         <div class="col">
-                          <mat-form-field appearance="fill">
-                            <mat-label>Client</mat-label>
-                            <mat-select ngDefaultControl formControlName="ClientId" [(ngModel)]="Clientid">
-                              <mat-option *ngFor="let Client of data.clientList" [value]="Client.id">
-                                {{Client.shortName}}
-                              </mat-option>
-                            </mat-select>
+                          <mat-form-field>
+                            <mat-label>Start Date</mat-label>
+                            <input
+                              matInput
+                              [matDatepicker]="startDatePicker"
+                              placeholder="Choose a date"
+                              formControlName="fromDate"
+                            />
+                            <mat-datepicker-toggle
+                              matSuffix
+                              [for]="startDatePicker"
+                            ></mat-datepicker-toggle>
+                            <mat-datepicker #startDatePicker></mat-datepicker>
                           </mat-form-field>
                         </div>
-
-
-                        <div class="button">
-                          <button class="btn btn-primary"  mat-raised-button color="primary">Search</button>
+                        <div class="col">
+                          <mat-form-field>
+                            <mat-label>End Date</mat-label>
+                            <input
+                              matInput
+                              [matDatepicker]="endDatePicker"
+                              placeholder="Choose a date"
+                              formControlName="toDate"
+                            />
+                            <mat-datepicker-toggle
+                              matSuffix
+                              [for]="endDatePicker"
+                            ></mat-datepicker-toggle>
+                            <mat-datepicker #endDatePicker></mat-datepicker>
+                          </mat-form-field>
                         </div>
-                <h3 class="selectedRecord">Selected Jobs For Invoice: {{this.SelectedListItem}} </h3>
+                        <div class="row">
+                          <div class="col">
+                            <mat-form-field appearance="fill">
+                              <mat-label>Client</mat-label>
+                              <mat-select
+                                ngDefaultControl
+                                formControlName="ClientId"
+                                [(ngModel)]="Clientid"
+                              >
+                                <mat-option
+                                  *ngFor="let Client of data.clientList"
+                                  [value]="Client.id"
+                                >
+                                  {{ Client.shortName }}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
 
+                          <div class="button">
+                            <button
+                              class="btn btn-primary"
+                              mat-raised-button
+                              color="primary"
+                            >
+                              Search
+                            </button>
+                          </div>
+                          <h3 class="selectedRecord">
+                            Selected Jobs For Invoice:
+                            {{ this.SelectedListItem }}
+                          </h3>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </form>
-              </div>
+                  </form>
+                </div>
 
-              <div class="table-container">
-                <ag-grid-angular style="width: 100%; height: 100%;" [context]="context" [columnDefs]="table1def"
-                [defaultColDef]="defaultColDef"   (selectionChanged)="onSelectionChanged()"
-                [suppressRowClickSelection]="true" [rowSelection]="rowSelection"
-                [rowData]="rowData" [pagination]="true" [class]="themeClass" (gridReady)="onGridReady1($event)"
-                (cellValueChanged)="handleCellValueChanged($event)" frameworkComponents="{ }"></ag-grid-angular>
-              </div>
-            </div>
-          </div>
-          <div class="matbuttonaign">
-            <button mat-raised-button style="color:#088607" (click)="openDialog()"> Generate Invoice</button>
-          </div>
-        </div>
-      </div>
-    </mat-tab>
-
-    <mat-tab label="GeneratedInvoice">
-      <!-- Content for GeneratedInvoice tab -->
-      <div class="container">
-        <div class="advance">
-          <div class="customerProfile">
-            <div class="backgroundcolor">
-              <div class="panel-heading">
-                <h2 class="panel-title" style="color:#fff;">
-                  Generated Invoice
-                </h2>
-              </div>
-
-              <div class="pricingcalculation">
-                <div class="container1">
-                  <div class="row">
-                    <div class="col">
-                      <mat-form-field appearance="fill">
-                        <mat-label>Client</mat-label>
-                        <mat-select ngDefaultControl [(ngModel)]="ClientGeneratedId" name="clientid">
-                          <mat-option *ngFor="let Client of ClientGeneratedata.clientList" [value]="Client.id">
-                            {{Client.shortName}}
-                          </mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                    </div>
-                  </div>
-
-                  <div class="button">
-                    <button type="button" class="btn btn-success" (click)="getGeneratedInvoice()"> search</button>
-                  </div>
-
+                <div class="table-container">
+                  <ag-grid-angular
+                    style="width: 100%; height: 100%"
+                    [context]="context"
+                    [columnDefs]="table1def"
+                    [defaultColDef]="defaultColDef"
+                    (selectionChanged)="onSelectionChanged()"
+                    [suppressRowClickSelection]="true"
+                    [rowSelection]="rowSelection"
+                    [rowData]="rowData"
+                    [pagination]="true"
+                    [class]="themeClass"
+                    (gridReady)="onGridReady1($event)"
+                    (cellValueChanged)="handleCellValueChanged($event)"
+                    [paginationPageSize]="10"
+                    floatingFilter="true" 
+                  ></ag-grid-angular>
                 </div>
               </div>
             </div>
-
-
-
-            <div class="table-container">
-              <ag-grid-angular style="width: 100%; height: 100%;" [context]="context" [columnDefs]="table2def"
-                [defaultColDef]="table2defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="table2rowSelection"
-                [rowData]="table2rowData" [pagination]="true" [class]="themeClass" (gridReady)="onGridReady2($event)"
-                (cellValueChanged)="handleCellValueChanged($event)" frameworkComponents="{ }"></ag-grid-angular>
-
-
-            </div>
-            <p class="Rate">Total Rate:{{this.totalRate}}</p>
-
-            <div class="footerButtons"
-              style="display: flex;align-items: center;justify-content: center;gap:20px;padding:20px">
-              <button class="btn btn-success" (click)="btnSubmitRecalculate()">Move To Details</button>
-              <button class="btn btn-success" (click)="btnSubmitConfirm()">Confirm Invoice</button>
+            <div class="matbuttonaign">
+              <button
+                mat-raised-button
+                style="color: #088607"
+                (click)="openDialog()"
+              >
+                Generate Invoice
+              </button>
             </div>
           </div>
-
         </div>
-      </div>
+      </mat-tab>
 
+      <mat-tab label="GeneratedInvoice">
+        <!-- Content for GeneratedInvoice tab -->
+        <div class="container">
+          <div class="advance">
+            <div class="customerProfile">
+              <div class="backgroundcolor">
+                <div class="panel-heading">
+                  <h2 class="panel-title" style="color: #fff">
+                    Generated Invoice
+                  </h2>
+                </div>
 
-    </mat-tab>
+                <div class="pricingcalculation">
+                  <div class="container1">
+                    <div class="row">
+                      <div class="col">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Client</mat-label>
+                          <mat-select
+                            ngDefaultControl
+                            [(ngModel)]="ClientGeneratedId"
+                            name="clientid"
+                          >
+                            <mat-option
+                              *ngFor="
+                                let Client of ClientGeneratedata.clientList
+                              "
+                              [value]="Client.id"
+                            >
+                              {{ Client.shortName }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
 
-    <mat-tab label="ConfirmInvoice">
-      <!-- Content for ConfirmInvoice tab -->
-      <div class="container">
-        <div class="advance">
-          <div class="customerProfile">
-            <div class="backgroundcolor">
-              <div class="panel-heading">
-                <h2 class="panel-title" style="color:#fff;">
-                  Confirm Invoice
-                </h2>
+                    <div class="button">
+                      <button
+                        type="button"
+                        class="btn btn-success"
+                        (click)="getGeneratedInvoice()"
+                      >
+                        search
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="pricingcalculation">
 
-                <div class="container1">
-                  <div class="row">
-                    <div class="col">
-                      <!-- <mat-form-field appearance="fill">
+              <div class="table-container">
+                <ag-grid-angular
+                  style="width: 100%; height: 100%"
+                  [context]="context"
+                  [columnDefs]="table2def"
+                  [defaultColDef]="table2defaultColDef"
+                  [suppressRowClickSelection]="true"
+                  [rowSelection]="table2rowSelection"
+                  [rowData]="table2rowData"
+                  [pagination]="true"
+                  [class]="themeClass"
+                  (gridReady)="onGridReady2($event)"
+                  (cellValueChanged)="handleCellValueChanged($event)"
+                  [paginationPageSize]="10"
+                floatingFilter="true" 
+                ></ag-grid-angular>
+              </div>
+              <p class="Rate">Total Rate:{{ this.totalRate }}</p>
+
+              <div
+                class="footerButtons"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 20px;
+                  padding: 20px;
+                "
+              >
+                <button
+                  class="btn btn-success"
+                  (click)="btnSubmitRecalculate()"
+                >
+                  Move To Details
+                </button>
+                <button class="btn btn-success" (click)="btnSubmitConfirm()">
+                  Confirm Invoice
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="ConfirmInvoice">
+        <!-- Content for ConfirmInvoice tab -->
+        <div class="container">
+          <div class="advance">
+            <div class="customerProfile">
+              <div class="backgroundcolor">
+                <div class="panel-heading">
+                  <h2 class="panel-title" style="color: #fff">
+                    Confirm Invoice
+                  </h2>
+                </div>
+                <div class="pricingcalculation">
+                  <div class="container1">
+                    <div class="row">
+                      <div class="col">
+                        <!-- <mat-form-field appearance="fill">
                         <mat-label>Client</mat-label>
                         <mat-select ngDefaultControl formControlName="ClientId">
                           <mat-option *ngFor="let Client of data.clientList" [value]="Client.id">
@@ -168,34 +241,68 @@
                           </mat-option>
                         </mat-select>
                       </mat-form-field> -->
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div class="table-container">
-                  <ag-grid-angular style="width: 100%; height: 100%;" [context]="context" [columnDefs]="table3def"
-                  [defaultColDef]="table3defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="table3rowSelection"
-                  [rowData]="table3rowData" [pagination]="true" [class]="themeClass" (gridReady)="onGridReady3($event)"       (cellClicked)="onCellClicked($event)"
-                  (cellValueChanged)="handleCellValueChanged($event)" frameworkComponents="{ }"></ag-grid-angular>
-  
+                  <div class="table-container">
+                    <ag-grid-angular
+                      style="width: 100%; height: 100%"
+                      [context]="context"
+                      [columnDefs]="table3def"
+                      [defaultColDef]="table3defaultColDef"
+                      [suppressRowClickSelection]="true"
+                      [rowSelection]="table3rowSelection"
+                      [rowData]="table3rowData"
+                      [pagination]="true"
+                      [class]="themeClass"
+                      (gridReady)="onGridReady3($event)"
+                      (cellClicked)="onCellClicked($event)"
+                      (cellValueChanged)="handleCellValueChanged($event)"
+                      [paginationPageSize]="10"
+                floatingFilter="true" 
+                    ></ag-grid-angular>
+                  </div>
 
-                </div>
-            
-                <div class="footerButtons" style="display: flex;align-items: center;justify-content: center;gap:20px">
-                  <button  id="invoice-button" class="btn btn-success" (click)="openArtInvoice()">Art Invoice</button>
-                  <div class="button-gap"></div>
-                  <button  id="invoice-button" class="btn btn-success" (click)="DigiArtInvoice()">Digi Invoice</button>
-                  <div class="button-gap"></div>
-                  <button  id="invoice-button" class="btn btn-success" (click)="Invoice()">Invoice</button>
+                  <div
+                    class="footerButtons"
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      gap: 20px;
+                    "
+                  >
+                    <button
+                      id="invoice-button"
+                      class="btn btn-success"
+                      (click)="openArtInvoice()"
+                    >
+                      Art Invoice
+                    </button>
+                    <div class="button-gap"></div>
+                    <button
+                      id="invoice-button"
+                      class="btn btn-success"
+                      (click)="DigiArtInvoice()"
+                    >
+                      Digi Invoice
+                    </button>
+                    <div class="button-gap"></div>
+                    <button
+                      id="invoice-button"
+                      class="btn btn-success"
+                      (click)="Invoice()"
+                    >
+                      Invoice
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </mat-tab>
-  </mat-tab-group>
-
-</body>
-
+      </mat-tab>
+    </mat-tab-group>
+  </body>
 </html>

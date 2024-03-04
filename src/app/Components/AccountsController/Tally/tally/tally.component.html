@@ -80,7 +80,8 @@
                     <ag-grid-angular style="width: 100%; height: 100%;" [context]="context" [columnDefs]="columnDefs"
                     [pagination]="true" [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true"
                     [rowSelection]="rowSelection" [rowData]="rowData" [class]="themeClass"
-                    (cellClicked)="onCellClicked($event)" (gridReady)="onGridReady($event)"></ag-grid-angular>
+                    (cellClicked)="onCellClicked($event)" (gridReady)="onGridReady($event)" [paginationPageSize]="10"
+                                  floatingFilter="true" ></ag-grid-angular>
                 </div>
             </div>
                

@@ -180,14 +180,21 @@ export class InvoicecancellationComponent {
     checkboxSelection: isFirstColumn,
   };
   columnDefs: ColDef[] = [
-    { headerName: 'Invoice Number', field: 'invoiceNo', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
-    { headerName: 'Invoice Date', field: 'invoiceDate', filter: true, },
-    { headerName: 'Product Value', field: 'productValue', filter: true, },
-    { headerName: 'Waiver', field: 'waiver', filter: true, },
+    { headerName: 'Invoice Number', field: 'invoiceNo', filter: 'agTextColumnFilter',
+      floatingFilter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
+    { headerName: 'Invoice Date', field: 'invoiceDate', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Product Value', field: 'productValue', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Waiver', field: 'waiver', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
-    { headerName: 'Round Off', field: 'roundOff', filter: true, },
-    { headerName: 'Discount', field: 'discount', filter: true, },
-    { headerName: 'Invoice Value', field: 'invoiceValue', filter: true, },
+    { headerName: 'Round Off', field: 'roundOff', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Discount', field: 'discount', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Invoice Value', field: 'invoiceValue', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
   ];
 
   public rowSelection: 'single' | 'multiple' = 'multiple';

@@ -79,13 +79,20 @@ public defaultColDef: ColDef = {
 };
 
 columnDefs: ColDef[] = [
-  { headerName: 'Department Name ', field:'departmentname', filter: true, },
-  { headerName: 'Customer Short Name ', field:'customerShortName', filter: true, },
-  { headerName: 'Process Name', field:'processname', filter: true, },
-  { headerName: 'Job Status', field:'jobstatus', filter: true, },
-  { headerName: 'Scope Name', field:'scopeName', filter: true, },
-  { headerName: 'Norms', field:'norms', filter: true, },
-  { headerName: 'Division Name', field:'divisionName', filter: true, },
+  { headerName: 'Department Name ', field:'departmentname', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Customer Short Name ', field:'customerShortName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Process Name', field:'processname', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Job Status', field:'jobstatus', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Scope Name', field:'scopeName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Norms', field:'norms', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Division Name', field:'divisionName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
   {
     headerName: 'Actions',
     field: 'action',

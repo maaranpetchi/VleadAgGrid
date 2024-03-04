@@ -3,26 +3,34 @@
     <div class="customerProfile">
       <div class="backgroundcolor">
         <div class="panel-heading">
-          <h2 class="panel-title" style="text-align: center;font-family: 'Times New Roman', Times, serif;color:#ffffff">
+          <h2
+            class="panel-title"
+            style="
+              text-align: center;
+              font-family: 'Times New Roman', Times, serif;
+              color: #ffffff;
+            "
+          >
             Invoice Cancellation List
           </h2>
         </div>
 
         <div class="table-container">
           <ag-grid-angular
-          style="width: 100%; height: 100%;"
-          [context]="context"
-          [columnDefs]="columnDefs"
-          [pagination]="true"
-          [defaultColDef]="defaultColDef"
-          [suppressRowClickSelection]="true"
-          [rowSelection]="rowSelection"
-          [rowData]="rowData"
-          [class]="themeClass"
-          (cellClicked)="onCellClicked($event)"
-          (gridReady)="onGridReady($event)"
-        ></ag-grid-angular>
-      
+            style="width: 100%; height: 100%"
+            [context]="context"
+            [columnDefs]="columnDefs"
+            [pagination]="true"
+            [defaultColDef]="defaultColDef"
+            [suppressRowClickSelection]="true"
+            [rowSelection]="rowSelection"
+            [rowData]="rowData"
+            [class]="themeClass"
+            (cellClicked)="onCellClicked($event)"
+            (gridReady)="onGridReady($event)"
+            [paginationPageSize]="10"
+            floatingFilter="true"
+          ></ag-grid-angular>
         </div>
         <!-- Paginator -->
       </div>

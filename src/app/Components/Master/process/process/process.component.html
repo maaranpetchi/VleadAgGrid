@@ -1,50 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-
-<body style="height:123vh">
-  <!DOCTYPE html>
-  <html lang="en">
-
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
   </head>
 
-  <body style="height: 123vh;">
-    <div class="container">
-      <div class="advance">
-        <div class="customerProfile">
-          <div class="backgroundcolor">
-            <div class="panel-heading">
-              <h2 class="panel-title" style="color:#fff;">
-                Process <mat-icon class="add-icon" matTooltip="Process!" (click)="addItem()">add_box</mat-icon>
-              </h2>
-            </div>
+  <body style="height: 123vh">
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+      </head>
 
-            <div class="table-container">
-              <ag-grid-angular style="width: 100%; height: 100%;" [context]="context" [columnDefs]="columnDefs"
-              [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="rowSelection"
-              [rowData]="rowData" [pagination]="true" [class]="themeClass" (gridReady)="onGridReady($event)"
-              (cellValueChanged)="handleCellValueChanged($event)" frameworkComponents="{ }"></ag-grid-angular>
+      <body style="height: 123vh">
+        <div class="container">
+          <div class="advance">
+            <div class="customerProfile">
+              <div class="backgroundcolor">
+                <div class="panel-heading">
+                  <h2 class="panel-title" style="color: #fff">
+                    Process
+                    <mat-icon
+                      class="add-icon"
+                      matTooltip="Process!"
+                      (click)="addItem()"
+                      >add_box</mat-icon
+                    >
+                  </h2>
+                </div>
 
+                <div class="table-container">
+                  <ag-grid-angular
+                    style="width: 100%; height: 100%"
+                    [context]="context"
+                    [columnDefs]="columnDefs"
+                    [defaultColDef]="defaultColDef"
+                    [suppressRowClickSelection]="true"
+                    [rowSelection]="rowSelection"
+                    [rowData]="rowData"
+                    [pagination]="true"
+                    [class]="themeClass"
+                    (gridReady)="onGridReady($event)"
+                    (cellValueChanged)="handleCellValueChanged($event)"
+                    [paginationPageSize]="10"
+                    floatingFilter="true"
+                  ></ag-grid-angular>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
-    </div>
-
+      </body>
+    </html>
   </body>
-
-  </html>
-
-</body>
-
 </html>

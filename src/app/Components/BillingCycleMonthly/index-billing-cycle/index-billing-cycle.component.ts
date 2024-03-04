@@ -139,9 +139,12 @@ context: any='billingCycleMonthly';
   };
 
   columnDefs: ColDef[] = [
-    { headerName: 'Customer', field: 'customerName', filter: true, },
-    { headerName: 'Department', field: 'departmentName', filter: true, },
-    { headerName: 'Billing Date', field: 'billingDate', filter: true, },
+    { headerName: 'Customer', field: 'customerName', filter: 'agTextColumnFilter',
+      floatingFilter: true,},
+    { headerName: 'Department', field: 'departmentName', filter: 'agTextColumnFilter',
+      floatingFilter: true,},
+    { headerName: 'Billing Date', field: 'billingDate', filter: 'agTextColumnFilter',
+      floatingFilter: true,},
 
     {
       headerName: 'Actions',

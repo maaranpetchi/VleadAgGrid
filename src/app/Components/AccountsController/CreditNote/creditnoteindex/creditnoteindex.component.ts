@@ -111,15 +111,23 @@ export class CreditnoteindexComponent {
     checkboxSelection: isFirstColumn,
   };
   columnDefs: ColDef[] = [
-    { headerName: 'Voucher Number', field: 'voucherNo', filter: true },
-    { headerName: 'Voucher Date', field: 'collectionDate', filter: true, },
-    { headerName: 'Customer', field: 'customerShortName', filter: true, },
-    { headerName: 'Credit Note Amount', field: 'collectionAmount', filter: true, },
+    { headerName: 'Voucher Number', field: 'voucherNo', filter: 'agTextColumnFilter',
+      floatingFilter: true,},
+    { headerName: 'Voucher Date', field: 'collectionDate', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Customer', field: 'customerShortName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Credit Note Amount', field: 'collectionAmount', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
-    { headerName: 'Reference Number', field: 'referenceNo', filter: true, },
-    { headerName: 'Reference Date', field: 'referenceDate', filter: true, },
-    { headerName: 'Description', field: 'description', filter: true, },
-    { headerName: 'Invoice Number', field: 'invoiceNo', filter: true, },
+    { headerName: 'Reference Number', field: 'referenceNo', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Reference Date', field: 'referenceDate', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Description', field: 'description', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Invoice Number', field: 'invoiceNo', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
   ];
 
   public rowSelection: 'single' | 'multiple' = 'multiple';
