@@ -106,10 +106,14 @@ export class UserMasterComponent implements OnInit {
   };
 
   columnDefs: ColDef[] = [
-    { headerName: 'Name ', field: 'userTypeDesc', filter: true, },
-    { headerName: 'User Name ', field: 'username', filter: true, },
-    { headerName: 'User Type', field: 'userType', filter: true, },
-    { headerName: 'Role', field: 'roles', filter: true, },
+    { headerName: 'Name ', field: 'userTypeDesc',  filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'User Name ', field: 'username',  filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'User Type', field: 'userType',  filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Role', field: 'roles',  filter: 'agTextColumnFilter',
+      floatingFilter: true, },
     {
       headerName: 'Actions',
       field: 'action',

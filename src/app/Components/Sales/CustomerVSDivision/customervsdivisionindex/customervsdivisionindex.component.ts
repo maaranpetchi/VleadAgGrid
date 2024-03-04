@@ -127,9 +127,12 @@ context: any="customervsdivision";
   };
 
   columnDefs: ColDef[] = [
-    { headerName: 'Customer Short Name ', field: 'customerShortName', filter: true, },
-    { headerName: 'Department ', field: 'department', filter: true, },
-    { headerName: 'Division', field: 'division', filter: true, },
+    { headerName: 'Customer Short Name ', field: 'customerShortName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Department ', field: 'department', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Division', field: 'division', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
     {
       headerName: 'Actions',

@@ -219,16 +219,24 @@ export class JoborderexcelComponent implements OnInit {
    checkboxSelection: isFirstColumn,
  };
  columnDefs: ColDef[] = [
-   { headerName: 'Department', field: 'department', filter: true },
+   { headerName: 'Department', field: 'department', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
-   { headerName: 'Clienr Name', field: 'clientName', filter: true, },
-   { headerName: 'Client Status', field: 'clientStatus', filter: true, },
-   { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
+   { headerName: 'Clienr Name', field: 'clientName', filter: 'agTextColumnFilter',
+      floatingFilter: true,},
+   { headerName: 'Client Status', field: 'clientStatus', filter: 'agTextColumnFilter',
+      floatingFilter: true,},
+   { headerName: 'Job Status', field: 'jobStatusDescription', filter: 'agTextColumnFilter',
+      floatingFilter: true,},
 
-   { headerName: 'File Name', field: 'fileName', filter: true, },
-   { headerName: 'File Received Date', field: 'dateofReceived', filter: true, },
-   { headerName: 'Divisions', field: 'division', filter: true, },
-   { headerName: 'Uploaded', field: 'statusDesc', filter: true, },
+   { headerName: 'File Name', field: 'fileName', filter: 'agTextColumnFilter',
+      floatingFilter: true,},
+   { headerName: 'File Received Date', field: 'dateofReceived', filter: 'agTextColumnFilter',
+      floatingFilter: true,},
+   { headerName: 'Divisions', field: 'division', filter: 'agTextColumnFilter',
+      floatingFilter: true,},
+   { headerName: 'Uploaded', field: 'statusDesc', filter: 'agTextColumnFilter',
+      floatingFilter: true,},
  ];
 
  public rowSelection: 'single' | 'multiple' = 'multiple';

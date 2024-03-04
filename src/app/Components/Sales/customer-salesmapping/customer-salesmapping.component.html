@@ -37,14 +37,16 @@
           <ag-grid-angular style="width: 100%; height: 100%;" [context]="context" [columnDefs]="table1def"
           [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="rowSelection"
           [rowData]="rowData" [pagination]="true" [class]="themeClass" (gridReady)="onGridReady1($event)"
-          (cellValueChanged)="handleCellValueChanged($event)" frameworkComponents="{ }"></ag-grid-angular>
+          (cellValueChanged)="handleCellValueChanged($event)" [paginationPageSize]="10"
+                floatingFilter="true" ></ag-grid-angular>
 
         </div>
         <div class="table2">
           <ag-grid-angular style="width: 100%; height: 100%;" [context]="context" [columnDefs]="table2def"
           [defaultColDef]="table2defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="table2rowSelection"
           [rowData]="table2rowData" [pagination]="true" [class]="themeClass" (gridReady)="onGridReady2($event)"
-          (cellValueChanged)="handleCellValueChanged($event)" frameworkComponents="{ }"></ag-grid-angular>
+          (cellValueChanged)="handleCellValueChanged($event)" [paginationPageSize]="10"
+                floatingFilter="true" ></ag-grid-angular>
         </div>
 
       </div>

@@ -268,14 +268,21 @@ export class WavierComponent {
     checkboxSelection: isFirstColumn,
   };
   columnDefs: ColDef[] = [
-    { headerName: 'Job Number', field: 'jobId', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
-    { headerName: 'Job Date', field: 'jobDate', filter: true, },
-    { headerName: 'Department', field: 'department', filter: true, },
-    { headerName: 'Client', field: 'shortName', filter: true, },
+    { headerName: 'Job Number', field: 'jobId', filter: 'agTextColumnFilter',
+      floatingFilter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
+    { headerName: 'Job Date', field: 'jobDate', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Department', field: 'department', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Client', field: 'shortName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
-    { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
-    { headerName: 'File Name', field: 'fileName', filter: true, },
-    { headerName: 'Job Date', field: 'jobDate', filter: true, },
+    { headerName: 'Job Status', field: 'jobStatusDescription', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'File Name', field: 'fileName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Job Date', field: 'jobDate', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
   ];
 
   public rowSelection: 'single' | 'multiple' = 'multiple';

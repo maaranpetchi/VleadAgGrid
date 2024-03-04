@@ -457,7 +457,8 @@
                                     [suppressRowClickSelection]="true" [rowSelection]="rowSelection" [rowData]="rowData"
                                     [pagination]="true" [class]="themeClass" (gridReady)="onGridReady1($event)"
                                     (cellValueChanged)="handleCellValueChanged($event)"
-                                    frameworkComponents="{ }"></ag-grid-angular>
+                                    [paginationPageSize]="10"
+                floatingFilter="true" ></ag-grid-angular>
                             </div>
                             <div class="secondnext">
                                 <button class="btn btn-primary" matStepperPrevious>Back</button>

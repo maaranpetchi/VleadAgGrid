@@ -77,12 +77,18 @@ context: any="vendor";
   };
 
   columnDefs: ColDef[] = [
-    { headerName: 'Vendor Name ', field: 'vendorName', filter: true, },
-    { headerName: 'Invoice Number ', field: 'invoiceNumber', filter: true, },
-    { headerName: 'Invoice Date', field: 'invoiceDate', filter: true, },
-    { headerName: 'Invoice Value', field: 'invoiceValue', filter: true, },
-    { headerName: 'Pending Amount', field: 'pendingAmount', filter: true, },
-    { headerName: 'Amount Paid', field: 'amountPaid', filter: true, },
+    { headerName: 'Vendor Name ', field: 'vendorName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Invoice Number ', field: 'invoiceNumber', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Invoice Date', field: 'invoiceDate', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Invoice Value', field: 'invoiceValue', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Pending Amount', field: 'pendingAmount', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Amount Paid', field: 'amountPaid', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
     {
       headerName: 'Actions',
       field: 'action',

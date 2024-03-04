@@ -179,13 +179,20 @@ export class EmployeecontrollerComponent implements OnInit {
   };
 
   columnDefs: ColDef[] = [
-    { headerName: 'EmployeeCode ', field: 'employeeCode', filter: true, },
-    { headerName: 'EmployeeName ', field: 'employeeName', filter: true, },
-    { headerName: 'Department', field: 'departmentDesc', filter: true, },
-    { headerName: 'Designation', field: 'designationDesc', filter: true, },
-    { headerName: 'Proficiency', field: 'profiencyDesc', filter: true, },
-    { headerName: 'Reporting Manager', field: 'managerName1', filter: true, },
-    { headerName: 'Reporting Leader', field: 'leaderName1', filter: true, },
+    { headerName: 'EmployeeCode ', field: 'employeeCode', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'EmployeeName ', field: 'employeeName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Department', field: 'departmentDesc', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Designation', field: 'designationDesc', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Proficiency', field: 'profiencyDesc', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Reporting Manager', field: 'managerName1', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Reporting Leader', field: 'leaderName1', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
    
     {
       headerName: 'Actions',

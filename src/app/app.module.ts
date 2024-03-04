@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {HttpClientModule} from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -62,18 +62,15 @@ import { ChecklistpopComponent } from './Components/TopToolbarComponents/Quality
     MaterialModule,
     NavigationModule,
     MatDialogModule,
-    AgGridModule
+    AgGridModule,
   ],
-  exports:[
-    FilterPipe
-  ],
+  exports: [FilterPipe],
   providers: [
     EditadvanceadjustmentComponent,
     AdvanceadjustmentComponent,
     VendorService,
-    
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {
   

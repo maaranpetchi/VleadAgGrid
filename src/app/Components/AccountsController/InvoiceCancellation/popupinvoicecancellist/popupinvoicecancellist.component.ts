@@ -49,16 +49,24 @@ export class PopupinvoicecancellistComponent implements OnInit {
     checkboxSelection: isFirstColumn,
   };
   columnDefs: ColDef[] = [
-    { headerName: 'Quantity', field: 'qty', filter: true, },
+    { headerName: 'Quantity', field: 'qty', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
-    { headerName: 'Rate', field: 'rate', filter: true },
-    { headerName: 'Value', field: 'value', filter: true, },
-    { headerName: 'Pricing Type ', field: 'pricingType', filter: true, },
+    { headerName: 'Rate', field: 'rate', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Value', field: 'value', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Pricing Type ', field: 'pricingType', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
-    { headerName: 'Scope', field: 'scope', filter: true, },
-    { headerName: 'Department', field: 'departmentName', filter: true, },
-    { headerName: 'invoice Number', field: 'invoiceNo', filter: true, },
-    { headerName: 'Invoice Date', field: 'invoiceDate', filter: true, },
+    { headerName: 'Scope', field: 'scope', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Department', field: 'departmentName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'invoice Number', field: 'invoiceNo', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Invoice Date', field: 'invoiceDate', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
   ];
 
   public rowSelection: 'single' | 'multiple' = 'multiple';

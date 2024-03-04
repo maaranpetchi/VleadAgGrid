@@ -51,7 +51,8 @@ export class QualityallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
       colId: 'jobIdColumn',
       cellStyle: { color: 'blue' },
 
@@ -70,7 +71,8 @@ export class QualityallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
       colId: 'artistNameColumn',
     },
     {
@@ -80,7 +82,8 @@ export class QualityallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
       colId: 'employeeNameColumn',
       cellStyle: { color: 'blue' },
 
@@ -98,7 +101,8 @@ export class QualityallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       width: 100,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     {
       headerName: 'Client',
@@ -106,7 +110,8 @@ export class QualityallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       width: 100,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     {
       headerName: 'Customer Classification',
@@ -114,7 +119,8 @@ export class QualityallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       width: 100,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
 
     {
@@ -124,7 +130,8 @@ export class QualityallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     {
       headerName: 'File Inward Mode',
@@ -133,7 +140,8 @@ export class QualityallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
 
     {
@@ -142,7 +150,8 @@ export class QualityallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       width: 100,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     {
       headerName: 'Project Code',
@@ -151,7 +160,8 @@ export class QualityallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     {
       headerName: 'Status',
@@ -159,7 +169,8 @@ export class QualityallocationtableComponent implements OnInit {
       width: 100,
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     {
       headerName: 'Scope',
@@ -167,7 +178,8 @@ export class QualityallocationtableComponent implements OnInit {
       width: 100,
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     },
     {
       headerName: 'Est Time',
@@ -175,7 +187,8 @@ export class QualityallocationtableComponent implements OnInit {
       width: 100,
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
       editable: true,
     },
 
@@ -186,26 +199,31 @@ export class QualityallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-      filter: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
     }
   ];
   colEmpDefs: ColDef[] = [
     {
-      headerName: 'Employee', field: 'employeenameWithCode', checkboxSelection: true, width: 100, headerClass: "text-wrap", suppressSizeToFit: true, sortable: true, filter: true, cellStyle: { color: 'blue' }, cellRenderer: function (params) {
+      headerName: 'Employee', field: 'employeenameWithCode', checkboxSelection: true, width: 100, headerClass: "text-wrap", suppressSizeToFit: true, sortable: true, filter: 'agTextColumnFilter',
+      floatingFilter: true, cellStyle: { color: 'blue' }, cellRenderer: function (params) {
         return '<button class="btn btn-sm btn-link p-0">' + params.value + '</button>';
       }
     },
-    { headerName: 'Shift', field: 'shiftName', headerClass: "text-wrap", width: 100, suppressSizeToFit: true, sortable: true, filter: true },
+    { headerName: 'Shift', field: 'shiftName', headerClass: "text-wrap", width: 100, suppressSizeToFit: true, sortable: true, filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
   ]
   public defaultEmpColDef: ColDef = {
-    resizable: true, sortable: true, filter: true, editable: true, flex: 1,
+    resizable: true, sortable: true, filter: 'agTextColumnFilter',
+      floatingFilter: true, editable: true, flex: 1,
     minWidth: 100,
     headerCheckboxSelection: isFirstColumn,
     checkboxSelection: isFirstColumn,
   };
   public defaultColDef: ColDef = {
-    resizable: true, sortable: true, filter: true, editable: true, flex: 1,
+    resizable: true, sortable: true, filter: 'agTextColumnFilter',
+      floatingFilter: true, editable: true, flex: 1,
     minWidth: 100,
     headerCheckboxSelection: isFirstColumn,
     checkboxSelection: isFirstColumn,

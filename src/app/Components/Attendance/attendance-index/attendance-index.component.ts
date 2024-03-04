@@ -154,12 +154,18 @@ context: any="Attendance";
   };
 
   columnDefs: ColDef[] = [
-    { headerName: 'Employee Code ', field: 'empCode', filter: true, },
-    { headerName: 'Name ', field: 'name', filter: true, },
-    { headerName: 'Division', field: 'devision', filter: true, },
-    { headerName: 'Shift', field: 'shift', filter: true, },
-    { headerName: 'Pending Amount', field: 'pendingAmount', filter: true, },
-    { headerName: 'Attendance Status', field: 'attendanceStatus', filter: true, },
+    { headerName: 'Employee Code ', field: 'empCode', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Name ', field: 'name', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Division', field: 'devision', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Shift', field: 'shift', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Pending Amount', field: 'pendingAmount', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Attendance Status', field: 'attendanceStatus', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
     {
       headerName: 'Actions',
       field: 'action',

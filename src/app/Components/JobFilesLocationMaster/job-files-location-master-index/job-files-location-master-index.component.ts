@@ -462,10 +462,14 @@ public defaultColDef: ColDef = {
 };
 
 columnDefs: ColDef[] = [
-  { headerName: 'Department', field:'department.description', filter: true, },
-  { headerName: 'Customer', field:'customer.name', filter: true, },
-  { headerName: 'Shared File path', field:'ftpfilePath', filter: true, },
-  { headerName: 'Process Name', field:'processName', filter: true, },
+  { headerName: 'Department', field:'department.description', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Customer', field:'customer.name', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Shared File path', field:'ftpfilePath', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Process Name', field:'processName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
   {
     headerName: 'Actions',
     field: 'action',

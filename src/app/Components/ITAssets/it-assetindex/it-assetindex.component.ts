@@ -55,12 +55,18 @@ public defaultColDef: ColDef = {
 };
 
 columnDefs: ColDef[] = [
-  { headerName: 'Bay Number ', field:'bayNumber', filter: true, },
-  { headerName: 'Location', field:'location', filter: true, },
-  { headerName: 'PC Name', field:'pcName', filter: true, },
-  { headerName: 'Description', field:'description', filter: true, },
-  { headerName: 'Roll', field:'roll', filter: true, },
-  { headerName: 'Working Status', field:'workingStatus', filter: true, },
+  { headerName: 'Bay Number ', field:'bayNumber', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Location', field:'location', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'PC Name', field:'pcName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Description', field:'description', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Roll', field:'roll', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Working Status', field:'workingStatus', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
   {
     headerName: 'Actions',
     field: 'action',

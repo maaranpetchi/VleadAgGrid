@@ -130,10 +130,14 @@ public defaultColDef: ColDef = {
 };
 
 columnDefs: ColDef[] = [
-  { headerName: 'Name ', field: 'name', filter: true, },
-  { headerName: 'Short Name ', field: 'shortName', filter: true, },
-  { headerName: 'Description ', field: 'description', filter: true, },
-  { headerName: 'Is Active ', field: 'isActive', filter: true, },
+  { headerName: 'Name ', field: 'name', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Short Name ', field: 'shortName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Description ', field: 'description', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+  { headerName: 'Is Active ', field: 'isActive', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
   {
     headerName: 'Actions',

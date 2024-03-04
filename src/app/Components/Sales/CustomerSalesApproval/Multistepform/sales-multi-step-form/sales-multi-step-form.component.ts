@@ -723,10 +723,14 @@ export class SalesMultiStepFormComponent implements OnInit, OnDestroy {
   };
 
   table1def: ColDef[] = [
-    { headerName: 'Customer', field: 'customerName', filter: true, },
-    { headerName: 'Department ', field: 'deptName', filter: true, },
-    { headerName: 'Scope', field: 'scopeName', filter: true, },
-    { headerName: 'Status', field: 'customerJobType', filter: true, },
+    { headerName: 'Customer', field: 'customerName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Department ', field: 'deptName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Scope', field: 'scopeName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Status', field: 'customerJobType', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
     {
       headerName: 'Actions',
@@ -740,10 +744,14 @@ export class SalesMultiStepFormComponent implements OnInit, OnDestroy {
   ];
   table2def: ColDef[] = [
 
-    { headerName: 'Customer Name ', field: 'name', filter: true, },
-    { headerName: 'Customer Short Name ', field: 'shortName', filter: true, },
-    { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
-    { headerName: 'TAT', field: 'tat', filter: true, },
+    { headerName: 'Customer Name ', field: 'name', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Customer Short Name ', field: 'shortName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Job Status', field: 'jobStatusDescription', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'TAT', field: 'tat', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
     {
       headerName: 'Actions',
       field: 'action',

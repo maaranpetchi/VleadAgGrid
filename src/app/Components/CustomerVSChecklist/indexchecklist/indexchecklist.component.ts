@@ -121,9 +121,12 @@ export class IndexchecklistComponent implements OnInit {
   };
 
   columnDefs: ColDef[] = [
-    { headerName: 'ShortName ', field: 'shortName', filter: true, },
-    { headerName: 'Description ', field: 'description', filter: true, },
-    { headerName: 'Department', field: 'department', filter: true, },
+    { headerName: 'ShortName ', field: 'shortName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Description ', field: 'description', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Department', field: 'department', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
     {
       headerName: 'Actions',
       field: 'action',

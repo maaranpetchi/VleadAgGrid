@@ -236,13 +236,16 @@ export class AddeditemployeevsdivisionComponent implements OnInit {
   };
 
   table1def: ColDef[] = [
-    { headerName: 'EmployeeCode ', field: 'employeeCode', filter: true, },
-    { headerName: 'EmployeeName ', field: 'employeeName', filter: true, },
+    { headerName: 'EmployeeCode ', field: 'employeeCode', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'EmployeeName ', field: 'employeeName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
   ];
   table2def: ColDef[] = [
 
-    { headerName: 'Division', field: 'divisionName', filter: true, },
+    { headerName: 'Division', field: 'divisionName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
   ];
 
 

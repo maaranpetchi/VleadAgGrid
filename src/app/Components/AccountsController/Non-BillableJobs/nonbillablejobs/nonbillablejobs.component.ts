@@ -269,16 +269,25 @@ export class NonbillablejobsComponent implements OnInit {
     checkboxSelection: isFirstColumn,
   };
   columnDefs: ColDef[] = [
-    { headerName: 'Client Name', field: 'jobId', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
-    { headerName: 'Job Date', field: 'jobDate', filter: true, },
-    { headerName: 'File Name', field: 'fileName', filter: true, },
-    { headerName: 'Department', field: 'department', filter: true, },
+    { headerName: 'Client Name', field: 'jobId', filter: 'agTextColumnFilter',
+      floatingFilter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
+    { headerName: 'Job Date', field: 'jobDate', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'File Name', field: 'fileName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Department', field: 'department', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
-    { headerName: 'Job Status', field: 'jobStatus', filter: true, },
-    { headerName: 'Customer', field: 'customer', filter: true, },
-    { headerName: 'Scope', field: 'scope', filter: true, },
-    { headerName: 'Stitch Count', field: 'stitchCount', filter: true, },
-    { headerName: 'Non-Billable Status', field: 'nonBillableStatus', filter: true, },
+    { headerName: 'Job Status', field: 'jobStatus', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Customer', field: 'customer', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Scope', field: 'scope', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Stitch Count', field: 'stitchCount', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Non-Billable Status', field: 'nonBillableStatus', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
   ];
 
   public rowSelection: 'single' | 'multiple' = 'multiple';

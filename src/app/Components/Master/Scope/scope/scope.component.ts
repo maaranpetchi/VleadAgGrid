@@ -94,8 +94,10 @@ context: any="scope";
   };
 
   columnDefs: ColDef[] = [
-    { headerName: 'Department Name ', field: 'departmentDescription', filter: true, },
-    { headerName: 'Description ', field: 'description', filter: true, },
+    { headerName: 'Department Name ', field: 'departmentDescription', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Description ', field: 'description', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
     {
       headerName: 'Actions',

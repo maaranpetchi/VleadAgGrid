@@ -110,9 +110,12 @@ export class indexemployeevsdivisionComponent implements OnInit {
   };
 
   columnDefs: ColDef[] = [
-    { headerName: 'EmployeeCode ', field: 'employeeCode', filter: true, },
-    { headerName: 'EmployeeName ', field: 'employeeName', filter: true, },
-    { headerName: 'Division', field: 'divisionName', filter: true, },
+    { headerName: 'EmployeeCode ', field: 'employeeCode', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'EmployeeName ', field: 'employeeName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Division', field: 'divisionName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
     {
       headerName: 'Actions',

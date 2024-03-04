@@ -104,8 +104,10 @@ context: any="errorcategory";
   };
 
   columnDefs: ColDef[] = [
-    { headerName: 'Department Name ', field: 'department.description', filter: true, },
-    { headerName: 'Description ', field: 'description', filter: true, },
+    { headerName: 'Department Name ', field: 'department.description', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Description ', field: 'description', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
 
     {
       headerName: 'Actions',

@@ -17,6 +17,8 @@
         (gridReady)="onGridReady($event)"
         (cellValueChanged)="onCellValueChanged($event)"
         (cellClicked)="onCellJobClicked($event)"
+        [paginationPageSize]="10"
+        floatingFilter="true" 
       >
       </ag-grid-angular>
     </div>
@@ -38,6 +40,8 @@
                 (gridReady)="onGridEmpReady($event)"
                 (selectionChanged)="onSelectionEmpChanged($event)"
                 (cellClicked)="onCellEmpClicked($event)"
+                [paginationPageSize]="10"
+        floatingFilter="true" 
               >
               </ag-grid-angular>
           </div>

@@ -1,76 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
+  <body style="height: 123vh">
+    <div class="container">
+      <div class="advance">
+        <div class="customerProfile">
+          <div class="backgroundcolor">
+            <div class="panel-heading">
+              <h2 class="panel-title" style="color: #fff">
+                Invoice Cancellation
+              </h2>
+            </div>
 
-<body style="height:123vh">
-  <div class="container">
-    <div class="advance">
-      <div class="customerProfile">
-        <div class="backgroundcolor">
-          <div class="panel-heading">
-            <h2 class="panel-title" style="color:#fff;">
-              Invoice Cancellation
-            </h2>
-          </div>
+            <div class="pricingcalculation">
+              <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+                <div class="container1">
+                  <div class="row">
+                    <div class="col">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Client</mat-label>
+                        <mat-select
+                          ngDefaultControl
+                          formControlName="ClientId"
+                          (selectionChange)="onOptionSelected($event, myForm)"
+                        >
+                          <mat-option
+                            *ngFor="let Client of clientdata.clientDrop"
+                            [value]="Client.id"
+                          >
+                            {{ Client.shortName }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Invoice Number</mat-label>
+                        <mat-select
+                          ngDefaultControl
+                          formControlName="invoicenumber"
+                        >
+                          <mat-option
+                            *ngFor="let invoicenumber of storinginvoicevalue"
+                            [value]="invoicenumber.invoiceNo"
+                          >
+                            {{ invoicenumber.invoiceNo }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
 
-          <div class="pricingcalculation">
-            <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
-              <div class="container1">
-                <div class="row">
-                  <div class="col">
-                    <mat-form-field appearance="fill">
-                      <mat-label>Client</mat-label>
-                      <mat-select ngDefaultControl formControlName="ClientId"
-                        (selectionChange)="onOptionSelected($event,myForm)">
-                        <mat-option *ngFor="let Client of clientdata.clientDrop" [value]="Client.id">
-                          {{Client.shortName}}
-                        </mat-option>
-                      </mat-select>
-                    </mat-form-field>
+                    <div class="button">
+                      <button
+                        class="btn btn-primary"
+                        mat-raised-button
+                        color="primary"
+                      >
+                        Search
+                      </button>
+                      <a
+                        class="viewcancelledinvoice"
+                        routerLink="/topnavbar/acc-viewinvcan"
+                        style="float: right"
+                        >View Cancelled Invoice</a
+                      >
+                    </div>
                   </div>
-                  <div class="col">
-                    <mat-form-field appearance="fill">
-                      <mat-label>Invoice Number</mat-label>
-                      <mat-select ngDefaultControl formControlName="invoicenumber">
-                        <mat-option *ngFor="let invoicenumber of storinginvoicevalue" [value]="invoicenumber.invoiceNo">
-                          {{invoicenumber.invoiceNo}}
-                        </mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-
-                  <div class="button">
-                    <button class="btn btn-primary" mat-raised-button color="primary">Search</button>
-                    <a class="viewcancelledinvoice" routerLink="/topnavbar/acc-viewinvcan" style="float: right;">View
-                      Cancelled Invoice</a>
-
-                  </div>
-
                 </div>
-              </div>
-            </form>
-          </div>
+              </form>
+            </div>
 
-
-          <div class="table-container">
-            <ag-grid-angular style="width: 100%; height: 100%;" [context]="context" [columnDefs]="columnDefs"
-              [pagination]="true" [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true"
-              [rowSelection]="rowSelection" [rowData]="rowData" [class]="themeClass"
-              (cellClicked)="onCellClicked($event)" (gridReady)="onGridReady($event)"></ag-grid-angular>
+            <div class="table-container">
+              <ag-grid-angular
+                style="width: 100%; height: 100%"
+                [context]="context"
+                [columnDefs]="columnDefs"
+                [pagination]="true"
+                [defaultColDef]="defaultColDef"
+                [suppressRowClickSelection]="true"
+                [rowSelection]="rowSelection"
+                [rowData]="rowData"
+                [class]="themeClass"
+                (cellClicked)="onCellClicked($event)"
+                (gridReady)="onGridReady($event)"
+                [paginationPageSize]="10"
+              floatingFilter="true" 
+              ></ag-grid-angular>
+            </div>
           </div>
-        </div>
-        <div class="thirdform" style="display:flex;align-items: center;justify-content: center;padding:20px">
-          <button type="button" class="btn btn-success" (click)="cancelInvoice()">Cancel Invoice</button>
+          <div
+            class="thirdform"
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              padding: 20px;
+            "
+          >
+            <button
+              type="button"
+              class="btn btn-success"
+              (click)="cancelInvoice()"
+            >
+              Cancel Invoice
+            </button>
+          </div>
         </div>
       </div>
-
     </div>
-  </div>
-</body>
-
+  </body>
 </html>

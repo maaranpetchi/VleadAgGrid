@@ -61,12 +61,18 @@ context: any="customerunapprovaljobs";
   };
 
   columnDefs: ColDef[] = [
-    { headerName: 'File Name', field: 'fileName', filter: true, },
-    { headerName: 'PO# ', field: 'pono', filter: true, },
-    { headerName: 'Customer Name', field: 'companyName', filter: true, },
-    { headerName: 'Instructions', field: 'jobStatusDescription', filter: true, },
-    { headerName: 'Sales Person Name', field: 'salesPersonName', filter: true, },
-    { headerName: 'Job Status', field: 'jobStatusDescription', filter: true, },
+    { headerName: 'File Name', field: 'fileName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'PO# ', field: 'pono', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Customer Name', field: 'companyName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Instructions', field: 'jobStatusDescription', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Sales Person Name', field: 'salesPersonName', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Job Status', field: 'jobStatusDescription', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
     {
       headerName: 'Actions',
       field: 'action',

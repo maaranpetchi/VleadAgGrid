@@ -117,11 +117,16 @@ export class AdvanceadjustmentComponent implements OnInit {
   };
 
   columnDefs: ColDef[] = [
-    { headerName: 'Voucher Number', field:'receivable.voucherNo', filter: true, },
-    { headerName: 'Collection Date', field:'receivable.collectionDate', filter: true, },
-    { headerName: 'Description', field:'receivable.description', filter: true, },
-    { headerName: 'Receipt Advance Amount', field: 'adjustmentAmount', filter: true, },
-    { headerName: 'Unadjusted Advance', field: 'availableAdvance', filter: true, },
+    { headerName: 'Voucher Number', field:'receivable.voucherNo', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Collection Date', field:'receivable.collectionDate', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Description', field:'receivable.description', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Receipt Advance Amount', field: 'adjustmentAmount', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
+    { headerName: 'Unadjusted Advance', field: 'availableAdvance', filter: 'agTextColumnFilter',
+      floatingFilter: true, },
     {
       headerName: 'Actions',
       field: 'action',

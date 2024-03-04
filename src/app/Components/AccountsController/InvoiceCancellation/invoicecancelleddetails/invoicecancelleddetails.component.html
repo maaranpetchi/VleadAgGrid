@@ -32,6 +32,8 @@
                 [class]="themeClass"
                 (cellClicked)="onCellClicked($event)"
                 (gridReady)="onGridReady($event)"
+                [paginationPageSize]="10"
+              floatingFilter="true" 
               ></ag-grid-angular>
               </div>
             </div>

@@ -88,7 +88,8 @@
                             [columnDefs]="columnDefs" [pagination]="true" [defaultColDef]="defaultColDef"
                             [suppressRowClickSelection]="true" [rowSelection]="rowSelection" [rowData]="rowData"
                             [class]="themeClass" (cellClicked)="onCellClicked($event)"
-                            (gridReady)="onGridReady($event)"></ag-grid-angular>
+                            (gridReady)="onGridReady($event)"[paginationPageSize]="10"
+                                          floatingFilter="true" ></ag-grid-angular>
                     </div>
                 </div>
                 <br>
