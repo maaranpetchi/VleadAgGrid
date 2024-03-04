@@ -37,6 +37,11 @@
         </div>
         <div class="row">
           <div class="col">
+            <p>Instructions :&nbsp;&nbsp; {{this.getJobHistoryData.jobCommonDetails.instruction}}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
             <p>Work File Folder : &nbsp;&nbsp;&nbsp;
               <button (click)="workFiles(data.id)">WorkFiles</button>
               <button (click)="zipFiles()">Zip</button>
