@@ -29,6 +29,7 @@ import { AnniversaryComponent } from './Components/Navigation/Anniversary/annive
 import { AgGridModule } from 'ag-grid-angular';
 import 'ag-grid-enterprise';
 import { DeleteActionRenderingComponent } from './Components/EmployeeVSDivision/delete-action-rendering/delete-action-rendering.component';
+import { ChecklistpopComponent } from './Components/TopToolbarComponents/Quality/checklistpop/checklistpop.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { DeleteActionRenderingComponent } from './Components/EmployeeVSDivision/
     BirthdayComponent,
     AnniversaryComponent,
     DeleteActionRenderingComponent,
+    ChecklistpopComponent,
     
     
     
@@ -70,4 +72,6 @@ import { DeleteActionRenderingComponent } from './Components/EmployeeVSDivision/
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  
+ }

@@ -93,7 +93,7 @@ export class UpdateBillingComponent implements OnInit {
         Swal.fire('Done', 'Billing Updated Sucessfully', 'success').then((result) => {
           if (result.isConfirmed) {
             this.form.reset();
-            this.dialogRef.close()
+            this.dialogRef.close(true)
           }
         })
       })

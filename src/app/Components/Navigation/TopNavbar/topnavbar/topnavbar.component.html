@@ -1,6 +1,6 @@
 <mat-toolbar color="primary" class="topToolbar">
 <div class="logoImage">
-   <a routerLink="dashboard" style="cursor: pointer;"><img src="http://www.vleadservices.com/wp-content/uploads/2017/06/logo.png" alt=""
+   <a routerLink="dashboard" style="cursor: pointer;"><img src="../../../../../assets/Images/Vleadlogo.png" alt=""
       style="max-width: 60%;"></a>
 </div>
 
@@ -229,12 +229,18 @@
       </mat-expansion-panel>
 
 
+
+      <mat-list-item (click)="salesReport()" *ngIf="this.checkIsTrue([116], isAdmin)">
+        <span class="spanClass">
+          <mat-icon class="push_pin">push_pin</mat-icon><span>SALES REPORT</span>
+        </span>
+      </mat-list-item>
       <!-- <mat-list-item routerLink="indexBiling">
         <span class="spanClass">
         <mat-icon class="push_pin">push_pin</mat-icon> <span >BILLING CYCLE MONTHLY</span>
         </span>
-      </mat-list-item> -->
-      
+      </mat-list-item>
+       -->
 
       <mat-list-item routerLink="JobFilesLocationMaster" *ngIf="this.checkIsTrue([92], isAdmin)">
         <span class="spanClass">
@@ -254,12 +260,12 @@
         </span>
       </mat-list-item>
 
-      <mat-list-item routerLink="customerNorms" >
+      <mat-list-item routerLink="customerNorms" *ngIf="this.checkIsTrue([115], isAdmin)">
         <span class="spanClass">
         <mat-icon class="push_pin">push_pin</mat-icon> <span >CUSTOMER NORMS</span>
         </span>
       </mat-list-item>
-      <mat-list-item routerLink="attendance">
+      <mat-list-item routerLink="attendance" *ngIf="this.checkIsTrue([114], isAdmin)">
         <span class="spanClass">
         <mat-icon class="push_pin">push_pin</mat-icon> <span >ATTENDANCE</span>
         </span>
@@ -285,7 +291,7 @@
 
       <mat-list-item routerLink="indexskillset" >
         <span class="spanClass">
-        <mat-icon class="push_pin">push_pin</mat-icon><span >EMPLOYEE VS SKILLSET</span>
+        <mat-icon class="push_pin">push_pin</mat-icon><span>EMPLOYEE VS SKILLSET</span>
         </span>
       </mat-list-item>
     </mat-nav-list>

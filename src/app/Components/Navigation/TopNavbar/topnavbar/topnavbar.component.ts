@@ -12,6 +12,7 @@ import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 import { forEach } from 'jszip';
 import { BirthdayComponent } from '../../Birthday/birthday/birthday.component';
 import { AnniversaryComponent } from '../../Anniversary/anniversary/anniversary.component';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 
 @Component({
@@ -36,7 +37,7 @@ export class TopnavbarComponent implements OnInit {
   showingMenu: any;
   username: string | null;
   UserId: string | null;
-  constructor(private _dialog: MatDialog, private loginservice: LoginService, private router: Router, private logoutService: LogoutService, private cookieService: CookieService, private http: HttpClient, private spinnerService: SpinnerService) { }
+  constructor(private _dialog: MatDialog, private loginservice: LoginService, private router: Router, private logoutService: LogoutService, private cookieService: CookieService, private http: HttpClient, private spinnerService: SpinnerService, private sanitizer: DomSanitizer) { }
   ngOnInit(): void {
     this.getProcesses();
     this.checkIsAdmin();
@@ -92,7 +93,10 @@ export class TopnavbarComponent implements OnInit {
     });
 
   }
-
+  salesReport() {
+    const url = 'https://app.powerbi.com/view?r=eyJrIjoiYzEyODhkY2EtZDVmNi00MDIxLWJiN2EtNGM1MDczNTE2ZTVkIiwidCI6ImUxZDgyNzFlLWFkYTgtNGJkYi1hYzBmLTQwYmU4YWU4ZTQzNSJ9&pageName=ReportSectiona64d4c421c07a3470796';
+    window.open(url, '_blank');
+  }
   Processes: any[] = [];
   getProcesses() {
     this.spinnerService.requestStarted();
@@ -105,6 +109,8 @@ export class TopnavbarComponent implements OnInit {
   }
 
   routeNav(process: any) {
+    console.log(process, "Process");
+
     if (process.id == 1) {
       this.cookieService.set('processId', process.id);
       this.cookieService.set('processName', process.name);
@@ -223,7 +229,7 @@ export class TopnavbarComponent implements OnInit {
 
 
 
-  birthday(){
+  birthday() {
     const dialogRef = this._dialog.open(BirthdayComponent);
     dialogRef.afterClosed().subscribe({
       // next: (val) => {
@@ -234,7 +240,7 @@ export class TopnavbarComponent implements OnInit {
     });
   }
 
-  anniversary(){
+  anniversary() {
     const dialogRef = this._dialog.open(AnniversaryComponent);
     dialogRef.afterClosed().subscribe({
       // next: (val) => {

@@ -596,6 +596,7 @@ export class InvoiceComponent implements OnInit {
   }
 
 
+  
   openArtInvoice() {
     const selectedRows = this.gridApi3.getSelectedRows();
 
@@ -609,24 +610,17 @@ export class InvoiceComponent implements OnInit {
       return;
     }
   
-    this.gridApi3.getSelectedRows().forEach(x => this.setConfirmAll(x));
-    if (this.selectedConfirmInvoice.length > 0) {
-      this.selectedConfirmInvoiceJobs = this.selectedConfirmInvoice;
+    selectedRows.forEach(row => {
+      const invoiceNumber = row.invoiceNo;
+      const shortName = row.shortName;
 
-      const params = new HttpParams().set('InvoiceNo', this.selectedConfirmInvoice[0].invoiceNo);
-
-      this.sendinginvoiceNumber = this.selectedConfirmInvoice[0].invoiceNo
-
-      const invoiceNumber = this.selectedConfirmInvoice[0].invoiceNo;
-      console.log(invoiceNumber, "invoiceNumber");
-
+      const queryParams = { InvoiceNo: invoiceNumber ,ShortName:shortName};
       const url = this.router.serializeUrl(
-        this.router.createUrlTree(['/topnavbar/acc-SSRS'], { queryParams: { InvoiceNo: invoiceNumber } })
+        this.router.createUrlTree(['/topnavbar/acc-SSRS'], { queryParams })
       );
       const redirectURL = document.location.origin + '/#' + url;
       window.open(redirectURL, '_blank');
-
-    }
+    });
   }
 
   DigiArtInvoice() {
@@ -644,24 +638,17 @@ export class InvoiceComponent implements OnInit {
     else {
       // this.spinnerService.requestStarted();
 
-      selectedRows.forEach(x => this.setConfirmAll(x));
-      if (this.selectedConfirmInvoice.length > 0) {
-        this.selectedConfirmInvoiceJobs = this.selectedConfirmInvoice;
+      selectedRows.forEach(row => {
+        const invoiceNumber = row.invoiceNo;
+        const shortName = row.shortName;
 
-        const params = new HttpParams().set('InvoiceNo', this.selectedConfirmInvoice[0].invoiceNo);
-
-        this.sendinginvoiceNumber = this.selectedConfirmInvoice[0].invoiceNo
-
-        const invoiceNumber = this.selectedConfirmInvoice[0].invoiceNo;
-        console.log(invoiceNumber, "invoiceNumber");
-
+        const queryParams = { InvoiceNo: invoiceNumber ,ShortName:shortName};
         const url = this.router.serializeUrl(
-          this.router.createUrlTree(['/topnavbar/acc-generatedinvoice'], { queryParams: { InvoiceNo: invoiceNumber } })
+          this.router.createUrlTree(['/topnavbar/acc-generatedinvoice'], { queryParams })
         );
         const redirectURL = document.location.origin + '/#' + url;
         window.open(redirectURL, '_blank');
-
-      }
+      });
     }
   }
   Invoice() {
@@ -680,27 +667,20 @@ export class InvoiceComponent implements OnInit {
       // this.spinnerService.requestStarted();
 
 
-      selectedRows.forEach(x => this.setConfirmAll(x));
-      if (this.selectedConfirmInvoice.length > 0) {
-        this.selectedConfirmInvoiceJobs = this.selectedConfirmInvoice;
-
-        const params = new HttpParams().set('InvoiceNo', this.selectedConfirmInvoice[0].invoiceNo);
-
-        this.sendinginvoiceNumber = this.selectedConfirmInvoice[0].invoiceNo
-
-        const invoiceNumber = this.selectedConfirmInvoice[0].invoiceNo;
-        console.log(invoiceNumber, "invoiceNumber");
-
+      selectedRows.forEach(row => {
+        console.log(row,"RowData");
+        
+        const invoiceNumber = row.invoiceNo;
+        const shortName = row.shortName;
+        const queryParams = { InvoiceNo: invoiceNumber ,ShortName:shortName};
         const url = this.router.serializeUrl(
-          this.router.createUrlTree(['/topnavbar/acc-popupinvoice'], { queryParams: { InvoiceNo: invoiceNumber } })
+          this.router.createUrlTree(['/topnavbar/acc-popupinvoice'], { queryParams })
         );
         const redirectURL = document.location.origin + '/#' + url;
         window.open(redirectURL, '_blank');
-
-      }
+      });
     }
   }
-
   /////////////////////////Ag-grid module///////////////////////////////
   @ViewChild('agGrid1') agGrid1: AgGridAngular;
   @ViewChild('agGrid2') agGrid2: AgGridAngular;

@@ -317,7 +317,7 @@
                                         }}</span>
 
                                 </div>
-                                <div class="col">
+                                <div class="col" *ngIf="this.AppCustomerDetails.empName != null">
                                     <mat-checkbox [(ngModel)]="Checklist" name="Checklist">Is Approved</mat-checkbox>
                                 </div>
                                 <div class="col">
@@ -354,10 +354,17 @@
                                         [(ngModel)]="CurrencyMode" placeholder="Currency Mode" required tabindex="2">
 
                                 </div>
-                                <div class="firstnext">
-                                    <button class="btn btn-success" style="float: right;"
-                                        (click)="AppCustomerupdate()">Next</button>
 
+                                <div class="col-4">
+                                    <mat-checkbox [(ngModel)]="LastChecklist"
+                                        name="LastChecklist">CheckList</mat-checkbox>
+
+                                </div>
+                                <div class="firstnext">
+                                    <button class="btn btn-primary" routerLink="/topnavbar/customerSalesApproval">
+                                        Back
+                                    </button>
+                                    <button class="btn btn-success" (click)="AppCustomerupdate()">Next</button>
                                 </div>
                             </div>
 
@@ -527,10 +534,12 @@
                             <br>
                             <div class="example-container mat-elevation-z8">
 
-                                <ag-grid-angular style="width: 100%; height: 100%;" [context]="getContext()" [columnDefs]="table2def"
-                                [defaultColDef]="table2defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="table2rowSelection"
-                                [rowData]="table2rowData" [pagination]="true" [class]="themeClass" (gridReady)="onGridReady2($event)"
-                                (cellValueChanged)="handleCellValueChanged($event)" ></ag-grid-angular>
+                                <ag-grid-angular style="width: 100%; height: 100%;" [context]="getContext()"
+                                    [columnDefs]="table2def" [defaultColDef]="table2defaultColDef"
+                                    [suppressRowClickSelection]="true" [rowSelection]="table2rowSelection"
+                                    [rowData]="table2rowData" [pagination]="true" [class]="themeClass"
+                                    (gridReady)="onGridReady2($event)"
+                                    (cellValueChanged)="handleCellValueChanged($event)"></ag-grid-angular>
                             </div>
                         </div>
                     </div>

@@ -366,7 +366,13 @@ export class BuddyProofTableComponent implements OnInit {
     { headerName: 'Job Id', field: 'jobId', filter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' } },
 
     { headerName: 'EST Job/Query Date', field: 'estjobDate', filter: true, },
-    { headerName: 'Actions', cellRenderer: actionrendering, field: 'actions', filter: true, },// Use cellRenderer for customization},
+    {
+      headerName: 'Actions',
+      field: 'action',
+      cellRenderer: actionrendering, // JS comp by Direct Reference
+      autoHeight: true,
+    }
+  ,
     { headerName: 'Client', field: 'shortName', filter: true, },
     { headerName: 'Customer Classification', field: 'customerClassification', filter: true, },
     { headerName: 'File Name', field: 'fileName', filter: true, },
@@ -383,7 +389,7 @@ export class BuddyProofTableComponent implements OnInit {
   ];
 
   public rowSelection: 'single' | 'multiple' = 'multiple';
-  public rowData!: any[];
+  public rowData: any[]=[];
   public themeClass: string =
     "ag-theme-quartz";
   @ViewChild(ClientordinationindexComponent) ClientordinationindexComponent: ClientordinationindexComponent;

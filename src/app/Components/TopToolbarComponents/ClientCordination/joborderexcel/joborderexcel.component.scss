@@ -16,4 +16,11 @@
     width: 75%; /* Set the table width to 75% of its container */
     border-collapse: collapse; /* Optional: Collapse borders between table cells */
   }
-  
+  .main-body {
+    align-items: center;
+    height: 100vh;
+    display: flex;
+    justify-items: center;
+    /* justify-content: flex-end; */
+    /* align-content: center; */
+}

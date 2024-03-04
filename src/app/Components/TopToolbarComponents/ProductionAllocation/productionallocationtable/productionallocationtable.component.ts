@@ -639,6 +639,7 @@ export class ProductionallocationtableComponent implements OnInit {
     }
   }
   freshJobs() {
+    this.spinnerService.requestStarted();
     this.http
       .get<any>(
         environment.apiURL +
@@ -648,6 +649,7 @@ export class ProductionallocationtableComponent implements OnInit {
       )
       .subscribe({
         next: (freshJobs) => {
+          this.spinnerService.requestEnded();
           if (this.gridApi) {
             // this.gridApi.setColumnVisible('jobId', true); // Show 'jobId' column // this.gridApi.setColumnVisible('AllocatedjobId', false); // Hide 'AllocatedjobId' column
           } else {
@@ -891,7 +893,7 @@ export class ProductionallocationtableComponent implements OnInit {
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
-          this.freshJobs();
+          this.ngOnInit();
         }
       },
     });

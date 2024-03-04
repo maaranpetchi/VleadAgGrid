@@ -42,7 +42,7 @@
 }
 
 .mat-elevation-z8 {
-  overflow-x: scroll;
+  overflow-x: hidden;
 }
 
 .clickable-link {
@@ -50,7 +50,7 @@
 }
 
 .table-container {
-  /* Set the maximum height for the table container */
+  height:69vh; /* Set the maximum height for the table container */
   overflow-y: auto;
   /* Enable vertical scrolling */
   background-color: white;

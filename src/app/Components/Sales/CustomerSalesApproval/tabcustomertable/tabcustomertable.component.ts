@@ -111,7 +111,7 @@ export class TabcustomertableComponent implements OnInit {
 
 
   ApprovedCustomer() {
-    // this.spinnerService.requestStarted();
+    this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Customer/getCustomerUnapproval?EmpId=${this.loginservice.getUsername()}`).subscribe(unapprovedCustomer => {
       this.gridApi.setColumnVisible('name', false);
       this.gridApi.setColumnVisible('companyName', true);
@@ -125,11 +125,12 @@ export class TabcustomertableComponent implements OnInit {
       this.gridApi.setColumnVisible('action', true);
 
       this.rowData = unapprovedCustomer ;
+      this.spinnerService.requestEnded();
 
     });
   }
   UnApprovedCustomer() {
-    // this.spinnerService.requestStarted();
+    this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Customer/GetAllCustomers?EmpId=${this.loginservice.getUsername()}`).subscribe(approvedCustomer => {
       this.rowData =  approvedCustomer;
       
@@ -143,6 +144,8 @@ export class TabcustomertableComponent implements OnInit {
       this.gridApi.setColumnVisible('phoneNo', false);
       this.gridApi.setColumnVisible('employeeName', true);
       this.gridApi.setColumnVisible('action', true);
+      this.spinnerService.requestEnded();
+
     },
       error => {
         // this.spinnerService.resetSpinner();
@@ -179,7 +182,7 @@ export class TabcustomertableComponent implements OnInit {
   ];
 
   public rowSelection: 'single' | 'multiple' = 'multiple';
-  public rowData!: any[];
+  public rowData: any[]=[];
   public themeClass: string =
     "ag-theme-quartz";
 

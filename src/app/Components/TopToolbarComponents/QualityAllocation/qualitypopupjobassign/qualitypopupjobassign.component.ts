@@ -58,6 +58,7 @@ export class QualitypopupjobassignComponent implements OnInit {
   gettingscopeid: any;
   gettingStitchCount: any;
 settingStitchcount: number=0;
+  jobCommonDetailsTranfilepath: any;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -144,6 +145,7 @@ settingStitchcount: number=0;
     this.http.post<any>(apiUrl, this.data.jId ? this.data.jId : this.data.jid).subscribe(
       (response: any) => {
         this.getJobHistoryData = response;
+        this.jobCommonDetailsTranfilepath = response.jobCommonDetails.tranFileUploadPath;
         this.jobCommonDetails = response.jobCommonDetails.description;
         this.dataJobSource = new MatTableDataSource(response.jobHistory);
         this.dataQuerySource = new MatTableDataSource(response.jobQueryHistory);
@@ -298,8 +300,7 @@ settingStitchcount: number=0;
         if (val.success === true) {
           Swal.fire('Done!', val.message, 'success').then((val) => {
             if(val.isConfirmed){
-              this.dialogRef.close();
-              window.location.reload();
+              this.dialogRef.close(true);
             }
           });
         }
@@ -362,7 +363,11 @@ settingStitchcount: number=0;
         this.spinnerservice.requestEnded();
 
         if (response.success === true) {
-          Swal.fire('Done!', response.message, 'success');
+          Swal.fire('Done!', response.message, 'success').then((res)=>{
+            if(res.isConfirmed){
+              this.dialogRef.close(true);
+            }
+          });
         } else if (response.success === false) {
           Swal.fire('Error!', response.message, 'error');
         };
@@ -401,7 +406,9 @@ settingStitchcount: number=0;
 
 
   zipFiles(): void {
-    let path = this.data.tranFileUploadPath || this.jobCommonDetails.jobCommonDetails.tranFileUploadPath;
+    console.log(this.jobCommonDetails,"tranfilePath");
+    
+    let path = this.data.tranFileUploadPath ? this.data.tranFileUploadPath: this.jobCommonDetailsTranfilepath;
     path = path.replace(/\\/g, '_');
 
     const fileUrl =
@@ -434,8 +441,9 @@ settingStitchcount: number=0;
 
   //Workfile downlaod//
   workFiles(id: number): void {
+console.log(this.jobCommonDetailsTranfilepath,"Tranfilrpath");
 
-    let path = this.data.tranFileUploadPath || this.jobCommonDetails.jobCommonDetails.tranFileUploadPath;
+    let path = this.data.tranFileUploadPath ?this.data.tranFileUploadPath: this.jobCommonDetailsTranfilepath;
 
     console.log(path, "PathFiles");
 

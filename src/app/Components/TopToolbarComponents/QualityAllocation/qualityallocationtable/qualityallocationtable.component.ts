@@ -36,8 +36,8 @@ export class QualityallocationtableComponent implements OnInit {
   selectedJobs: any[] = [];
 
   // AG Grid Table Data
-  rowData!:any;
-  rowEmpData!:any;
+  rowData!: any;
+  rowEmpData!: any;
   public rowSelection: 'single' | 'multiple' = 'multiple';
   private gridApi;
   private gridEmplApi!: GridApi<any>;
@@ -52,9 +52,9 @@ export class QualityallocationtableComponent implements OnInit {
       suppressSizeToFit: true,
       sortable: true,
       filter: true,
-      colId: 'jobIdColumn' ,
+      colId: 'jobIdColumn',
       cellStyle: { color: 'blue' },
-     
+
       cellRenderer: function (params) {
         return (
           '<button class="btn btn-sm btn-link p-0">' +
@@ -71,7 +71,7 @@ export class QualityallocationtableComponent implements OnInit {
       suppressSizeToFit: true,
       sortable: true,
       filter: true,
-      colId: 'artistNameColumn' ,
+      colId: 'artistNameColumn',
     },
     {
       headerName: 'Employee(s)',
@@ -81,9 +81,9 @@ export class QualityallocationtableComponent implements OnInit {
       suppressSizeToFit: true,
       sortable: true,
       filter: true,
-      colId: 'employeeNameColumn' ,
+      colId: 'employeeNameColumn',
       cellStyle: { color: 'blue' },
-     
+
       cellRenderer: function (params) {
         return (
           '<button class="btn btn-sm btn-link p-0">' +
@@ -116,7 +116,7 @@ export class QualityallocationtableComponent implements OnInit {
       sortable: true,
       filter: true,
     },
-    
+
     {
       headerName: 'File Name',
       field: 'fileName',
@@ -135,7 +135,7 @@ export class QualityallocationtableComponent implements OnInit {
       sortable: true,
       filter: true,
     },
-    
+
     {
       headerName: 'Job Status ',
       field: 'jobStatusDescription',
@@ -178,7 +178,7 @@ export class QualityallocationtableComponent implements OnInit {
       filter: true,
       editable: true,
     },
-    
+
     {
       headerName: 'Delivery Date',
       field: 'dateofDelivery',
@@ -189,25 +189,31 @@ export class QualityallocationtableComponent implements OnInit {
       filter: true,
     }
   ];
-  colEmpDefs:ColDef[]=[
-    {  headerName:'Employee', field: 'employeenameWithCode',checkboxSelection: true, width: 100,headerClass:"text-wrap", suppressSizeToFit: true,sortable:true, filter:true ,cellStyle: { color: 'blue' },cellRenderer:function(params){
-      return '<button class="btn btn-sm btn-link p-0">'+ params.value +'</button>';
-    } },
-    { headerName:'Shift', field: 'shiftName',headerClass:"text-wrap", width: 100, suppressSizeToFit: true,sortable:true, filter:true },
-  
+  colEmpDefs: ColDef[] = [
+    {
+      headerName: 'Employee', field: 'employeenameWithCode', checkboxSelection: true, width: 100, headerClass: "text-wrap", suppressSizeToFit: true, sortable: true, filter: true, cellStyle: { color: 'blue' }, cellRenderer: function (params) {
+        return '<button class="btn btn-sm btn-link p-0">' + params.value + '</button>';
+      }
+    },
+    { headerName: 'Shift', field: 'shiftName', headerClass: "text-wrap", width: 100, suppressSizeToFit: true, sortable: true, filter: true },
+
   ]
   public defaultEmpColDef: ColDef = {
-    resizable: true,sortable:true, filter:true,    editable: true,  flex: 1,
+    resizable: true, sortable: true, filter: true, editable: true, flex: 1,
     minWidth: 100,
     headerCheckboxSelection: isFirstColumn,
     checkboxSelection: isFirstColumn,
   };
   public defaultColDef: ColDef = {
-    resizable: true,sortable:true, filter:true,    editable: true,  flex: 1,
+    resizable: true, sortable: true, filter: true, editable: true, flex: 1,
     minWidth: 100,
     headerCheckboxSelection: isFirstColumn,
     checkboxSelection: isFirstColumn,
   };
+  selectedEmpNodes: any;
+  settingFirstData: any[] = [];
+  frstrow: any;
+  secondrow: any;
   onGridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
@@ -229,7 +235,7 @@ export class QualityallocationtableComponent implements OnInit {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`
       )
       .subscribe((response) => {
         this.rowEmpData = response.employees;
@@ -238,107 +244,109 @@ export class QualityallocationtableComponent implements OnInit {
   onCellJobClicked(event: CellClickedEvent) {
     const { colDef, data } = event;
     if (colDef.colId === 'jobIdColumn') {
-      console.log(data,"PopupData");
-      
-     this.openjobDialog(data);
-    } else if(colDef.colId === 'employeeNameColumn') {
-      console.log(data,"PopupData");
-      
-     this.getemployeeName(data);
-    }
-}
-getemployeeName(data: any) {
-  const dialogRef = this._dialog.open(JoballocatedEmplpopupComponent, {
-    width: '100%',
-    height: '450px',
-    data: data,
-  });
-  dialogRef.afterClosed().subscribe({
-    next: (val) => {
-      if (val) {
-        this.freshJobs();
-      }
-    },
-  });
-}
-onCellEmpClicked(event: CellClickedEvent) {
-  const { colDef, data } = event;
-  if (colDef.field === 'employeenameWithCode') {
-    console.log(data,"PopupData");
-    
-   this.openEmployeeDialog(data);
-  }
-}
-onSelectionChanged =(event: SelectionChangedEvent)=> {
-  const selectedNodes = this.gridApi.getSelectedNodes();
-  console.log('Selected Rows:', selectedNodes); // Update exchangeHeader with the estimated time of the first selected row
-  // if (selectedNodes.length > 0) {
-  //   this.exchangeHeader = selectedNodes[0].data.estimatedTime;
-  // } else {
-  //   // If no row is selected, reset exchangeHeader
-  //   this.exchangeHeader = null;
-  // }
-  selectedNodes.forEach((item:any)=>{
-    if (item.data.allocatedEstimatedTime == null) item.data.allocatedEstimatedTime = 0;
-  if (item.data.employeeId == null) item.data.employeeId = 0;
-  if (item.data.estimatedTime == null) item.data.estimatedTime = 0;
-  this.selectedQuery.push({
-    ...item.data,
-    CategoryDesc: '',
-    Comments: '',
-    CommentsToClient: '',
-    Remarks: '',
-    SelectedEmployees: [],
-    SelectedRows: [],
-  });
-  })
-}
-onSelectionEmpChanged(event: SelectionChangedEvent){
-  const selectedEmpNodes = this.gridEmplApi.getSelectedNodes();
-  console.log('Selected Rows:', selectedEmpNodes); // Update exchangeHeader with the estimated time of the first selected row
-  selectedEmpNodes.forEach((item:any)=>{
-    if (item.data.jId != null)
-    this.selectedEmployee.push({
-      ...item.data,
-      CategoryDesc: '',
-      Comments: '',
-      CommentsToClient: '',
-      FileInwardType: '',
-      JobId: 0,
-      Remarks: '',
-      SelectedEmployees: [],
-      SelectedRows: [],
-      TimeStamp: '',
-      jId:0
-     // estimatedTime: this.totalEstimateTime
-    });
-  else {
-    this.selectedEmployee.push({
-      ...item.data,
-      jId: 0,
-        CategoryDesc: '',
-        Comments: '',
-        CommentsToClient: '',
-        FileInwardType: '',
-        JobId: 0,
-        Remarks: '',
-        SelectedEmployees: [],
-        SelectedRows: [],
-        TimeStamp: '',
-      
-    });
-  }
-  })
-  
-}
-// Handle cell editing event
-onCellValueChanged = (event: CellValueChangedEvent) => {
-  console.log(`New Cell Value: ${event.value}`)
-}
+      console.log(data, "PopupData");
 
-onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
-  console.log(`New Cell Value: ${event.value}`)
-}
+      this.openjobDialog(data);
+    } else if (colDef.colId === 'employeeNameColumn') {
+      console.log(data, "PopupData");
+
+      this.getemployeeName(data);
+    }
+  }
+  getemployeeName(data: any) {
+    const dialogRef = this._dialog.open(JoballocatedEmplpopupComponent, {
+      width: '100%',
+      height: '450px',
+      data: data,
+    });
+    dialogRef.afterClosed().subscribe({
+      next: (val) => {
+        if (val) {
+          this.freshJobs();
+        }
+      },
+    });
+  }
+  onCellEmpClicked(event: CellClickedEvent) {
+    const { colDef, data } = event;
+    if (colDef.field === 'employeenameWithCode') {
+      console.log(data, "PopupData");
+
+      this.openEmployeeDialog(data);
+    }
+  }
+  onSelectionChanged = (event: SelectionChangedEvent) => {
+    const selectedNodes = this.gridApi.getSelectedRows();
+    console.log('Selected  frst Rows:', selectedNodes); // Update exchangeHeader with the estimated time of the first selected row
+    // if (selectedNodes.length > 0) {
+    //   this.exchangeHeader = selectedNodes[0].data.estimatedTime;
+    // } else {
+    //   // If no row is selected, reset exchangeHeader
+    //   this.exchangeHeader = null;
+    // // }
+    // selectedNodes.forEach((item: any) => {
+    //   if (item.data.allocatedEstimatedTime == null) item.data.allocatedEstimatedTime = 0;
+    //   if (item.data.employeeId == null) item.data.employeeId = 0;
+    //   if (item.data.estimatedTime == null) item.data.estimatedTime = 0;
+    //   this.selectedQuery.push({
+    //     ...item.data,
+    //     CategoryDesc: '',
+    //     Comments: '',
+    //     CommentsToClient: '',
+    //     Remarks: '',
+    //     SelectedEmployees: [],
+    //     SelectedRows: [],
+    //   });
+    // })
+    // console.log(this.selectedNodes, "SelectedQuery");
+
+  }
+  onSelectionEmpChanged(event: SelectionChangedEvent) {
+    this.selectedEmpNodes = this.gridEmplApi.getSelectedRows();
+    console.log('Selected 2nd Rows:', this.selectedEmpNodes); // Update exchangeHeader with the estimated time of the first selected row
+    // this.selectedEmpNodes.forEach((item: any) => {
+    //   if (item.data.jId != null)
+    //     this.selectedEmployee.push({
+    //       ...item.data,
+    //       CategoryDesc: '',
+    //       Comments: '',
+    //       CommentsToClient: '',
+    //       FileInwardType: '',
+    //       JobId: 0,
+    //       Remarks: '',
+    //       SelectedEmployees: [],
+    //       SelectedRows: [],
+    //       TimeStamp: '',
+    //       jId: 0
+    //       // estimatedTime: this.totalEstimateTime
+    //     });
+    //   else {
+    //     this.selectedEmployee.push({
+    //       ...item.data,
+    //       jId: 0,
+    //       CategoryDesc: '',
+    //       Comments: '',
+    //       CommentsToClient: '',
+    //       FileInwardType: '',
+    //       JobId: 0,
+    //       Remarks: '',
+    //       SelectedEmployees: [],
+    //       SelectedRows: [],
+    //       TimeStamp: '',
+
+    //     });
+    //   }
+    // })
+
+  }
+  // Handle cell editing event
+  onCellValueChanged = (event: CellValueChangedEvent) => {
+    console.log(`New Cell Value: ${event.value}`)
+  }
+
+  onCellEmployeeValueChanged = (event: CellValueChangedEvent) => {
+    console.log(`New Cell Value: ${event.value}`)
+  }
   // 
   displayedColumns: string[] = [
     'selected',
@@ -459,7 +467,7 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
       this.dataSource.paginator.firstPage();
     }
   }
-  
+
   applyEmployeeFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataEmployeeSource.filter = filterValue.trim().toLowerCase();
@@ -473,20 +481,8 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
   selectedQuery: any[] = [];
   selectedEmployee: any[] = [];
 
-  setAllJobs(item: any) {
-    if (item.allocatedEstimatedTime == null) item.allocatedEstimatedTime = 0;
-    if (item.employeeId == null) item.employeeId = 0;
-    if (item.estimatedTime == null) item.estimatedTime = 0;
-    this.selectedQuery.push({
-      ...item,
-      CategoryDesc: '',
-      Comments: '',
-      CommentsToClient: '',
-      Remarks: '',
-      SelectedEmployees: [],
-      SelectedRows: [],
-    });
-  }
+
+
 
   setEmployeeAll(completed: boolean, item: any) {
 
@@ -582,19 +578,19 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
     this.displayedColumnsvisibility.querydate = false;
     this.displayedColumnsvisibility.estjob = true;
     this.http
-    .get<any>(
-      environment.apiURL +
-      `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-        this.loginservice.getUsername()
-      )}/${parseInt(this.loginservice.getProcessId())}/1/0`
-    ).pipe(catchError((error) => {
-      this.spinner.requestEnded();
-      return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-    })).subscribe(response => {
-      this.spinner.requestEnded();
-      this.rowData= response.allocationJobs;
-      this.rowEmpData =response.employees;
-    })
+      .get<any>(
+        environment.apiURL +
+        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/1/0`
+      ).pipe(catchError((error) => {
+        this.spinner.requestEnded();
+        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+      })).subscribe(response => {
+        this.spinner.requestEnded();
+        this.rowData = response.allocationJobs;
+        this.rowEmpData = response.employees;
+      })
   }
   revisionJobs() {
     this.spinner.requestStarted();
@@ -613,8 +609,8 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
       .subscribe({
         next: (revisionJobs) => {
           this.spinner.requestEnded();
-          this.rowData= revisionJobs.allocationJobs;
-          this.rowEmpData =revisionJobs.employees;
+          this.rowData = revisionJobs.allocationJobs;
+          this.rowEmpData = revisionJobs.employees;
         },
         error: (err) => {
           this.spinner.resetSpinner();
@@ -640,8 +636,8 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
       .subscribe({
         next: (reworkJobs) => {
           this.spinner.requestEnded();
-          this.rowData= reworkJobs.allocationJobs;
-          this.rowEmpData =reworkJobs.employees;
+          this.rowData = reworkJobs.allocationJobs;
+          this.rowEmpData = reworkJobs.employees;
         },
         error: (err) => {
           this.spinner.resetSpinner();
@@ -665,8 +661,8 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
       .subscribe({
         next: (allocaetdJobs) => {
           this.spinner.requestEnded();
-          this.rowData= allocaetdJobs.allocationJobs;
-          this.rowEmpData =allocaetdJobs.employees;
+          this.rowData = allocaetdJobs.allocationJobs;
+          this.rowEmpData = allocaetdJobs.employees;
         },
         error: (err) => {
           this.spinner.resetSpinner();
@@ -690,8 +686,8 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
       ).subscribe({
         next: (queries) => {
           this.spinner.requestEnded();
-          this.rowData= queries.queryPendingJobs;
-          this.rowEmpData =queries.employees;
+          this.rowData = queries.queryPendingJobs;
+          this.rowEmpData = queries.employees;
         },
         error: (err) => {
           this.spinner.resetSpinner();
@@ -717,8 +713,8 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
       .subscribe({
         next: (queryResposne) => {
           this.spinner.requestEnded();
-          this.rowData= queryResposne.queryResponseJobs;
-          this.rowEmpData =queryResposne.employees;
+          this.rowData = queryResposne.queryResponseJobs;
+          this.rowEmpData = queryResposne.employees;
         },
         error: (err) => {
           this.spinner.resetSpinner();
@@ -743,8 +739,8 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
       .subscribe({
         next: (errorJobs) => {
           this.spinner.requestEnded();
-          this.rowData= errorJobs.allocationJobs;
-          this.rowEmpData =errorJobs.employees;
+          this.rowData = errorJobs.allocationJobs;
+          this.rowEmpData = errorJobs.employees;
         },
         error: (err) => {
           this.spinner.resetSpinner();
@@ -769,8 +765,8 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
       .subscribe({
         next: (quotationJobs) => {
           this.spinner.requestEnded();
-          this.rowData= quotationJobs.allocationJobs;
-          this.rowEmpData =quotationJobs.employees;
+          this.rowData = quotationJobs.allocationJobs;
+          this.rowEmpData = quotationJobs.employees;
         },
         error: (err) => {
           this.spinner.resetSpinner();
@@ -836,54 +832,93 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
   }
   data: any;
   onSubmit(data: any) {
-    // let selectedRow = this.gridApi.setAllJobs();
-    // console.log(selectedRow, "SelectedRowws");
-    // this.selection.selected.forEach((x) => this.setAllJobs(x));
-    // if (this.selectedQuery.length > 0) {
-    //   this.selectedJobs = this.selectedQuery;
-    // }
-    var selectedJobCount = this.gridApi.getSelectedRows();
-    var selectedEmployeeCount:any = this.gridEmplApi.getSelectedRows();
-    if (this.loginservice.getProcessName() == 'Production Allocation') {
+
+
+    var selectedJobCount = this.gridApi.getSelectedRows().length;
+    var selectedEmployeeCount: any = this.gridEmplApi.getSelectedRows().length;
+    this.frstrow = this.gridApi.getSelectedRows();
+
+    this.frstrow.forEach((item) => {
+      item.CategoryDesc = '';
+      item.Comments = '';
+      item.CommentsToClient = '';
+      item.Remarks = '';
+      item.SelectedEmployees = [];
+      item.SelectedRows = [];
+      item.employeeId = item.employeeId ? item.employeeId : 0,
+      item.estimatedTime = item.estimatedTime ? item.estimatedTime : 0,
+      item.allocatedEstimatedTime = item.allocatedEstimatedTime ? item.allocatedEstimatedTime : 0,
+      item.dateofDelivery = item.dateofDelivery ? item.dateofDelivery : new Date().toISOString,
+      item.employeeCount = item.employeeCount ? item.employeeCount : 0,
+      item.employeeName = item.employeeName ? item.employeeName : "",
+      item.queryJobDate = item.queryJobDate ? item.queryJobDate : ""
+    });
+
+    this.secondrow = this.gridEmplApi.getSelectedRows()
+
+
+    this.secondrow.forEach((item) => {
+      item.CategoryDesc = '',
+        item.Comments = '',
+        item.CommentsToClient = '',
+        item.FileInwardType = '',
+        item.JobId = 0,
+        item.Remarks = '',
+        item.SelectedEmployees = [],
+        item.SelectedRows = [],
+        item.TimeStamp = '',
+        item.jId = 0
+      
+    });
+
+    console.log(selectedJobCount, 'selectedjobCount');
+    console.log(selectedEmployeeCount, 'selectedEmployeeCount');
+
+
+
+    var processName = this.loginservice.getProcessName();
+    console.log(processName, "ProcessName");
+
+    if (this.loginservice.getProcessName() == 'Quality Allocation') {
       if (selectedJobCount != 0 && selectedEmployeeCount != 0) {
         if (selectedJobCount > 1) {
           if (selectedEmployeeCount > 1) {
             Swal.fire('Info!', 'Please select one Employee', 'info');
             // $('#alertPopup').modal('show');
           } else {
-            for (var i = 0; i < selectedJobCount; i++) {
-              if (
-                this.selectedJobs[i].allocatedEstimatedTime == undefined ||
-                this.selectedJobs[i].allocatedEstimatedTime == '' ||
-                this.selectedJobs[i].allocatedEstimatedTime == 0
-              ) {
-                Swal.fire(
-                  'Info!',
-                  'Please enter Estimated Time for Selected Job',
-                  'info'
-                );
-                // $('#alertPopup').modal('show');
-                return;
-              }
-            }
+            // for (var i = 0; i < selectedJobCount; i++) {
+            //   if (
+            //     this.selectedJobs[i].allocatedEstimatedTime == undefined ||
+            //     this.selectedJobs[i].allocatedEstimatedTime == '' ||
+            //     this.selectedJobs[i].allocatedEstimatedTime == 0
+            //   ) {
+            //     Swal.fire(
+            //       'Info!',
+            //       'Please enter Estimated Time for Selected Job',
+            //       'info'
+            //     );
+            //     // $('#alertPopup').modal('show');
+            //     return;
+            //   }
+            // }
             this.postJobs(data);
           }
         } else {
-          for (var i = 0; i < selectedEmployeeCount; i++) {
-            if (
-              this.selectedEmployee[i].estTime == undefined ||
-              this.selectedEmployee[i].estTime == '' ||
-              this.selectedEmployee[i].estTime == 0
-            ) {
-              Swal.fire(
-                'Info!',
-                'Please enter Estimated Time for Selected Employee',
-                'info'
-              );
-              // $('#alertPopup').modal('show');
-              return;
-            }
-          }
+          // for (var i = 0; i < selectedEmployeeCount; i++) {
+          //   if (
+          //     this.selectedEmployee[i].estTime == undefined ||
+          //     this.selectedEmployee[i].estTime == '' ||
+          //     this.selectedEmployee[i].estTime == 0
+          //   ) {
+          //     Swal.fire(
+          //       'Info!',
+          //       'Please enter Estimated Time for Selected Employee',
+          //       'info'
+          //     );
+          //     // $('#alertPopup').modal('show');
+          //     return;
+          //   }
+          // }
           this.postJobs(data);
         }
       } else {
@@ -927,8 +962,8 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
       jId: 0,
       estimatedTime: this.estTime !== 0 ? this.estTime : 0,
       tranMasterId: 0,
-      selectedRows: this.selectedQuery,
-      selectedEmployees: this.selectedEmployee,
+      selectedRows: this.frstrow,
+      selectedEmployees: this.secondrow,
       departmentId: 0,
       updatedUTC: '2023-06-22T11:47:25.193Z',
       categoryDesc: 'string',
@@ -978,11 +1013,24 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
                 strJobId += ',' + SameQAEmployeeJobList[i].JobId;
               }
             }
-            Swal.fire(
-              'Info!',
-              'Following Job Ids are assigned to same Employee',
-              'info'
-            );
+            if (result.success == false) {
+              Swal.fire(
+                'Info!',
+                result.message,
+                'info'
+              ).then((res) => {
+                if (res.isConfirmed) {
+                  window.location.reload();
+                }
+              });
+            }
+            else {
+              Swal.fire(
+                'Info!',
+                result.message,
+                'info'
+              );
+            }
             // alert('Following Job Ids are assigne to same employee ' + strJobId);
           }
         }
@@ -997,6 +1045,7 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
     let AttachedFiles = [];
     this.selectedJobs = processMovement.selectedRows;
     this.selectedEmployee = processMovement.selectedEmployees;
+    this.spinner.requestStarted();
     this.http
       .post<any>(
         environment.apiURL + 'Allocation/processMovement',
@@ -1004,8 +1053,16 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
       )
       .subscribe((result: any) => {
         this.confirmationMessage = result.message;
-        Swal.fire('Done!', result.message, 'success');
+        this.spinner.requestEnded();
+
+        Swal.fire('Done!', result.message, 'success').then((res) => {
+          if (res.isConfirmed) {
+            window.location.reload();
+          }
+        });
       });
+
+
     if (AttachedFiles.length > 0) {
       var fd = new FormData();
       for (let i = 0; i < AttachedFiles.length; i++) {
@@ -1031,6 +1088,7 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
           }
         });
     }
+
   }
 
   onSubmits(type: any, data: any) {
@@ -1082,7 +1140,7 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
-          this.freshJobs();
+          this.ngOnInit();
         }
       },
     });
@@ -1096,7 +1154,7 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
-          this.freshJobs();
+          this.ngOnInit();
         }
       },
     });
@@ -1118,9 +1176,9 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
     }
   }
 
-   //textcolor
-   getCellClass(data) {
-    
+  //textcolor
+  getCellClass(data) {
+
     return {
       'text-color-green': data.employeeCount === 1,
       'text-color-brown': data.queryJobDate !== null,
@@ -1132,7 +1190,7 @@ onCellEmployeeValueChanged=(event: CellValueChangedEvent)=>{
       'Rush': data.jobStatusId === 2 || data.jobStatusId === 4 || data.jobStatusId === 8
     };
   }
-  
+
 }
 function isFirstColumn(
   params:

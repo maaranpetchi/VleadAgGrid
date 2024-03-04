@@ -13,8 +13,8 @@
     <div class="main-body">
         <div class="productionmain">
             <h1 style="font-family:'Times New Roman', Times, serif;color:#137cdf">Total
-                Customers({{ApprovedCustomerCount +
-                UnApprovedCustomerCount}})</h1>
+                Customers({{ (ApprovedCustomerCount  ? ApprovedCustomerCount:0) +
+                (UnApprovedCustomerCount ? UnApprovedCustomerCount:0)}})</h1>
             <mat-tab-group dynamicHeight (selectedTabChange)="onTabChange($event)">
                 <mat-tab
                     label="{{ 'Un Approved Customers (' + (UnApprovedCustomerCount ? UnApprovedCustomerCount:0) + ')' }}">

@@ -17,6 +17,7 @@ import { CookieService } from 'ngx-cookie-service';
 export class GetJobHistoryPopupComponent implements OnInit {
   selectedJobs: { DepartmentId: any; TranMasterId: any; JId: any; CustomerId: any; JobId: string; Remarks: string; Comments: string; TimeStamp: string; CategoryDesc: string; SelectedRows: never[]; FileInwardType: string; CommentsToClient: string; SelectedEmployees: never[]; }[];
   scopedescription: any;
+  instructions: any;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private http: HttpClient, private cookieService: CookieService,private loginservice: LoginService, private spinnerservice: SpinnerService) {
   }
@@ -37,7 +38,8 @@ export class GetJobHistoryPopupComponent implements OnInit {
     // Fetch data from the REST API and populate the table job history
     this.http.post<any>(environment.apiURL + 'JobOrder/getJobHistory', this.data.jid).subscribe(data => {
       this.dataJobSource = data.jobHistory;
-      this.scopedescription = data.jobCommonDetails.description
+      this.scopedescription = data.jobCommonDetails.description;
+      this.instructions=data.jobCommonDetails.instruction;
 
     });
   }
