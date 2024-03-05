@@ -57,9 +57,9 @@ export class CompletedjobsComponent implements OnInit {
   getCompletedJobData(): void {
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Allocation/getCompletedJobs?EmpId=${this.loginservice.getUsername()}`).subscribe(data => {
-      this.spinnerService.requestEnded();
       this.rowData = data.clientDetails.resultCompletedJobsList;
       this.CompletedJobsCount = data.clientDetails.resultForCompletedList;
+      this.spinnerService.requestEnded();
 
     });
   }
@@ -76,10 +76,10 @@ export class CompletedjobsComponent implements OnInit {
     if (this.selectedQuery.length > 0) {
       this.selectedJobs = this.selectedQuery
       this.selectedJobs.forEach((job: any) => {
-        job.employeeId = job.employeeId?job.employeeId: this.loginservice.getUsername();
+        job.employeeId = job.employeeId ? job.employeeId : this.loginservice.getUsername();
       });
-      console.log(this.selectedJobs,"SelectedJobs");
-      
+      console.log(this.selectedJobs, "SelectedJobs");
+
     }
     this.http.get<any>(environment.apiURL + `Allocation/getCompletedJobs?EmpId=${this.loginservice.getUsername()}`).subscribe(data => {
       this.spinnerService.requestEnded();
@@ -138,7 +138,7 @@ export class CompletedjobsComponent implements OnInit {
           'success'
         ).then((result) => {
           if (result.isConfirmed) {
-            this.getCompletedJobData();
+            window.location.reload();
           }
         })
       }
@@ -149,7 +149,7 @@ export class CompletedjobsComponent implements OnInit {
           'info'
         ).then((result) => {
           if (result.isConfirmed) {
-            this.getCompletedJobData();
+            window.location.reload();
           }
         })
       }

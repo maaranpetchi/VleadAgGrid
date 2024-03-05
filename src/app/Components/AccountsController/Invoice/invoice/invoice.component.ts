@@ -168,6 +168,7 @@ export class InvoiceComponent implements OnInit {
           if (response.isConfirmed) {
             this.myForm.reset();
             this.rowData = [];
+            window.location.reload();
           }
         })
       }
@@ -369,6 +370,7 @@ export class InvoiceComponent implements OnInit {
         ).then((res) => {
           if (res.isConfirmed) {
             this.table2rowData = [];
+            window.location.reload();
           }
         })
       })
@@ -437,7 +439,7 @@ export class InvoiceComponent implements OnInit {
           ).then((res) => {
             if (res.isConfirmed) {
               this.table2rowData = [];
-
+              window.location.reload();
             }
           })
         }

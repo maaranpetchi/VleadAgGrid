@@ -1088,20 +1088,7 @@ onCellValueChanged(event: CellValueChangedEvent) {
     
     // Update estimatedTime for selected jobs
     this.selectedJobs.forEach((job) => (job.estimatedTime = this.exchangeHeader)); // Update estimatedTime for selected employees
-    // this.selectedEmployees.forEach((employee) => {
-      
-      // if (!employee.estimatedTime) {
-      //   Swal.fire(
-      //     'Info!',
-      //     'Please enter Estimated Time for Selected Employee!',
-      //     'info'
-      //   );
-      //   this.spinnerService.requestEnded();
-      //   this.postJobs();
-      //   return;
-      // }
-    // }); // Reset exchangeHeader after updating the selected rows // this.exchangeHeader = null; // Continue with your logic to post jobs
-    this.postJobs();
+ this.postJobs();
   }
   postJobs() {
     console.log(this.selectedJobs,"selectedjobs");

@@ -20,11 +20,10 @@
           </div>
 
           <div class="pricingcalculation">
-        
+            <mat-label>{{ 'Ready To Upload Jobs (' + (CompletedJobsCount ? CompletedJobsCount:0) + ')' }}</mat-label>
+
           </div>
           <div class="table-container">
-           
-              <mat-label>{{ 'Ready To Upload Jobs (' + (CompletedJobsCount ? CompletedJobsCount:0) + ')' }}</mat-label>
               <ag-grid-angular
               style="width: 100%; height: 100%;"
               [context]="context"
