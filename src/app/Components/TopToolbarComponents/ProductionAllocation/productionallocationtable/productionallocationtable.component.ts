@@ -428,10 +428,17 @@ export class ProductionallocationtableComponent implements OnInit {
   handleCellValueChanged(params: { colDef: ColDef; newValue: any; data: any }) {
     console.log(params, 'Parameter');
     console.log(params.data, 'ParameterData');
-    let parameterData = params.data;
-    if (params.colDef.field === 'filecount') {
-      // Check if the changed column is 'price'
-      // this.openPopup(params.newValue, parameterData);
+
+    if (params.colDef.field === 'allocatedEstimatedTime') {
+      const selectedNodes = this.gridApi.getSelectedRows();
+      
+      selectedNodes.forEach((node) => {
+        if (node.jobId === params.data.jobId) {
+          node.allocatedEstimatedTime = params.newValue;
+        }
+      });
+
+      this.gridApi.refreshCells(); 
     }
   }
 onCellValueChanged(event: CellValueChangedEvent) {
@@ -486,7 +493,7 @@ onCellValueChanged(event: CellValueChangedEvent) {
     console.log('Selected Rows:', selectedRows);
   };
   onSelectionChanged(event: SelectionChangedEvent) {
-    const selectedNodes = this.gridApi.getSelectedNodes();
+    const selectedNodes = this.gridApi.getSelectedRows();
     console.log('Selected Rows:', selectedNodes); // Update exchangeHeader with the estimated time of the first selected row
     if (selectedNodes.length > 0) {
       this.exchangeHeader = selectedNodes[0].data.estimatedTime;
@@ -939,16 +946,16 @@ onCellValueChanged(event: CellValueChangedEvent) {
   }
   setExchangeHeader() {
     if (this.gridApi) {
-      const selectedNodes = this.gridApi.getSelectedNodes();
-  
+      const selectedNodes = this.gridApi.getSelectedRows();
+
       selectedNodes.forEach((node) => {
-        console.log(node,"node")
-        if (node.data.jobId) {
-          node.setDataValue('allocatedEstimatedTime', this.exchangeHeader);
-          console.log(this.exchangeHeader,"exgheader");
-          
+        console.log(node, "node");
+        if (node.jobId) {
+          node.allocatedEstimatedTime = this.exchangeHeader;
+          console.log(this.exchangeHeader, "exgheader");
         }
-      }); // Manually trigger change detection // this.exchangeHeader = null;
+      });
+      this.gridApi.refreshCells(); // Manually trigger change detection
     } else {
       console.error('AG Grid API not available');
     }
@@ -960,18 +967,19 @@ onCellValueChanged(event: CellValueChangedEvent) {
   }
  
   onSubmits() {
-    this. selectedJobs= this.gridApi.getSelectedRows();
-    this. selectedEmployees= this.gridEmplApi.getSelectedRows();
-    // if (this.selectedQuery.length > 0) {
-    //   this.selectedJobs = this.selectedQuery;
-    // }
+    this.selectedJobs= this.gridApi.getSelectedRows();
+    this.selectedEmployees= this.gridEmplApi.getSelectedRows();
+
+    console.log(this.selectedJobs,"this.selectedJobs");
+    console.log(this.selectedEmployees.length,"this.selectedEmployees");
+    
     this.spinnerService.requestStarted();
     var selectedJobCount = this.selectedJobs.length;
     var selectedEmployeeCount = this.selectedEmployees.length;
     if (this.loginservice.getProcessName() == 'Production Allocation') {
       if (selectedJobCount != 0 && selectedEmployeeCount != 0) {
         if (selectedJobCount > 1) {
-          if (selectedEmployeeCount > 1) {
+          if (selectedEmployeeCount < 1) {
             Swal.fire('Info!', 'Please select one Employee!', 'info');
           }
           else {
@@ -1025,32 +1033,30 @@ onCellValueChanged(event: CellValueChangedEvent) {
 
     this. selectedJobs= this.gridApi.getSelectedRows(); // let selectedJobs = this.gridApi.getSelectedRows().forEach(x => this.setAll(x)); // let seleectedJobsData = selectedJobs.push([{...selectedJobs,employeeId:'',allocatedEstimatedTime:'',jId:''}])
     this. selectedEmployees= this.gridEmplApi.getSelectedRows(); // let selectedEmployees =   this.gridEmplApi.getSelectedRows().forEach(x => this.setEmployeeAll(true, x)); // let seleectedEmployeeData = selectedEmployees.push([{...selectedEmployees,employeeId:'',allocatedEstimatedTime:'',jId:''}]) // console.log(seleectedEmployeeData,"seleectedEmployeeData"); // console.log(seleectedJobsData,"seleectedJobsData"); // Reset variables
-    // this.selectedJobs = [];
-    // this.selectedQuery = [];
-    // this.selectedEmployee = []; // Display selected rows in the console for debugging
+  
     console.log(this.selectedJobs, 'SelectedJobs');
-    console.log(this.selectedEmployees, 'selectedEmployees'); // Handle the case where no jobs or employees are selected
+    console.log(this.selectedEmployees.length, 'selectedEmployees'); // Handle the case where no jobs or employees are selected
     if (this.selectedJobs.length === 0 || this.selectedEmployees.length === 0) {
       Swal.fire('Info!', 'Please select Job and Employee!', 'info');
       this.spinnerService.requestEnded();
       return;
     } // Handle the case where multiple employees are selected
-    if (this.selectedEmployees.length > 1) {
+    if (this.selectedEmployees.length < 1) {
       Swal.fire('Info!', 'Please select one Employee!', 'info');
       this.spinnerService.requestEnded();
       // this.postJobs();
       return;
     } 
-    if (this.gridApi) {
-      const selectedNodes = this.gridApi.getSelectedNodes();
-      selectedNodes.forEach((node) => {
-        if (node.data.jobId) {
-          // Update the data directly, which will trigger Angular's change detection
-          node.setDataValue('allocatedEstimatedTime', this.exchangeHeader);
-        }
-      }); // Reset exchangeHeader after updating the selected rows
-      // this.exchangeHeader = null;
-    } // Handle the case where multiple jobs are selected
+    // if (this.gridApi) {
+    //   const selectedNodes = this.gridApi.getSelectedNodes();
+    //   selectedNodes.forEach((node) => {
+    //     if (node.data.jobId) {
+    //       // Update the data directly, which will trigger Angular's change detection
+    //       node.setDataValue('allocatedEstimatedTime', this.exchangeHeader);
+    //     }
+    //   }); // Reset exchangeHeader after updating the selected rows
+    //   // this.exchangeHeader = null;
+    // } // Handle the case where multiple jobs are selected
     if (this.selectedJobs.length > 1) {
       for (let i = 0; i < this.selectedJobs.length; i++) {
         // if (this.selectedJobs[i].this.exchangeHeader) {
@@ -1087,8 +1093,21 @@ onCellValueChanged(event: CellValueChangedEvent) {
     }
     
     // Update estimatedTime for selected jobs
-    this.selectedJobs.forEach((job) => (job.estimatedTime = this.exchangeHeader)); // Update estimatedTime for selected employees
- this.postJobs();
+    // this.selectedJobs.forEach((job) => (job.estimatedTime = this.exchangeHeader)); // Update estimatedTime for selected employees
+    // this.selectedEmployees.forEach((employee) => {
+      
+      // if (!employee.estimatedTime) {
+      //   Swal.fire(
+      //     'Info!',
+      //     'Please enter Estimated Time for Selected Employee!',
+      //     'info'
+      //   );
+      //   this.spinnerService.requestEnded();
+      //   this.postJobs();
+      //   return;
+      // }
+    // }); // Reset exchangeHeader after updating the selected rows // this.exchangeHeader = null; // Continue with your logic to post jobs
+    this.postJobs();
   }
   postJobs() {
     console.log(this.selectedJobs,"selectedjobs");

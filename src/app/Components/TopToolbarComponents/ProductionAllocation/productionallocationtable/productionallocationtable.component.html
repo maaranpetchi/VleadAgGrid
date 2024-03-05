@@ -33,9 +33,10 @@
         (gridReady)="onGridReady($event)"
         (cellValueChanged)="onCellValueChanged($event)"
         (selectionChanged)="onSelectionChanged($event)"
+        [rowMultiSelectWithClick]="true"
         (cellClicked)="onCellJobClicked($event)"
         [paginationPageSize]="10"
-        floatingFilter="true" 
+        floatingFilter="true"
       >
       </ag-grid-angular>
     </div>
@@ -52,7 +53,7 @@
           </h3>
           <div class="table-container">
             <ag-grid-angular
-              style="width: 100%;height:415px"
+              style="width: 100%; height: 415px"
               class="ag-theme-quartz"
               [rowData]="rowEmpData"
               [columnDefs]="colEmpDefs"
@@ -64,8 +65,9 @@
               (cellValueChanged)="onCellValueEmpChanged($event)"
               (selectionChanged)="onSelectionEmpChanged($event)"
               (cellClicked)="onCellEmpClicked($event)"
+              [rowMultiSelectWithClick]="true"
               [paginationPageSize]="10"
-              floatingFilter="true" 
+              floatingFilter="true"
             >
             </ag-grid-angular>
           </div>
