@@ -215,10 +215,10 @@ export class ClientorderstableComponent implements OnInit {
     this.gridApi.setColumnVisible('jobId', false);
     this.gridApi.setColumnVisible('clientName', true);
     this.gridApi.setColumnVisible('shortName', false);
-    this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/1').subscribe((response)=>{
+    this.http.get<any>(environment.apiURL + 'ClientOrderService/ClientOrdersExts/1').subscribe((response) => {
       this.spinnerService.requestEnded();
       this.rowData = response.data;
-      console.log(this.rowData,"RowData");
+      console.log(this.rowData, "RowData");
 
     })
   }
@@ -989,28 +989,50 @@ export class ClientorderstableComponent implements OnInit {
   };
 
   columnDefs: ColDef[] = [
-    { headerName: 'JobId', field: 'jobId', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-    { headerName: 'ClientName', field: 'clientName', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-    { headerName: 'Client Name', field: 'shortName', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-    { headerName: 'CustomerClassification', field: 'customerClassification', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-    { headerName: 'FileName', field: 'fileName', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-    { headerName: 'File Received EST Date', field: 'estFileReceivedDate', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-    { headerName: 'Department', field: 'departmentName', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-    { headerName: 'Quote Parent Id', field: 'parentJobId', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-    { headerName: 'Instructions', field: 'instruction', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-    { headerName: 'Sales Person Name', field: 'salesPersonName', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-    { headerName: 'TransactionType', field: 'transactionType', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
+    {
+      headerName: 'JobId', field: 'jobId', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
+    {
+      headerName: 'ClientName', field: 'clientName', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
+    {
+      headerName: 'Client Name', field: 'shortName', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
+    {
+      headerName: 'CustomerClassification', field: 'customerClassification', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
+    {
+      headerName: 'FileName', field: 'fileName', filter: 'agTextColumnFilter',
+      floatingFilter: true, editable: true
+    },
+    {
+      headerName: 'File Received EST Date', field: 'estFileReceivedDate', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
+    {
+      headerName: 'Department', field: 'departmentName', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
+    {
+      headerName: 'Quote Parent Id', field: 'parentJobId', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
+    {
+      headerName: 'Instructions', field: 'instruction', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
+    {
+      headerName: 'Sales Person Name', field: 'salesPersonName', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
+    {
+      headerName: 'TransactionType', field: 'transactionType', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
     {
       headerName: 'Actions',
       field: 'action',
@@ -1024,7 +1046,7 @@ export class ClientorderstableComponent implements OnInit {
   ];
 
   public rowSelection: 'single' | 'multiple' = 'multiple';
-  public rowData: any[]=[];
+  public rowData: any[] = [];
   public themeClass: string =
     "ag-theme-quartz";
 

@@ -79,8 +79,8 @@
                 <div class="row">
                     <div class="col">
                         <p>Work File Folder:
-                            <button type="button" class="btn btn-primary">WorkFiles</button>
-                            <button type="button" class="btn btn-primary">Zip</button>
+                            <button type="button" class="btn btn-primary" (click)="workFiles(data.id)">WorkFiles</button>
+                            <button type="button" class="btn btn-primary" (click)="zipFiles()">Zip</button>
                             <button class="btn btn-primary">CopyPath</button>
                         </p>
                     </div>
@@ -88,8 +88,8 @@
                 <div class="row">
                     <div class="col">
                         <p>Input File Folder:&nbsp;&nbsp;
-                            <button class="btn btn-primary">WorkFiles</button>
-                            <button class="btn btn-primary">Zip</button>
+                            <button class="btn btn-primary" (click)="InputworkFiles(data.id)">Input File Folder:</button>
+                            <button class="btn btn-primary" (click)="zipFiles()">Zip</button>
                             <button class="btn btn-primary">CopyPath</button>
                         </p>
                     </div>

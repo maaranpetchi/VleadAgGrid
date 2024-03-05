@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { SpinnerService } from '../../Spinner/spinner.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/Environments/environment';
+import saveAs from 'file-saver';
 
 @Component({
   selector: 'app-view-unapprovaljobs',
@@ -35,39 +36,30 @@ export class ViewUnapprovaljobsComponent implements OnInit {
       },
     })
   }
+  files: string[] = [];
 
   workFiles(path: string): void {
     path = path.replace(/\\/g, '_');
-    this.http
-      .get<any>(environment.apiURL + `Allocation/getFileNames/${path}`)
-      .subscribe((response) => {
-        if (response.files && response.files.length > 0) {
-          const downloadObservables = response.files.map((value) =>
-            this.downloadFile(path, value)
-          );
-        }
-      });
-  }
-  downloadFile(path: string, filename: string): void {
-    this.http
-      .get(environment.apiURL + `Allocation/DownloadFilesTest/${path}/${filename}`,{
-        headers:{'Content-Type': 'application/octet-stream'},
-        responseType: 'blob',
-        observe: 'response'
-      })
-      .subscribe((response) => {
-        const contentType = response.headers.get('Content-Type');
-        if (response.body?.size) {
-        const fileBlob: Blob = response.body;
-        const fileURL = URL.createObjectURL(fileBlob);
-        const downloadLink = document.createElement('a');
-        downloadLink.href = fileURL;
-        downloadLink.download = filename;
-        downloadLink.click();
-        }
-      });
+    this.http.get<any>(environment.apiURL + `Allocation/getFileNames/${path}`).subscribe((result: any) => {
+      this.files = result.files;
+      if (this.files.length > 0) {
+        this.files.forEach((value: string) => {
+          const url =environment.apiURL+`Allocation/downloadFilesTest/${path}/${value}`;
+          this.fileDownload(url, value);
+        });
+      }
+    });
   }
 
+  fileDownload(url: string, fileName: string): void {
+    this.http
+      .get(url, {
+        responseType: 'blob',
+      })
+      .subscribe((response: Blob) => {
+        saveAs(response, fileName);
+      });
+  }
   onCancel() {
     this.router.navigate(['/topnavbar/unapprovalJobs']);
   }

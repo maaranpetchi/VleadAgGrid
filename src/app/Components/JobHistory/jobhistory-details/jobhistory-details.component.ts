@@ -48,27 +48,30 @@ private spinnerservice:SpinnerService
       this.queryDataJobSource = data.jobQueryHistory 
   })
   }
+  files: string[] = [];
+
   downloadExcell(path: any): void {
     
     // let path= this.jobHistory.fileUploadPath
     path = path.replace(/\\/g, '_');
-    this.spinnerservice.requestStarted();
-    this.http
-      .get(
-        environment.apiURL +
-          `Allocation/getFileNames/${path}`
-      ).pipe(catchError((error)=>{
-        this.spinnerservice.requestEnded();
-        return Swal.fire('Alert!','An error occurred while processing your request','error');
-      }))
-      .subscribe((response: any) => {
-        this.spinnerservice.requestEnded();
-        const fileUrls: string[] = response.files;
-        fileUrls.forEach((url) => {
-          this.http.get(environment.apiURL+'Allocation/downloadFilesTest/'+`${path}/`+url).subscribe((response:any) => {
-            saveAs(new Blob([response.data], { type: "application/octet-stream" }), url);
-          })
+    this.http.get<any>(environment.apiURL + `Allocation/getFileNames/${path}`).subscribe((result: any) => {
+      this.files = result.files;
+      if (this.files.length > 0) {
+        this.files.forEach((value: string) => {
+          const url =environment.apiURL+`Allocation/downloadFilesTest/${path}/${value}`;
+          this.fileDownload(url, value);
         });
+      }
+    });
+  }
+
+  fileDownload(url: string, fileName: string): void {
+    this.http
+      .get(url, {
+        responseType: 'blob',
+      })
+      .subscribe((response: Blob) => {
+        saveAs(response, fileName);
       });
   }
   getFileNameFromPath(filePath: string): string {

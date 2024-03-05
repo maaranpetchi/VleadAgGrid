@@ -61,15 +61,6 @@ export class ClientorderviewComponent {
       .subscribe((response: Blob) => {
         saveAs(response, fileName);
       });
-      const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    const data: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    
-    // Use saveAs to trigger the download
-    saveAs(data, 'your-filename.xlsx');
-  // }
   }
 
 

@@ -57,8 +57,9 @@ export class QualitypopupjobassignComponent implements OnInit {
   getJobHistoryData: any;
   gettingscopeid: any;
   gettingStitchCount: any;
-settingStitchcount: number=0;
+  settingStitchcount: number = 0;
   jobCommonDetailsTranfilepath: any;
+  jobCommonDetailsJofilepath: any;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -116,12 +117,12 @@ settingStitchcount: number=0;
         this.gettingScope = result.scope;
         this.gettingscopeid = result.scopeId;
         this.gettingStitchCount = result.stitchCount;
-        console.log(this.gettingStitchCount,"Gettingstitchcount");
-        this.settingStitchcount =this.gettingStitchCount; 
-        console.log(this.settingStitchcount,"settingStitchcount");
+        console.log(this.gettingStitchCount, "Gettingstitchcount");
+        this.settingStitchcount = this.gettingStitchCount;
+        console.log(this.settingStitchcount, "settingStitchcount");
 
       })
-      
+
     } else if (this.selectedQureryStatus == 100) {
       this.EstimatedTime = false;
       this.EmployeData = true;
@@ -146,9 +147,11 @@ settingStitchcount: number=0;
       (response: any) => {
         this.getJobHistoryData = response;
         this.jobCommonDetailsTranfilepath = response.jobCommonDetails.tranFileUploadPath;
+        this.jobCommonDetailsJofilepath = response.jobCommonDetails.jofileUploadPath;
         this.jobCommonDetails = response.jobCommonDetails.description;
         this.dataJobSource = new MatTableDataSource(response.jobHistory);
         this.dataQuerySource = new MatTableDataSource(response.jobQueryHistory);
+      
       },
       (error: any) => {
         console.log('Error fetching data from REST API:', error);
@@ -252,7 +255,7 @@ settingStitchcount: number=0;
           customerId: this.data.customerId,
           departmentId: this.data.departmentId,
           estimatedTime: this.estimatedTime,
-          jId: this.data.jId ?this.data.jId: this.data.jid,
+          jId: this.data.jId ? this.data.jId : this.data.jid,
           tranMasterId: this.data.tranMasterId,
           Comments: '',
           TimeStamp: '',
@@ -299,7 +302,7 @@ settingStitchcount: number=0;
 
         if (val.success === true) {
           Swal.fire('Done!', val.message, 'success').then((val) => {
-            if(val.isConfirmed){
+            if (val.isConfirmed) {
               this.dialogRef.close(true);
             }
           });
@@ -363,8 +366,8 @@ settingStitchcount: number=0;
         this.spinnerservice.requestEnded();
 
         if (response.success === true) {
-          Swal.fire('Done!', response.message, 'success').then((res)=>{
-            if(res.isConfirmed){
+          Swal.fire('Done!', response.message, 'success').then((res) => {
+            if (res.isConfirmed) {
               this.dialogRef.close(true);
             }
           });
@@ -406,9 +409,9 @@ settingStitchcount: number=0;
 
 
   zipFiles(): void {
-    console.log(this.jobCommonDetails,"tranfilePath");
-    
-    let path = this.data.tranFileUploadPath ? this.data.tranFileUploadPath: this.jobCommonDetailsTranfilepath;
+    console.log(this.jobCommonDetails, "tranfilePath");
+
+    let path = this.data.tranFileUploadPath ? this.data.tranFileUploadPath : this.jobCommonDetailsTranfilepath;
     path = path.replace(/\\/g, '_');
 
     const fileUrl =
@@ -440,30 +443,59 @@ settingStitchcount: number=0;
   }
 
   //Workfile downlaod//
+  files: string[] = [];
+
   workFiles(id: number): void {
-console.log(this.jobCommonDetailsTranfilepath,"Tranfilrpath");
 
-    let path = this.data.tranFileUploadPath ?this.data.tranFileUploadPath: this.jobCommonDetailsTranfilepath;
+    console.log(this.jobCommonDetailsTranfilepath, "Tranfilrpath");
 
-    console.log(path, "PathFiles");
+    let path = this.data.tranFileUploadPath ? this.data.tranFileUploadPath : this.jobCommonDetailsTranfilepath;
 
     path = path.replace(/\\/g, '_');
-    this.spinnerservice.requestStarted();
-    this.http
-      .get(environment.apiURL + `Allocation/getFileNames/${path}`)
-      .subscribe((response: any) => {
-        const fileUrls: string[] = response.files;
-        fileUrls.forEach((url) => {
-          this.http.get(environment.apiURL + 'Allocation/downloadFilesTest/' + `${path}/` + url).subscribe((response: any) => {
-            this.spinnerservice.requestEnded();
-            saveAs(
-              new Blob([response.data], { type: 'application/octet-stream' }),
-              url
-            );
-          });
+    console.log(path, "PathFile");
+
+    this.http.get<any>(environment.apiURL + `Allocation/getFileNames/${path}`).subscribe((result: any) => {
+      this.files = result.files;
+      if (this.files.length > 0) {
+        this.files.forEach((value: string) => {
+          const url =environment.apiURL+`Allocation/downloadFilesTest/${path}/${value}`;
+          this.fileDownload(url, value);
         });
+      }
+    });
+  }
+
+  InputworkFiles(id: number): void {
+
+    console.log(this.jobCommonDetailsJofilepath, "jobCommonDetailsJofilepath");
+
+    let path = this.data.jofileUploadPath ? this.data.jofileUploadPath : this.jobCommonDetailsJofilepath;
+
+    path = path.replace(/\\/g, '_');
+    console.log(path, "PathFile");
+
+    this.http.get<any>(environment.apiURL + `Allocation/getFileNames/${path}`).subscribe((result: any) => {
+      this.files = result.files;
+      if (this.files.length > 0) {
+        this.files.forEach((value: string) => {
+          const url =environment.apiURL+`Allocation/downloadFilesTest/${path}/${value}`;
+          this.fileDownload(url, value);
+        });
+      }
+    });
+  }
+
+  fileDownload(url: string, fileName: string): void {
+    this.http
+      .get(url, {
+        responseType: 'blob',
+      })
+      .subscribe((response: Blob) => {
+        saveAs(response, fileName);
       });
   }
+
+
   getFileNameFromPath(filePath: string): string {
     const pathParts = filePath.split('/');
     return pathParts[pathParts.length - 1];

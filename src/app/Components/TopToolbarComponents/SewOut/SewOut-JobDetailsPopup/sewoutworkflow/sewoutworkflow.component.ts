@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, TemplateRef } from '@angular/core';
+import { Component, Inject, TemplateRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -7,6 +7,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { LoginService } from 'src/app/Services/Login/login.service';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { environment } from 'src/Environments/environment';
+import saveAs from 'file-saver';
 
 @Component({
   selector: 'app-sewoutworkflow',
@@ -16,7 +19,11 @@ import { LoginService } from 'src/app/Services/Login/login.service';
 })
 export class SewoutworkflowComponent {
   responseData: any;
-  constructor(private route: ActivatedRoute, private datePipe: DatePipe, private http: HttpClient, private loginservice: LoginService) { }
+  constructor(private route: ActivatedRoute, private datePipe: DatePipe, private http: HttpClient, private loginservice: LoginService,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialogRef: MatDialogRef<SewoutworkflowComponent>
+  
+    ) { }
   displayedColumns: string[] = ['startDate', 'endDate', 'timeTaken', 'status'];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
@@ -36,7 +43,6 @@ export class SewoutworkflowComponent {
     window.history.back();
   }
 
-
   applyFilter(event: Event, column: string): void {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
     this.dataSource.filterPredicate = (data: any, filter: string) => {
@@ -44,7 +50,86 @@ export class SewoutworkflowComponent {
     };
     this.dataSource.filter = filterValue;
   }
+  zipFiles(): void {
 
+    let path = this.data.tranFileUploadPath ;
+    path = path.replace(/\\/g, '_');
+
+    const fileUrl =
+      environment.apiURL + 'Allocation/DownloadZipFile?path=' + `${path}`; // Replace with the actual URL of your zip file
+
+    // Use HttpClient to make a GET request to fetch the zip file
+    this.http.get(fileUrl, { responseType: 'blob' }).subscribe((response) => {
+      this.saveFile(response);
+    });
+  }
+  private saveFile(blob: Blob) {
+    // Create a blob URL for the file
+    const url = window.URL.createObjectURL(blob);
+
+    // Create a link element to trigger the download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = this.data.fileName; // Replace with the desired file name
+    document.body.appendChild(a);
+
+    // Trigger the click event to start the download
+    a.click();
+
+    // Clean up the blob URL and the link element
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }
+  //Workfile downlaod//
+  files: string[] = [];
+
+  workFiles(id: number): void {
+
+
+    let path = this.data.tranFileUploadPath ;
+
+    path = path.replace(/\\/g, '_');
+    console.log(path, "PathFile");
+
+    this.http.get<any>(environment.apiURL + `Allocation/getFileNames/${path}`).subscribe((result: any) => {
+      this.files = result.files;
+      if (this.files.length > 0) {
+        this.files.forEach((value: string) => {
+          const url =environment.apiURL+`Allocation/downloadFilesTest/${path}/${value}`;
+          this.fileDownload(url, value);
+        });
+      }
+    });
+  }
+
+  InputworkFiles(id: number): void {
+
+
+    let path = this.data.jofileUploadPath;
+
+    path = path.replace(/\\/g, '_');
+    console.log(path, "PathFile");
+
+    this.http.get<any>(environment.apiURL + `Allocation/getFileNames/${path}`).subscribe((result: any) => {
+      this.files = result.files;
+      if (this.files.length > 0) {
+        this.files.forEach((value: string) => {
+          const url =environment.apiURL+`Allocation/downloadFilesTest/${path}/${value}`;
+          this.fileDownload(url, value);
+        });
+      }
+    });
+  }
+
+  fileDownload(url: string, fileName: string): void {
+    this.http
+      .get(url, {
+        responseType: 'blob',
+      })
+      .subscribe((response: Blob) => {
+        saveAs(response, fileName);
+      });
+  }
   //small table
   totalWorked: string;
   breakTime: string;

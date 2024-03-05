@@ -26,6 +26,7 @@ export class ProductionQuotationComponent implements OnInit {
   selectedJobs: { DepartmentId: any; TranMasterId: any; JId: any; CustomerId: any; JobId: string; Comments: string; TimeStamp: string; CategoryDesc: string; SelectedRows: never[]; FileInwardType: string; CommentsToClient: string; SelectedEmployees: never[]; }[];
   estimationTime: any;
   stitchCount: any;
+  jobCommonDetailsJofilepath: any;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private http: HttpClient,
@@ -107,6 +108,7 @@ this.spinnerService.requestStarted();
     this.http.post<any>(apiUrl, this.data.jId ? this.data.jId : 0).subscribe(
       (response: any) => {
         this.jobCommonDetails = response;
+        this.jobCommonDetailsJofilepath = response.jobCommonDetails.jofileUploadPath;
 
         this.dataJobSource = response;
         this.dataJobSource = new MatTableDataSource(response.jobHistory);
@@ -199,22 +201,46 @@ this.spinnerService.requestStarted();
     window.URL.revokeObjectURL(url);
     document.body.removeChild(a);
   }
+  files: string[] = [];
   workFiles(id: number): void {
     let path = this.jobCommonDetails.jobCommonDetails.tranFileUploadPath
     path = path.replace(/\\/g, '_');
-
-    this.http
-      .get(
-        environment.apiURL +
-        `Allocation/getFileNames/${path}`
-      )
-      .subscribe((response: any) => {
-        const fileUrls: string[] = response.files;
-        fileUrls.forEach((url) => {
-          this.http.get(environment.apiURL + 'Allocation/downloadFilesTest/' + `${path}/` + url).subscribe((response: any) => {
-            saveAs(new Blob([response.data], { type: "application/octet-stream" }), url);
-          })
+    this.http.get<any>(environment.apiURL + `Allocation/getFileNames/${path}`).subscribe((result: any) => {
+      this.files = result.files;
+      if (this.files.length > 0) {
+        this.files.forEach((value: string) => {
+          const url =environment.apiURL+`Allocation/downloadFilesTest/${path}/${value}`;
+          this.fileDownload(url, value);
         });
+      }
+    });
+  }
+  InputworkFiles(id: number): void {
+
+    console.log(this.jobCommonDetailsJofilepath, "jobCommonDetailsJofilepath");
+
+    let path = this.data.jofileUploadPath ? this.data.jofileUploadPath : this.jobCommonDetailsJofilepath;
+
+    path = path.replace(/\\/g, '_');
+    console.log(path, "PathFile");
+
+    this.http.get<any>(environment.apiURL + `Allocation/getFileNames/${path}`).subscribe((result: any) => {
+      this.files = result.files;
+      if (this.files.length > 0) {
+        this.files.forEach((value: string) => {
+          const url =environment.apiURL+`Allocation/downloadFilesTest/${path}/${value}`;
+          this.fileDownload(url, value);
+        });
+      }
+    });
+  }
+  fileDownload(url: string, fileName: string): void {
+    this.http
+      .get(url, {
+        responseType: 'blob',
+      })
+      .subscribe((response: Blob) => {
+        saveAs(response, fileName);
       });
   }
   getFileNameFromPath(filePath: string): string {

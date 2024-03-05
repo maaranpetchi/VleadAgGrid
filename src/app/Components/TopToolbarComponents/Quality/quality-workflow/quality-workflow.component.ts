@@ -75,6 +75,7 @@ export class QualityWorkflowComponent implements OnInit {
   data: any;
   jobCommonDetails: any;
   settingChecklist: any;
+  jobCommonDetailsJofilepath: any;
   ngOnInit(): void {
     this.getIsvalue();
     this.fetchData();
@@ -125,31 +126,48 @@ export class QualityWorkflowComponent implements OnInit {
     window.URL.revokeObjectURL(url);
     document.body.removeChild(a);
   }
+  files: string[] = [];
 
   workFiles(id: number): void {
     let path = this.jobCommonDetails.jobCommonDetails.tranFileUploadPath;
     path = path.replace(/\\/g, '_');
 
-    this.http
-      .get(environment.apiURL + `Allocation/getFileNames/${path}`)
-      .subscribe((response: any) => {
-        const fileUrls: string[] = response.files;
-        fileUrls.forEach((url) => {
-          this.http
-            .get(
-              environment.apiURL +
-              'Allocation/downloadFilesTest/' +
-              `${path}/` +
-              url
-            )
-            .subscribe((response: any) => {
-
-              saveAs(
-                new Blob([response.data], { type: 'application/octet-stream' }),
-                url
-              );
-            });
+    this.http.get<any>(environment.apiURL + `Allocation/getFileNames/${path}`).subscribe((result: any) => {
+      this.files = result.files;
+      if (this.files.length > 0) {
+        this.files.forEach((value: string) => {
+          const url =environment.apiURL+`Allocation/downloadFilesTest/${path}/${value}`;
+          this.fileDownload(url, value);
         });
+      }
+    });
+  }
+  InputworkFiles(id: number): void {
+
+    console.log(this.jobCommonDetailsJofilepath, "jobCommonDetailsJofilepath");
+
+    let path = this.data.jofileUploadPath ? this.data.jofileUploadPath : this.jobCommonDetailsJofilepath;
+
+    path = path.replace(/\\/g, '_');
+    console.log(path, "PathFile");
+
+    this.http.get<any>(environment.apiURL + `Allocation/getFileNames/${path}`).subscribe((result: any) => {
+      this.files = result.files;
+      if (this.files.length > 0) {
+        this.files.forEach((value: string) => {
+          const url =environment.apiURL+`Allocation/downloadFilesTest/${path}/${value}`;
+          this.fileDownload(url, value);
+        });
+      }
+    });
+  }
+  fileDownload(url: string, fileName: string): void {
+    this.http
+      .get(url, {
+        responseType: 'blob',
+      })
+      .subscribe((response: Blob) => {
+        saveAs(response, fileName);
       });
   }
   getFileNameFromPath(filePath: string): string {
@@ -161,6 +179,7 @@ export class QualityWorkflowComponent implements OnInit {
 
     this.http.post<any>(apiUrl, this.data.jid ? this.data.jid : this.data.jId).subscribe((response: any) => {
       this.jobCommonDetails = response;
+      this.jobCommonDetailsJofilepath = response.jobCommonDetails.jofileUploadPath;
       console.log(this.jobCommonDetails, "JobCommonDetails");
 
     },
