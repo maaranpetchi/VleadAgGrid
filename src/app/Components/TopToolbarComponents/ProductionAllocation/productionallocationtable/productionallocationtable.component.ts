@@ -969,10 +969,8 @@ onCellValueChanged(event: CellValueChangedEvent) {
   onSubmits() {
     this.selectedJobs= this.gridApi.getSelectedRows();
     this.selectedEmployees= this.gridEmplApi.getSelectedRows();
-
     console.log(this.selectedJobs,"this.selectedJobs");
     console.log(this.selectedEmployees.length,"this.selectedEmployees");
-    
     this.spinnerService.requestStarted();
     var selectedJobCount = this.selectedJobs.length;
     var selectedEmployeeCount = this.selectedEmployees.length;
