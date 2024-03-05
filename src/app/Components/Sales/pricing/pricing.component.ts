@@ -260,9 +260,10 @@ export class PricingComponent implements OnInit {
       )
       .subscribe({
         next: (response: any) => {
-          this.spinner.requestEnded();
+          this.showTable = true;
           this.loadScope();
           this.customers = response;
+          this.spinner.requestEnded();
         },
         error: (err) => {
           this.spinner.resetSpinner();

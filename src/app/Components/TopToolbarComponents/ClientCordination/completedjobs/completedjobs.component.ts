@@ -58,7 +58,7 @@ export class CompletedjobsComponent implements OnInit {
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `Allocation/getCompletedJobs?EmpId=${this.loginservice.getUsername()}`).subscribe(data => {
       this.spinnerService.requestEnded();
-      this.rowData= data.clientDetails.resultCompletedJobsList;
+      this.rowData = data.clientDetails.resultCompletedJobsList;
       this.CompletedJobsCount = data.clientDetails.resultForCompletedList;
 
     });
@@ -74,7 +74,12 @@ export class CompletedjobsComponent implements OnInit {
     this.spinnerService.requestStarted();
     this.gridApi.getSelectedRows().forEach(x => this.setAll(x));
     if (this.selectedQuery.length > 0) {
-      this.selectedJobs = this.selectedQuery;
+      this.selectedJobs = this.selectedQuery
+      this.selectedJobs.forEach((job: any) => {
+        job.employeeId = job.employeeId?job.employeeId: this.loginservice.getUsername();
+      });
+      console.log(this.selectedJobs,"SelectedJobs");
+      
     }
     this.http.get<any>(environment.apiURL + `Allocation/getCompletedJobs?EmpId=${this.loginservice.getUsername()}`).subscribe(data => {
       this.spinnerService.requestEnded();
@@ -141,8 +146,12 @@ export class CompletedjobsComponent implements OnInit {
         Swal.fire(
           'Error!',
           data.message,
-          'error'
-        )
+          'info'
+        ).then((result) => {
+          if (result.isConfirmed) {
+            this.getCompletedJobData();
+          }
+        })
       }
     });
   }
@@ -197,10 +206,10 @@ export class CompletedjobsComponent implements OnInit {
   }
 
 
-   //textcolor
-   getCellClass(data) {
-    console.log(data,"Colordata");
-    
+  //textcolor
+  getCellClass(data) {
+    console.log(data, "Colordata");
+
     return {
       'text-color-green': data.employeeCount === 1,
       'text-color-brown': data.queryJobDate !== null,
@@ -212,84 +221,110 @@ export class CompletedjobsComponent implements OnInit {
       'Rush': data.jobStatusId === 2 || data.jobStatusId === 4 || data.jobStatusId === 8
     };
   }
-/////////////////////////Ag-grid module///////////////////////////////
-context: any;
+  /////////////////////////Ag-grid module///////////////////////////////
+  context: any;
 
-@ViewChild('agGrid') agGrid: any;
+  @ViewChild('agGrid') agGrid: any;
 
-private gridApi!: GridApi<any>;
-
-
-public defaultColDef: ColDef = {
-  flex: 1,
-  minWidth: 100,
-  headerCheckboxSelection: isFirstColumn,
-  checkboxSelection: isFirstColumn,
-};
-
-columnDefs: ColDef[] = [
+  private gridApi!: GridApi<any>;
 
 
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    headerCheckboxSelection: isFirstColumn,
+    checkboxSelection: isFirstColumn,
+  };
 
-  { headerName: 'JobNumber', field: 'jobId', filter: 'agTextColumnFilter',
-      floatingFilter: true,cellStyle: {color: 'skyblue', 'cursor':'pointer'}  },
-
-  { headerName: 'EST Job /Query Date', field: 'jobDateEst', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-  { headerName: 'Department', field: 'description', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-  { headerName: 'Client', field: 'shortName', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-  { headerName: 'CustomerClassification', field: 'customerClassification', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-  { headerName: 'ClientStatus', field: 'customerType', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-  { headerName: 'JobStatus', field: 'jobStatusDescription', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-  { headerName: 'ParentJobId', field: 'parentjobid', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-  { headerName: 'FileName', field: 'fileName', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-  { headerName: 'File Inward Mode', field: 'fileInwardMode', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-  { headerName: 'File Received EST Date', field: 'estfileReceivedDate', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-  { headerName: 'JobClosedDate', field: 'jobClosedUtc', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-  { headerName: 'CommentsToClient', field: 'commentsToClient', filter: 'agTextColumnFilter',
-      floatingFilter: true, },
-];
+  columnDefs: ColDef[] = [
 
 
 
-public rowSelection: 'single' | 'multiple' = 'multiple';
-public rowData: any[]=[];
-public themeClass: string =
-  "ag-theme-quartz";
+    {
+      headerName: 'JobNumber', field: 'jobId', filter: 'agTextColumnFilter',
+      floatingFilter: true, cellStyle: { color: 'skyblue', 'cursor': 'pointer' }
+    },
+
+    {
+      headerName: 'EST Job /Query Date', field: 'jobDateEst', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
+    {
+      headerName: 'Department', field: 'description', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
+    {
+      headerName: 'Client', field: 'shortName', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
+    {
+      headerName: 'CustomerClassification', field: 'customerClassification', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
+    {
+      headerName: 'ClientStatus', field: 'customerType', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
+    {
+      headerName: 'JobStatus', field: 'jobStatusDescription', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
+    {
+      headerName: 'ParentJobId', field: 'parentjobid', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
+    {
+      headerName: 'FileName', field: 'fileName', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
+    {
+      headerName: 'File Inward Mode', field: 'fileInwardMode', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
+    {
+      headerName: 'File Received EST Date', field: 'estfileReceivedDate', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
+    {
+      headerName: 'JobClosedDate', field: 'jobClosedUtc', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
+    {
+      headerName: 'CommentsToClient', field: 'commentsToClient', filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
+  ];
+
+
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  public rowData: any[] = [];
+  public themeClass: string =
+    "ag-theme-quartz";
   @ViewChild(ClientordinationindexComponent) ClientordinationindexComponent: ClientordinationindexComponent;
 
-onGridReady(params: GridReadyEvent<any>) {
- this.gridApi = params.api;
- this.columnApi = params.columnApi;
- this.http.get<any>(environment.apiURL + `Allocation/getCompletedJobs?EmpId=${this.loginservice.getUsername()}`).subscribe((response) => (this.rowData = response.clientDetails.resultCompletedJobsList)); 
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
+    this.columnApi = params.columnApi;
+    this.http.get<any>(environment.apiURL + `Allocation/getCompletedJobs?EmpId=${this.loginservice.getUsername()}`).subscribe((response) => (this.rowData = response.clientDetails.resultCompletedJobsList));
 
- }
- onCellClicked(event: CellClickedEvent) {
-  const { colDef, data } = event;
-  if (colDef.field === 'jobId') {
-    console.log(data,"PopupData");
-    this.getjobhistory(data)
   }
-}
+  onCellClicked(event: CellClickedEvent) {
+    const { colDef, data } = event;
+    if (colDef.field === 'jobId') {
+      console.log(data, "PopupData");
+      this.getjobhistory(data)
+    }
+  }
 }
 
 
 function isFirstColumn(
-params:
-  | CheckboxSelectionCallbackParams
-  | HeaderCheckboxSelectionCallbackParams
+  params:
+    | CheckboxSelectionCallbackParams
+    | HeaderCheckboxSelectionCallbackParams
 ) {
-var displayedColumns = params.api.getAllDisplayedColumns();
-var thisIsFirstColumn = displayedColumns[0] === params.column;
-return thisIsFirstColumn;
+  var displayedColumns = params.api.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
 }

@@ -14,6 +14,7 @@ import { environment } from 'src/Environments/environment';
 import { GridApi, ColDef, GridReadyEvent, CheckboxSelectionCallbackParams, HeaderCheckboxSelectionCallbackParams } from 'ag-grid-community';
 import { EmpskillactionrenderingComponent } from 'src/app/Components/EmployeeVSSkillset/empskillactionrendering/empskillactionrendering.component';
 import { ViewActionRenderingComponent } from '../view-action-rendering/view-action-rendering.component';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
 @Component({
   selector: 'app-customerreceiptsindex',
   templateUrl: './customerreceiptsindex.component.html',
@@ -44,7 +45,7 @@ constructor( private _dialog: MatDialog,
   private router:Router,
   private _empService:CustomerreceiptsService ,
   private _coreService: CoreService,
-  private http:HttpClient){}
+  private http:HttpClient,private spinnerservice:SpinnerService){}
 
   
   ngOnInit(): void {
@@ -57,10 +58,11 @@ constructor( private _dialog: MatDialog,
   }
 
   getEmployeeList() {
+    this.spinnerservice.requestStarted();
     this._empService.getEmployeeList().subscribe({
      
       next: (res) => {
-      
+        this.spinnerservice.requestEnded();
         this.rowData = res;     
       },
       error: console.log,

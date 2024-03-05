@@ -10,7 +10,7 @@ import { JobHistoryService } from 'src/app/Services/JobHistory/job-history.servi
 import { JobhistoryDetailsComponent } from '../jobhistory-details/jobhistory-details.component';
 import { SpinnerService } from '../../Spinner/spinner.service';
 import { environment } from 'src/Environments/environment';
-import { catchError } from 'rxjs';
+import { catchError, map } from 'rxjs';
 import { error } from 'jquery';
 import * as FileSaver from 'file-saver';
 import Swal from 'sweetalert2/src/sweetalert2.js'
@@ -104,12 +104,18 @@ export class JobHistoryComponent implements OnInit {
       this.toDate = '';
 
       this.spinnerService.requestStarted();
-      this.http.get<any>(environment.apiURL + 'Customer/GetCustomers').pipe(catchError((error) => {
+      this.http.get<any>(environment.apiURL + 'Customer/GetCustomers').pipe(
+        catchError((error) => {
+          this.spinnerService.requestEnded();
+          return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
+        }),
+        map((clientdata: any[]) => {
+          // Sort the client data array based on client name
+          return clientdata.sort((a, b) => a.shortName.localeCompare(b.shortName));
+        })
+      ).subscribe(sortedClients => {
         this.spinnerService.requestEnded();
-        return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
-      })).subscribe(clientdata => {
-        this.spinnerService.requestEnded();
-        this.clients = clientdata.sort();
+        this.clients = sortedClients;
       });
 
     }

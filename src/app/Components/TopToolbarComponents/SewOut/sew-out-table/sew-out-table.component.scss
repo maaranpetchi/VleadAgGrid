@@ -1,6 +1,9 @@
 .mat-elevation-z8{
     overflow: auto;
 }
+.fullform {
+  height: 596px;
+}
 
 .no-data-cell {
     text-align: center;
@@ -10,7 +13,6 @@
   }
 
   .table-container {
-    height:50vh; /* Set the maximum height for the table container */
     overflow-y: auto; /* Enable vertical scrolling */
   }
   
