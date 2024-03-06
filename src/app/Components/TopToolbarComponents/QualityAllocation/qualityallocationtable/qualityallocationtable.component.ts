@@ -214,20 +214,20 @@ export class QualityallocationtableComponent implements OnInit {
       floatingFilter: true, },
 
   ]
-  public defaultEmpColDef: ColDef = {
-    resizable: true, sortable: true, filter: 'agTextColumnFilter',
-      floatingFilter: true, editable: true, flex: 1,
-    minWidth: 100,
-    headerCheckboxSelection: isFirstColumn,
-    checkboxSelection: isFirstColumn,
-  };
-  public defaultColDef: ColDef = {
-    resizable: true, sortable: true, filter: 'agTextColumnFilter',
-      floatingFilter: true, editable: true, flex: 1,
-    minWidth: 100,
-    headerCheckboxSelection: isFirstColumn,
-    checkboxSelection: isFirstColumn,
-  };
+  // public defaultEmpColDef: ColDef = {
+  //   resizable: true, sortable: true, filter: 'agTextColumnFilter',
+  //     floatingFilter: true, editable: true, flex: 1,
+  //   minWidth: 100,
+  //   headerCheckboxSelection: isFirstColumn,
+  //   checkboxSelection: isFirstColumn,
+  // };
+  // public defaultColDef: ColDef = {
+  //   resizable: true, sortable: true, filter: 'agTextColumnFilter',
+  //     floatingFilter: true, editable: true, flex: 1,
+  //   minWidth: 100,
+  //   headerCheckboxSelection: isFirstColumn,
+  //   checkboxSelection: isFirstColumn,
+  // };
   selectedEmpNodes: any;
   settingFirstData: any[] = [];
   frstrow: any;

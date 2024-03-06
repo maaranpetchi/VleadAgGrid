@@ -7,8 +7,8 @@ export const environment = {
     //apiURL: 'http://vislocaluat.vleadservices.com:81/api/'
 
     ////Local///
-    apiURL: 'https://localhost:7208/api/'
+    //apiURL: 'https://localhost:7208/api/'
 
     ////Live server///
-    //apiURL: 'https://vislocalapi.vleadservices.com/api/'
+    apiURL: 'https://vislocalapi.vleadservices.com/api/'
 };

@@ -20,6 +20,7 @@ import saveAs from 'file-saver';
 import { ChecklistpopComponent } from '../checklistpop/checklistpop.component';
 import { CustomerreceiptsService } from 'src/app/Services/AccountController/CustomerReceipts/customerreceipts.service';
 import { SharedService } from 'src/app/Services/SharedService/shared.service';
+import { NavigationExtras, Router } from '@angular/router';
 
 @Component({
   selector: 'app-quality-workflow',
@@ -87,7 +88,7 @@ export class QualityWorkflowComponent implements OnInit {
   }
   gettingdata: any;
   constructor(private sharedDataService: SharedService, private location: Location, private http: HttpClient, private dialog: MatDialog, private loginService: LoginService, private workflowservice: WorkflowService, private spinnerService: SpinnerService, private _empService: CustomerreceiptsService
-  ) {
+  ,private router:Router) {
     this.data = this.workflowservice.getData();
 
     console.log(this.data, "GettingDataFromBulkJobs");
@@ -190,9 +191,20 @@ export class QualityWorkflowComponent implements OnInit {
   }
 
   Back() {
+    // this.clearBrowserCache();
     this.location.back();
   }
+  clearBrowserCache() {
+    const currentUrl = this.router.url;
+    const navigationExtras: NavigationExtras = {
+      queryParams: { 'timestamp': new Date().getTime() } // Add a unique timestamp to force reload
+    };
 
+    // Navigate to the same route with a timestamp query parameter to force reload
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate([currentUrl], navigationExtras);
+    });
+  }
   //upperbody
   viewDetails(data) {
     this.dialog.open(JobhistorypopuptableComponent, {
@@ -632,7 +644,7 @@ export class QualityWorkflowComponent implements OnInit {
                 'success'
               ).then((result) => {
                 if (result.isConfirmed) {
-                  this.location.back();
+                  this.Back();
                 }
               })
             }
@@ -643,7 +655,7 @@ export class QualityWorkflowComponent implements OnInit {
                 'error'
               ).then((result) => {
                 if (result.isConfirmed) {
-                  this.location.back();
+                  this.Back();
                 }
               })
             }
@@ -657,12 +669,17 @@ export class QualityWorkflowComponent implements OnInit {
         this.http.post<any>(environment.apiURL + `Workflow/ChangeWorkflow/${this.data.wftid ? this.data.wftid : this.data.tranId}`, fd).subscribe(ChangeWorkflowResult => {
           this.BindWorkDetails();
           this.confirmationMessage = ChangeWorkflowResult.message;
+          this.spinnerService.requestEnded();
+
           Swal.fire(
             'Done!',
             this.confirmationMessage,
             'success'
-          )
-          this.spinnerService.requestEnded();
+          ).then((res)=>{
+            if(res.isConfirmed){
+              this.Back();
+            }
+          })
         });
       }
     }

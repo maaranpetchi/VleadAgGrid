@@ -344,19 +344,19 @@ export class ProductionallocationtableComponent implements OnInit {
   };
   context: any;
   @ViewChild('agGrid') agGrid: any;
-  public defaultColDef: ColDef = {
-    flex: 1,
-    minWidth: 100,
-    headerCheckboxSelection: isFirstColumn,
-    checkboxSelection: isFirstColumn,
-  };
-  public defaultEmpColDef: ColDef = {
-    flex: 1,
-    minWidth: 100,
-    field: 'empCheckBoxValue',
-    headerCheckboxSelection: isEmpColumn,
-    checkboxSelection: isEmpColumn,
-  };
+  // public defaultColDef: ColDef = {
+  //   flex: 1,
+  //   minWidth: 100,
+  //   headerCheckboxSelection: isFirstColumn,
+  //   checkboxSelection: isFirstColumn,
+  // };
+  // public defaultEmpColDef: ColDef = {
+  //   flex: 1,
+  //   minWidth: 100,
+  //   field: 'empCheckBoxValue',
+  //   headerCheckboxSelection: isEmpColumn,
+  //   checkboxSelection: isEmpColumn,
+  // };
   public themeClass: string = 'ag-theme-quartz';
   constructor(
     private http: HttpClient,
