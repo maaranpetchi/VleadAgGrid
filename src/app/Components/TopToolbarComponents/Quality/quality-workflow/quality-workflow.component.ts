@@ -335,7 +335,7 @@ export class QualityWorkflowComponent implements OnInit {
 
   ////////////////////////////Main Method//////////////////////////////////////////
 
-  changeWorkType(workType) {
+  async changeWorkType(workType) {
     if (workType == 'Start') {
       this.disableWorkType = false;
       this.showFiles = true;
@@ -344,10 +344,12 @@ export class QualityWorkflowComponent implements OnInit {
       this.ChangeWorkflow(workType);
     }
     else if (workType == 'End') {
+      console.log(this.data.processName,"GettingprocessName");
+      
       console.log(this.CopyPreviousFiles, "Copypreviousfile");
       console.log(this.checked, "checked");
 
-      if (this.AttachedFiles.length == 0 && this.CopyPreviousFiles == false) {
+      if (this.AttachedFiles.length == 0 && this.CopyPreviousFiles == false ) {
         Swal.fire(
           'Please Copy Previous Files (or) Upload Files!',
           'Info',
@@ -356,8 +358,11 @@ export class QualityWorkflowComponent implements OnInit {
 
       }
       else {
-        this.http.get<any>(environment.apiURL + `Workflow/ChecklistPopup?WFMId=${this.data.wfmid ? this.data.wfmid : this.ProcessTransaction.wfmid}`).subscribe(result => {
+         this.http.get<any>(environment.apiURL + `Workflow/ChecklistPopup?WFMId=${this.data.wfmid ? this.data.wfmid : this.ProcessTransaction.wfmid}`).subscribe(result => {
           this.checklist = result.check;
+          console.log(this.checklist,"Checklist");
+          console.log(this.checklist.length,"Checklistlength");
+          
           this._empService.setData({ data: this.checklist });
 
           if (this.checklist && this.checklist.length > 0) {
@@ -378,13 +383,91 @@ export class QualityWorkflowComponent implements OnInit {
               }
             });
           }
-        });
-        if (this.checklist.length == 0) {
+          if (this.checklist.length == 0) {
 
 
-          if (this.data.processName == 'Production') {   //        the below code 154 to 193 STARTS     
-            if (this.Status == 'Query' || this.Status == 'Query for Special Pricing') {
-              if (this.AttachedFiles.length == 0 && this.checked == false) {
+            if (this.data.processName == 'Production') {   //        the below code 154 to 193 STARTS     
+              if (this.Status == 'Query' || this.Status == 'Query for Special Pricing') {
+                if (this.AttachedFiles.length == 0 && this.CopyPreviousFiles == false) {
+                  this.alertMessage = 'Please Copy Previous Files (or) Upload Files!';
+                  //  $('#alertPopup').modal('show');
+                }
+                else {
+                  this.disableWorkType = true;
+                  this.ChangeWorkflow(workType);
+                }
+              }
+              else if (this.AttachedFiles.length == 0) {
+                this.alertMessage = 'Please Upload Files!';
+                //  $('#alertPopup').modal('show');
+              }
+              else {
+                this.disableWorkType = true;
+                this.ChangeWorkflow(workType);
+              }
+            }
+            else if (this.data.processName == 'Quality') {
+              if (this.AttachedFiles.length == 0 && this.CopyPreviousFiles == false) {
+                this.alertMessage = 'Please Copy Previous Files (or) Upload Files!';
+                //   $('#alertPopup').modal('show');
+              }
+              else {
+                console.log(this.data,"CheckingProcess");
+                
+                this.disableWorkType = true;
+                this.ChangeWorkflow(workType);
+              }
+            }
+            else if (this.data.processName == 'Sew Out' || this.data.processName == 'Buddy Proof') {
+              if (this.AttachedFiles.length == 0 && this.CopyPreviousFiles == false && this.AttachedFiles1.length == 0) {
+                this.alertMessage = 'Please Copy Previous Files (or) Upload Files!';
+                // $('#alertPopup').modal('show');
+              }
+              else {
+                this.disableWorkType = true;
+                this.ChangeWorkflow(workType);
+              }
+            }
+            else if (this.data.processName == 'Proof Reading') {
+              if (this.CopyPreviousFiles == false) {
+                this.alertMessage = 'Please Copy Previous Files!';
+                //  $('#alertPopup').modal('show');
+              }
+              else {
+                this.disableWorkType = true;
+                this.ChangeWorkflow(workType);
+              }
+            }
+            else {
+              this.disableWorkType = true;
+              this.ChangeWorkflow(workType);
+            }
+          }
+  
+  
+          else {
+            if (this.data.processName == 'Production') {         //the below code 154 to 193 STARTS          
+              if (this.Status == 'Query' || this.Status == 'Query for Special Pricing') {
+                if (this.AttachedFiles.length == 0 && this.CopyPreviousFiles == false) {
+                  this.alertMessage = 'Please Copy Previous Files (or) Upload Files!';
+                  //   $('#alertPopup').modal('show');
+                }
+                else {
+                  this.disableWorkType = true;
+                  this.ChangeWorkflow(workType);
+                }
+              }
+              else if (this.AttachedFiles.length == 0) {
+                this.alertMessage = 'Please Upload Files!';
+                //  $('#alertPopup').modal('show');
+              }
+              else {
+                this.disableWorkType = true;
+                this.ChangeWorkflow(workType);
+              }
+            }
+            else if (this.data.processName == 'Quality') {
+              if (this.AttachedFiles.length == 0 && this.CopyPreviousFiles == false) {
                 this.alertMessage = 'Please Copy Previous Files (or) Upload Files!';
                 //  $('#alertPopup').modal('show');
               }
@@ -393,108 +476,36 @@ export class QualityWorkflowComponent implements OnInit {
                 this.ChangeWorkflow(workType);
               }
             }
-            else if (this.AttachedFiles.length == 0) {
-              this.alertMessage = 'Please Upload Files!';
-              //  $('#alertPopup').modal('show');
-            }
-            else {
-              this.disableWorkType = true;
-              this.ChangeWorkflow(workType);
-            }
-          }
-          else if (this.data.processName == 'Quality') {
-            if (this.AttachedFiles.length == 0 && this.checked == false) {
-              this.alertMessage = 'Please Copy Previous Files (or) Upload Files!';
-              //   $('#alertPopup').modal('show');
-            }
-            else {
-              this.disableWorkType = true;
-              this.ChangeWorkflow(workType);
-            }
-          }
-          else if (this.data.processName == 'Sew Out' || this.data.processName == 'Buddy Proof') {
-            if (this.AttachedFiles.length == 0 && this.checked == false && this.AttachedFiles1.length == 0) {
-              this.alertMessage = 'Please Copy Previous Files (or) Upload Files!';
-              // $('#alertPopup').modal('show');
-            }
-            else {
-              this.disableWorkType = true;
-              this.ChangeWorkflow(workType);
-            }
-          }
-          else if (this.data.processName == 'Proof Reading') {
-            if (this.checked == false) {
-              this.alertMessage = 'Please Copy Previous Files!';
-              //  $('#alertPopup').modal('show');
-            }
-            else {
-              this.disableWorkType = true;
-              this.ChangeWorkflow(workType);
-            }
-          }
-          else {
-            this.disableWorkType = true;
-            this.ChangeWorkflow(workType);
-          }
-        }
-
-
-        else {
-          if (this.data.processName == 'Production') {         //the below code 154 to 193 STARTS          
-            if (this.Status == 'Query' || this.Status == 'Query for Special Pricing') {
-              if (this.AttachedFiles.length == 0 && this.checked == false) {
+            else if (this.data.processName == 'Sew Out' || this.data.processName == 'Buddy Proof') {
+              if (this.AttachedFiles.length == 0 && this.CopyPreviousFiles == false && this.AttachedFiles1.length == 0) {
                 this.alertMessage = 'Please Copy Previous Files (or) Upload Files!';
-                //   $('#alertPopup').modal('show');
+                //  $('#alertPopup').modal('show');
               }
               else {
                 this.disableWorkType = true;
                 this.ChangeWorkflow(workType);
               }
             }
-            else if (this.AttachedFiles.length == 0) {
-              this.alertMessage = 'Please Upload Files!';
-              //  $('#alertPopup').modal('show');
+            else if (this.data.processName == 'Proof Reading') {
+              if (this.CopyPreviousFiles == false) {
+                this.alertMessage = 'Please Copy Previous Files!';
+                // $('#alertPopup').modal('show');
+              }
+              else {
+                this.disableWorkType = true;
+                this.ChangeWorkflow(workType);
+              }
             }
             else {
               this.disableWorkType = true;
               this.ChangeWorkflow(workType);
             }
           }
-          else if (this.data.processName == 'Quality') {
-            if (this.AttachedFiles.length == 0 && this.checked == false) {
-              this.alertMessage = 'Please Copy Previous Files (or) Upload Files!';
-              //  $('#alertPopup').modal('show');
-            }
-            else {
-              this.disableWorkType = true;
-              this.ChangeWorkflow(workType);
-            }
-          }
-          else if (this.data.processName == 'Sew Out' || this.data.processName == 'Buddy Proof') {
-            if (this.AttachedFiles.length == 0 && this.checked == false && this.AttachedFiles1.length == 0) {
-              this.alertMessage = 'Please Copy Previous Files (or) Upload Files!';
-              //  $('#alertPopup').modal('show');
-            }
-            else {
-              this.disableWorkType = true;
-              this.ChangeWorkflow(workType);
-            }
-          }
-          else if (this.data.processName == 'Proof Reading') {
-            if (this.checked == false) {
-              this.alertMessage = 'Please Copy Previous Files!';
-              // $('#alertPopup').modal('show');
-            }
-            else {
-              this.disableWorkType = true;
-              this.ChangeWorkflow(workType);
-            }
-          }
-          else {
-            this.disableWorkType = true;
-            this.ChangeWorkflow(workType);
-          }
-        }
+        });
+        console.log(this.checklist,"Checklist");
+        console.log(this.checklist.length,"Checklistlength");
+        
+    
       }
       //-----------------------------------------------------------------final CL---------------------------------------------------------------
     }
@@ -511,8 +522,10 @@ export class QualityWorkflowComponent implements OnInit {
 
 
   ChangeWorkflow(workType) {
+    console.log("Method started");
+    
     let ProcessCheck = localStorage.getItem('processid');
-
+    console.log("Process Check",ProcessCheck);
     if (ProcessCheck === '3' || ProcessCheck === '5' || ProcessCheck === '9' || ProcessCheck === '11') {
       if (this.data.stitchCountUpdate === undefined) {
         this.data.stitchCountUpdate = this.txtbpsoStitchCount;
