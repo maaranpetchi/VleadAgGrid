@@ -20,7 +20,10 @@ import { catchError } from 'rxjs';
 })
 export class EndRenderingComponent implements ICellRendererAngularComp {
     iconClicked: boolean=false;
-    constructor(private loginservice: LoginService, private http: HttpClient, private spinnerService: SpinnerService, private sharedDataService: SharedService) { }
+    constructor(private loginservice: LoginService, private http: HttpClient, private spinnerService: SpinnerService, private sharedDataService: SharedService) {
+        console.log( localStorage.getItem('processId'),"ProcessId");
+
+     }
 
     gettingData: any;
     componentParent: any;
@@ -38,16 +41,20 @@ export class EndRenderingComponent implements ICellRendererAngularComp {
         return false;
     }
     changeWorkflow(data, worktype) {
+
+        console.log(data,"Data");
+        console.log(this.gettingData,"gettingData");
+        
         this.iconClicked = true;
 
         this.sharedDataService.selectDivision$.subscribe((selectdivision) => {
           
             if (this.iconClicked) {
 
-            if (selectdivision === 0) {
+            if (selectdivision === 0 && this.gettingData.scopeId == null) {
                 Swal.fire(
                     'Alert!',
-                    'Select Division!',
+                    'Please select the scope!',
                     'info'
                 ).then((response) => {
                     if (response.isConfirmed) {
@@ -69,7 +76,7 @@ export class EndRenderingComponent implements ICellRendererAngularComp {
                     "value": 0,
                     "scopeId": selectdivision,
                     "Scope": '',
-                    "processId": localStorage.getItem('processId'),
+                    "processId": this.gettingData.processId,
                     "stitchCount": 0,
                     "orderId": 0,
                     "isClientOrder": 0,

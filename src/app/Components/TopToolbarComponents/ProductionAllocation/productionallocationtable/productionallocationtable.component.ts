@@ -163,7 +163,7 @@ export class ProductionallocationtableComponent implements OnInit {
     },
     {
       headerName: 'Employee(s)',
-      field: 'employeeName',
+      field: 'employeeName' ? 'employeeName' : 'View',
       width: 70,
       headerClass: 'text-wrap',
       suppressSizeToFit: true,

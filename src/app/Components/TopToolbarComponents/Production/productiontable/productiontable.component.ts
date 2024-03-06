@@ -133,9 +133,9 @@ export class ProductiontableComponent {
   storedProcessId: string | null;
 
   constructor(private http: HttpClient, private loginservice: LoginService, private dialog: MatDialog, private spinnerService: SpinnerService, private workflowservice: WorkflowService, private router: Router,private sharedDataService:SharedService) {
-    // this.sharedDataService.refreshData$.subscribe(() => {
-    //   this.bulkJobs();
-    // })
+    this.sharedDataService.refreshData$.subscribe(() => {
+      this.bulkJobs();
+    })
   }
 
   ngOnInit(): void {

@@ -21,6 +21,7 @@ export class JobhistoryDetailsComponent implements OnInit {
   displayedJobColumns: string[] = ['movedFrom', 'movedTo', 'movedDate', 'movedBy','MovedTo', 'remarks' , 'files'];
   displayedQueryColumns: string[] = ['movedFrom', 'movedTo', 'movedDate', 'movedBy','MovedTo', 'remarks' ,'ProcessStatus', 'files'];
   jobHistory: any;
+  jobcommonDetails: any;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -45,6 +46,7 @@ private spinnerservice:SpinnerService
     })).subscribe(data => {
       this.spinnerservice.requestEnded();
       this.dataJobSource = data.jobHistory;
+      this.jobcommonDetails = data.jobCommonDetails;
       this.queryDataJobSource = data.jobQueryHistory 
   })
   }

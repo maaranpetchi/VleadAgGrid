@@ -51,7 +51,7 @@ export class StartRenderingComponent implements ICellRendererAngularComp {
                 "value": 0,
                 "scopeId": "",
                 "Scope": [],
-                "processId": localStorage.getItem('processId'),
+                "processId": this.gettingData.processId,
                 "stitchCount": 0,
                 "orderId": 0,
                 "isClientOrder": 0,
@@ -85,9 +85,8 @@ export class StartRenderingComponent implements ICellRendererAngularComp {
             headers.append('Content-Type', 'multipart/form-data');
             this.spinnerService.requestStarted();
             this.http.post<any>(environment.apiURL + `Workflow/processMovement`, fd, { headers }).subscribe((response) => {
-                this.sharedDataService.triggerRefresh();
-
                 this.spinnerService.requestEnded();
+                this.sharedDataService.triggerRefresh();
             })
         }
         else {
