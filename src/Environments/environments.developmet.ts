@@ -10,6 +10,6 @@ export const environment = {
   apiURL: 'https://localhost:7208/api/'
 
   ////Live server///
- // apiURL: 'https://vislocalapi.vleadservices.com/api/'
+  // apiURL: 'https://vislocalapi.vleadservices.com/api/'
 
 };
