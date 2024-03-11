@@ -54,11 +54,11 @@ export class BenchOptionsComponent implements OnInit {
     this.spinnerService.requestStarted();
     this.http.get<any>(environment.apiURL + `BenchOption/Getbutton?EmployeeId=${this.loginservice.getUsername()}`).subscribe((status) => {
       this.spinnerService.requestEnded();
-
+      this.disableWorkType = status.data.start;
       console.log(status, "Status")
       console.log(status.data.start, "StatusStart")
 
-      if (status.data.start == false) {
+      if (status.data.message == "Null") {
         Swal.fire('Alert', 'Close you regular job for further step..!', 'info').then((res) => {
           if (res.isConfirmed) {
             this.router.navigate(['/topnavbar/dashboard']);
@@ -109,8 +109,6 @@ export class BenchOptionsComponent implements OnInit {
         EmployeeId: this.loginservice.getUsername(),
         Status: ''
       }
-
-
 
       this.spinnerService.requestStarted();
 

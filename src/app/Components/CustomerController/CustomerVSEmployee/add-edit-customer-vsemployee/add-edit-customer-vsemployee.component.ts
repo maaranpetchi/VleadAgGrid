@@ -191,7 +191,7 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
           else {
             Swal.fire(
               'Alert!',
-              'Please try another customer!',
+              'Customer Already Exists!',
               'info'
             ).then((result) => {
               if (result.isConfirmed) {

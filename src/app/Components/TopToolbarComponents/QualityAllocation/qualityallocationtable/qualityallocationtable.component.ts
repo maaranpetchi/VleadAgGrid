@@ -77,7 +77,7 @@ export class QualityallocationtableComponent implements OnInit {
     },
     {
       headerName: 'Employee(s)',
-      field: 'employeeName',
+      field: 'employeeName' ? 'employeeName' : 'View',
       width: 100,
       headerClass: 'text-wrap',
       suppressSizeToFit: true,

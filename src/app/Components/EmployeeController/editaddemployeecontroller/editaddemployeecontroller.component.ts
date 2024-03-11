@@ -38,8 +38,8 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       this.gettingType = data.type
       if (this.gettingType == "EDIT") {
         this.fetchUpdateData();
-        this.homeButton= false;
-        this.updateButton=true;
+        this.homeButton = false;
+        this.updateButton = true;
         this._empservice.shouldFetchData = false;
       }
 
@@ -167,8 +167,8 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       this.emergencyContactName = this.apiResponseData.emp.addressDetail.emergencyContactName,
       this.emergencyMobilenumber = this.apiResponseData.emp.addressDetail.emergencyContactNo,
       this.officialemailaddress = this.apiResponseData.emp.addressDetail.email,
-      this.employeeRoles = this.apiResponseData.emp.role.id;
-      console.log(this.employeeRoles,"Roles");
+      this.employeeRoles = this.apiResponseData.emp.role.map(option => option.id);
+    console.log(this.employeeRoles, "Roles");
 
 
     this.employeeProcess = this.apiResponseData.emp.code.map(process => process.id);
@@ -362,6 +362,15 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       }
     });
   }
+  getEmployeeName(employeeId: number): string {
+    const employee = this.EmployeeHierarchyOptions.find(emp => emp.employeeId === employeeId);
+    return employee ? employee.employeeName : '';
+  }
+  getRoleDes(id: number): string {
+    const employee = this.EmployeeRolesoptions.find(emp => emp.id === id);
+    return employee ? employee.description : '';
+  }
+
 
   onSubmit() {
     const requiredFields: string[] = [];
@@ -423,19 +432,19 @@ export class EditaddemployeecontrollerComponent implements OnInit {
     if (requiredFields.length === 0) {
       let empRoleList = this.employeeRoles.map((item) => {
         return {
-          "roleId": item.id ? item.id : '',
-          "roleDescription": item.description ? item.description : '',
-          // "createdBy": item.createdBy ? item.createdBy : '',
-          // "updatedBy": item.updatedBy? item.updatedBy:''
+          "roleId": item,
+          "roleDescription": this.getRoleDes(item),
         }
       });
       let empHierarchyList = this.employeehierarchy.map(item => {
         return {
-          "subEmpId": item.employeeId ? parseInt(item.employeeId) : 0,
-          "subEmpName": item.employeeName ? item.employeeName : '',
+          "subEmpId": item,
+          "subEmpName": this.getEmployeeName(item),
           // "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
         };
       });
+
+      console.log(empHierarchyList);
 
       let payload = {
         "employeeId": 0,
@@ -596,16 +605,14 @@ export class EditaddemployeecontrollerComponent implements OnInit {
     if (requiredFields.length === 0) {
       let empRoleList = this.employeeRoles.map((item) => {
         return {
-          "roleId": item.id ? item.id : '',
-          "roleDescription": item.description ? item.description : '',
-          // "createdBy": item.createdBy ? item.createdBy : '',
-          // "updatedBy": item.updatedBy? item.updatedBy:''
+          "roleId": item,
+          "roleDescription": this.getRoleDes(item),
         }
       });
       let empHierarchyList = this.employeehierarchy.map(item => {
         return {
-          "subEmpId": item.employeeId ? parseInt(item.employeeId) : 0,
-          "subEmpName": item.employeeName ? item.employeeName : '',
+          "subEmpId": item,
+          "subEmpName": this.getEmployeeName(item),
           // "createdBy": this.loginservice.getUsername() ? this.loginservice.getUsername() : '',
         };
       });
@@ -652,8 +659,8 @@ export class EditaddemployeecontrollerComponent implements OnInit {
         "result": this.outsource ? this.outsource : false,
         "roleDescription": "",
         "isOutsource": this.outsource ? this.outsource : false,
-        "empRolesList": empRoleList ? empRoleList : '',
-        "empHierarchyList": empHierarchyList ? empHierarchyList : 0,
+        "empRolesList": empRoleList ? empRoleList : [],
+        "empHierarchyList": empHierarchyList ? empHierarchyList : [],
         "isInternetConnection": this.internetAvailable ? this.internetAvailable : '',
         "isSystem": this.systemlaptop ? this.systemlaptop : false,
         "netWorkType": this.internetType ? this.internetType : 0,
@@ -670,28 +677,18 @@ export class EditaddemployeecontrollerComponent implements OnInit {
       ).subscribe({
         next: (val: any) => {
           this.spinnerservice.requestEnded();
-          if (val == true) {
-            Swal.fire(
-              'Updated!',
-              'Employee updated successfully',
-              'success'
-            ).then((update) => {
-              if (update.isConfirmed) {
-                this.router.navigate(['/topnavbar/Emp-Empcontroller'])
-              }
-            });
-          }
-          else {
-            Swal.fire(
-              'Alert!',
-              'Employee not updated successfully',
-              'info'
-            ).then((update) => {
-              if (update.isConfirmed) {
-                this.router.navigate(['/topnavbar/Emp-Empcontroller'])
-              }
-            });
-          }
+
+          Swal.fire(
+            'Updated!',
+            'Employee updated successfully',
+            'success'
+          ).then((update) => {
+            if (update.isConfirmed) {
+              this.router.navigate(['/topnavbar/Emp-Empcontroller'])
+            }
+          });
+
+
         },
         error: (err: any) => {
           Swal.fire(

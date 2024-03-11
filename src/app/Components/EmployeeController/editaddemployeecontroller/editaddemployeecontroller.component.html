@@ -71,8 +71,8 @@
             <mat-form-field>
               <mat-label>Martial Status<span style="color: red;">*</span></mat-label>
               <mat-select [(ngModel)]="martialStatus" name="martialStatus">
-                <mat-option value="single">Single</mat-option>
-                <mat-option value="married">Married</mat-option>
+                <mat-option value="SINGLE">Single</mat-option>
+                <mat-option value="MARRIED">Married</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -106,8 +106,8 @@
             <mat-form-field>
               <mat-label>Gender<span style="color: red;">*</span></mat-label>
               <mat-select [(ngModel)]="gender" name="gender">
-                <mat-option value="male">Male</mat-option>
-                <mat-option value="Female">Female</mat-option>
+                <mat-option value="MALE">Male</mat-option>
+                <mat-option value="FEMALE">Female</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -458,7 +458,7 @@
             <mat-form-field appearance="fill">
               <mat-label>EmployeeRoles</mat-label>
               <mat-select [(ngModel)]="employeeRoles" name="employeeRoles" multiple>
-                <mat-option *ngFor="let EmployeeRolesoption of EmployeeRolesoptions" [value]="EmployeeRolesoption">
+                <mat-option *ngFor="let EmployeeRolesoption of EmployeeRolesoptions" [value]="EmployeeRolesoption.id">
                   {{ EmployeeRolesoption.description }}
                 </mat-option>
               </mat-select>

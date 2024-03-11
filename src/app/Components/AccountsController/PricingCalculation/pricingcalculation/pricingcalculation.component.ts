@@ -133,13 +133,15 @@ export class PricingcalculationComponent implements OnInit {
 
     clientid = parseInt(this.myForm?.value.ClientId ? this.myForm?.value.ClientId : "0")
     let temporaryarray: any[] = this.gridApi.getSelectedRows().map(selectedRow => {
+      console.log(selectedRow,"SelectedRow");
+      
       return {
         "jobId": selectedRow.jobId,
         "shortName": selectedRow.shortName,
         "scopeId": selectedRow.scopeId,
         "scopeDesc": "",
         "clientId": selectedRow.clientId,
-        "billingCycleType": selectedRow.billingCycleType,
+        "billingCycleType": selectedRow.billingCycleType ? selectedRow.billingCycleType:'',
         "dateofUpload": selectedRow.dateofUpload,
         "createdBy": this.loginservice.getUsername(),
         "departmentId": selectedRow.departmentId,

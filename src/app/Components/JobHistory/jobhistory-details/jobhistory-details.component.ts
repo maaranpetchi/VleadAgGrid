@@ -46,8 +46,8 @@ private spinnerservice:SpinnerService
     })).subscribe(data => {
       this.spinnerservice.requestEnded();
       this.dataJobSource = data.jobHistory;
-      this.jobcommonDetails = data.jobCommonDetails;
-      this.queryDataJobSource = data.jobQueryHistory 
+      this.jobcommonDetails = data.jobCommonDetails ?? [];
+      this.queryDataJobSource = data.jobQueryHistory ?? []
   })
   }
   files: string[] = [];

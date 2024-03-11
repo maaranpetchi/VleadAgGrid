@@ -48,7 +48,7 @@
 
         <ng-container matColumnDef="movedTo">
           <th mat-header-cell *matHeaderCellDef>Moved To</th>
-          <td mat-cell *matCellDef="let element">{{ element.jobHistory?element.jobHistory:"client" }}</td>
+          <td mat-cell *matCellDef="let element">{{ element.processName?element.processName:"client" }}</td>
         </ng-container>
 
         <ng-container matColumnDef="movedDate">

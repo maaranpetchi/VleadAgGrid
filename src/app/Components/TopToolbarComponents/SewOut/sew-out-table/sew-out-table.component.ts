@@ -160,7 +160,7 @@ export class SewOutTableComponent implements OnInit {
     this.spinnerservice.requestStarted();
 
     this.sewOutService.getTabValue2().subscribe(revisionJobs => {
-      this.spinnerservice.requestStarted();
+      this.spinnerservice.requestEnded();
 
       this.rowData = revisionJobs.getWorkflowDetails;
 

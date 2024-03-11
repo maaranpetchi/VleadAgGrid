@@ -30,8 +30,9 @@ export class JobDetailsClientIndexComponent implements OnInit {
   JobCommonDetailsJob: any;
   jobCommonDetailsJofilepath: any;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private http: HttpClient, private spinnerService: SpinnerService, private loginservice: LoginService, private _coreService: CoreService, public dialogRef: MatDialogRef<JobDetailsClientIndexComponent>, private _empService: ClientcordinationService,private sharedDataService: SharedService) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private http: HttpClient, private spinnerService: SpinnerService, private loginservice: LoginService, private _coreService: CoreService, public dialogRef: MatDialogRef<JobDetailsClientIndexComponent>, private _empService: ClientcordinationService, private sharedDataService: SharedService) {
     this.JobCommonDetailsJob = this.data.jobStatusDescription;
+    console.log(this.data, "InjectedData");
 
     this.gettingindex = this._empService.getData() ?? 0;
 
@@ -120,8 +121,8 @@ export class JobDetailsClientIndexComponent implements OnInit {
           'Done!',
           result.message,
           'success'
-        ).then((res)=>{
-          if(res.isConfirmed){
+        ).then((res) => {
+          if (res.isConfirmed) {
             this.sharedDataService.triggerRefresh();
 
           }
@@ -136,7 +137,7 @@ export class JobDetailsClientIndexComponent implements OnInit {
         const url = environment.apiURL + 'ClientOrderLocal/SendMailForCompletedJobs';
 
         const params = new HttpParams()
-          .set('JobId', result.orderId); 
+          .set('JobId', result.orderId);
         const headers = new HttpHeaders().set('Content-Type', 'application/json');
         const options = { headers: headers, params: params };
 
@@ -274,7 +275,7 @@ export class JobDetailsClientIndexComponent implements OnInit {
       this.files = result.files;
       if (this.files.length > 0) {
         this.files.forEach((value: string) => {
-          const url =environment.apiURL+`Allocation/downloadFilesTest/${path}/${value}`;
+          const url = environment.apiURL + `Allocation/downloadFilesTest/${path}/${value}`;
           this.fileDownload(url, value);
         });
       }
@@ -282,7 +283,7 @@ export class JobDetailsClientIndexComponent implements OnInit {
   }
 
 
-  
+
   InputworkFiles(id: number): void {
 
     console.log(this.jobCommonDetailsJofilepath, "jobCommonDetailsJofilepath");
@@ -296,7 +297,7 @@ export class JobDetailsClientIndexComponent implements OnInit {
       this.files = result.files;
       if (this.files.length > 0) {
         this.files.forEach((value: string) => {
-          const url =environment.apiURL+`Allocation/downloadFilesTest/${path}/${value}`;
+          const url = environment.apiURL + `Allocation/downloadFilesTest/${path}/${value}`;
           this.fileDownload(url, value);
         });
       }
@@ -322,8 +323,12 @@ export class JobDetailsClientIndexComponent implements OnInit {
 
 
   submitpostQueryData(data) {
+
+    console.log(data, "SubmitData");
+
     const requiredFields: string[] = [];
     console.log(this.queryStatus, "QueryStatus");
+
 
     if (this.queryStatus === '8') {
       if (!this.remarks) {
@@ -333,6 +338,9 @@ export class JobDetailsClientIndexComponent implements OnInit {
         requiredFields.push('Pricing Amount');
       }
     } else {
+      if (!this.queryStatus) {
+        requiredFields.push('Process Status');
+      }
       if (!this.remarks) {
         requiredFields.push('Remarks');
       }
@@ -402,8 +410,10 @@ export class JobDetailsClientIndexComponent implements OnInit {
       this.jobMovement(processMovement);
       const res: string = btoa(this.data.jid);
       const res1: string = btoa(this.data.statusId);
+      console.log(this.data.statusId, "StatusIDKulla");
 
-      if (this.data.statusId == 6 || this.data.statusId == 8) {
+
+      if (this.queryStatus === '6' || this.queryStatus === '8') {
         const url = environment.apiURL + 'ClientOrderLocal/SendMailForQueryJobs';
         const params = new HttpParams()
           .set('WFMId', this.data.tranMasterId

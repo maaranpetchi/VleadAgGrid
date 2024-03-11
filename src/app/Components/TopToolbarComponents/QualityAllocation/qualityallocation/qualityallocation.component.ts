@@ -74,6 +74,9 @@ export class QualityallocationComponent  implements OnInit {
         case 6:
           this.errorJobs();
           break;
+        case 7:
+          this.quotationJobs();
+          break;
       default:
         break;
     }

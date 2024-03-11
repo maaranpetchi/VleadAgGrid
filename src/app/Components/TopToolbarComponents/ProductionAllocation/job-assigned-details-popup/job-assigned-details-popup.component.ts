@@ -56,6 +56,7 @@ export class JobAssignedDetailsPopupComponent implements OnInit {
     private spinnerService: SpinnerService,
     public dialogRef: MatDialogRef<JobAssignedDetailsPopupComponent>
   ) {
+console.log(this.data,"InjectedData");
 
   }
 
