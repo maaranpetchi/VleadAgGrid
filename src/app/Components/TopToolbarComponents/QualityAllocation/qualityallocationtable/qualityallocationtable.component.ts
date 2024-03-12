@@ -14,6 +14,7 @@ import Swal from 'sweetalert2/src/sweetalert2.js';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CellClickedEvent, CellValueChangedEvent, CheckboxSelectionCallbackParams, ColDef, GridApi, GridReadyEvent, HeaderCheckboxSelectionCallbackParams, SelectionChangedEvent } from 'ag-grid-community';
 import { JoballocatedEmplpopupComponent } from '../../ProductionAllocation/joballocated-emplpopup/joballocated-emplpopup.component';
+import { ProductionQuotationComponent } from '../../ProductionAllocation/production-quotation/production-quotation.component';
 interface Employee {
   id: number;
   name: string;
@@ -54,6 +55,27 @@ export class QualityallocationtableComponent implements OnInit {
       filter: 'agTextColumnFilter',
       floatingFilter: true,
       colId: 'jobIdColumn',
+      cellStyle: { color: 'blue' },
+
+      cellRenderer: function (params) {
+        return (
+          '<button class="btn btn-sm btn-link p-0">' +
+          params.value +
+          '</button>'
+        );
+      },
+    },
+    {
+      headerName: 'Job Id',
+      field: 'jobId',
+      checkboxSelection: true,
+      width: 100,
+      headerClass: 'text-wrap',
+      suppressSizeToFit: true,
+      sortable: true,
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
+      colId: 'quotationIdColumn',
       cellStyle: { color: 'blue' },
 
       cellRenderer: function (params) {
@@ -236,6 +258,7 @@ export class QualityallocationtableComponent implements OnInit {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
     this.gridApi.setColumnVisible('jobIdColumn', true);
+    this.gridApi.setColumnVisible('quotationIdColumn', false);
     this.gridApi.setColumnVisible('artistNameColumn', true);
     this.gridApi.setColumnVisible('employeeNameColumn', false);
     // this.http
@@ -269,6 +292,9 @@ export class QualityallocationtableComponent implements OnInit {
       console.log(data, "PopupData");
 
       this.getemployeeName(data);
+    }
+    else if(colDef.colId === 'quotationIdColumn'){
+      this.quotationJobId(data);
     }
   }
   getemployeeName(data: any) {
@@ -558,33 +584,42 @@ export class QualityallocationtableComponent implements OnInit {
       this.freshJobs();
       this.gridApi.setColumnVisible('artistNameColumn', true);
       this.gridApi.setColumnVisible('employeeNameColumn', false);
+      this.gridApi.setColumnVisible('quotationIdColumn', false);
     } else if (action == '2') {
       this.gridApi.setColumnVisible('artistNameColumn', true);
+      this.gridApi.setColumnVisible('quotationIdColumn', false);
       this.gridApi.setColumnVisible('employeeNameColumn', false);
       this.revisionJobs();
     } else if (action == '3') {
       this.gridApi.setColumnVisible('artistNameColumn', true);
+      this.gridApi.setColumnVisible('quotationIdColumn', false);
       this.gridApi.setColumnVisible('employeeNameColumn', false);
       this.reworkJobs();
     } else if (action == '4') {
       this.gridApi.setColumnVisible('artistNameColumn', false);
+      this.gridApi.setColumnVisible('quotationIdColumn', false);
       this.gridApi.setColumnVisible('employeeNameColumn', true);
       this.allocaetdJobs();
     } else if (action == '5') {
       this.gridApi.setColumnVisible('artistNameColumn', false);
+      this.gridApi.setColumnVisible('quotationIdColumn', false);
       this.gridApi.setColumnVisible('employeeNameColumn', false);
       this.queries();
     } else if (action == '6') {
       this.gridApi.setColumnVisible('artistNameColumn', false);
       this.gridApi.setColumnVisible('employeeNameColumn', false);
+      this.gridApi.setColumnVisible('quotationIdColumn', false);
       this.queryResposne();
     } else if (action == '7') {
       this.gridApi.setColumnVisible('artistNameColumn', false);
       this.gridApi.setColumnVisible('employeeNameColumn', false);
+      this.gridApi.setColumnVisible('quotationIdColumn', false);
       this.errorJobs();
     } else if (action == '8') {
       this.gridApi.setColumnVisible('artistNameColumn', false);
       this.gridApi.setColumnVisible('employeeNameColumn', false);
+      this.gridApi.setColumnVisible('jobIdColumn', false);
+      this.gridApi.setColumnVisible('quotationIdColumn', true);
       this.quotationJobs();
     }
   }
@@ -1151,6 +1186,20 @@ export class QualityallocationtableComponent implements OnInit {
   }
   openjobDialog(data: any) {
     const dialogRef = this._dialog.open(QualitypopupjobassignComponent, {
+      width: '100%',
+      height: '450px',
+      data: data,
+    });
+    dialogRef.afterClosed().subscribe({
+      next: (val) => {
+        if (val) {
+          this.ngOnInit();
+        }
+      },
+    });
+  }
+  quotationJobId(data: any) {
+    const dialogRef = this._dialog.open(ProductionQuotationComponent, {
       width: '100%',
       height: '450px',
       data: data,
