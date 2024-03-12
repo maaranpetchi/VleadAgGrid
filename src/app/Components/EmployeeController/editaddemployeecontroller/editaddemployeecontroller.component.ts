@@ -673,7 +673,6 @@ export class EditaddemployeecontrollerComponent implements OnInit {
           this.spinnerservice.requestEnded();
           return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
         })
-
       ).subscribe({
         next: (val: any) => {
           this.spinnerservice.requestEnded();
