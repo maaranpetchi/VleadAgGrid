@@ -795,6 +795,17 @@ export class ClientorderstableComponent implements OnInit {
         GetAllValues: Gridwithmultiplefilesname,
       }
 
+
+      let filenames: string[] = [];
+      for (let value of this.selectedJobs) {
+        filenames.push(value.fileName);
+      }
+
+      // Assign concatenated filenames to the fileName property of senddata
+      senddata.fileName = filenames.join(", ");
+
+      console.log(filenames,"FileNames");
+      
       this.spinnerService.requestStarted();
       this.http.post<any>(environment.apiURL + 'JobOrder/DirectOrder', senddata).pipe(
 
@@ -815,8 +826,19 @@ export class ClientorderstableComponent implements OnInit {
         console.log(convertdata, "ConvertedData");
 
         let JobId = convertdata.jobId;
-        if (JobId == `File Name Already Exist!` || JobId == "Previous Job is not closed for the File Name and Client!") {
-          alert(JobId);
+
+        console.log(JobId, "jOBiD");
+
+        if (JobId == `File Name Already Exist!,${filenames}` || JobId == "Previous Job is not closed for the File Name and Client!") {
+          Swal.fire(
+            'info!',
+            JobId,
+            'info'
+          ).then((result) => {
+            if (result.isConfirmed) {
+              window.location.reload();
+            }
+          })
         }
         else {
           if (convertdata.message == `Some Order has been blocked temporarily due to Invoice Outstanding for customer- ${this.errorShowingClientName},${this.errorShowingClientName} , ${this.errorShowingClientName}, ${this.errorShowingClientName},Kindly contact respective sales person/service desk.`) {

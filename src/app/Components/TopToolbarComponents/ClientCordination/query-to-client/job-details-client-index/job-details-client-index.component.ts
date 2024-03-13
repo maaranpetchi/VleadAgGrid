@@ -386,7 +386,7 @@ export class JobDetailsClientIndexComponent implements OnInit {
         SelectedScopeId: this.scopeid ? this.scopeid : 0,
         //Amount: $scope.specialPriceValue,
         Amount: this.pricingAmount,
-        EstimatedTime: this.QueryEstimatedTime,
+        EstimatedTime: this.QueryEstimatedTime ?? 0,
         ClientId: this.data.clientId,
         FileReceivedDate: this.data.fileReceivedDate,
         StitchCount: this.StitchCount,
