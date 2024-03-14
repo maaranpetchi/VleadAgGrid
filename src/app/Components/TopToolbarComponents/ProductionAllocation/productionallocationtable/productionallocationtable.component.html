@@ -1,16 +1,9 @@
 <div class="headertable">
   <div class="row">
-    <div
-      class="col-md-4 offset-md-7 mt-3"
-      style="display: flex; justify-content: flex-end; align-items: baseline"
-    >
+    <div class="col-md-4 offset-md-7 mt-3" style="display: flex; justify-content: flex-end; align-items: baseline">
       <mat-form-field>
         <mat-label>Est Time</mat-label>
-        <input
-          matInput
-          [(ngModel)]="exchangeHeader"
-          placeholder="Enter exchange header"
-        />
+        <input matInput [(ngModel)]="exchangeHeader" placeholder="Enter exchange header" />
       </mat-form-field>
       &nbsp;&nbsp;&nbsp;
       <button mat-raised-button color="primary" (click)="setExchangeHeader()">
@@ -19,56 +12,38 @@
     </div>
   </div>
 </div>
+<div class="container">
+  <div class="row">
+    <div class="col-6">Selected Jobs: {{this.selectedLength ?? 0}} </div>
+  </div>
+</div>
 <div class="main-body">
   <div class="container">
     <div class="content">
-      <ag-grid-angular
-        style="width: 100%; height: 550px"
-        class="ag-theme-quartz"
-        [rowData]="rowData"
-        [columnDefs]="colDefs"
-        [gridOptions]="gridOptions1"
-        [rowSelection]="'multiple'"
-        [suppressRowClickSelection]="true" 
-        (gridReady)="onGridReady($event)"
-        (cellValueChanged)="onCellValueChanged($event)"
-        (selectionChanged)="onSelectionChanged($event)"
-        [rowMultiSelectWithClick]="true"
-        (cellClicked)="onCellJobClicked($event)"
-        [paginationPageSize]="10"
-        floatingFilter="true"
-      >
+      <ag-grid-angular style="width: 100%; height: 550px" class="ag-theme-quartz" [rowData]="rowData"
+        [columnDefs]="colDefs" [gridOptions]="gridOptions1" [rowSelection]="'multiple'"
+        [suppressRowClickSelection]="true" (gridReady)="onGridReady($event)"
+        (cellValueChanged)="onCellValueChanged($event)" (selectionChanged)="onSelectionChanged($event)"
+        [rowMultiSelectWithClick]="true" (cellClicked)="onCellJobClicked($event)" [paginationPageSize]="10"
+        floatingFilter="true">
       </ag-grid-angular>
     </div>
     <div class="employeetable">
       <div class="row">
         <div class="col-8">
-          <h3
-            style="
+          <h3 style="
               font-family: 'Times New Roman', Times, serif;
               color: #ff9710df;
-            "
-          >
+            ">
             Assigned To:
           </h3>
           <div class="table-container">
-            <ag-grid-angular
-              style="width: 100%; height: 415px"
-              class="ag-theme-quartz"
-              [rowData]="rowEmpData"
-              [columnDefs]="colEmpDefs"
-              [gridOptions]="EmpgridOptions"
-              [pagination]="true"
-              [rowSelection]="'multiple'"
-              (gridReady)="onGridEmpReady($event)"
-              (cellValueChanged)="onCellValueEmpChanged($event)"
-              (selectionChanged)="onSelectionEmpChanged($event)"
-              (cellClicked)="onCellEmpClicked($event)"
-              [suppressRowClickSelection]="true" 
-              [rowMultiSelectWithClick]="true"
-              [paginationPageSize]="10"
-              floatingFilter="true"
-            >
+            <ag-grid-angular style="width: 100%; height: 415px" class="ag-theme-quartz" [rowData]="rowEmpData"
+              [columnDefs]="colEmpDefs" [gridOptions]="EmpgridOptions" [pagination]="true" [rowSelection]="'multiple'"
+              (gridReady)="onGridEmpReady($event)" (cellValueChanged)="onCellValueEmpChanged($event)"
+              (selectionChanged)="onSelectionEmpChanged($event)" (cellClicked)="onCellEmpClicked($event)"
+              [suppressRowClickSelection]="true" [rowMultiSelectWithClick]="true" [paginationPageSize]="10"
+              floatingFilter="true">
             </ag-grid-angular>
           </div>
         </div>
@@ -84,17 +59,9 @@
           </mat-form-field>
 
           <br />
-          <mat-checkbox
-            matInput
-            [(ngModel)]="benchChecked"
-            (change)="onBenchCheckboxChange($event)"
-          >
-            BenchBox </mat-checkbox
-          >&nbsp;&nbsp;&nbsp;<button
-            type="submit"
-            class="btn btn-success"
-            (click)="onSubmit()"
-          >
+          <mat-checkbox matInput [(ngModel)]="benchChecked" (change)="onBenchCheckboxChange($event)">
+            BenchBox </mat-checkbox>&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-success"
+            (click)="onSubmit()">
             Submit
           </button>
         </div>

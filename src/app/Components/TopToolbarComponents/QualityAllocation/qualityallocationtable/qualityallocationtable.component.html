@@ -1,7 +1,13 @@
 <div class="main-body">
   <div class="container">
     <div class="card-body" id="AllocationJobs">
-      <div class="selectedJobTable mt-4">
+      <div class="container">
+        <div class="row">
+          <div class="col-6">
+            Selected Jobs: {{this.selectedLength ?? 0}} 
+          </div>
+        </div>
+      </div>      <div class="selectedJobTable mt-4">
         <div class="mat-elevation-z8">
           <div class="content">
             <ag-grid-angular

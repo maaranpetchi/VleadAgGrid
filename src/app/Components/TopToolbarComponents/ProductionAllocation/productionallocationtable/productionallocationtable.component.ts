@@ -348,6 +348,7 @@ export class ProductionallocationtableComponent implements OnInit {
 
   public themeClass: string = 'ag-theme-quartz';
   currentPageIndex: number = 1;
+  selectedLength: any;
   constructor(
     private http: HttpClient,
     private loginservice: LoginService,
@@ -493,10 +494,12 @@ export class ProductionallocationtableComponent implements OnInit {
     const selectedNodes = this.gridApi.getSelectedNodes();
     console.log('Row Selected!');
     const selectedRows = this.gridApi.getSelectedRows(); // Perform your bulk convert action with the selected rows
-    console.log('Selected Rows:', selectedRows);
+    
   };
   onSelectionChanged(event: SelectionChangedEvent) {
     const selectedNodes = this.gridApi.getSelectedRows();
+    this.selectedLength = selectedNodes.length
+
     console.log('Selected Rows:', selectedNodes); // Update exchangeHeader with the estimated time of the first selected row
     if (selectedNodes.length > 0) {
       this.exchangeHeader = selectedNodes[0].data.estimatedTime;
@@ -1086,23 +1089,7 @@ export class ProductionallocationtableComponent implements OnInit {
       }
       // this.postJobs();
     }
-
-    // Update estimatedTime for selected jobs
-    // this.selectedJobs.forEach((job) => (job.estimatedTime = this.exchangeHeader)); // Update estimatedTime for selected employees
-    // this.selectedEmployees.forEach((employee) => {
-
-    // if (!employee.estimatedTime) {
-    //   Swal.fire(
-    //     'Info!',
-    //     'Please enter Estimated Time for Selected Employee!',
-    //     'info'
-    //   );
-    //   this.spinnerService.requestEnded();
-    //   this.postJobs();
-    //   return;
-    // }
-    // }); // Reset exchangeHeader after updating the selected rows // this.exchangeHeader = null; // Continue with your logic to post jobs
-    this.postJobs();
+  this.postJobs();
   }
   postJobs() {
     console.log(this.selectedJobs, "selectedjobs");

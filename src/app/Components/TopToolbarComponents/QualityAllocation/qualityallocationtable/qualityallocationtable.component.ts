@@ -256,6 +256,7 @@ export class QualityallocationtableComponent implements OnInit {
   frstrow: any;
   secondrow: any;
   currentPageIndex: any;
+  selectedLength: any;
   onGridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
@@ -337,65 +338,12 @@ export class QualityallocationtableComponent implements OnInit {
   onSelectionChanged = (event: SelectionChangedEvent) => {
     const selectedNodes = this.gridApi.getSelectedRows();
     console.log('Selected  frst Rows:', selectedNodes); // Update exchangeHeader with the estimated time of the first selected row
-    // if (selectedNodes.length > 0) {
-    //   this.exchangeHeader = selectedNodes[0].data.estimatedTime;
-    // } else {
-    //   // If no row is selected, reset exchangeHeader
-    //   this.exchangeHeader = null;
-    // // }
-    // selectedNodes.forEach((item: any) => {
-    //   if (item.data.allocatedEstimatedTime == null) item.data.allocatedEstimatedTime = 0;
-    //   if (item.data.employeeId == null) item.data.employeeId = 0;
-    //   if (item.data.estimatedTime == null) item.data.estimatedTime = 0;
-    //   this.selectedQuery.push({
-    //     ...item.data,
-    //     CategoryDesc: '',
-    //     Comments: '',
-    //     CommentsToClient: '',
-    //     Remarks: '',
-    //     SelectedEmployees: [],
-    //     SelectedRows: [],
-    //   });
-    // })
-    // console.log(this.selectedNodes, "SelectedQuery");
+    this.selectedLength = selectedNodes.length
 
   }
   onSelectionEmpChanged(event: SelectionChangedEvent) {
     this.selectedEmpNodes = this.gridEmplApi.getSelectedRows();
     console.log('Selected 2nd Rows:', this.selectedEmpNodes); // Update exchangeHeader with the estimated time of the first selected row
-    // this.selectedEmpNodes.forEach((item: any) => {
-    //   if (item.data.jId != null)
-    //     this.selectedEmployee.push({
-    //       ...item.data,
-    //       CategoryDesc: '',
-    //       Comments: '',
-    //       CommentsToClient: '',
-    //       FileInwardType: '',
-    //       JobId: 0,
-    //       Remarks: '',
-    //       SelectedEmployees: [],
-    //       SelectedRows: [],
-    //       TimeStamp: '',
-    //       jId: 0
-    //       // estimatedTime: this.totalEstimateTime
-    //     });
-    //   else {
-    //     this.selectedEmployee.push({
-    //       ...item.data,
-    //       jId: 0,
-    //       CategoryDesc: '',
-    //       Comments: '',
-    //       CommentsToClient: '',
-    //       FileInwardType: '',
-    //       JobId: 0,
-    //       Remarks: '',
-    //       SelectedEmployees: [],
-    //       SelectedRows: [],
-    //       TimeStamp: '',
-
-    //     });
-    //   }
-    // })
 
   }
   // Handle cell editing event

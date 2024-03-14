@@ -106,13 +106,8 @@ export class EmployeePopupTableComponent implements OnInit {
           this.dataSource.sort = this.sort;
           this.totalDataCount = response.pendingJobsWithEmployeeId.length;
 
-          // let Pendingjobs:any[]= response.pendingJobsWithEmployeeId
-
-          // Pendingjobs.map(x=>{
-          //   this.estimatedTime = x.estimatedTime + this.estimatedTime;
-          // })
-          this.totalEstimatedTime = this.tableRecords.reduce(
-            (total, record) => total + record.estimatedTime,
+          this.totalEstimatedTime = response.pendingJobsWithEmployeeId.reduce(
+            (total: number, record: any) => total + record.estimatedTime,
             0
           );
                 
