@@ -5,6 +5,7 @@ import { data } from 'jquery';
 import { catchError } from 'rxjs';
 import { environment } from 'src/Environments/environment';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 import Swal from 'sweetalert2/src/sweetalert2.js';
 @Component({
   selector: 'app-clientorders',
@@ -17,11 +18,17 @@ export class ClientordersComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private spinnerService: SpinnerService
-  ) {}
+    private spinnerService: SpinnerService,
+    private sharedService: SharedService
+  ) { }
 
   DivisionApiData: any[];
   ngOnInit(): void {
+    this.sharedService.refreshData$.subscribe(() => {
+      // Update your data or call the necessary methods to refresh the data
+      this.getmattabcount();
+    });
+
     this.getDivisionAPi();
     this.getmattabcount();
     this.getclientordercount();
@@ -86,7 +93,7 @@ export class ClientordersComponent implements OnInit {
   quotationjobs() {
     this.ClientorderstableComponent.tab('2');
 
-    
+
   }
   convertedjobs() {
     this.ClientorderstableComponent.tab('3');
@@ -114,9 +121,9 @@ export class ClientordersComponent implements OnInit {
 
           console.error('API Error:', error);
 
-   
 
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+          return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
 
         })
 
@@ -135,9 +142,9 @@ export class ClientordersComponent implements OnInit {
 
           console.error('API Error:', error);
 
-   
 
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+          return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
 
         })
 
@@ -167,9 +174,9 @@ export class ClientordersComponent implements OnInit {
 
           console.error('API Error:', error);
 
-   
 
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+          return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
 
         })
 
@@ -190,9 +197,9 @@ export class ClientordersComponent implements OnInit {
 
           console.error('API Error:', error);
 
-   
 
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+          return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
 
         })
 
@@ -213,9 +220,9 @@ export class ClientordersComponent implements OnInit {
 
           console.error('API Error:', error);
 
-   
 
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+          return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
 
         })
 
@@ -236,9 +243,9 @@ export class ClientordersComponent implements OnInit {
 
           console.error('API Error:', error);
 
-   
 
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+          return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
 
         })
 
@@ -259,9 +266,9 @@ export class ClientordersComponent implements OnInit {
 
           console.error('API Error:', error);
 
-   
 
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+          return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
 
         })
 
@@ -277,7 +284,7 @@ export class ClientordersComponent implements OnInit {
     this.http
       .get<any>(
         environment.apiURL +
-          `CustomerQuery/GetNotApprovedQueryForSPJobsToCCCount`
+        `CustomerQuery/GetNotApprovedQueryForSPJobsToCCCount`
       ).pipe(
 
         catchError((error) => {
@@ -286,9 +293,9 @@ export class ClientordersComponent implements OnInit {
 
           console.error('API Error:', error);
 
-   
 
-          return Swal.fire('Alert!','An error occurred while processing your request','error');
+
+          return Swal.fire('Alert!', 'An error occurred while processing your request', 'error');
 
         })
 

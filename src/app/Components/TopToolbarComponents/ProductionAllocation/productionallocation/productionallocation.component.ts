@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { LoginService } from 'src/app/Services/Login/login.service';
 import { event } from 'jquery';
 import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 
 @Component({
   selector: 'app-productionallocation',
@@ -30,15 +31,22 @@ export class ProductionallocationComponent implements OnInit {
     public dialog: MatDialog,
     private http: HttpClient,
     private loginservice: LoginService,
-    private spinnerservice:SpinnerService
+    private spinnerservice:SpinnerService,
+    private sharedService:SharedService
   ) {}
   ngOnInit(): void {
+    this.sharedService.refreshData$.subscribe(() => {
+      // Update your data or call the necessary methods to refresh the data
+      this.getCount();
+    });
     this.getCount();
     this.onTabChange(event);
   }
 
   onTabChange(event: any) {
     // Update the REST API based on the selected tab
+    console.log(event.index, "Index Page");
+    
     switch (event.index) {
       case 0: // Fresh Jobs tab
         // Call your REST API for Fresh Jobs

@@ -31,6 +31,7 @@ import {
 } from 'ag-grid-community';
 import { ActionsCellRendererComponent } from '../../ClientCordination/ClientOrder/actions-cell-renderer/actions-cell-renderer.component';
 import { param } from 'jquery';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 @Component({
   selector: 'app-productionallocationtable',
   templateUrl: './productionallocationtable.component.html',
@@ -92,8 +93,8 @@ export class ProductionallocationtableComponent implements OnInit {
   JobStatusId: any;
   totalEstimateTime: any; // AG grid
 
-  rowData!: any;
-  rowEmpData!: any;
+  rowData: any=[];
+  rowEmpData: any=[];
   public rowSelection: 'single' | 'multiple' = 'multiple';
   private gridApi!: GridApi<any>;
   private gridEmplApi!: GridApi<any>;
@@ -106,11 +107,11 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-       filter: 'agTextColumnFilter',
+      filter: 'agTextColumnFilter',
       floatingFilter: true,
-      colId: 'jobIdColumn' ,
+      colId: 'jobIdColumn',
       cellStyle: { color: 'blue' },
-     
+
       cellRenderer: function (params) {
         return (
           '<button class="btn btn-sm btn-link p-0">' +
@@ -127,11 +128,11 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-       filter: 'agTextColumnFilter',
+      filter: 'agTextColumnFilter',
       floatingFilter: true,
-      colId: 'quotationIdColumn' ,
+      colId: 'quotationIdColumn',
       cellStyle: { color: 'blue' },
-     
+
       cellRenderer: function (params) {
         return (
           '<button class="btn btn-sm btn-link p-0">' +
@@ -148,11 +149,11 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-       filter: 'agTextColumnFilter',
+      filter: 'agTextColumnFilter',
       floatingFilter: true,
-      colId: 'allocatedIdColumn' ,
+      colId: 'allocatedIdColumn',
       cellStyle: { color: 'blue' },
-     
+
       cellRenderer: function (params) {
         return (
           '<button class="btn btn-sm btn-link p-0">' +
@@ -168,11 +169,11 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-       filter: 'agTextColumnFilter',
+      filter: 'agTextColumnFilter',
       floatingFilter: true,
-      colId: 'employeeNameColumn' ,
+      colId: 'employeeNameColumn',
       cellStyle: { color: 'blue' },
-     
+
       cellRenderer: function (params) {
         return (
           '<button class="btn btn-sm btn-link p-0">' +
@@ -187,7 +188,7 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       width: 100,
       sortable: true,
-       filter: 'agTextColumnFilter',
+      filter: 'agTextColumnFilter',
       floatingFilter: true,
     },
     {
@@ -196,7 +197,7 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       width: 100,
       sortable: true,
-       filter: 'agTextColumnFilter',
+      filter: 'agTextColumnFilter',
       floatingFilter: true,
     },
     {
@@ -205,10 +206,10 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       width: 100,
       sortable: true,
-       filter: 'agTextColumnFilter',
+      filter: 'agTextColumnFilter',
       floatingFilter: true,
     },
-    
+
     {
       headerName: 'File Name',
       field: 'fileName',
@@ -216,7 +217,7 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-       filter: 'agTextColumnFilter',
+      filter: 'agTextColumnFilter',
       floatingFilter: true,
     },
     {
@@ -226,17 +227,17 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-       filter: 'agTextColumnFilter',
+      filter: 'agTextColumnFilter',
       floatingFilter: true,
     },
-    
+
     {
       headerName: 'Job Status ',
       field: 'jobStatusDescription',
       headerClass: 'text-wrap',
       width: 100,
       sortable: true,
-       filter: 'agTextColumnFilter',
+      filter: 'agTextColumnFilter',
       floatingFilter: true,
     },
     {
@@ -246,7 +247,7 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-       filter: 'agTextColumnFilter',
+      filter: 'agTextColumnFilter',
       floatingFilter: true,
     },
     {
@@ -255,7 +256,7 @@ export class ProductionallocationtableComponent implements OnInit {
       width: 100,
       suppressSizeToFit: true,
       sortable: true,
-       filter: 'agTextColumnFilter',
+      filter: 'agTextColumnFilter',
       floatingFilter: true,
     },
     {
@@ -264,11 +265,11 @@ export class ProductionallocationtableComponent implements OnInit {
       width: 100,
       suppressSizeToFit: true,
       sortable: true,
-       filter: 'agTextColumnFilter',
+      filter: 'agTextColumnFilter',
       floatingFilter: true,
       editable: true,
     },
-    
+
     {
       headerName: 'Delivery Date',
       field: 'dateofDelivery',
@@ -276,20 +277,20 @@ export class ProductionallocationtableComponent implements OnInit {
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-       filter: 'agTextColumnFilter',
+      filter: 'agTextColumnFilter',
       floatingFilter: true,
     }
   ];
   colEmpDefs: ColDef[] = [
     {
-      headerName:'Employee',
+      headerName: 'Employee',
       field: 'employeenameWithCode',
       checkboxSelection: true,
       width: 100,
       headerClass: 'text-wrap',
       suppressSizeToFit: true,
       sortable: true,
-       filter: 'agTextColumnFilter',
+      filter: 'agTextColumnFilter',
       floatingFilter: true,
       cellStyle: { color: 'blue' },
       cellRenderer: function (params) {
@@ -301,35 +302,35 @@ export class ProductionallocationtableComponent implements OnInit {
       },
     },
     {
-      headerName:'Est Time (In Mins)',
+      headerName: 'Est Time (In Mins)',
       field: 'estTime',
       headerClass: 'text-wrap',
       width: 100,
       suppressSizeToFit: true,
       sortable: true,
-       filter: 'agTextColumnFilter',
+      filter: 'agTextColumnFilter',
       floatingFilter: true,
       editable: true,
     },
     {
-      headerName:'Job Cat.',
+      headerName: 'Job Cat.',
       field: 'status',
       headerClass: 'text-wrap',
       width: 100,
       suppressSizeToFit: true,
       sortable: true,
-       filter: 'agTextColumnFilter',
+      filter: 'agTextColumnFilter',
       floatingFilter: true,
       editable: true,
     },
     {
-      headerName:'Shift',
+      headerName: 'Shift',
       field: 'shift',
       headerClass: 'text-wrap',
       width: 100,
       suppressSizeToFit: true,
       sortable: true,
-       filter: 'agTextColumnFilter',
+      filter: 'agTextColumnFilter',
       floatingFilter: true,
       editable: true,
     },
@@ -344,33 +345,24 @@ export class ProductionallocationtableComponent implements OnInit {
   };
   context: any;
   @ViewChild('agGrid') agGrid: any;
-  // public defaultColDef: ColDef = {
-  //   flex: 1,
-  //   minWidth: 100,
-  //   headerCheckboxSelection: isFirstColumn,
-  //   checkboxSelection: isFirstColumn,
-  // };
-  // public defaultEmpColDef: ColDef = {
-  //   flex: 1,
-  //   minWidth: 100,
-  //   field: 'empCheckBoxValue',
-  //   headerCheckboxSelection: isEmpColumn,
-  //   checkboxSelection: isEmpColumn,
-  // };
+
   public themeClass: string = 'ag-theme-quartz';
+  currentPageIndex: number = 1;
   constructor(
     private http: HttpClient,
     private loginservice: LoginService,
     private productionallocation: ProductionAllocationService,
     private _dialog: MatDialog,
     private spinnerService: SpinnerService,
-    private router: Router
+    private router: Router,
+    private sharedDataService: SharedService
   ) {
     // Initialize the `editing` flag for each job object to `false`
     this.dataEmployeeSource.data.forEach((job) => {
       job.editing = false;
     });
   }
+
   editTime: number;
   ngOnInit(): void {
     this.freshJobs(); //scopes
@@ -384,76 +376,87 @@ export class ProductionallocationtableComponent implements OnInit {
     this.gridApi.setColumnVisible('allocatedIdColumn', false);
     this.gridApi.setColumnVisible('employeeNameColumn', false);
   }
+
+  fetchEmployeeTable(){
+    this.http
+    .get<any>(
+      environment.apiURL +
+      `Allocation/getPendingAllocationJobsAndEmployees/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`
+    )
+    .subscribe((response) => {
+      this.rowEmpData = response.employees;
+    });
+  }
   onGridEmpReady(params: GridReadyEvent<any>) {
     // this.gridApi = params.api;
     this.gridEmplApi = params.api;
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`
       )
       .subscribe((response) => {
         this.rowEmpData = response.employees;
       });
   }
   onCellJobClicked(event: CellClickedEvent) {
-      const { colDef, data } = event;
-      if (colDef.colId === 'jobIdColumn') {
-        console.log(data,"PopupData");
-        
-       this.getProductionJob(data);
-      }else if (colDef.colId === 'quotationIdColumn') {
-        console.log(data,"PopupData");
-        
-       this.getQuatationJobId(data);
-      } else if (colDef.colId === 'allocatedIdColumn') {
-        console.log(data,"PopupData");
-        
-       this.getAllocatedJobId(data);
-      } 
-      else if (colDef.colId === 'employeeNameColumn') {
-        console.log(data,"PopupData");
-        
-       this.getemployeeName(data);
-      } 
+    const { colDef, data } = event;
+    if (colDef.colId === 'jobIdColumn') {
+      console.log(data, "PopupData");
+
+      this.getProductionJob(data);
+    } else if (colDef.colId === 'quotationIdColumn') {
+      console.log(data, "PopupData");
+
+      this.getQuatationJobId(data);
+    } else if (colDef.colId === 'allocatedIdColumn') {
+      console.log(data, "PopupData");
+
+      this.getAllocatedJobId(data);
+    }
+    else if (colDef.colId === 'employeeNameColumn') {
+      console.log(data, "PopupData");
+
+      this.getemployeeName(data);
+    }
   }
   onCellEmpClicked(event: CellClickedEvent) {
     const { colDef, data } = event;
     if (colDef.field === 'employeenameWithCode') {
-      console.log(data,"PopupData");
-      
-     this.employeeProduction(data);
+      console.log(data, "PopupData");
+
+      this.employeeProduction(data);
     }
-}
+  }
   handleCellValueChanged(params: { colDef: ColDef; newValue: any; data: any }) {
     console.log(params, 'Parameter');
     console.log(params.data, 'ParameterData');
 
     if (params.colDef.field === 'allocatedEstimatedTime') {
       const selectedNodes = this.gridApi.getSelectedRows();
-      
+
       selectedNodes.forEach((node) => {
         if (node.jobId === params.data.jobId) {
           node.allocatedEstimatedTime = params.newValue;
         }
       });
 
-      this.gridApi.refreshCells(); 
+      this.gridApi.refreshCells();
     }
   }
-onCellValueChanged(event: CellValueChangedEvent) {
-  const updatedRow = event.data;
-  // You can perform any validation or additional logic here if needed
-  console.log("New Estimated Time for Job ID:", updatedRow.jobId, "is", updatedRow.allocatedEstimatedTime);
-}
+  onCellValueChanged(event: CellValueChangedEvent) {
+    const updatedRow = event.data;
+    // You can perform any validation or additional logic here if needed
+    console.log("New Estimated Time for Job ID:", updatedRow.jobId, "is", updatedRow.allocatedEstimatedTime);
+  }
   onCellValueEmpChanged = (event: CellValueChangedEvent) => {
     console.log(event);
     if (parseInt(this.loginservice.getProcessId()) == 2) {
       console.log(this.loginservice.getProcessId(), "ulla");
-  
+
       var colls = this.estTimeinput;
       console.table(colls);
-  
+
       var Esttime1 = colls[0].estimatedTime;
       var Esttime2 = colls[1].estimatedTime;
       var Esttime3 = colls[2].estimatedTime;
@@ -463,10 +466,10 @@ onCellValueChanged(event: CellValueChangedEvent) {
       var desc3 = colls[2].description;
       var desc4 = colls[3].description;
       var desc5 = colls[4].description;
-  
+
       // Assuming event.data contains the updated value of estTime
       var updatedEstTime = event.data.estTime;
-  
+
       if (updatedEstTime <= Esttime1 && updatedEstTime > 0) {
         event.data.status = desc1;
       } else if (updatedEstTime <= Esttime2 && updatedEstTime > Esttime1) {
@@ -478,14 +481,14 @@ onCellValueChanged(event: CellValueChangedEvent) {
       } else if (updatedEstTime > Esttime4) {
         event.data.status = desc5;
       }
-      
+
       // Update the row with the new data
       event.node.updateData(event.data);
     }
     console.log(`New Cell Valueemp: ${event.value}`);
     console.log(event);
   };
-  
+
   onSelectionChangeds = (event: SelectionChangedEvent) => {
     const selectedNodes = this.gridApi.getSelectedNodes();
     console.log('Row Selected!');
@@ -501,43 +504,28 @@ onCellValueChanged(event: CellValueChangedEvent) {
       // If no row is selected, reset exchangeHeader
       this.exchangeHeader = null;
     }
-    selectedNodes.forEach((item:any)=>{
+    selectedNodes.forEach((item: any) => {
       if (item.data.allocatedEstimatedTime == null) item.data.allocatedEstimatedTime = 0;
-    if (item.data.employeeId == null) item.data.employeeId = 0;
-    if (item.data.estimatedTime == null) item.data.estimatedTime = 0;
-    this.selectedQuery.push({
-      ...item.data,
-      CategoryDesc: '',
-      Comments: '',
-      CommentsToClient: '',
-      Remarks: '',
-      SelectedEmployees: [],
-      SelectedRows: [],
-    });
-    })
-  }
-  onSelectionEmpChanged(event: SelectionChangedEvent){
-    const selectedEmpNodes = this.gridEmplApi.getSelectedNodes();
-    console.log('Selected Rows:', selectedEmpNodes); // Update exchangeHeader with the estimated time of the first selected row
-    selectedEmpNodes.forEach((item:any)=>{
-      if (item.data.jId != null)
-      this.selectedEmployee.push({
+      if (item.data.employeeId == null) item.data.employeeId = 0;
+      if (item.data.estimatedTime == null) item.data.estimatedTime = 0;
+      this.selectedQuery.push({
         ...item.data,
         CategoryDesc: '',
         Comments: '',
         CommentsToClient: '',
-        FileInwardType: '',
-        JobId: 0,
         Remarks: '',
         SelectedEmployees: [],
         SelectedRows: [],
-        TimeStamp: '',
-       // estimatedTime: this.totalEstimateTime
       });
-    else {
-      this.selectedEmployee.push({
-        ...item.data,
-        jId: 0,
+    })
+  }
+  onSelectionEmpChanged(event: SelectionChangedEvent) {
+    const selectedEmpNodes = this.gridEmplApi.getSelectedNodes();
+    console.log('Selected Rows:', selectedEmpNodes); // Update exchangeHeader with the estimated time of the first selected row
+    selectedEmpNodes.forEach((item: any) => {
+      if (item.data.jId != null)
+        this.selectedEmployee.push({
+          ...item.data,
           CategoryDesc: '',
           Comments: '',
           CommentsToClient: '',
@@ -547,17 +535,32 @@ onCellValueChanged(event: CellValueChangedEvent) {
           SelectedEmployees: [],
           SelectedRows: [],
           TimeStamp: '',
-        
-      });
-    }
+          // estimatedTime: this.totalEstimateTime
+        });
+      else {
+        this.selectedEmployee.push({
+          ...item.data,
+          jId: 0,
+          CategoryDesc: '',
+          Comments: '',
+          CommentsToClient: '',
+          FileInwardType: '',
+          JobId: 0,
+          Remarks: '',
+          SelectedEmployees: [],
+          SelectedRows: [],
+          TimeStamp: '',
+
+        });
+      }
     })
-    
+
   }
   fetchScopes() {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getScopeValues/${this.loginservice.getUsername()}`
+        `Allocation/getScopeValues/${this.loginservice.getUsername()}`
       )
       .subscribe((scopedata) => {
         this.scopes = scopedata.scopeDetails;
@@ -569,52 +572,55 @@ onCellValueChanged(event: CellValueChangedEvent) {
 
   setEmployeeAll(item: any) {
 
-   // if (completed == true) {
-      if (item.jId != null)
-        return {
-          ...item,
-          CategoryDesc: '',
-          Comments: '',
-          CommentsToClient: '',
-          FileInwardType: '',
-          JobId: 0,
-          Remarks: '',
-          SelectedEmployees: [],
-          SelectedRows: [],
-          TimeStamp: '',
-          estimatedTime: item.estTime
-        };
-      else {
-        return{
-          ...item,
-          jId: 0,
-          CategoryDesc: '',
-          Comments: '',
-          CommentsToClient: '',
-          FileInwardType: '',
-          JobId: 0,
-          Remarks: '',
-          SelectedEmployees: [],
-          SelectedRows: [],
-          TimeStamp: '',
-          estimatedTime: item.estTime
-        };
-      }
-   // } else {
-      // if (this.selectedEmployee.find((x) => x.id == item.id)) {
-      //   this.selectedEmployee = this.selectedEmployee.filter((x) => {
-      //     if (x.id != item.id) {
-      //       return item;
-      //     }
-      //   });
-      // }
-   // }
+    // if (completed == true) {
+    if (item.jId != null)
+      return {
+        ...item,
+        CategoryDesc: '',
+        Comments: '',
+        CommentsToClient: '',
+        FileInwardType: '',
+        JobId: 0,
+        Remarks: '',
+        SelectedEmployees: [],
+        SelectedRows: [],
+        TimeStamp: '',
+        estimatedTime: item.estTime
+      };
+    else {
+      return {
+        ...item,
+        jId: 0,
+        CategoryDesc: '',
+        Comments: '',
+        CommentsToClient: '',
+        FileInwardType: '',
+        JobId: 0,
+        Remarks: '',
+        SelectedEmployees: [],
+        SelectedRows: [],
+        TimeStamp: '',
+        estimatedTime: item.estTime
+      };
+    }
+    // } else {
+    // if (this.selectedEmployee.find((x) => x.id == item.id)) {
+    //   this.selectedEmployee = this.selectedEmployee.filter((x) => {
+    //     if (x.id != item.id) {
+    //       return item;
+    //     }
+    //   });
+    // }
+    // }
   }
   benchChecked: boolean = false;
   onBenchCheckboxChange(event: any) {
     this.benchChecked = event.checked;
   }
   tab(action) {
+    this.currentPageIndex = action;
+    console.log(this.currentPageIndex, "currentPageIndex");
+
     if (action == '1') {
       this.freshJobs();
       this.gridApi.setColumnVisible('jobIdColumn', true);
@@ -623,8 +629,8 @@ onCellValueChanged(event: CellValueChangedEvent) {
       this.gridApi.setColumnVisible('employeeNameColumn', false);
     } else if (action == '2') {
       this.gridApi.setColumnVisible('jobIdColumn', true);
-        this.gridApi.setColumnVisible('quotationIdColumn', false);
-        this.gridApi.setColumnVisible('allocatedIdColumn', false);
+      this.gridApi.setColumnVisible('quotationIdColumn', false);
+      this.gridApi.setColumnVisible('allocatedIdColumn', false);
       this.gridApi.setColumnVisible('employeeNameColumn', false);
 
       this.revisionJobs();
@@ -633,33 +639,33 @@ onCellValueChanged(event: CellValueChangedEvent) {
     } else if (action == '4') {
       this.allocaetdJobs();
       this.gridApi.setColumnVisible('jobIdColumn', false);
-        this.gridApi.setColumnVisible('quotationIdColumn', false);
-        this.gridApi.setColumnVisible('allocatedIdColumn', true);
+      this.gridApi.setColumnVisible('quotationIdColumn', false);
+      this.gridApi.setColumnVisible('allocatedIdColumn', true);
       this.gridApi.setColumnVisible('employeeNameColumn', true);
 
     } else if (action == '5') {
       this.gridApi.setColumnVisible('jobIdColumn', true);
-        this.gridApi.setColumnVisible('quotationIdColumn', false);
-        this.gridApi.setColumnVisible('allocatedIdColumn', false);
+      this.gridApi.setColumnVisible('quotationIdColumn', false);
+      this.gridApi.setColumnVisible('allocatedIdColumn', false);
       this.gridApi.setColumnVisible('employeeNameColumn', false);
       this.queries();
     } else if (action == '6') {
       this.gridApi.setColumnVisible('jobIdColumn', true);
-        this.gridApi.setColumnVisible('quotationIdColumn', false);
-        this.gridApi.setColumnVisible('allocatedIdColumn', false);
+      this.gridApi.setColumnVisible('quotationIdColumn', false);
+      this.gridApi.setColumnVisible('allocatedIdColumn', false);
       this.gridApi.setColumnVisible('employeeNameColumn', false);
       this.queryResposne();
     } else if (action == '7') {
       this.gridApi.setColumnVisible('jobIdColumn', true);
-        this.gridApi.setColumnVisible('quotationIdColumn', false);
-        this.gridApi.setColumnVisible('allocatedIdColumn', false);
+      this.gridApi.setColumnVisible('quotationIdColumn', false);
+      this.gridApi.setColumnVisible('allocatedIdColumn', false);
       this.gridApi.setColumnVisible('employeeNameColumn', false);
 
       this.errorJobs();
     } else if (action == '8') {
       this.gridApi.setColumnVisible('jobIdColumn', false);
-        this.gridApi.setColumnVisible('quotationIdColumn', true);
-        this.gridApi.setColumnVisible('allocatedIdColumn', false);
+      this.gridApi.setColumnVisible('quotationIdColumn', true);
+      this.gridApi.setColumnVisible('allocatedIdColumn', false);
       this.gridApi.setColumnVisible('employeeNameColumn', false);
 
       this.quotationJobs();
@@ -670,9 +676,9 @@ onCellValueChanged(event: CellValueChangedEvent) {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/1/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/1/0`
       )
       .subscribe({
         next: (freshJobs) => {
@@ -694,12 +700,12 @@ onCellValueChanged(event: CellValueChangedEvent) {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/2/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/2/0`
       )
       .subscribe({
-       next: (revisionJobs) => {
+        next: (revisionJobs) => {
           this.spinnerService.requestEnded();
           this.spinnerService.requestEnded();
           this.gridApi.setColumnVisible('jobId', true);
@@ -717,12 +723,12 @@ onCellValueChanged(event: CellValueChangedEvent) {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/3/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/3/0`
       )
       .subscribe({
-       next: (revisionJobs) => {
+        next: (revisionJobs) => {
           this.spinnerService.requestEnded();
           this.gridApi.setColumnVisible('jobId', true);
           this.gridApi.setColumnVisible('AllocatedjobId', false);
@@ -739,12 +745,12 @@ onCellValueChanged(event: CellValueChangedEvent) {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/4/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/4/0`
       )
       .subscribe({
-       next: (revisionJobs) => {
+        next: (revisionJobs) => {
           this.spinnerService.requestEnded();
           this.gridApi.setColumnVisible('jobId', false);
           this.gridApi.setColumnVisible('AllocatedjobId', true);
@@ -761,12 +767,12 @@ onCellValueChanged(event: CellValueChangedEvent) {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getQueryPendingJobs/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/0`
+        `Allocation/getQueryPendingJobs/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/0`
       )
       .subscribe({
-       next: (revisionJobs) => {
+        next: (revisionJobs) => {
           this.spinnerService.requestEnded();
           this.gridApi.setColumnVisible('jobId', true);
           this.gridApi.setColumnVisible('AllocatedjobId', false);
@@ -783,9 +789,9 @@ onCellValueChanged(event: CellValueChangedEvent) {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getQueryResponseJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/0`
+        `Allocation/getQueryResponseJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/0`
       )
       .subscribe({
         next: (freshJobs) => {
@@ -808,9 +814,9 @@ onCellValueChanged(event: CellValueChangedEvent) {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/5/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/5/0`
       )
       .subscribe({
         next: (freshJobs) => {
@@ -833,9 +839,9 @@ onCellValueChanged(event: CellValueChangedEvent) {
     this.http
       .get<any>(
         environment.apiURL +
-          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-            this.loginservice.getUsername()
-          )}/${parseInt(this.loginservice.getProcessId())}/7/0`
+        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+          this.loginservice.getUsername()
+        )}/${parseInt(this.loginservice.getProcessId())}/7/0`
       )
       .subscribe({
         next: (freshJobs) => {
@@ -863,7 +869,7 @@ onCellValueChanged(event: CellValueChangedEvent) {
       });
   }
 
-  
+
   getProductionJob(data: any) {
     const dialogRef = this._dialog.open(JobAssignedDetailsPopupComponent, {
       width: '100%',
@@ -936,7 +942,7 @@ onCellValueChanged(event: CellValueChangedEvent) {
     });
   }
   selectedJobs: any[] = [];
-  selectedEmployees:any[]=[];
+  selectedEmployees: any[] = [];
   sampleData() {
     const firstTable = this.gridApi.getSelectedRows();
     console.log(firstTable, 'FirstTable');
@@ -960,17 +966,17 @@ onCellValueChanged(event: CellValueChangedEvent) {
       console.error('AG Grid API not available');
     }
   }
- 
+
   ScopeId: any;
   scopeChange(scope) {
     this.ScopeId = scope;
   }
- 
+
   onSubmits() {
-    this.selectedJobs= this.gridApi.getSelectedRows();
-    this.selectedEmployees= this.gridEmplApi.getSelectedRows();
-    console.log(this.selectedJobs,"this.selectedJobs");
-    console.log(this.selectedEmployees.length,"this.selectedEmployees");
+    this.selectedJobs = this.gridApi.getSelectedRows();
+    this.selectedEmployees = this.gridEmplApi.getSelectedRows();
+    console.log(this.selectedJobs, "this.selectedJobs");
+    console.log(this.selectedEmployees.length, "this.selectedEmployees");
     this.spinnerService.requestStarted();
     var selectedJobCount = this.selectedJobs.length;
     var selectedEmployeeCount = this.selectedEmployees.length;
@@ -1029,9 +1035,9 @@ onCellValueChanged(event: CellValueChangedEvent) {
   onSubmit() {
     console.log(this.gridApi.getSelectedRows(), 'rowselection');
 
-    this. selectedJobs= this.gridApi.getSelectedRows(); // let selectedJobs = this.gridApi.getSelectedRows().forEach(x => this.setAll(x)); // let seleectedJobsData = selectedJobs.push([{...selectedJobs,employeeId:'',allocatedEstimatedTime:'',jId:''}])
-    this. selectedEmployees= this.gridEmplApi.getSelectedRows(); // let selectedEmployees =   this.gridEmplApi.getSelectedRows().forEach(x => this.setEmployeeAll(true, x)); // let seleectedEmployeeData = selectedEmployees.push([{...selectedEmployees,employeeId:'',allocatedEstimatedTime:'',jId:''}]) // console.log(seleectedEmployeeData,"seleectedEmployeeData"); // console.log(seleectedJobsData,"seleectedJobsData"); // Reset variables
-  
+    this.selectedJobs = this.gridApi.getSelectedRows(); // let selectedJobs = this.gridApi.getSelectedRows().forEach(x => this.setAll(x)); // let seleectedJobsData = selectedJobs.push([{...selectedJobs,employeeId:'',allocatedEstimatedTime:'',jId:''}])
+    this.selectedEmployees = this.gridEmplApi.getSelectedRows(); // let selectedEmployees =   this.gridEmplApi.getSelectedRows().forEach(x => this.setEmployeeAll(true, x)); // let seleectedEmployeeData = selectedEmployees.push([{...selectedEmployees,employeeId:'',allocatedEstimatedTime:'',jId:''}]) // console.log(seleectedEmployeeData,"seleectedEmployeeData"); // console.log(seleectedJobsData,"seleectedJobsData"); // Reset variables
+
     console.log(this.selectedJobs, 'SelectedJobs');
     console.log(this.selectedEmployees.length, 'selectedEmployees'); // Handle the case where no jobs or employees are selected
     if (this.selectedJobs.length === 0 || this.selectedEmployees.length === 0) {
@@ -1044,25 +1050,16 @@ onCellValueChanged(event: CellValueChangedEvent) {
       this.spinnerService.requestEnded();
       // this.postJobs();
       return;
-    } 
-    // if (this.gridApi) {
-    //   const selectedNodes = this.gridApi.getSelectedNodes();
-    //   selectedNodes.forEach((node) => {
-    //     if (node.data.jobId) {
-    //       // Update the data directly, which will trigger Angular's change detection
-    //       node.setDataValue('allocatedEstimatedTime', this.exchangeHeader);
-    //     }
-    //   }); // Reset exchangeHeader after updating the selected rows
-    //   // this.exchangeHeader = null;
-    // } // Handle the case where multiple jobs are selected
+    }
+
     if (this.selectedJobs.length > 1) {
       for (let i = 0; i < this.selectedJobs.length; i++) {
         // if (this.selectedJobs[i].this.exchangeHeader) {
-          if (
-            this.selectedJobs[i].allocatedEstimatedTime == undefined ||
-            this.selectedJobs[i].allocatedEstimatedTime == '' ||
-            this.selectedJobs[i].allocatedEstimatedTime == 0
-          ){
+        if (
+          this.selectedJobs[i].allocatedEstimatedTime == undefined ||
+          this.selectedJobs[i].allocatedEstimatedTime == '' ||
+          this.selectedJobs[i].allocatedEstimatedTime == 0
+        ) {
           Swal.fire(
             'Info!',
             'Please enter Estimated Time for Selected Job!',
@@ -1089,33 +1086,33 @@ onCellValueChanged(event: CellValueChangedEvent) {
       }
       // this.postJobs();
     }
-    
+
     // Update estimatedTime for selected jobs
     // this.selectedJobs.forEach((job) => (job.estimatedTime = this.exchangeHeader)); // Update estimatedTime for selected employees
     // this.selectedEmployees.forEach((employee) => {
-      
-      // if (!employee.estimatedTime) {
-      //   Swal.fire(
-      //     'Info!',
-      //     'Please enter Estimated Time for Selected Employee!',
-      //     'info'
-      //   );
-      //   this.spinnerService.requestEnded();
-      //   this.postJobs();
-      //   return;
-      // }
+
+    // if (!employee.estimatedTime) {
+    //   Swal.fire(
+    //     'Info!',
+    //     'Please enter Estimated Time for Selected Employee!',
+    //     'info'
+    //   );
+    //   this.spinnerService.requestEnded();
+    //   this.postJobs();
+    //   return;
+    // }
     // }); // Reset exchangeHeader after updating the selected rows // this.exchangeHeader = null; // Continue with your logic to post jobs
     this.postJobs();
   }
   postJobs() {
-    console.log(this.selectedJobs,"selectedjobs");
+    console.log(this.selectedJobs, "selectedjobs");
     console.log(this.selectedJobs, "selectedemployee");
-    
+
     let processMovement = {
       id: 0,
       processId: this.loginservice.getProcessId(),
       statusId: 1,
-      selectedScopeId: this.ScopeId ? this.ScopeId : 0,
+      selectedScopeId: this.selectedScope ? this.selectedScope : 0,
       autoUploadJobs: true,
       employeeId: this.loginservice.getUsername(),
       remarks: 'string',
@@ -1124,7 +1121,7 @@ onCellValueChanged(event: CellValueChangedEvent) {
       value: 0,
       amount: 0,
       stitchCount: 0,
-      estimationTime:this.exchangeHeader?? this.selectedEmployees.reduce(
+      estimationTime: this.exchangeHeader ?? this.selectedEmployees.reduce(
         (total, employee) => total + employee.estTime,
         0
       ),
@@ -1134,24 +1131,24 @@ onCellValueChanged(event: CellValueChangedEvent) {
       copyFiles: true,
       updatedBy: 0,
       jId: 0,
-      estimatedTime:this.exchangeHeader??this.selectedEmployees.reduce(
+      estimatedTime: this.exchangeHeader ?? this.selectedEmployees.reduce(
         (total, employee) => total + employee.estTime,
         0
       ),
       tranMasterId: 0,
-      selectedRows: this.selectedJobs.map(x=>this.setAll(x)),
-      selectedEmployees: this.selectedEmployees.map(x=>this.setEmployeeAll(x)),
+      selectedRows: this.selectedJobs.map(x => this.setAll(x)),
+      selectedEmployees: this.selectedEmployees.map(x => this.setEmployeeAll(x)),
       departmentId: 0,
       updatedUTC: new Date().toISOString,
       categoryDesc: 'string',
-      allocatedEstimatedTime: this.exchangeHeader??this.selectedEmployees.reduce(
+      allocatedEstimatedTime: this.exchangeHeader ?? this.selectedEmployees.reduce(
         (total, employee) => total + employee.estTime,
         0
       ),
       tranId: 0,
       fileInwardType: 'string',
       timeStamp: '',
-      scopeId: 0,
+      scopeId: this.selectedScope ? this.selectedScope : 0,
       quotationRaisedby: 0,
       quotationraisedOn: new Date().toISOString,
       clientId: 0,
@@ -1163,14 +1160,14 @@ onCellValueChanged(event: CellValueChangedEvent) {
     if (this.loginservice.getProcessName() == 'Quality Allocation') {
       this.ProcessMovementData('QARestriction', processMovement).subscribe(
         (result) => {
-          var SameQAEmployeeJobList:any[] = processMovement.selectedRows.filter(
-            function (item:any) {
+          var SameQAEmployeeJobList: any[] = processMovement.selectedRows.filter(
+            function (item: any) {
               var exists = result.jids.some((x) => x == item?.jId);
               return exists;
             }
           );
           var processedRows = processMovement.selectedRows.filter(function (
-            item:any
+            item: any
           ) {
             var exists = result.jids.some((x) => x == item?.jId);
             return !exists;
@@ -1219,7 +1216,9 @@ onCellValueChanged(event: CellValueChangedEvent) {
           Swal.fire('Done!', 'Job assigned successfully!', 'success').then(
             (response) => {
               if (response.isConfirmed) {
-                this.refreshPage();
+                this.tab(this.currentPageIndex);
+                this.sharedDataService.triggerRefresh();
+                this.fetchEmployeeTable();
               }
             }
           );
@@ -1308,7 +1307,7 @@ onCellValueChanged(event: CellValueChangedEvent) {
       Remarks: '',
       SelectedEmployees: [],
       SelectedRows: [],
-      
+
     };
   } //textcolor
 

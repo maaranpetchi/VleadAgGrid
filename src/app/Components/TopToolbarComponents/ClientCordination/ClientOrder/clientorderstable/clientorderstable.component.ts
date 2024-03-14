@@ -37,6 +37,7 @@ import { SharedService } from 'src/app/Services/SharedService/shared.service';
 })
 export class ClientorderstableComponent implements OnInit {
   context: any;
+  currentPageIndex: any;
   ngOnInit(): void {
     // //DivisionApiDatadropdown
     this.fetchdivision();
@@ -379,6 +380,8 @@ export class ClientorderstableComponent implements OnInit {
   }
 
   tab(action) {
+    this.currentPageIndex = action;
+
     if (action == '1') {
       this.bindingjobs();
     }
@@ -859,7 +862,8 @@ export class ClientorderstableComponent implements OnInit {
               'success'
             ).then((result) => {
               if (result.isConfirmed) {
-                window.location.reload();
+                this.tab(this.currentPageIndex);
+                this.sharedService.triggerRefresh();
               }
             })
           }
@@ -1006,7 +1010,6 @@ export class ClientorderstableComponent implements OnInit {
   public defaultColDef: ColDef = {
     flex: 1,
     minWidth: 100,
-    headerCheckboxSelection: isFirstColumn,
     checkboxSelection: isFirstColumn,
   };
 

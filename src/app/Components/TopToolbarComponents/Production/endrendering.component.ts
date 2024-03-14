@@ -74,7 +74,7 @@ export class EndRenderingComponent implements ICellRendererAngularComp {
                     "copyFiles": true,
                     "errorCategoryId": 0,
                     "value": 0,
-                    "scopeId": selectdivision,
+                    "scopeId": data.scopeId?data.scopeId: selectdivision,
                     "Scope": '',
                     "processId": this.gettingData.processId,
                     "stitchCount": 0,

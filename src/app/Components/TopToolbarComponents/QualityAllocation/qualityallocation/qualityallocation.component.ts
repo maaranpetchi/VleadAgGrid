@@ -9,6 +9,8 @@ import { environment } from 'src/Environments/environment';
 import { Route, RouterLink } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { QualitypopupjobassignComponent } from '../qualitypopupjobassign/qualitypopupjobassign.component';
+import { SpinnerService } from 'src/app/Components/Spinner/spinner.service';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 
 interface Employee {
   id: number;
@@ -21,10 +23,10 @@ interface Employee {
   templateUrl: './qualityallocation.component.html',
   styleUrls: ['./qualityallocation.component.scss']
 })
-export class QualityallocationComponent  implements OnInit {
+export class QualityallocationComponent implements OnInit {
   @ViewChild(QualityallocationtableComponent) QualityallocationtableComponent: QualityallocationtableComponent;
 
- 
+
   pendingJobsCount: any;
   freshJobsCount: number;
   revisionJobsCount: number;
@@ -38,9 +40,16 @@ export class QualityallocationComponent  implements OnInit {
     public dialog: MatDialog,
     private http: HttpClient,
     private loginservice: LoginService,
-    ) { }
+    private spinnerservice: SpinnerService,
+    private sharedService:SharedService
+  ) { }
   ngOnInit(): void {
-    this.getCount()
+    this.sharedService.refreshData$.subscribe(() => {
+      // Update your data or call the necessary methods to refresh the data
+      this.getCount();
+    });
+    this.getCount();
+
   }
 
 
@@ -50,7 +59,7 @@ export class QualityallocationComponent  implements OnInit {
       case 0: // Fresh Jobs tab
         // Call your REST API for Fresh Jobs
         this.freshJobs();
-        
+
         break;
       case 1: // Revision Jobs tab
 
@@ -71,12 +80,12 @@ export class QualityallocationComponent  implements OnInit {
       case 5:
         this.queryResponse();
         break;
-        case 6:
-          this.errorJobs();
-          break;
-        case 7:
-          this.quotationJobs();
-          break;
+      case 6:
+        this.errorJobs();
+        break;
+      case 7:
+        this.quotationJobs();
+        break;
       default:
         break;
     }
@@ -101,29 +110,32 @@ export class QualityallocationComponent  implements OnInit {
   queryResponse() {
     this.QualityallocationtableComponent.tab('6');
   }
-errorJobs(){
-  this.QualityallocationtableComponent.tab('7');
-}
-quotationJobs(){
-  this.QualityallocationtableComponent.tab('8');
-}
+  errorJobs() {
+    this.QualityallocationtableComponent.tab('7');
+  }
+  quotationJobs() {
+    this.QualityallocationtableComponent.tab('8');
+  }
 
-getCount() {
-  return this.http
-    .get<any>(
-      environment.apiURL +
+  getCount() {
+    this.spinnerservice.requestStarted();
+    this.http
+      .get<any>(
+        environment.apiURL +
         `Allocation/getCount/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/0`
-    )
-    .subscribe((freshDataCount) => {
-     this.pendingJobsCount= freshDataCount.pendingJobsCount,
-     this.freshJobsCount = freshDataCount.freshJobsCount,
-     this.revisionJobsCount= freshDataCount.revisionJobsCount,
-     this.reworkJobsCount= freshDataCount.reworkJobsCount,
-     this.allocatedJobCount = freshDataCount.allocatedJobCount
-     this.queriesJobsCount= freshDataCount.queriesJobsCount,
-     this.queryResponseJobsCount= freshDataCount.queryResponseJobsCount,
-     this.errorJobsCount= freshDataCount.errorJobsCount,
-     this.quotationJobCount= freshDataCount.quotationJobCount
-    });
-}
+      )
+      .subscribe((freshDataCount) => {
+        this.pendingJobsCount = freshDataCount.pendingJobsCount,
+          this.freshJobsCount = freshDataCount.freshJobsCount,
+          this.revisionJobsCount = freshDataCount.revisionJobsCount,
+          this.reworkJobsCount = freshDataCount.reworkJobsCount,
+          this.allocatedJobCount = freshDataCount.allocatedJobCount
+        this.queriesJobsCount = freshDataCount.queriesJobsCount,
+          this.queryResponseJobsCount = freshDataCount.queryResponseJobsCount,
+          this.errorJobsCount = freshDataCount.errorJobsCount,
+          this.quotationJobCount = freshDataCount.quotationJobCount
+        this.spinnerservice.requestEnded();
+
+      });
+  }
 }

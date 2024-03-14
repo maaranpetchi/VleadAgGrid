@@ -15,6 +15,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { CellClickedEvent, CellValueChangedEvent, CheckboxSelectionCallbackParams, ColDef, GridApi, GridReadyEvent, HeaderCheckboxSelectionCallbackParams, SelectionChangedEvent } from 'ag-grid-community';
 import { JoballocatedEmplpopupComponent } from '../../ProductionAllocation/joballocated-emplpopup/joballocated-emplpopup.component';
 import { ProductionQuotationComponent } from '../../ProductionAllocation/production-quotation/production-quotation.component';
+import { SharedService } from 'src/app/Services/SharedService/shared.service';
 interface Employee {
   id: number;
   name: string;
@@ -254,6 +255,7 @@ export class QualityallocationtableComponent implements OnInit {
   settingFirstData: any[] = [];
   frstrow: any;
   secondrow: any;
+  currentPageIndex: any;
   onGridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
@@ -269,6 +271,19 @@ export class QualityallocationtableComponent implements OnInit {
     //   )}/${parseInt(this.loginservice.getProcessId())}/1/0`
     // )
     //   .subscribe((data) => (this.rowData = data.employees));
+  }
+
+  fetchEmployeeTable(){
+    this.spinner.requestStarted();
+    this.http
+    .get<any>(
+      environment.apiURL +
+      `Allocation/getPendingAllocationJobsAndEmployees/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`
+    )
+    .subscribe((response) => {
+      this.rowEmpData = response.employees;
+      this.spinner.requestEnded();
+    });
   }
   onGridEmpReady(params: GridReadyEvent<any>) {
     // this.gridApi = params.api;
@@ -494,7 +509,8 @@ export class QualityallocationtableComponent implements OnInit {
     private http: HttpClient,
     private loginservice: LoginService,
     private _dialog: MatDialog,
-    private spinner: SpinnerService
+    private spinner: SpinnerService,
+    private sharedDataService:SharedService
   ) { }
 
   ngOnInit(): void {
@@ -580,6 +596,8 @@ export class QualityallocationtableComponent implements OnInit {
   @ViewChild('paginator2') paginator2: MatPaginator;
 
   tab(action) {
+    this.currentPageIndex = action;
+
     if (action == '1') {
       this.freshJobs();
       this.gridApi.setColumnVisible('artistNameColumn', true);
@@ -1110,8 +1128,9 @@ export class QualityallocationtableComponent implements OnInit {
 
         Swal.fire('Done!', result.message, 'success').then((res) => {
           if (res.isConfirmed) {
-            window.location.reload();
-          }
+            this.tab(this.currentPageIndex);
+            this.sharedDataService.triggerRefresh();
+            this.fetchEmployeeTable();          }
         });
       });
 
