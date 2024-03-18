@@ -130,7 +130,7 @@ context: any="customervsemployee";
 
   onGridReady(params: GridReadyEvent<any>) {
     this.gridApi = params.api;
-    this._empService.getEmployeeList().subscribe((response) => (this.rowData = response));
+    // this._empService.getEmployeeList().subscribe((response) => (this.rowData = response));
   }
 
   handleCellValueChanged(params: { colDef: ColDef, newValue: any, data: any }) {

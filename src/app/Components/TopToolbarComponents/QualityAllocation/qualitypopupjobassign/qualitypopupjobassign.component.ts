@@ -307,6 +307,12 @@ export class QualitypopupjobassignComponent implements OnInit {
             }
           });
         }
+        else{
+          Swal.fire('info!', val.message, 'info').then((val) => {
+            if (val.isConfirmed) {
+            }
+          });
+        }
       },
       error: (err) => {
         this.spinnerservice.resetSpinner();

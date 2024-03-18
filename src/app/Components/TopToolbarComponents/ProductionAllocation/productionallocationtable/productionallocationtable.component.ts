@@ -94,8 +94,8 @@ export class ProductionallocationtableComponent implements OnInit {
   JobStatusId: any;
   totalEstimateTime: any; // AG grid
 
-  rowData: any=[];
-  rowEmpData: any=[];
+  rowData: any = [];
+  rowEmpData: any = [];
   public rowSelection: 'single' | 'multiple' = 'multiple';
   private gridApi!: GridApi<any>;
   private gridEmplApi!: GridApi<any>;
@@ -336,7 +336,7 @@ export class ProductionallocationtableComponent implements OnInit {
       editable: true,
     },
   ];
-  gridOptions1:GridOptions  = {
+  gridOptions1: GridOptions = {
     pagination: true,
     paginationPageSize: 25,
     getRowStyle: (params) => {
@@ -352,7 +352,7 @@ export class ProductionallocationtableComponent implements OnInit {
   };
 
 
-  
+
   EmpgridOptions = {
     pagination: true,
     paginationPageSize: 25,
@@ -392,15 +392,15 @@ export class ProductionallocationtableComponent implements OnInit {
     this.gridApi.setColumnVisible('employeeNameColumn', false);
   }
 
-  fetchEmployeeTable(){
+  fetchEmployeeTable() {
     this.http
-    .get<any>(
-      environment.apiURL +
-      `Allocation/getPendingAllocationJobsAndEmployees/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`
-    )
-    .subscribe((response) => {
-      this.rowEmpData = response.employees;
-    });
+      .get<any>(
+        environment.apiURL +
+        `Allocation/getPendingAllocationJobsAndEmployees/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`
+      )
+      .subscribe((response) => {
+        this.rowEmpData = response.employees;
+      });
   }
   onGridEmpReady(params: GridReadyEvent<any>) {
     // this.gridApi = params.api;
@@ -508,7 +508,7 @@ export class ProductionallocationtableComponent implements OnInit {
     const selectedNodes = this.gridApi.getSelectedNodes();
     console.log('Row Selected!');
     const selectedRows = this.gridApi.getSelectedRows(); // Perform your bulk convert action with the selected rows
-    
+
   };
   onSelectionChanged(event: SelectionChangedEvent) {
     const selectedNodes = this.gridApi.getSelectedRows();
@@ -896,7 +896,9 @@ export class ProductionallocationtableComponent implements OnInit {
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
-          this.ngOnInit();
+          this.tab(this.currentPageIndex);
+          this.sharedDataService.triggerRefresh();
+          this.fetchEmployeeTable();
         }
       },
     });
@@ -910,7 +912,9 @@ export class ProductionallocationtableComponent implements OnInit {
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
-          this.freshJobs();
+          this.tab(this.currentPageIndex);
+          this.sharedDataService.triggerRefresh();
+          this.fetchEmployeeTable();
         }
       },
     });
@@ -925,8 +929,9 @@ export class ProductionallocationtableComponent implements OnInit {
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
-          this.freshJobs();
-        }
+          this.tab(this.currentPageIndex);
+          this.sharedDataService.triggerRefresh();
+          this.fetchEmployeeTable();        }
       },
     });
   }
@@ -939,8 +944,9 @@ export class ProductionallocationtableComponent implements OnInit {
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
-          this.freshJobs();
-        }
+          this.tab(this.currentPageIndex);
+          this.sharedDataService.triggerRefresh();
+          this.fetchEmployeeTable();        }
       },
     });
   }
@@ -953,8 +959,10 @@ export class ProductionallocationtableComponent implements OnInit {
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
-          this.freshJobs();
-        }
+          this.tab(this.currentPageIndex);
+          this.sharedDataService.triggerRefresh();
+          this.fetchEmployeeTable();
+                }
       },
     });
   }
@@ -1103,7 +1111,7 @@ export class ProductionallocationtableComponent implements OnInit {
       }
       // this.postJobs();
     }
-  this.postJobs();
+    this.postJobs();
   }
   postJobs() {
     console.log(this.selectedJobs, "selectedjobs");

@@ -324,7 +324,9 @@ export class QualityallocationtableComponent implements OnInit {
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
-          this.freshJobs();
+          this.tab(this.currentPageIndex);
+          this.sharedDataService.triggerRefresh();
+          this.fetchEmployeeTable();
         }
       },
     });
@@ -465,6 +467,7 @@ export class QualityallocationtableComponent implements OnInit {
 
   ngOnInit(): void {
     this.freshJobs();
+
   }
 
   filterValue: any = null;
@@ -1163,7 +1166,9 @@ export class QualityallocationtableComponent implements OnInit {
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
-          this.ngOnInit();
+          this.tab(this.currentPageIndex);
+          this.sharedDataService.triggerRefresh();
+          this.fetchEmployeeTable();
         }
       },
     });
@@ -1191,7 +1196,9 @@ export class QualityallocationtableComponent implements OnInit {
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
-          this.ngOnInit();
+          this.tab(this.currentPageIndex);
+          this.sharedDataService.triggerRefresh();
+          this.fetchEmployeeTable();
         }
       },
     });

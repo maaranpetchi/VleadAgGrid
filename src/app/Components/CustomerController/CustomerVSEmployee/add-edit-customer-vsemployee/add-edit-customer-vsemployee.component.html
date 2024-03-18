@@ -45,15 +45,18 @@
                 <br> -->
                 <mat-form-field>
                   <mat-label>Customer</mat-label>
-                  <!-- <mat-select ngDefaultControl formControlName="customer" [formControl]="selectControl" multiple> -->
-                  <mat-select ngDefaultControl multiple formControlName="customer" [(ngModel)]="selectedCustomerId" (selectionChange)="customerChange()"><mat-label> Search for customer</mat-label>
+                  <mat-select ngDefaultControl multiple formControlName="customer" [(ngModel)]="selectedCustomerId" (selectionChange)="customerChange()">
+                    <mat-label>Search for customer</mat-label>
                     <input matInput (keyup)="applyFilters($event)" placeholder="Filter" #input>
-                    <mat-option *ngFor="let employeehierarchyoption of data.customerList"
-                      [value]="employeehierarchyoption.id	">
-                      {{ employeehierarchyoption.shortName+'-'+employeehierarchyoption.name }}
+                    <!-- Checkbox to select all -->
+                    <mat-checkbox (change)="selectAllCustomers($event.checked)">Select All</mat-checkbox>
+                    <mat-option *ngFor="let customer of data.customerList" [value]="customer.id">
+                      {{ customer.shortName + ' - ' + customer.name }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
+                
+                
                 <div class="button"> <button mat-raised-button color="primary">Submit</button>
                 </div>
               </form>

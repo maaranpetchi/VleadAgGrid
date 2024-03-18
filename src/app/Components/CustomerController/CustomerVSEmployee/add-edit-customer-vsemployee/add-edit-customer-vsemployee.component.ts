@@ -113,6 +113,16 @@ export class AddEditCustomerVSEmployeeComponent implements OnInit {
       });
   }
 
+  selectAllCustomers(checked: boolean) {
+    if (checked) {
+      this.selectedCustomerId = this.data.customerList.map(customer => customer.id);
+      console.log(this.selectedCustomerId);
+      
+    } else {
+      this.selectedCustomerId = [];
+    }
+  }
+
   onSubmit() {
     console.log(this.selectedCustomerId, "SelecetdCustomer");
 
