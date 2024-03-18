@@ -26,7 +26,6 @@ interface Employee {
 export class QualityallocationComponent implements OnInit {
   @ViewChild(QualityallocationtableComponent) QualityallocationtableComponent: QualityallocationtableComponent;
 
-
   pendingJobsCount: any;
   freshJobsCount: number;
   revisionJobsCount: number;
@@ -45,7 +44,6 @@ export class QualityallocationComponent implements OnInit {
   ) { }
   ngOnInit(): void {
     this.sharedService.refreshData$.subscribe(() => {
-      // Update your data or call the necessary methods to refresh the data
       this.getCount();
     });
     this.getCount();

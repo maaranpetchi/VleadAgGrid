@@ -25,6 +25,7 @@ import {
   CheckboxSelectionCallbackParams,
   ColDef,
   GridApi,
+  GridOptions,
   GridReadyEvent,
   HeaderCheckboxSelectionCallbackParams,
   SelectionChangedEvent,
@@ -335,10 +336,23 @@ export class ProductionallocationtableComponent implements OnInit {
       editable: true,
     },
   ];
-  gridOptions1 = {
+  gridOptions1:GridOptions  = {
     pagination: true,
     paginationPageSize: 25,
+    getRowStyle: (params) => {
+      if (params.data.status === 'Completed') {
+        return { backgroundColor: 'lightgreen' };
+      } else if (params.data.jobStatusDescription === 'Overdue') {
+        return { backgroundColor: 'pink' };
+      } else {
+        // No specific style, return undefined
+        return undefined;
+      }
+    }
   };
+
+
+  
   EmpgridOptions = {
     pagination: true,
     paginationPageSize: 25,

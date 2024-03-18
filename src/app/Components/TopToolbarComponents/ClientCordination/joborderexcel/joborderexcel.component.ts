@@ -52,6 +52,11 @@ export class JoborderexcelComponent implements OnInit {
   ViewImportExcel = {};
   ViewImportExcelTrue = {};
   importExceFile() {
+
+    if(this.selectedFile.length == 0){
+      Swal.fire('info','please select the file','info')
+    }
+    else{
     let employeeId = this.loginservice.getUsername();
     var fd = new FormData();
     for (let i = 0; i < this.selectedFile.length; i++) {
@@ -64,12 +69,14 @@ export class JoborderexcelComponent implements OnInit {
 
       this.postBindFileInward();
       this.postFileInwardType();
+      
     }, (error) => {
       // Handle error (optional)
       this.spinnerService.requestEnded();
       console.error('API call failed:', error);
     }
     );
+  }
   }
 
   postBindFileInward() {
@@ -103,6 +110,8 @@ export class JoborderexcelComponent implements OnInit {
 
   //submit
   InwardExcelDatas() {
+
+    
     let payload = {
       "id": 0,
       "dateofReceived": "2023-06-21T11:58:24.045Z",

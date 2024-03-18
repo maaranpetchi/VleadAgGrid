@@ -233,8 +233,10 @@ export class QualityallocationtableComponent implements OnInit {
         return '<button class="btn btn-sm btn-link p-0">' + params.value + '</button>';
       }
     },
-    { headerName: 'Shift', field: 'shiftName', headerClass: "text-wrap", width: 100, suppressSizeToFit: true, sortable: true, filter: 'agTextColumnFilter',
-      floatingFilter: true, },
+    {
+      headerName: 'Shift', field: 'shiftName', headerClass: "text-wrap", width: 100, suppressSizeToFit: true, sortable: true, filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    },
 
   ]
   // public defaultEmpColDef: ColDef = {
@@ -274,17 +276,17 @@ export class QualityallocationtableComponent implements OnInit {
     //   .subscribe((data) => (this.rowData = data.employees));
   }
 
-  fetchEmployeeTable(){
+  fetchEmployeeTable() {
     this.spinner.requestStarted();
     this.http
-    .get<any>(
-      environment.apiURL +
-      `Allocation/getPendingAllocationJobsAndEmployees/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`
-    )
-    .subscribe((response) => {
-      this.rowEmpData = response.employees;
-      this.spinner.requestEnded();
-    });
+      .get<any>(
+        environment.apiURL +
+        `Allocation/getPendingAllocationJobsAndEmployees/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`
+      )
+      .subscribe((response) => {
+        this.rowEmpData = response.employees;
+        this.spinner.requestEnded();
+      });
   }
   onGridEmpReady(params: GridReadyEvent<any>) {
     // this.gridApi = params.api;
@@ -309,7 +311,7 @@ export class QualityallocationtableComponent implements OnInit {
 
       this.getemployeeName(data);
     }
-    else if(colDef.colId === 'quotationIdColumn'){
+    else if (colDef.colId === 'quotationIdColumn') {
       this.quotationJobId(data);
     }
   }
@@ -458,7 +460,7 @@ export class QualityallocationtableComponent implements OnInit {
     private loginservice: LoginService,
     private _dialog: MatDialog,
     private spinner: SpinnerService,
-    private sharedDataService:SharedService
+    private sharedDataService: SharedService
   ) { }
 
   ngOnInit(): void {
@@ -865,12 +867,12 @@ export class QualityallocationtableComponent implements OnInit {
       item.SelectedEmployees = [];
       item.SelectedRows = [];
       item.employeeId = item.employeeId ? item.employeeId : 0,
-      item.estimatedTime = item.estimatedTime ? item.estimatedTime : 0,
-      item.allocatedEstimatedTime = item.allocatedEstimatedTime ? item.allocatedEstimatedTime : 0,
-      item.dateofDelivery = item.dateofDelivery ? item.dateofDelivery : new Date().toISOString,
-      item.employeeCount = item.employeeCount ? item.employeeCount : 0,
-      item.employeeName = item.employeeName ? item.employeeName : "",
-      item.queryJobDate = item.queryJobDate ? item.queryJobDate : ""
+        item.estimatedTime = item.estimatedTime ? item.estimatedTime : 0,
+        item.allocatedEstimatedTime = item.allocatedEstimatedTime ? item.allocatedEstimatedTime : 0,
+        item.dateofDelivery = item.dateofDelivery ? item.dateofDelivery : new Date().toISOString,
+        item.employeeCount = item.employeeCount ? item.employeeCount : 0,
+        item.employeeName = item.employeeName ? item.employeeName : "",
+        item.queryJobDate = item.queryJobDate ? item.queryJobDate : ""
     });
 
     this.secondrow = this.gridEmplApi.getSelectedRows()
@@ -887,7 +889,7 @@ export class QualityallocationtableComponent implements OnInit {
         item.SelectedRows = [],
         item.TimeStamp = '',
         item.jId = 0
-      
+
     });
 
     console.log(selectedJobCount, 'selectedjobCount');
@@ -1078,7 +1080,8 @@ export class QualityallocationtableComponent implements OnInit {
           if (res.isConfirmed) {
             this.tab(this.currentPageIndex);
             this.sharedDataService.triggerRefresh();
-            this.fetchEmployeeTable();          }
+            this.fetchEmployeeTable();
+          }
         });
       });
 

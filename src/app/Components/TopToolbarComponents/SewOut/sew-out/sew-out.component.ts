@@ -119,7 +119,7 @@ export class SewOutComponent implements OnInit {
       this.RevisionJobsCount = freshdataCount.revisionJobsCount;
       this.ReworkJobsCount = freshdataCount.reworkJobsCount;
       this.QuoteJobsCount = freshdataCount.quoteJobsCount;
-      this.SewOutCount = freshdataCount.sewJobsCount,
+      this.SewOutCount = freshdataCount.sewOutJobsCount,
         this.BulkJobsCount = freshdataCount.bulkJobsCount;
       this.BulkUploadJobsCount = freshdataCount.bulkUploadJobsCount;
     });
