@@ -134,102 +134,64 @@ export class PricingComponent implements OnInit {
     if (pricingType != undefined) {
       //  this.pricingtype = pricingType.Id;
       if (pricingType == 1 || pricingType == 9) {
-        this.type2 = false;
-        this.type22 = false;
-        this.type6 = false;
-        this.showeffective = true;
-        this.priceBasedOnFileCount = true;
-        //$scope.showstaffing = false;
-        this.showcounttable = false;
-        this.showcounttabletime = false;
-        this.showstaffingcounttable = false;
-        this.notshowntocount = true;
-        this.ScopeBasedRateBasedFileCountTable = false;
-        this.EstimatedTimeTable = false;
-        this.showtodate = false;
+        this.priceBasedOnFileCount = false;
+        this.specialPricing = false;
+        this.priceBasedOnHour = false;
+        this.staffing = false;
+        this.rateBasedFileCount = false;
+        this.priceBasedOnScope = true
       } else if (pricingType == 2) {
-        this.type6 = false;
+        this.priceBasedOnFileCount = false;
         this.specialPricing = true;
-        //$scope.showstaffing = false;
-        this.showcounttable = false;
-        this.showcounttabletime = false;
-        this.showstaffingcounttable = false;
-        this.ScopeBasedRateBasedFileCountTable = false;
-        this.EstimatedTimeTable = false;
-        this.showtodate = false;
+        this.priceBasedOnHour = false;
+        this.staffing = false;
+        this.rateBasedFileCount = false;
+        this.priceBasedOnScope = false;
       } else if (pricingType == 13 || pricingType == 14) {
-        this.type2 = false;
-        this.type22 = false;
-        this.type6 = false;
-        this.showeffective = false;
+        this.priceBasedOnFileCount = false;
+        this.specialPricing = false;
         this.priceBasedOnHour = true;
-        //$scope.showstaffing = false;
-        this.showcounttable = false;
-        this.showcounttabletime = false;
-        this.showstaffingcounttable = false;
-        this.notshowntocount = false;
-        this.ScopeBasedRateBasedFileCountTable = false;
-        this.EstimatedTimeTable = false;
-        this.showtodate = false;
-      } else if (pricingType == 11 || pricingType == 12) {
-        this.type2 = false;
-        this.type22 = false;
-        this.type6 = false;
-        this.showeffective = false;
+        this.staffing = false;
+        this.rateBasedFileCount = false;
+        this.priceBasedOnScope = false;
+      } else if (pricingType ==4 || pricingType == 11) {
         this.priceBasedOnFileCount = true;
-        //$scope.showstaffing = false;
-        this.showcounttable = false;
-        this.showcounttabletime = false;
-        this.showstaffingcounttable = false;
-        this.showstaffingcount = false;
-        this.notshowntocount = false;
-        this.ScopeBasedRateBasedFileCountTable = false;
-        this.EstimatedTimeTable = false;
-        this.showtodate = false;
-      } else if (pricingType == 3 || pricingType == 4 || pricingType == 10) {
-        this.type2 = false;
-        this.type22 = false;
-        this.type6 = false;
+        this.specialPricing = false;
+        this.priceBasedOnHour = false;
+        this.staffing = false;
+        this.rateBasedFileCount = false;
+        this.priceBasedOnScope = false;
+      } else if (pricingType == 3  || pricingType == 10) {
+        this.specialPricing = false;
+        this.priceBasedOnHour = false;
         this.rateBasedFileCount = true;
         this.priceBasedOnFileCount = false;
-        this.showcounttabletime = false;
-        this.showstaffingcounttable = false;
-        this.notshowntocount = false;
-        this.ScopeBasedRateBasedFileCountTable = false;
-        this.EstimatedTimeTable = false;
-        this.showtodate = false;
+        this.staffing = false;
+        this.priceBasedOnScope = false;
       } else if (pricingType == 5 || pricingType == 15) {
-        this.type2 = false;
-        this.type22 = false;
-        this.type6 = false;
-        this.showeffective = false;
+        this.specialPricing = false;
+        this.priceBasedOnHour = false;
+        this.rateBasedFileCount = true;
         this.priceBasedOnFileCount = false;
-        //$scope.showstaffing = false;
+        this.priceBasedOnScope = false;
         this.staffing = true;
-        this.showcounttabletime = false;
-        this.showstaffingcounttable = false;
-        this.StaffingdataCountTable= false
-        this.showstaffingcount = false;
-        this.notshowntocount = false;
-        this.ScopeBasedRateBasedFileCountTable = false;
-        this.EstimatedTimeTable = false;
-        this.showtodate = false;
-      } else if (pricingType == 6) {
-        this.type2 = false;
-        this.type22 = false;
-        this.type6 = true;
-        this.showeffective = true;
-        this.priceBasedOnFileCount = false;
-        //$scope.showstaffing = false;
-        this.showcounttable = false;
-        this.showcounttabletime = false;
-        this.showstaffingcounttable = false;
-
-        this.notshowntocount = true;
-        this.ScopeBasedRateBasedFileCountTable = false;
-        this.EstimatedTimeTable = false;
-        this.showtodate = false;
       }
+      //  else if (pricingType == 13) {
+      //   // this.type2 = false;
+      //   // this.type22 = false;
+      //   // this.type6 = true;
+      //   // this.showeffective = true;
+      //   // this.priceBasedOnFileCount = false;
+      //   // //$scope.showstaffing = false;
+      //   // this.showcounttable = false;
+      //   // this.showcounttabletime = false;
+      //   // this.showstaffingcounttable = false;
+
+      //   this.notshowntocount = true;
+      //   // this.ScopeBasedRateBasedFileCountTable = false;
+      //   // this.EstimatedTimeTable = false;
+      //   // this.showtodate = false;
+      // }
       this.selectedCustomers = null;
       this.http.get(environment.apiURL + 'Pricing/GetjobStatusList').subscribe({
         next: (response: any) => {

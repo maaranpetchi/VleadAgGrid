@@ -1,4 +1,3 @@
-
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatTableDataSource } from '@angular/material/table';
@@ -99,6 +98,24 @@ export class ProductionallocationtableComponent implements OnInit {
   public rowSelection: 'single' | 'multiple' = 'multiple';
   private gridApi!: GridApi<any>;
   private gridEmplApi!: GridApi<any>;
+  // getCellClass(data) {
+  //   return {
+  //     'text-color-green': data.employeeCount === 1,
+  //     'text-color-brown': data.queryJobDate !== null,
+  //     'text-color-blue': data.employeeCount > 1,
+  //     'text-color-DeepSkyBlue': data.customerJobType === 'Trial',
+  //     'text-color-#ffab00': data.statusId === 10,
+  //     'text-color-red': data.statusId === 11,
+  //     SuperRush:
+  //       data.jobStatusId === 1 ||
+  //       data.jobStatusId === 3 ||
+  //       data.jobStatusId === 7,
+  //     Rush:
+  //       data.jobStatusId === 2 ||
+  //       data.jobStatusId === 4 ||
+  //       data.jobStatusId === 8,
+  //   };
+  // }
   colDefs: ColDef[] = [
     {
       headerName: 'Job Id',
@@ -111,14 +128,23 @@ export class ProductionallocationtableComponent implements OnInit {
       filter: 'agTextColumnFilter',
       floatingFilter: true,
       colId: 'jobIdColumn',
-      cellStyle: { color: 'blue' },
-
-      cellRenderer: function (params) {
-        return (
-          '<button class="btn btn-sm btn-link p-0">' +
-          params.value +
-          '</button>'
-        );
+      cellStyle: (params) => {
+        // debugger;
+        console.log(params.data, 'paramsvalue');
+        if (params.data.employeeCount === 1) {
+          return { color: 'green' };
+        } else if (params.data.queryJobDate !== null) {
+          return { color: 'brown' };
+        } else if (params.data.employeeCount > 1) {
+          return { color: 'red' };
+        } else if (params.data.customerJobType === 'Trial') {
+          return { color: 'DeepSkyBlue' };
+        } else if (params.data.statusId === 10) {
+          return { color: '#ffab00' };
+        } else if (params.data.statusId === 11) {
+          return { color: 'red' };
+        }
+        return null;
       },
     },
     {
@@ -132,14 +158,22 @@ export class ProductionallocationtableComponent implements OnInit {
       filter: 'agTextColumnFilter',
       floatingFilter: true,
       colId: 'quotationIdColumn',
-      cellStyle: { color: 'blue' },
-
-      cellRenderer: function (params) {
-        return (
-          '<button class="btn btn-sm btn-link p-0">' +
-          params.value +
-          '</button>'
-        );
+      cellStyle: (params) => {
+        // debugger;
+        if (params.data.employeeCount === 1) {
+          return { color: 'green' };
+        } else if (params.data.queryJobDate !== null) {
+          return { color: 'brown' };
+        } else if (params.data.employeeCount > 1) {
+          return { color: 'red' };
+        } else if (params.data.customerJobType === 'Trial') {
+          return { color: 'DeepSkyBlue' };
+        } else if (params.data.statusId === 10) {
+          return { color: '#ffab00' };
+        } else if (params.data.statusId === 11) {
+          return { color: 'red' };
+        }
+        return null;
       },
     },
     {
@@ -153,14 +187,22 @@ export class ProductionallocationtableComponent implements OnInit {
       filter: 'agTextColumnFilter',
       floatingFilter: true,
       colId: 'allocatedIdColumn',
-      cellStyle: { color: 'blue' },
-
-      cellRenderer: function (params) {
-        return (
-          '<button class="btn btn-sm btn-link p-0">' +
-          params.value +
-          '</button>'
-        );
+      cellStyle: (params) => {
+        // debugger;
+        if (params.data.employeeCount === 1) {
+          return { color: 'green' };
+        } else if (params.data.queryJobDate !== null) {
+          return { color: 'brown' };
+        } else if (params.data.employeeCount > 1) {
+          return { color: 'red' };
+        } else if (params.data.customerJobType === 'Trial') {
+          return { color: 'DeepSkyBlue' };
+        } else if (params.data.statusId === 10) {
+          return { color: 'orange' };
+        } else if (params.data.statusId === 11) {
+          return { color: 'red' };
+        }
+        return null;
       },
     },
     {
@@ -175,13 +217,13 @@ export class ProductionallocationtableComponent implements OnInit {
       colId: 'employeeNameColumn',
       cellStyle: { color: 'blue' },
 
-      cellRenderer: function (params) {
-        return (
-          '<button class="btn btn-sm btn-link p-0">' +
-          params.value +
-          '</button>'
-        );
-      },
+      // cellRenderer: function (params) {
+      //   return (
+      //     '<button class="btn btn-sm btn-link p-0">' +
+      //     params.value +
+      //     '</button>'
+      //   );
+      // },
     },
     {
       headerName: 'Est Job/ Query Date',
@@ -191,6 +233,23 @@ export class ProductionallocationtableComponent implements OnInit {
       sortable: true,
       filter: 'agTextColumnFilter',
       floatingFilter: true,
+      cellStyle: (params) => {
+        // debugger;
+        if (params.data.employeeCount === 1) {
+          return { color: 'green' };
+        } else if (params.data.queryJobDate !== null) {
+          return { color: 'brown' };
+        } else if (params.data.employeeCount > 1) {
+          return { color: 'red' };
+        } else if (params.data.customerJobType === 'Trial') {
+          return { color: 'DeepSkyBlue' };
+        } else if (params.data.statusId === 10) {
+          return { color: '#ffab00' };
+        } else if (params.data.statusId === 11) {
+          return { color: 'red' };
+        }
+        return null;
+      },
     },
     {
       headerName: 'Client',
@@ -200,6 +259,23 @@ export class ProductionallocationtableComponent implements OnInit {
       sortable: true,
       filter: 'agTextColumnFilter',
       floatingFilter: true,
+      cellStyle: (params) => {
+        // debugger;
+        if (params.data.employeeCount === 1) {
+          return { color: 'green' };
+        } else if (params.data.queryJobDate !== null) {
+          return { color: 'brown' };
+        } else if (params.data.employeeCount > 1) {
+          return { color: 'red' };
+        } else if (params.data.customerJobType === 'Trial') {
+          return { color: 'DeepSkyBlue' };
+        } else if (params.data.statusId === 10) {
+          return { color: '#ffab00' };
+        } else if (params.data.statusId === 11) {
+          return { color: 'red' };
+        }
+        return null;
+      },
     },
     {
       headerName: 'Customer Classification',
@@ -209,6 +285,23 @@ export class ProductionallocationtableComponent implements OnInit {
       sortable: true,
       filter: 'agTextColumnFilter',
       floatingFilter: true,
+      cellStyle: (params) => {
+        // debugger;
+        if (params.data.employeeCount === 1) {
+          return { color: 'green' };
+        } else if (params.data.queryJobDate !== null) {
+          return { color: 'brown' };
+        } else if (params.data.employeeCount > 1) {
+          return { color: 'red' };
+        } else if (params.data.customerJobType === 'Trial') {
+          return { color: 'DeepSkyBlue' };
+        } else if (params.data.statusId === 10) {
+          return { color: '#ffab00' };
+        } else if (params.data.statusId === 11) {
+          return { color: 'red' };
+        }
+        return null;
+      },
     },
 
     {
@@ -220,6 +313,23 @@ export class ProductionallocationtableComponent implements OnInit {
       sortable: true,
       filter: 'agTextColumnFilter',
       floatingFilter: true,
+      cellStyle: (params) => {
+        // debugger;
+        if (params.data.employeeCount === 1) {
+          return { color: 'green' };
+        } else if (params.data.queryJobDate !== null) {
+          return { color: 'brown' };
+        } else if (params.data.employeeCount > 1) {
+          return { color: 'red' };
+        } else if (params.data.customerJobType === 'Trial') {
+          return { color: 'DeepSkyBlue' };
+        } else if (params.data.statusId === 10) {
+          return { color: '#ffab00' };
+        } else if (params.data.statusId === 11) {
+          return { color: 'red' };
+        }
+        return null;
+      },
     },
     {
       headerName: 'File Inward Mode',
@@ -230,6 +340,23 @@ export class ProductionallocationtableComponent implements OnInit {
       sortable: true,
       filter: 'agTextColumnFilter',
       floatingFilter: true,
+      cellStyle: (params) => {
+        // debugger;
+        if (params.data.employeeCount === 1) {
+          return { color: 'green' };
+        } else if (params.data.queryJobDate !== null) {
+          return { color: 'brown' };
+        } else if (params.data.employeeCount > 1) {
+          return { color: 'red' };
+        } else if (params.data.customerJobType === 'Trial') {
+          return { color: 'DeepSkyBlue' };
+        } else if (params.data.statusId === 10) {
+          return { color: '#ffab00' };
+        } else if (params.data.statusId === 11) {
+          return { color: 'red' };
+        }
+        return null;
+      },
     },
 
     {
@@ -240,6 +367,23 @@ export class ProductionallocationtableComponent implements OnInit {
       sortable: true,
       filter: 'agTextColumnFilter',
       floatingFilter: true,
+      cellStyle: (params) => {
+        // debugger;
+        if (params.data.employeeCount === 1) {
+          return { color: 'green' };
+        } else if (params.data.queryJobDate !== null) {
+          return { color: 'brown' };
+        } else if (params.data.employeeCount > 1) {
+          return { color: 'red' };
+        } else if (params.data.customerJobType === 'Trial') {
+          return { color: 'DeepSkyBlue' };
+        } else if (params.data.statusId === 10) {
+          return { color: '#ffab00' };
+        } else if (params.data.statusId === 11) {
+          return { color: 'red' };
+        }
+        return null;
+      },
     },
     {
       headerName: 'Project Code',
@@ -250,6 +394,23 @@ export class ProductionallocationtableComponent implements OnInit {
       sortable: true,
       filter: 'agTextColumnFilter',
       floatingFilter: true,
+      cellStyle: (params) => {
+        // debugger;
+        if (params.data.employeeCount === 1) {
+          return { color: 'green' };
+        } else if (params.data.queryJobDate !== null) {
+          return { color: 'brown' };
+        } else if (params.data.employeeCount > 1) {
+          return { color: 'red' };
+        } else if (params.data.customerJobType === 'Trial') {
+          return { color: 'DeepSkyBlue' };
+        } else if (params.data.statusId === 10) {
+          return { color: '#ffab00' };
+        } else if (params.data.statusId === 11) {
+          return { color: 'red' };
+        }
+        return null;
+      },
     },
     {
       headerName: 'Status',
@@ -259,6 +420,23 @@ export class ProductionallocationtableComponent implements OnInit {
       sortable: true,
       filter: 'agTextColumnFilter',
       floatingFilter: true,
+      cellStyle: (params) => {
+        // debugger;
+        if (params.data.employeeCount === 1) {
+          return { color: 'green' };
+        } else if (params.data.queryJobDate !== null) {
+          return { color: 'brown' };
+        } else if (params.data.employeeCount > 1) {
+          return { color: 'red' };
+        } else if (params.data.customerJobType === 'Trial') {
+          return { color: 'DeepSkyBlue' };
+        } else if (params.data.statusId === 10) {
+          return { color: '#ffab00' };
+        } else if (params.data.statusId === 11) {
+          return { color: 'red' };
+        }
+        return null;
+      },
     },
     {
       headerName: 'Estimated Time',
@@ -280,7 +458,24 @@ export class ProductionallocationtableComponent implements OnInit {
       sortable: true,
       filter: 'agTextColumnFilter',
       floatingFilter: true,
-    }
+      cellStyle: (params) => {
+        // debugger;
+        if (params.data.employeeCount === 1) {
+          return { color: 'green' };
+        } else if (params.data.queryJobDate !== null) {
+          return { color: 'brown' };
+        } else if (params.data.employeeCount > 1) {
+          return { color: 'red' };
+        } else if (params.data.customerJobType === 'Trial') {
+          return { color: 'DeepSkyBlue' };
+        } else if (params.data.statusId === 10) {
+          return { color: '#ffab00' };
+        } else if (params.data.statusId === 11) {
+          return { color: 'red' };
+        }
+        return null;
+      },
+    },
   ];
   colEmpDefs: ColDef[] = [
     {
@@ -348,10 +543,8 @@ export class ProductionallocationtableComponent implements OnInit {
         // No specific style, return undefined
         return undefined;
       }
-    }
+    },
   };
-
-
 
   EmpgridOptions = {
     pagination: true,
@@ -396,7 +589,7 @@ export class ProductionallocationtableComponent implements OnInit {
     this.http
       .get<any>(
         environment.apiURL +
-        `Allocation/getPendingAllocationJobsAndEmployees/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`
+          `Allocation/getPendingAllocationJobsAndEmployees/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`
       )
       .subscribe((response) => {
         this.rowEmpData = response.employees;
@@ -408,7 +601,7 @@ export class ProductionallocationtableComponent implements OnInit {
     this.http
       .get<any>(
         environment.apiURL +
-        `Allocation/getPendingAllocationJobsAndEmployees/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`
+          `Allocation/getPendingAllocationJobsAndEmployees/${this.loginservice.getUsername()}/${this.loginservice.getProcessId()}/1/0`
       )
       .subscribe((response) => {
         this.rowEmpData = response.employees;
@@ -417,20 +610,19 @@ export class ProductionallocationtableComponent implements OnInit {
   onCellJobClicked(event: CellClickedEvent) {
     const { colDef, data } = event;
     if (colDef.colId === 'jobIdColumn') {
-      console.log(data, "PopupData");
+      console.log(data, 'PopupData');
 
       this.getProductionJob(data);
     } else if (colDef.colId === 'quotationIdColumn') {
-      console.log(data, "PopupData");
+      console.log(data, 'PopupData');
 
       this.getQuatationJobId(data);
     } else if (colDef.colId === 'allocatedIdColumn') {
-      console.log(data, "PopupData");
+      console.log(data, 'PopupData');
 
       this.getAllocatedJobId(data);
-    }
-    else if (colDef.colId === 'employeeNameColumn') {
-      console.log(data, "PopupData");
+    } else if (colDef.colId === 'employeeNameColumn') {
+      console.log(data, 'PopupData');
 
       this.getemployeeName(data);
     }
@@ -438,7 +630,7 @@ export class ProductionallocationtableComponent implements OnInit {
   onCellEmpClicked(event: CellClickedEvent) {
     const { colDef, data } = event;
     if (colDef.field === 'employeenameWithCode') {
-      console.log(data, "PopupData");
+      console.log(data, 'PopupData');
 
       this.employeeProduction(data);
     }
@@ -462,12 +654,17 @@ export class ProductionallocationtableComponent implements OnInit {
   onCellValueChanged(event: CellValueChangedEvent) {
     const updatedRow = event.data;
     // You can perform any validation or additional logic here if needed
-    console.log("New Estimated Time for Job ID:", updatedRow.jobId, "is", updatedRow.allocatedEstimatedTime);
+    console.log(
+      'New Estimated Time for Job ID:',
+      updatedRow.jobId,
+      'is',
+      updatedRow.allocatedEstimatedTime
+    );
   }
   onCellValueEmpChanged = (event: CellValueChangedEvent) => {
     console.log(event);
     if (parseInt(this.loginservice.getProcessId()) == 2) {
-      console.log(this.loginservice.getProcessId(), "ulla");
+      console.log(this.loginservice.getProcessId(), 'ulla');
 
       var colls = this.estTimeinput;
       console.table(colls);
@@ -508,11 +705,10 @@ export class ProductionallocationtableComponent implements OnInit {
     const selectedNodes = this.gridApi.getSelectedNodes();
     console.log('Row Selected!');
     const selectedRows = this.gridApi.getSelectedRows(); // Perform your bulk convert action with the selected rows
-
   };
   onSelectionChanged(event: SelectionChangedEvent) {
     const selectedNodes = this.gridApi.getSelectedRows();
-    this.selectedLength = selectedNodes.length
+    this.selectedLength = selectedNodes.length;
 
     console.log('Selected Rows:', selectedNodes); // Update exchangeHeader with the estimated time of the first selected row
     if (selectedNodes.length > 0) {
@@ -522,7 +718,8 @@ export class ProductionallocationtableComponent implements OnInit {
       this.exchangeHeader = null;
     }
     selectedNodes.forEach((item: any) => {
-      if (item.data.allocatedEstimatedTime == null) item.data.allocatedEstimatedTime = 0;
+      if (item.data.allocatedEstimatedTime == null)
+        item.data.allocatedEstimatedTime = 0;
       if (item.data.employeeId == null) item.data.employeeId = 0;
       if (item.data.estimatedTime == null) item.data.estimatedTime = 0;
       this.selectedQuery.push({
@@ -534,7 +731,7 @@ export class ProductionallocationtableComponent implements OnInit {
         SelectedEmployees: [],
         SelectedRows: [],
       });
-    })
+    });
   }
   onSelectionEmpChanged(event: SelectionChangedEvent) {
     const selectedEmpNodes = this.gridEmplApi.getSelectedNodes();
@@ -567,17 +764,15 @@ export class ProductionallocationtableComponent implements OnInit {
           SelectedEmployees: [],
           SelectedRows: [],
           TimeStamp: '',
-
         });
       }
-    })
-
+    });
   }
   fetchScopes() {
     this.http
       .get<any>(
         environment.apiURL +
-        `Allocation/getScopeValues/${this.loginservice.getUsername()}`
+          `Allocation/getScopeValues/${this.loginservice.getUsername()}`
       )
       .subscribe((scopedata) => {
         this.scopes = scopedata.scopeDetails;
@@ -588,7 +783,6 @@ export class ProductionallocationtableComponent implements OnInit {
   selectedEmployee: any[] = [];
 
   setEmployeeAll(item: any) {
-
     // if (completed == true) {
     if (item.jId != null)
       return {
@@ -602,7 +796,7 @@ export class ProductionallocationtableComponent implements OnInit {
         SelectedEmployees: [],
         SelectedRows: [],
         TimeStamp: '',
-        estimatedTime: item.estTime
+        estimatedTime: item.estTime,
       };
     else {
       return {
@@ -617,7 +811,7 @@ export class ProductionallocationtableComponent implements OnInit {
         SelectedEmployees: [],
         SelectedRows: [],
         TimeStamp: '',
-        estimatedTime: item.estTime
+        estimatedTime: item.estTime,
       };
     }
     // } else {
@@ -636,7 +830,7 @@ export class ProductionallocationtableComponent implements OnInit {
   }
   tab(action) {
     this.currentPageIndex = action;
-    console.log(this.currentPageIndex, "currentPageIndex");
+    console.log(this.currentPageIndex, 'currentPageIndex');
 
     if (action == '1') {
       this.freshJobs();
@@ -659,7 +853,6 @@ export class ProductionallocationtableComponent implements OnInit {
       this.gridApi.setColumnVisible('quotationIdColumn', false);
       this.gridApi.setColumnVisible('allocatedIdColumn', true);
       this.gridApi.setColumnVisible('employeeNameColumn', true);
-
     } else if (action == '5') {
       this.gridApi.setColumnVisible('jobIdColumn', true);
       this.gridApi.setColumnVisible('quotationIdColumn', false);
@@ -693,9 +886,9 @@ export class ProductionallocationtableComponent implements OnInit {
     this.http
       .get<any>(
         environment.apiURL +
-        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-          this.loginservice.getUsername()
-        )}/${parseInt(this.loginservice.getProcessId())}/1/0`
+          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+            this.loginservice.getUsername()
+          )}/${parseInt(this.loginservice.getProcessId())}/1/0`
       )
       .subscribe({
         next: (freshJobs) => {
@@ -717,9 +910,9 @@ export class ProductionallocationtableComponent implements OnInit {
     this.http
       .get<any>(
         environment.apiURL +
-        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-          this.loginservice.getUsername()
-        )}/${parseInt(this.loginservice.getProcessId())}/2/0`
+          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+            this.loginservice.getUsername()
+          )}/${parseInt(this.loginservice.getProcessId())}/2/0`
       )
       .subscribe({
         next: (revisionJobs) => {
@@ -740,9 +933,9 @@ export class ProductionallocationtableComponent implements OnInit {
     this.http
       .get<any>(
         environment.apiURL +
-        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-          this.loginservice.getUsername()
-        )}/${parseInt(this.loginservice.getProcessId())}/3/0`
+          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+            this.loginservice.getUsername()
+          )}/${parseInt(this.loginservice.getProcessId())}/3/0`
       )
       .subscribe({
         next: (revisionJobs) => {
@@ -762,9 +955,9 @@ export class ProductionallocationtableComponent implements OnInit {
     this.http
       .get<any>(
         environment.apiURL +
-        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-          this.loginservice.getUsername()
-        )}/${parseInt(this.loginservice.getProcessId())}/4/0`
+          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+            this.loginservice.getUsername()
+          )}/${parseInt(this.loginservice.getProcessId())}/4/0`
       )
       .subscribe({
         next: (revisionJobs) => {
@@ -784,9 +977,9 @@ export class ProductionallocationtableComponent implements OnInit {
     this.http
       .get<any>(
         environment.apiURL +
-        `Allocation/getQueryPendingJobs/${parseInt(
-          this.loginservice.getUsername()
-        )}/${parseInt(this.loginservice.getProcessId())}/0`
+          `Allocation/getQueryPendingJobs/${parseInt(
+            this.loginservice.getUsername()
+          )}/${parseInt(this.loginservice.getProcessId())}/0`
       )
       .subscribe({
         next: (revisionJobs) => {
@@ -806,9 +999,9 @@ export class ProductionallocationtableComponent implements OnInit {
     this.http
       .get<any>(
         environment.apiURL +
-        `Allocation/getQueryResponseJobsAndEmployees/${parseInt(
-          this.loginservice.getUsername()
-        )}/${parseInt(this.loginservice.getProcessId())}/0`
+          `Allocation/getQueryResponseJobsAndEmployees/${parseInt(
+            this.loginservice.getUsername()
+          )}/${parseInt(this.loginservice.getProcessId())}/0`
       )
       .subscribe({
         next: (freshJobs) => {
@@ -831,9 +1024,9 @@ export class ProductionallocationtableComponent implements OnInit {
     this.http
       .get<any>(
         environment.apiURL +
-        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-          this.loginservice.getUsername()
-        )}/${parseInt(this.loginservice.getProcessId())}/5/0`
+          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+            this.loginservice.getUsername()
+          )}/${parseInt(this.loginservice.getProcessId())}/5/0`
       )
       .subscribe({
         next: (freshJobs) => {
@@ -856,9 +1049,9 @@ export class ProductionallocationtableComponent implements OnInit {
     this.http
       .get<any>(
         environment.apiURL +
-        `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
-          this.loginservice.getUsername()
-        )}/${parseInt(this.loginservice.getProcessId())}/7/0`
+          `Allocation/getPendingAllocationJobsAndEmployees/${parseInt(
+            this.loginservice.getUsername()
+          )}/${parseInt(this.loginservice.getProcessId())}/7/0`
       )
       .subscribe({
         next: (freshJobs) => {
@@ -886,7 +1079,6 @@ export class ProductionallocationtableComponent implements OnInit {
       });
   }
 
-
   getProductionJob(data: any) {
     const dialogRef = this._dialog.open(JobAssignedDetailsPopupComponent, {
       width: '100%',
@@ -898,8 +1090,7 @@ export class ProductionallocationtableComponent implements OnInit {
         if (val) {
           this.tab(this.currentPageIndex);
           this.sharedDataService.triggerRefresh();
-          this.fetchEmployeeTable();
-        }
+          this.fetchEmployeeTable();        }
       },
     });
   }
@@ -914,8 +1105,7 @@ export class ProductionallocationtableComponent implements OnInit {
         if (val) {
           this.tab(this.currentPageIndex);
           this.sharedDataService.triggerRefresh();
-          this.fetchEmployeeTable();
-        }
+          this.fetchEmployeeTable();             }
       },
     });
   }
@@ -931,7 +1121,7 @@ export class ProductionallocationtableComponent implements OnInit {
         if (val) {
           this.tab(this.currentPageIndex);
           this.sharedDataService.triggerRefresh();
-          this.fetchEmployeeTable();        }
+          this.fetchEmployeeTable();             }
       },
     });
   }
@@ -946,7 +1136,7 @@ export class ProductionallocationtableComponent implements OnInit {
         if (val) {
           this.tab(this.currentPageIndex);
           this.sharedDataService.triggerRefresh();
-          this.fetchEmployeeTable();        }
+          this.fetchEmployeeTable();             }
       },
     });
   }
@@ -961,8 +1151,7 @@ export class ProductionallocationtableComponent implements OnInit {
         if (val) {
           this.tab(this.currentPageIndex);
           this.sharedDataService.triggerRefresh();
-          this.fetchEmployeeTable();
-                }
+          this.fetchEmployeeTable();             }
       },
     });
   }
@@ -980,10 +1169,10 @@ export class ProductionallocationtableComponent implements OnInit {
       const selectedNodes = this.gridApi.getSelectedRows();
 
       selectedNodes.forEach((node) => {
-        console.log(node, "node");
+        console.log(node, 'node');
         if (node.jobId) {
           node.allocatedEstimatedTime = this.exchangeHeader;
-          console.log(this.exchangeHeader, "exgheader");
+          console.log(this.exchangeHeader, 'exgheader');
         }
       });
       this.gridApi.refreshCells(); // Manually trigger change detection
@@ -1000,8 +1189,8 @@ export class ProductionallocationtableComponent implements OnInit {
   onSubmits() {
     this.selectedJobs = this.gridApi.getSelectedRows();
     this.selectedEmployees = this.gridEmplApi.getSelectedRows();
-    console.log(this.selectedJobs, "this.selectedJobs");
-    console.log(this.selectedEmployees.length, "this.selectedEmployees");
+    console.log(this.selectedJobs, 'this.selectedJobs');
+    console.log(this.selectedEmployees.length, 'this.selectedEmployees');
     this.spinnerService.requestStarted();
     var selectedJobCount = this.selectedJobs.length;
     var selectedEmployeeCount = this.selectedEmployees.length;
@@ -1010,11 +1199,18 @@ export class ProductionallocationtableComponent implements OnInit {
         if (selectedJobCount > 1) {
           if (selectedEmployeeCount < 1) {
             Swal.fire('Info!', 'Please select one Employee!', 'info');
-          }
-          else {
+          } else {
             for (var i = 0; i < selectedJobCount; i++) {
-              if (this.selectedJobs[i].estimatedTime == undefined || this.selectedJobs[i].estimatedTime == "" || this.selectedJobs[i].estimatedTime == 0) {
-                Swal.fire('Info!', 'Please enter Estimated Time for Selected Job!', 'info');
+              if (
+                this.selectedJobs[i].estimatedTime == undefined ||
+                this.selectedJobs[i].estimatedTime == '' ||
+                this.selectedJobs[i].estimatedTime == 0
+              ) {
+                Swal.fire(
+                  'Info!',
+                  'Please enter Estimated Time for Selected Job!',
+                  'info'
+                );
                 this.spinnerService.requestEnded();
                 return;
               }
@@ -1028,7 +1224,11 @@ export class ProductionallocationtableComponent implements OnInit {
               this.selectedEmployees[i].estimatedTime == '' ||
               this.selectedEmployees[i].estimatedTime == 0
             ) {
-              Swal.fire('Info!', 'Please enter Estimated Time for Selected Employee!', 'info');
+              Swal.fire(
+                'Info!',
+                'Please enter Estimated Time for Selected Employee!',
+                'info'
+              );
               this.spinnerService.requestEnded();
               return;
             }
@@ -1054,8 +1254,6 @@ export class ProductionallocationtableComponent implements OnInit {
         this.spinnerService.requestEnded();
       }
     }
-
-
   }
   onSubmit() {
     console.log(this.gridApi.getSelectedRows(), 'rowselection');
@@ -1097,14 +1295,18 @@ export class ProductionallocationtableComponent implements OnInit {
       }
     } else {
       for (var i = 0; i < this.selectedEmployees.length; i++) {
-        console.table(this.selectedEmployee)
-        console.table(this.selectedEmployees,)
+        console.table(this.selectedEmployee);
+        console.table(this.selectedEmployees);
         if (
           this.selectedEmployees[i].estTime == undefined ||
           this.selectedEmployees[i].estTime == '' ||
           this.selectedEmployees[i].estTime == 0
         ) {
-          Swal.fire('Info!', 'Please enter Estimated Time for Selected Employee!', 'info');
+          Swal.fire(
+            'Info!',
+            'Please enter Estimated Time for Selected Employee!',
+            'info'
+          );
           this.spinnerService.requestEnded();
           return;
         }
@@ -1114,8 +1316,8 @@ export class ProductionallocationtableComponent implements OnInit {
     this.postJobs();
   }
   postJobs() {
-    console.log(this.selectedJobs, "selectedjobs");
-    console.log(this.selectedJobs, "selectedemployee");
+    console.log(this.selectedJobs, 'selectedjobs');
+    console.log(this.selectedJobs, 'selectedemployee');
 
     let processMovement = {
       id: 0,
@@ -1130,30 +1332,38 @@ export class ProductionallocationtableComponent implements OnInit {
       value: 0,
       amount: 0,
       stitchCount: 0,
-      estimationTime: this.exchangeHeader ?? this.selectedEmployees.reduce(
-        (total, employee) => total + employee.estTime,
-        0
-      ),
+      estimationTime:
+        this.exchangeHeader ??
+        this.selectedEmployees.reduce(
+          (total, employee) => total + employee.estTime,
+          0
+        ),
       dateofDelivery: '2023-06-22T11:47:25.193Z',
       comments: 'string',
       validity: 0,
       copyFiles: true,
       updatedBy: 0,
       jId: 0,
-      estimatedTime: this.exchangeHeader ?? this.selectedEmployees.reduce(
-        (total, employee) => total + employee.estTime,
-        0
-      ),
+      estimatedTime:
+        this.exchangeHeader ??
+        this.selectedEmployees.reduce(
+          (total, employee) => total + employee.estTime,
+          0
+        ),
       tranMasterId: 0,
-      selectedRows: this.selectedJobs.map(x => this.setAll(x)),
-      selectedEmployees: this.selectedEmployees.map(x => this.setEmployeeAll(x)),
+      selectedRows: this.selectedJobs.map((x) => this.setAll(x)),
+      selectedEmployees: this.selectedEmployees.map((x) =>
+        this.setEmployeeAll(x)
+      ),
       departmentId: 0,
       updatedUTC: new Date().toISOString,
       categoryDesc: 'string',
-      allocatedEstimatedTime: this.exchangeHeader ?? this.selectedEmployees.reduce(
-        (total, employee) => total + employee.estTime,
-        0
-      ),
+      allocatedEstimatedTime:
+        this.exchangeHeader ??
+        this.selectedEmployees.reduce(
+          (total, employee) => total + employee.estTime,
+          0
+        ),
       tranId: 0,
       fileInwardType: 'string',
       timeStamp: '',
@@ -1169,12 +1379,11 @@ export class ProductionallocationtableComponent implements OnInit {
     if (this.loginservice.getProcessName() == 'Quality Allocation') {
       this.ProcessMovementData('QARestriction', processMovement).subscribe(
         (result) => {
-          var SameQAEmployeeJobList: any[] = processMovement.selectedRows.filter(
-            function (item: any) {
+          var SameQAEmployeeJobList: any[] =
+            processMovement.selectedRows.filter(function (item: any) {
               var exists = result.jids.some((x) => x == item?.jId);
               return exists;
-            }
-          );
+            });
           var processedRows = processMovement.selectedRows.filter(function (
             item: any
           ) {
@@ -1316,30 +1525,8 @@ export class ProductionallocationtableComponent implements OnInit {
       Remarks: '',
       SelectedEmployees: [],
       SelectedRows: [],
-
     };
   } //textcolor
-
-  getCellClass(data) {
-    return {
-      'text-color-green': data.employeeCount === 1,
-      'text-color-brown': data.queryJobDate !== null,
-      'text-color-blue': data.employeeCount > 1,
-      'text-color-DeepSkyBlue': data.customerJobType === 'Trial',
-      'text-color-yellow': data.statusId === 10,
-      'text-color-red': data.statusId === 11,
-      SuperRush:
-        data.jobStatusId === 1 ||
-        data.jobStatusId === 3 ||
-        data.jobStatusId === 7,
-      Rush:
-        data.jobStatusId === 2 ||
-        data.jobStatusId === 4 ||
-        data.jobStatusId === 8,
-    };
-  }
-
-
 }
 function isFirstColumn(
   params:
